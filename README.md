@@ -15,6 +15,11 @@ wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS
 wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS-SSR-TG-iptables-bt/main/sh/ss-go.sh && chmod +x ss-go.sh && bash ss-go.sh
 ```
 
+- 八合一的一键搭建
+```yaml
+wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
+```
+
 - v2ray一键搭建
 ```yaml
 bash <(curl -s -L https://git.io/JzclH)

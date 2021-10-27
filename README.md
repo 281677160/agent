@@ -1,7 +1,7 @@
 # v2-ssr
 ```yaml
 sudo apt-get update
-sudo apt install -y  curl wget curl git git-core
+sudo apt install -y wget curl git git-core bash
 sudo apt-get -y dist-upgrade
 sudo apt-get clean
 sudo apt-get autoremove

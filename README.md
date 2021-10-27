@@ -9,18 +9,18 @@ sudo apt-get autoremove
 #
 ---
 #
-```yaml
-- SS+SSR一键搭建，后期管理再次输入命令
-
-wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS-SSR-TG-iptables-bt/main/sh/ssr.sh && chmod +x ssr.sh && bash ssr.sh
-
-```
 ---
+- SS+SSR一键搭建，后期管理再次输入命令
 ```yaml
+wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS-SSR-TG-iptables-bt/main/sh/ssr.sh && chmod +x ssr.sh && bash ssr.sh
+```
+#
+---
+#
+---
 - TG代理一键搭建，后期管理再次输入命令
-
+```yaml
 wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS-SSR-TG-iptables-bt/main/sh/mtproxy.sh && chmod +x mtproxy.sh && bash mtproxy.sh
-
 ```
 ---
 

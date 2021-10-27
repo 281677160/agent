@@ -6,7 +6,9 @@ sudo apt-get -y dist-upgrade
 sudo apt-get clean
 sudo apt-get autoremove
 ```
+#
 ---
+#
 ```yaml
 - SS+SSR一键搭建，后期管理再次输入命令
 

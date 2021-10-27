@@ -1,4 +1,11 @@
 # v2-ssr
+```yaml
+sudo apt-get update
+sudo apt install -y  curl wget curl git git-core
+sudo apt-get -y dist-upgrade
+sudo apt-get clean
+sudo apt-get autoremove
+```
 
 - SS+SSR一键搭建
 ```yaml

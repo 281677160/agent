@@ -6,30 +6,43 @@ sudo apt-get -y dist-upgrade
 sudo apt-get clean
 sudo apt-get autoremove
 ```
-
+---
+```yaml
 - SS+SSR一键搭建，后期管理再次输入命令
-```yaml
+
 wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS-SSR-TG-iptables-bt/main/sh/ssr.sh && chmod +x ssr.sh && bash ssr.sh
-```
 
+```
+---
+```yaml
 - TG代理一键搭建，后期管理再次输入命令
-```yaml
+
 wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS-SSR-TG-iptables-bt/main/sh/mtproxy.sh && chmod +x mtproxy.sh && bash mtproxy.sh
-```
 
+```
+---
+
+```yaml
 - SS一键搭建，后期管理再次输入命令
-```yaml
+
 wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS-SSR-TG-iptables-bt/main/sh/ss-go.sh && chmod +x ss-go.sh && bash ss-go.sh
-```
 
+```
+---
+
+```yaml
 - 八合一的一键搭建，需要域名，后期管理命令：vasma
-```yaml
-wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
-```
 
-- v2ray一键搭建，后期管理看下面的命令
+wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
+
+```
+---
+
 ```yaml
+- v2ray一键搭建，后期管理看下面的命令
+
 bash <(curl -s -L https://git.io/JzclH)
+
 
 快速管理
 
@@ -73,12 +86,17 @@ Caddy 配置文件路径：/etc/caddy/Caddyfile
 
 脚本配置文件路径: /etc/v2ray/233blog_v2ray_backup.conf
 ```
+---
+```yaml
 - 一键安装BBR，使用BBR+CAKE加速方案，后期管理再次输入命令
-```yaml
-wget -N --no-check-certificate "https://raw.githubusercontent.com/ylx2016/Linux-NetSpeed/master/tcp.sh" && chmod +x tcp.sh && ./tcp.sh
-```
 
-- 测试解锁流媒体情况，选择4测试
+wget -N --no-check-certificate "https://raw.githubusercontent.com/ylx2016/Linux-NetSpeed/master/tcp.sh" && chmod +x tcp.sh && ./tcp.sh
+
+```
+---
 ```yaml
+- 测试解锁流媒体情况，选择4测试
+
 bash <(curl -L -s https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/check.sh)
+
 ```

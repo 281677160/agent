@@ -7,17 +7,17 @@ sudo apt-get clean
 sudo apt-get autoremove
 ```
 
-- SS+SSR一键搭建
+- SS+SSR一键搭建，后期管理再次输入命令
 ```yaml
 wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS-SSR-TG-iptables-bt/main/sh/ssr.sh && chmod +x ssr.sh && bash ssr.sh
 ```
 
-- TG代理一键搭建
+- TG代理一键搭建，后期管理再次输入命令
 ```yaml
 wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS-SSR-TG-iptables-bt/main/sh/mtproxy.sh && chmod +x mtproxy.sh && bash mtproxy.sh
 ```
 
-- SS一键搭建
+- SS一键搭建，后期管理再次输入命令
 ```yaml
 wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS-SSR-TG-iptables-bt/main/sh/ss-go.sh && chmod +x ss-go.sh && bash ss-go.sh
 ```
@@ -27,7 +27,7 @@ wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS
 wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
 ```
 
-- v2ray一键搭建
+- v2ray一键搭建，后期管理看下面的命令
 ```yaml
 bash <(curl -s -L https://git.io/JzclH)
 
@@ -73,7 +73,7 @@ Caddy 配置文件路径：/etc/caddy/Caddyfile
 
 脚本配置文件路径: /etc/v2ray/233blog_v2ray_backup.conf
 ```
-- 一键安装BBR，使用BBR+CAKE加速方案
+- 一键安装BBR，使用BBR+CAKE加速方案，后期管理再次输入命令
 ```yaml
 wget -N --no-check-certificate "https://raw.githubusercontent.com/ylx2016/Linux-NetSpeed/master/tcp.sh" && chmod +x tcp.sh && ./tcp.sh
 ```

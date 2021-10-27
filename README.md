@@ -66,6 +66,10 @@ Caddy 配置文件路径：/etc/caddy/Caddyfile
 
 脚本配置文件路径: /etc/v2ray/233blog_v2ray_backup.conf
 ```
+- 一键安装BBR
+```yaml
+wget -N --no-check-certificate "https://raw.githubusercontent.com/ylx2016/Linux-NetSpeed/master/tcp.sh" && chmod +x tcp.sh && ./tcp.sh
+```
 
 - 测试解锁流媒体情况，选择4测试
 ```yaml

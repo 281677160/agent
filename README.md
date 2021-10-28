@@ -29,6 +29,7 @@ wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS
 - SS一键搭建，后期管理再次输入命令
 ```yaml
 wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS-SSR-TG-iptables-bt/main/sh/ss-go.sh && chmod +x ss-go.sh && bash ss-go.sh
+```
 #
 ---
 #
@@ -36,6 +37,7 @@ wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS
 - 八合一的一键搭建，需要域名，后期管理命令：vasma
 ```yaml
 wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
+```
 #
 ---
 #

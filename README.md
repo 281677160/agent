@@ -17,6 +17,13 @@ wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS
 #
 ---
 #
+- TG代理一键搭建，出处：https://github.com/seriyps/mtproto_proxy
+```yaml
+curl -L -o mtp_install.sh https://git.io/fj5ru && bash mtp_install.sh
+```
+#
+---
+#
 ---
 - TG代理一键搭建，后期管理再次输入命令
 ```yaml

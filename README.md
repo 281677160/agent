@@ -22,26 +22,27 @@ wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS
 ```yaml
 wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS-SSR-TG-iptables-bt/main/sh/mtproxy.sh && chmod +x mtproxy.sh && bash mtproxy.sh
 ```
+#
 ---
-
-```yaml
+#
+---
 - SS一键搭建，后期管理再次输入命令
-
+```yaml
 wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS-SSR-TG-iptables-bt/main/sh/ss-go.sh && chmod +x ss-go.sh && bash ss-go.sh
-
-```
+#
 ---
-
-```yaml
+#
+---
 - 八合一的一键搭建，需要域名，后期管理命令：vasma
-
-wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
-
-```
----
-
 ```yaml
+wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
+#
+---
+#
+---
 - v2ray一键搭建，后期管理看下面的命令
+```yaml
+
 
 bash <(curl -s -L https://git.io/JzclH)
 
@@ -88,17 +89,19 @@ Caddy 配置文件路径：/etc/caddy/Caddyfile
 
 脚本配置文件路径: /etc/v2ray/233blog_v2ray_backup.conf
 ```
+#
 ---
-```yaml
+#
+---
 - 一键安装BBR，使用BBR+CAKE加速方案，后期管理再次输入命令
-
-wget -N --no-check-certificate "https://raw.githubusercontent.com/ylx2016/Linux-NetSpeed/master/tcp.sh" && chmod +x tcp.sh && ./tcp.sh
-
-```
----
 ```yaml
+wget -N --no-check-certificate "https://raw.githubusercontent.com/ylx2016/Linux-NetSpeed/master/tcp.sh" && chmod +x tcp.sh && ./tcp.sh
+```
+#
+---
+#
+---
 - 测试解锁流媒体情况，选择4测试
-
+```yaml
 bash <(curl -L -s https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/check.sh)
-
 ```

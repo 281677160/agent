@@ -42,10 +42,9 @@ wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-
 ---
 - v2ray一键搭建，后期管理看下面的命令
 ```yaml
-
-
 bash <(curl -s -L https://git.io/JzclH)
-
+```
+```yaml
 
 快速管理
 

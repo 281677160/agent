@@ -1,10 +1,7 @@
 # v2-ssr
 ```yaml
 sudo apt-get update
-sudo apt install -y wget curl git git-core bash
-sudo apt-get -y dist-upgrade
-sudo apt-get clean
-sudo apt-get autoremove
+sudo apt install -y wget curl git git-core socat
 ```
 #
 ---
@@ -48,7 +45,19 @@ wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-
 #
 ---
 #
-- 带网页版的xray教程链接：https://www.v2rayssr.com/x-ui.html
+- 带网页版的xray教程链接：https://mgxray.xyz/index.php/archives/362/
+```yaml
+curl https://get.acme.sh | sh
+~/.acme.sh/acme.sh --register-account -m xxxx@gmail.com
+~/.acme.sh/acme.sh  --issue -d 你的域名   --standalone
+~/.acme.sh/acme.sh --installcert -d 你的域名 --key-file /root/private.key --fullchain-file /root/cert.crt
+bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
+
+顺利安装完成后，用IP+54321 端口登录页面，修改好用户名、密码、面板监听端口、面板证书公钥文件路径、面板证书密钥文件路径
+
+重启页面，然后就可以用你的域名+面板监听端口和你新设置的用户名跟密码登录页面了
+
+```
 
 #
 ---
@@ -110,6 +119,12 @@ wget -N --no-check-certificate "https://raw.githubusercontent.com/ylx2016/Linux-
 ```
 #
 ---
+---
+- 一键安装BBR2
+```yaml
+wget --no-check-certificate -q -O bbr2.sh "https://github.com/yeyingorg/bbr2.sh/raw/master/bbr2.sh" && chmod +x bbr2.sh && bash bbr2.sh auto
+```
+#
 #
 ---
 - 测试解锁流媒体情况，选择4测试

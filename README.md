@@ -48,7 +48,7 @@ wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-
 #
 ---
 #
-- 带网页版的xray教程
+- 带网页版的xray教程链接
 ```yaml
 https://www.v2rayssr.com/x-ui.html
 ```

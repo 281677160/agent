@@ -48,6 +48,11 @@ wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-
 #
 ---
 #
+- 带网页版的xray教程
+```yaml
+https://www.v2rayssr.com/x-ui.html
+```
+#
 ---
 - v2ray一键搭建，后期管理看下面的命令
 ```yaml
@@ -113,3 +118,5 @@ wget -N --no-check-certificate "https://raw.githubusercontent.com/ylx2016/Linux-
 ```yaml
 bash <(curl -L -s https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/check.sh)
 ```
+https://www.vpscang.com/
+

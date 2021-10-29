@@ -48,10 +48,8 @@ wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-
 #
 ---
 #
-- 带网页版的xray教程链接
-```yaml
-https://www.v2rayssr.com/x-ui.html
-```
+- 带网页版的xray教程链接：https://www.v2rayssr.com/x-ui.html
+
 #
 ---
 - v2ray一键搭建，后期管理看下面的命令

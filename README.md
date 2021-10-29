@@ -118,5 +118,7 @@ wget -N --no-check-certificate "https://raw.githubusercontent.com/ylx2016/Linux-
 ```yaml
 bash <(curl -L -s https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/check.sh)
 ```
+```yaml
 https://www.vpscang.com/
+```
 

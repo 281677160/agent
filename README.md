@@ -1,11 +1,11 @@
 # v2-ssr
 ```yaml
 支持ubunt18或以下系统，debian10或以下系统
-sudo apt-get update && sudo apt install -y wget curl git git-core socat
+sudo apt-get update && sudo apt install -y wget curl git socat
 
 
 支持CentOS7或者以下系统
-yum apt-get update && sudo yum install -y wget curl git git-core socat
+yum apt-get update && sudo yum install -y wget curl git socat
 ```
 #
 ---

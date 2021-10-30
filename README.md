@@ -139,3 +139,4 @@ bash <(curl -L -s https://raw.githubusercontent.com/lmc999/RegionRestrictionChec
 https://www.vpscang.com/
 ```
 
+- 一键DD服务器：https://hostloc.com/thread-779358-1-1.html

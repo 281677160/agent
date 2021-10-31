@@ -11,7 +11,7 @@ yum apt-get update && sudo yum install -y wget curl git socat
 ---
 #
 ---
-- 带网页版的xray教程链接：https://mgxray.xyz/index.php/archives/362/
+- [带x-ui网页版的xray](https://github.com/vaxilu/x-ui),按下面步骤一步步输入命令即可(xxxx@gmail.com邮箱无需理会，就这样就可以)
 ```yaml
 curl https://get.acme.sh | sh
 ~/.acme.sh/acme.sh --register-account -m xxxx@gmail.com

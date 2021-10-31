@@ -28,6 +28,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
 #
 ---
 #
+---
 - [TG代理一键搭建](https://github.com/seriyps/mtproto_proxy)
 ```yaml
 curl -L -o mtp_install.sh https://git.io/fj5ru && bash mtp_install.sh
@@ -59,6 +60,8 @@ wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS
 ```yaml
 wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
 ```
+#
+---
 #
 ---
 - SS+SSR一键搭建，后期管理再次输入命令
@@ -127,12 +130,14 @@ wget -N --no-check-certificate "https://raw.githubusercontent.com/ylx2016/Linux-
 ```
 #
 ---
+#
 ---
 - [一键安装BBR2](https://github.com/yeyingorg/bbr2.sh),不支持CentOS
 ```yaml
 wget --no-check-certificate -q -O bbr2.sh "https://github.com/yeyingorg/bbr2.sh/raw/master/bbr2.sh" && chmod +x bbr2.sh && bash bbr2.sh auto
 ```
 #
+---
 #
 ---
 - [测试解锁流媒体情况](https://github.com/lmc999/RegionRestrictionCheck)

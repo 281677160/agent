@@ -26,7 +26,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
 #
 ---
 #
-- TG代理一键搭建，出处：https://github.com/seriyps/mtproto_proxy
+- [TG代理一键搭建](https://github.com/seriyps/mtproto_proxy)
 ```yaml
 curl -L -o mtp_install.sh https://git.io/fj5ru && bash mtp_install.sh
 ```
@@ -50,7 +50,7 @@ wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS
 ---
 #
 ---
-- 八合一的一键搭建，需要域名，后期管理命令：vasma
+- [八合一的一键搭建](https://github.com/mack-a/v2ray-agent)，需要域名，后期管理命令：vasma
 ```yaml
 wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
 ```

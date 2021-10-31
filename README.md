@@ -66,8 +66,7 @@ wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-
 wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS-SSR-TG-iptables-bt/main/sh/ssr.sh && chmod +x ssr.sh && bash ssr.sh
 ```
 #
-```
-
+---
 #
 ---
 - [v2ray一键搭建](https://github.com/279437541/v2ray)，后期管理看下面的命令

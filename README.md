@@ -1,11 +1,13 @@
 # v2-ssr
 ```yaml
-支持ubunt18或以下系统，debian10或以下系统(首先对你的系统使用以下命令)
+支持ubunt18或以下系统，debian10或以下系统(用root用户登录，然后首先对你的系统使用以下命令)
 apt-get update && apt-get install -y wget curl git socat sudo
+apt-get install ca-certificates wget -y && update-ca-certificates
 
 
-支持CentOS7或者以下系统(首先对你的系统使用以下命令)
+支持CentOS7或者以下系统(用root用户登录，然后首先对你的系统使用以下命令)
 yum apt-get update && sudo yum install -y wget curl git socat
+yum install ca-certificates wget -y && update-ca-trust force-enable
 ```
 #
 ---
@@ -120,21 +122,21 @@ Caddy 配置文件路径：/etc/caddy/Caddyfile
 ---
 #
 ---
-- 一键安装BBR，使用BBR+CAKE加速方案，后期管理再次输入命令
+- [一键安装BBR](https://github.com/ylx2016/Linux-NetSpeed)，使用BBR+CAKE加速方案，后期管理再次输入命令
 ```yaml
 wget -N --no-check-certificate "https://raw.githubusercontent.com/ylx2016/Linux-NetSpeed/master/tcp.sh" && chmod +x tcp.sh && ./tcp.sh
 ```
 #
 ---
 ---
-- 一键安装BBR2
+- [一键安装BBR2](https://github.com/yeyingorg/bbr2.sh),不支持CentOS
 ```yaml
 wget --no-check-certificate -q -O bbr2.sh "https://github.com/yeyingorg/bbr2.sh/raw/master/bbr2.sh" && chmod +x bbr2.sh && bash bbr2.sh auto
 ```
 #
 #
 ---
-- 测试解锁流媒体情况，选择4测试
+- [测试解锁流媒体情况](https://github.com/lmc999/RegionRestrictionCheck)
 ```yaml
 bash <(curl -L -s https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/check.sh)
 ```

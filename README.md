@@ -56,7 +56,7 @@ wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-
 ---
 #
 ---
-- SS一键搭建，后期管理再次输入命令
+- [SS一键搭建](https://github.com/shidahuilang/SS-SSR-TG-iptables-bt)，后期管理再次输入命令
 ```yaml
 wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS-SSR-TG-iptables-bt/main/sh/ss-go.sh && chmod +x ss-go.sh && bash ss-go.sh
 ```
@@ -64,7 +64,7 @@ wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS
 ---
 #
 ---
-- SS+SSR一键搭建，后期管理再次输入命令
+- [SS/SSR一键搭建](https://github.com/shidahuilang/SS-SSR-TG-iptables-bt)，后期管理再次输入命令
 ```yaml
 wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS-SSR-TG-iptables-bt/main/sh/ssr.sh && chmod +x ssr.sh && bash ssr.sh
 ```

@@ -1,8 +1,6 @@
 # 各种常用代理一键搭建
 #
 ---
-#
----
 ```yaml
 支持ubunt18或以下系统，debian10或以下系统(用root用户登录，然后首先对你的系统使用以下命令)
 apt-get update && apt-get install -y wget curl git socat sudo
@@ -148,8 +146,15 @@ wget --no-check-certificate -q -O bbr2.sh "https://github.com/yeyingorg/bbr2.sh/
 ```yaml
 bash <(curl -L -s https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/check.sh)
 ```
+#
+---
+#
+---
+- [一键DD更换服务器系统教程](https://hostloc.com/thread-779358-1-1.html)
+#
+---
+#
+---
 ```yaml
 https://www.vpscang.com/
 ```
-
-- 一键DD服务器：https://hostloc.com/thread-779358-1-1.html

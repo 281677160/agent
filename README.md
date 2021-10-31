@@ -20,9 +20,13 @@ yum install ca-certificates wget -y && update-ca-trust force-enable
 - [带x-ui网页版的xray](https://github.com/vaxilu/x-ui)，需要域名，按下面步骤一步步输入命令即可(xxxx@gmail.com邮箱无需理会，就这样就可以)
 ```yaml
 curl https://get.acme.sh | sh
+
 ~/.acme.sh/acme.sh --register-account -m xxxx@gmail.com
+
 ~/.acme.sh/acme.sh  --issue -d 你的域名   --standalone
+
 ~/.acme.sh/acme.sh --installcert -d 你的域名 --key-file /root/private.key --fullchain-file /root/cert.crt
+
 bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
 
 顺利安装完成后，用IP+54321 端口登录页面，修改好用户名、密码、面板监听端口、面板证书公钥文件路径、面板证书密钥文件路径

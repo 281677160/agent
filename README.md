@@ -158,7 +158,7 @@ bash <(curl -L -s https://raw.githubusercontent.com/lmc999/RegionRestrictionChec
 ---
 #
 ---
-- [一键DD更换服务器系统教程](https://hostloc.com/thread-779358-1-1.html)
+- [一键DD更换服务器系统教程](https://www.moeelf.com/archives/293.html)
 #
 ---
 #

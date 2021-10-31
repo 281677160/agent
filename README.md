@@ -13,7 +13,7 @@ yum install ca-certificates wget -y && update-ca-trust force-enable
 ---
 #
 ---
-- [带x-ui网页版的xray](https://github.com/vaxilu/x-ui),按下面步骤一步步输入命令即可(xxxx@gmail.com邮箱无需理会，就这样就可以)
+- [带x-ui网页版的xray](https://github.com/vaxilu/x-ui)，需要域名，按下面步骤一步步输入命令即可(xxxx@gmail.com邮箱无需理会，就这样就可以)
 ```yaml
 curl https://get.acme.sh | sh
 ~/.acme.sh/acme.sh --register-account -m xxxx@gmail.com

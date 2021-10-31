@@ -48,17 +48,17 @@ bash <(wget -qO- https://git.io/mtg.sh)
 ---
 #
 ---
-- SS一键搭建，后期管理再次输入命令
+- [八合一的一键搭建(V2ray/Xray/Trojan)](https://github.com/mack-a/v2ray-agent)，需要域名，后期管理命令：vasma
 ```yaml
-wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS-SSR-TG-iptables-bt/main/sh/ss-go.sh && chmod +x ss-go.sh && bash ss-go.sh
+wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
 ```
 #
 ---
 #
 ---
-- [八合一的一键搭建](https://github.com/mack-a/v2ray-agent)，需要域名，后期管理命令：vasma
+- SS一键搭建，后期管理再次输入命令
 ```yaml
-wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
+wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS-SSR-TG-iptables-bt/main/sh/ss-go.sh && chmod +x ss-go.sh && bash ss-go.sh
 ```
 #
 ---

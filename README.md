@@ -46,8 +46,8 @@ curl -L -o mtp_install.sh https://git.io/fj5ru && bash mtp_install.sh
 #
 ---
 - [TG代理一键搭建](https://github.com/cutelua/mtg-dist)
-- 输入命令后显示：> Input service PORT, or press Enter to use a random port 这个是输入您要设置端口，不设置的话回车默认端口
-- 然后显示：> Input a domain for FakeTLS, or press Enter to use "hostupdate.vmware.com" 回车默认hostupdate.vmware.com，可以输入 FakeTLS 改协议
+- 输入命令后显示：`> Input service PORT, or press Enter to use a random port` 这个是输入您要设置端口，不设置的话回车默认端口
+- 然后显示：`> Input a domain for FakeTLS, or press Enter to use "hostupdate.vmware.com"` 回车默认hostupdate.vmware.com，可以输入 FakeTLS 改协议
 - 搭建好以后要查看TG代理链接，输入：mtg access /etc/mtg.toml
 ```yaml
 bash <(wget -qO- https://git.io/mtg.sh)

@@ -1,4 +1,8 @@
-# v2-ssr
+# 各种常用代理一键搭建
+#
+---
+#
+---
 ```yaml
 支持ubunt18或以下系统，debian10或以下系统(用root用户登录，然后首先对你的系统使用以下命令)
 apt-get update && apt-get install -y wget curl git socat sudo

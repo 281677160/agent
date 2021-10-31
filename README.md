@@ -1,19 +1,27 @@
 # v2-ssr
 ```yaml
-支持ubunt18或以下系统，debian10或以下系统
-sudo apt-get update && sudo apt install -y wget curl git socat
+支持ubunt18或以下系统，debian10或以下系统(首先对你的系统使用以下命令)
+apt-get update && apt-get install -y wget curl git socat sudo
 
 
-支持CentOS7或者以下系统
+支持CentOS7或者以下系统(首先对你的系统使用以下命令)
 yum apt-get update && sudo yum install -y wget curl git socat
 ```
 #
 ---
 #
 ---
-- SS+SSR一键搭建，后期管理再次输入命令
+- 带网页版的xray教程链接：https://mgxray.xyz/index.php/archives/362/
 ```yaml
-wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS-SSR-TG-iptables-bt/main/sh/ssr.sh && chmod +x ssr.sh && bash ssr.sh
+curl https://get.acme.sh | sh
+~/.acme.sh/acme.sh --register-account -m xxxx@gmail.com
+~/.acme.sh/acme.sh  --issue -d 你的域名   --standalone
+~/.acme.sh/acme.sh --installcert -d 你的域名 --key-file /root/private.key --fullchain-file /root/cert.crt
+bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
+
+顺利安装完成后，用IP+54321 端口登录页面，修改好用户名、密码、面板监听端口、面板证书公钥文件路径、面板证书密钥文件路径
+
+重启页面，然后就可以用你的域名+面板监听端口和你新设置的用户名跟密码登录页面了
 ```
 #
 ---
@@ -48,19 +56,11 @@ wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-
 ```
 #
 ---
-#
-- 带网页版的xray教程链接：https://mgxray.xyz/index.php/archives/362/
+- SS+SSR一键搭建，后期管理再次输入命令
 ```yaml
-curl https://get.acme.sh | sh
-~/.acme.sh/acme.sh --register-account -m xxxx@gmail.com
-~/.acme.sh/acme.sh  --issue -d 你的域名   --standalone
-~/.acme.sh/acme.sh --installcert -d 你的域名 --key-file /root/private.key --fullchain-file /root/cert.crt
-bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
-
-顺利安装完成后，用IP+54321 端口登录页面，修改好用户名、密码、面板监听端口、面板证书公钥文件路径、面板证书密钥文件路径
-
-重启页面，然后就可以用你的域名+面板监听端口和你新设置的用户名跟密码登录页面了
-
+wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS-SSR-TG-iptables-bt/main/sh/ssr.sh && chmod +x ssr.sh && bash ssr.sh
+```
+#
 ```
 
 #

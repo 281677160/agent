@@ -164,6 +164,7 @@ bash <(curl -L -s https://raw.githubusercontent.com/lmc999/RegionRestrictionChec
 #
 ---
 ```yaml
-https://www.namecheap.com/
-https://www.vpscang.com/
+https://www.namecheap.com
+https://www.godaddy.com
+https://www.vpscang.com
 ```

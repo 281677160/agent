@@ -2,6 +2,8 @@
 #
 ---
 ```yaml
+首先您要有一个外网的服务器，一般来说线路用香港、日本、新加坡的应该比较好
+
 支持ubunt18或以下系统，debian10或以下系统(用root用户登录，然后首先对你的系统使用以下两条命令)
 apt-get update && apt-get install -y wget curl git socat sudo
 

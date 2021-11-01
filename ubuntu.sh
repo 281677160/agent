@@ -9,7 +9,7 @@ echo
 sleep 2
 echo
 echo -e "\033[33m 请输入您的后端服务器地址域名[比如：suc.v2rayssr.com] \033[0m"
-read -p "请输入您的后端服务器地址域名：" fwym
+read -p " 请输入您的后端服务器地址域名：" fwym
 export fwym=${fwym}
 echo -e "\033[32m 您的后端服务器地址域名为：${fwym} \033[0m"
 echo

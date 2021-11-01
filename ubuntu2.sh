@@ -1,6 +1,6 @@
 #!/bin/bash
 cd /root
-source sub_suc
+source /root/sub_suc
 rm -fr /root/sub-web/src/views/Subconverter.vue
 curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/Subconverter.vue > /root/sub-web/src/views/Subconverter.vue
 if [[ $? -ne 0 ]];then

@@ -30,3 +30,8 @@ else
   yarn install
   yarn serve
 fi
+cd ../
+rm -fr /sub-web/src/views/Subconverter.vue
+curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/Subconverter.vue /sub-web/src/views/Subconverter.vue
+yarn build
+yum install -y wget && wget -O install.sh http://download.bt.cn/install/install_6.0.sh && sh install.sh

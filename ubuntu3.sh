@@ -1,5 +1,5 @@
 #!/bin/bash
-ip="subqd.danshui.online"
+subqd="subqd.danshui.online"
 rm  -rf /www/wwwroot/${subqd}/* !(.user.ini)
 cp -Rf /root/sub-web/dist/* /www/wwwroot/${subqd}
 cd /root

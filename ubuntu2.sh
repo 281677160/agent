@@ -1,17 +1,9 @@
 #!/bin/bash
-echo
-echo
-echo "请输入你后端的域名[比如：suc.v2rayssr.com]"
-read -p " 请输入你后端的域名：" ip
-export ip=${ip:-"$suc.danshui.online"}
-echo "您的后台地址为：$ip"
-echo
-echo
 cd /root
 rm -fr /root/sub-web/src/views/Subconverter.vue
 curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/Subconverter.vue > /root/sub-web/src/views/Subconverter.vue
 if [[ $? -ne 0 ]];then
-  echo "文件下载不成功"
+  echo "文件下载不失败"
   exit 1
 else
   sed -i "s/192.168.1.1/${ip}/g" /root/sub-web/src/views/Subconverter.vue

@@ -14,6 +14,13 @@ if [[ $? -ne 0 ]];then
   echo "文件下载不成功"
   exit 1
 else
-  sed -i "s/192.168.1.1/${ip}/g" shangyouck
+  sed -i "s/192.168.1.1/${ip}/g" /root/sub-web/src/views/Subconverter.vue
+fi
 yarn build
+echo
+echo
+echo "开始安装宝塔面板，看到提示按 N/Y 的按Y回车继续进行安装"
+echo
+echo
+sleep 10
 wget -O install.sh http://download.bt.cn/install/install-ubuntu_6.0.sh && sudo bash install.sh

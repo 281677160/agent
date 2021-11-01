@@ -2,13 +2,13 @@
 
 echo
 echo "请输入您的前端网址域名[比如：sub.v2rayssr.com]"
-read -p " 请输入您的前端网址域名：" wzym
+read -p "请输入您的前端网址域名：" wzym
 export wzym=${wzym}
 echo "您的前端网址域名为：${wzym}"
 echo
 echo
 echo "请输入您的后端服务地址域名[比如：suc.v2rayssr.com]"
-read -p " 请输入您的后端服务地址域名：" fwym
+read -p "请输入您的后端服务地址域名：" fwym
 export fwym=${fwym}
 echo "您的后台地址为：${fwym}"
 echo
@@ -16,8 +16,6 @@ cat >/root/sub_suc <<-EOF
 wzym=${wzym}
 fwym=${fwym}
 EOF
-apt-get update
-apt-get install -y curl wget sudo git
 curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 sudo apt-get install -y nodejs
 if [[ `node --version |egrep -o "v[0-9]+\.[0-9]+\.[0-9]+"` ]]; then

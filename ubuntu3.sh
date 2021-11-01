@@ -1,6 +1,6 @@
 #!/bin/bash
 ip="subqd.danshui.online"
-rm  -rf /www/wwwroot/${subqd} * !(.user.ini)
+rm  -rf /www/wwwroot/${subqd}/* !(.user.ini)
 cp -Rf /root/sub-web/dist/* /www/wwwroot/${subqd}
 cd /root
 rm -fr subconverter_linux64.tar.gz

@@ -22,7 +22,7 @@ else
 	echo "yarn安装不成功!"
   exit 1
 fi
-git clone https://github.com/CareyWang/sub-web.git
+rm -fr sub-web && git clone https://github.com/CareyWang/sub-web.git
 if [[ $? -ne 0 ]];then
 	echo "sub-web下载失败!"
 else
@@ -33,6 +33,6 @@ else
 fi
 cd ../
 rm -fr /sub-web/src/views/Subconverter.vue
-curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/Subconverter.vue > /sub-web/src/views/Subconverter.vue
+curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/Subconverter.vue > /root/sub-web/src/views/Subconverter.vue
 yarn build
 wget -O install.sh http://download.bt.cn/install/install-ubuntu_6.0.sh && sudo bash install.sh

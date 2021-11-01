@@ -1,6 +1,10 @@
 #!/bin/bash
 cd /root
 source sub_suc
+shopt -s extglob
+cd /www/wwwroot/${wzym}
+rm -rf !(.user.ini)
+cd /root
 cp -Rf /root/sub-web/dist/* /www/wwwroot/${wzym}
 rm -fr subconverter_linux64.tar.gz
 rm -fr subconverter

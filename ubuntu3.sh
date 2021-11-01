@@ -1,6 +1,7 @@
 #!/bin/bash
-cp -Rf /root/sub-web/dist/* /www/wwwroot/${subqd}
 cd /root
+source sub_suc
+cp -Rf /root/sub-web/dist/* /www/wwwroot/${wzym}
 rm -fr subconverter_linux64.tar.gz
 rm -fr subconverter
 wget https://github.com/tindy2013/subconverter/releases/download/v0.6.3/subconverter_linux64.tar.gz
@@ -12,7 +13,7 @@ fi
 Api2="api_access_token\=$(date +e%Swoid%YiI6IC%dIyIiwK%HInBz%MIjogIjIzM3Y)"
 Api1="$(cat /root/subconverter/pref.ini |grep "api_access_token=")"
 sed -i "s/${Api1}/${Api2}/g" /root/subconverter/pref.ini
-Managed2="managed_config_prefix\=https:\/\/${subqd}"
+Managed2="managed_config_prefix\=https:\/\/${wzym}"
 Managed1="$(cat /root/subconverter/pref.ini |grep "managed_config_prefix=" |sed 's/\//\\&/g')"
 sed -i "s/${Managed1}/${Managed2}/g" /root/subconverter/pref.ini
 List2="listen\=127.0.0.1"

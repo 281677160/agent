@@ -1,7 +1,7 @@
 #!/bin/bash
 apt-get update
 apt-get install -y curl wget sudo git
-curl -sL https://rpm.nodesource.com/setup_10.x | sudo bash -
+curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 sudo apt-get install -y nodejs
 if [[ `node --version |egrep -o "v[0-9]+\.[0-9]+\.[0-9]+"` ]]; then
 	echo "node安装成功!"
@@ -9,7 +9,6 @@ else
 	echo "node安装不成功!"
   exit 1
 fi
-apt install -y npm
 if [[ `npm --version |egrep -o "[0-9]+\.[0-9]+\.[0-9]+"` ]]; then
 	echo "npm安装成功!"
 else

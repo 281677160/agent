@@ -32,3 +32,4 @@ else
 	yarn install
 	yarn serve
 fi
+exit 0

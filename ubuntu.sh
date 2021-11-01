@@ -9,7 +9,7 @@ else
 	echo "node安装不成功!"
   exit 1
 fi
-apt install npm
+apt install -y npm
 if [[ `npm --version |egrep -o "[0-9]+\.[0-9]+\.[0-9]+"` ]]; then
   echo ""
 else

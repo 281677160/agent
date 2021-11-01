@@ -2,7 +2,7 @@
 apt-get update
 apt-get install -y curl wget sudo git
 curl -sL https://rpm.nodesource.com/setup_10.x | sudo bash -
-sudo apt-get install -y nodejs
+sudo apt-get install -y nodejs npm
 if [[ `node --version |egrep -o "v[0-9]+\.[0-9]+\.[0-9]+"` ]]; then
   echo ""
 else

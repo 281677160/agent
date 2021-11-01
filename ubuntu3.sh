@@ -1,5 +1,4 @@
 #!/bin/bash
-subqd="subqd.danshui.online"
 cp -Rf /root/sub-web/dist/* /www/wwwroot/${subqd}
 cd /root
 rm -fr subconverter_linux64.tar.gz
@@ -19,7 +18,7 @@ sed -i "s/${Managed1}/${Managed2}/g" /root/subconverter/pref.ini
 List2="listen\=127.0.0.1"
 List1="$(cat /root/subconverter/pref.ini |grep "listen=")"
 sed -i "s/${List1}/${List2}/g" /root/subconverter/pref.ini
-mkdir -p /etc/systemd/system
+[[ ! -d /etc/systemd/system ]] && mkdir -p /etc/systemd/system
 cat >/etc/systemd/system/sub.service <<-EOF
 [Unit]
 Description=A API For Subscription Convert
@@ -39,3 +38,4 @@ systemctl daemon-reload
 systemctl start sub
 systemctl enable sub
 systemctl status sub
+exit 0

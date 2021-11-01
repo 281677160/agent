@@ -25,13 +25,14 @@ fi
 rm -fr sub-web && git clone https://github.com/CareyWang/sub-web.git
 if [[ $? -ne 0 ]];then
 	echo "sub-web下载失败!"
+	exit 1
 else
 	echo "sub-web下载成功!"
 	cd sub-web
 	yarn install
 	yarn serve
 fi
-cd ../
+cd /root
 rm -fr /sub-web/src/views/Subconverter.vue
 curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/Subconverter.vue > /root/sub-web/src/views/Subconverter.vue
 yarn build

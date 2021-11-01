@@ -16,7 +16,8 @@ if [[ $? -ne 0 ]];then
 else
   sed -i "s/192.168.1.1/${ip}/g" /root/sub-web/src/views/Subconverter.vue
 fi
-yarn build
+cd sub-web && yarn build
+cd /root
 echo
 echo
 echo "开始安装宝塔面板，看到提示按 N/Y 的按Y回车继续进行安装"

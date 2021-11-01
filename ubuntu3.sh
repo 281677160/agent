@@ -1,6 +1,6 @@
 #!/bin/bash
 cd /root
-source sub_suc
+source /root/sub_suc
 shopt -s extglob
 cd /www/wwwroot/${wzym}
 rm -rf !(.user.ini)
@@ -23,6 +23,7 @@ sed -i "s/${Managed1}/${Managed2}/g" /root/subconverter/pref.ini
 List2="listen\=127.0.0.1"
 List1="$(cat /root/subconverter/pref.ini |grep "listen=")"
 sed -i "s/${List1}/${List2}/g" /root/subconverter/pref.ini
+rm -fr /root/sub_suc
 [[ ! -d /etc/systemd/system ]] && mkdir -p /etc/systemd/system
 cat >/etc/systemd/system/sub.service <<-EOF
 [Unit]

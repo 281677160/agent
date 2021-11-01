@@ -3,6 +3,8 @@ ip="subqd.danshui.online"
 rm  -rf /www/wwwroot/${subqd} * !(.user.ini)
 cp -Rf /root/sub-web/dist/* /www/wwwroot/${subqd}
 cd /root
+rm -fr subconverter_linux64.tar.gz
+rm -fr subconverter
 wget https://github.com/tindy2013/subconverter/releases/download/v0.6.3/subconverter_linux64.tar.gz
 if [[ $? -ne 0 ]];then
   echo "文件下载失败"

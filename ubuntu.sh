@@ -31,4 +31,5 @@ else
 	cd sub-web
 	yarn install
 	yarn serve
+	reboot
 fi

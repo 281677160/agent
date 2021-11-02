@@ -136,18 +136,18 @@ Caddy 配置文件路径：/etc/caddy/Caddyfile
 ---
 - clash节点转换安装三部曲
 #
-#
-- 运行第一个命令，顺利运行后[看这里](https://github.com/281677160/agent/blob/main/doc/taota01.png)
+- 运行第一个命令，顺利运行后《[看这里](https://github.com/281677160/agent/blob/main/doc/taota01.png)》
 ```yaml
 bash <(curl -fsSL git.io/clashzh1.sh)
 ```
 ---
-- 运行第一个命令，顺利运行后[看这里](https://github.com/281677160/agent/blob/main/doc/taota01.png)
+- 运行第二个命令，顺利运行后《[看这里](https://github.com/281677160/agent/blob/main/doc/clash.md)》
 ```yaml
 bash <(curl -fsSL git.io/clashzh2.sh)
-```yaml
+```
 ---
-- 运行第一个命令，顺利运行后[看这里](https://github.com/281677160/agent/blob/main/doc/taota01.png)
+```yaml
+- 运行第三个命令，顺利运行后《[看这里](https://github.com/281677160/agent/blob/main/doc/taota13.png)》
 bash <(curl -fsSL git.io/clashzh3.sh)
 ```
 #

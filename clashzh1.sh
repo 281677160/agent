@@ -9,7 +9,7 @@ if [[ ! "$USER" == "root" ]]; then
 	exit 1
 fi
 if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
-	curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
+	curl -sL https://rpm.nodesource.com/setup_10.x | sudo bash -
 	export AZML="sudo yum install"
 elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
 	curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -

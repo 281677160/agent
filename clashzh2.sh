@@ -15,7 +15,7 @@ if [[ -d /root/sub-web ]]; then
 fi
 echo
 echo
-echo -e "\033[32m 开始安装宝塔面板! \033[0m"
+echo -e "\033[32m 开始安装宝塔面板,请耐心等候... \033[0m"
 echo
 echo
 sleep 5

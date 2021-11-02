@@ -15,21 +15,27 @@ if [[ -d /root/sub-web ]]; then
 fi
 echo
 echo
-echo -e "\033[32m 开始安装宝塔面板，看到提示按 N/Y 的时候按 Y 回车继续进行安装! \033[0m"
+echo -e "\033[32m 开始安装宝塔面板! \033[0m"
 echo
 echo
-sleep 10
+sleep 5
 if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
-	export go="y"
-	yum install -y wget && wget -O install.sh http://download.bt.cn/install/install_6.0.sh && sh install.sh
+	yum install -y wget && wget -O install.sh http://download.bt.cn/install/install_6.0.sh
 elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
-	export go="y"
-	wget -O install.sh http://download.bt.cn/install/install-ubuntu_6.0.sh && sudo bash install.sh
+	wget -O install.sh http://download.bt.cn/install/install-ubuntu_6.0.sh
 elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
-	export go="y"
-	wget -O install.sh http://download.bt.cn/install/install-ubuntu_6.0.sh && bash install.sh
+	wget -O install.sh http://download.bt.cn/install/install-ubuntu_6.0.sh
 else
 	echo -e "\033[31m 不支持该系统 \033[0m"
 	exit 1
+fi
+sed -i '/while \[ \"$go\"/,+4d'   /root/install.sh
+sed -i '/if \[ \"$go\"/,+2d'   /root/install.sh
+if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
+	sh install.sh
+elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
+	sudo bash install.sh
+elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
+	bash install.sh
 fi
 exit 0

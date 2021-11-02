@@ -10,13 +10,13 @@ if [[ ! "$USER" == "root" ]]; then
 fi
 if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
 	curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
-	export ANML="sudo yum install"
+	export AZML="sudo yum install"
 elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
 	curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
-	export ANML="sudo apt-get install"
+	export AZML="sudo apt-get install"
 elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
 	curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
-	export ANML="sudo apt-get install"
+	export AZML="sudo apt-get install"
 else
 	echo -e "\033[31m 不支持该系统 \033[0m"
 	exit 1
@@ -39,7 +39,7 @@ cat >/root/sub_suc <<-EOF
 wzym=${wzym}
 fwym=${fwym}
 EOF
-${ANML} -y nodejs
+${AZML} -y nodejs
 if [[ `node --version |egrep -o "v[0-9]+\.[0-9]+\.[0-9]+"` ]]; then
 	echo ""
 else

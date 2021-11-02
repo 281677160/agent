@@ -17,5 +17,14 @@ echo -e "\033[32m 开始安装宝塔面板，看到提示按 N/Y 的时候按 Y 
 echo
 echo
 sleep 10
-wget -O install.sh http://download.bt.cn/install/install-ubuntu_6.0.sh && sudo bash install.sh
+if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
+	yum install -y wget && wget -O install.sh http://download.bt.cn/install/install_6.0.sh && sh install.sh
+elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
+	wget -O install.sh http://download.bt.cn/install/install-ubuntu_6.0.sh && sudo bash install.sh
+elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
+	wget -O install.sh http://download.bt.cn/install/install-ubuntu_6.0.sh && bash install.sh
+else
+	echo -e "\033[31m 不支持该系统 \033[0m"
+	exit 1
+fi
 exit 0

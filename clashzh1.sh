@@ -21,6 +21,7 @@ else
 	echo -e "\033[31m 不支持该系统 \033[0m"
 	exit 1
 fi
+clear
 echo
 echo -e "\033[33m 请输入您的前端网页域名[比如：wy.v2ray.com] \033[0m"
 read -p " 请输入您的前端网页域名：" wzym

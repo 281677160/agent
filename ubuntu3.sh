@@ -10,7 +10,7 @@ rm -fr subconverter_linux64.tar.gz
 rm -fr subconverter
 wget https://github.com/tindy2013/subconverter/releases/download/v0.6.3/subconverter_linux64.tar.gz
 if [[ $? -ne 0 ]];then
-  echo "文件下载失败"
+  echo -e "\033[31m subconverter文件下载失败! \033[0m"
 else
   tar -zxvf subconverter_linux64.tar.gz
 fi
@@ -46,4 +46,5 @@ systemctl daemon-reload
 systemctl start sub
 systemctl enable sub
 systemctl status sub
+echo -e "\033[32m 安装完成,按 Ctrl+C退出! \033[0m"
 exit 0

@@ -2,7 +2,7 @@
 #
 
 https://git.io/clashzh1.sh
-
+https://git.io/clashzh2.sh
 ---
 ```yaml
 首先您要有一个外网的服务器，一般来说线路用香港、日本、新加坡的应该比较好

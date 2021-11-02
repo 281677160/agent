@@ -135,6 +135,8 @@ Caddy 配置文件路径：/etc/caddy/Caddyfile
 #
 ---
 - clash节点转换安装三部曲
+
+- 首先您要有域名跟解析好域名，分别为一个前端，一个后端，同一个域名解析两个子域名就可以了
 #
 - 运行第一个命令，顺利运行后《[看这里](https://github.com/281677160/agent/blob/main/doc/taota01.png)》
 ```yaml

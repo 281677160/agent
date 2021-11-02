@@ -82,9 +82,9 @@ wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS
 ---
 #
 ---
-- [v2ray一键搭建](https://github.com/279437541/v2ray)，后期管理看下面的命令
+- [v2ray一键搭建](https://github.com/gms1979/v2ray)，后期管理看下面的命令
 ```yaml
-bash <(curl -s -L https://git.io/JzclH)
+bash <(curl -s -L https://git.io/v2ray.sh)
 ```
 ```yaml
 

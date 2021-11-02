@@ -1,6 +1,13 @@
 #!/bin/bash
 
-
+if [[ ! "$USER" == "root" ]]; then
+	clear
+	echo
+	echo -e "\033[31m 警告：请使用root用户操作!~~ \033[0m"
+	echo
+	sleep 2
+	exit 1
+fi
 if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
 	curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
 	export ANML="sudo yum install"

@@ -13,7 +13,7 @@ cd sub-web && yarn build
 cd /root
 echo
 echo
-echo -e "\033[32m 开始安装宝塔面板，看到提示按 N/Y 的按Y回车继续进行安装! \033[0m"
+echo -e "\033[32m 开始安装宝塔面板，看到提示按 N/Y 的时候按 Y 回车继续进行安装! \033[0m"
 echo
 echo
 sleep 10

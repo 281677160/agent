@@ -146,8 +146,8 @@ bash <(curl -fsSL git.io/clashzh1.sh)
 bash <(curl -fsSL git.io/clashzh2.sh)
 ```
 ---
-```yaml
 - 运行第三个命令，顺利运行后《[看这里](https://github.com/281677160/agent/blob/main/doc/taota13.png)》
+```yaml
 bash <(curl -fsSL git.io/clashzh3.sh)
 ```
 #

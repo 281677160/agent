@@ -468,7 +468,7 @@ export default {
               },
               {
                 label: "网易云解锁（仅规则分组）",
-                https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/netease.ini"
+                value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/netease.ini"
               }
             ]
           }

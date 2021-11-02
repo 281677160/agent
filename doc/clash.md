@@ -1,12 +1,14 @@
-# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota1.png" />
-# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota2.png" />
-# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota3.png" />
-# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota4.png" />
-# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota5.png" />
-# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota6.png" />
-# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota7.png" />
-# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota8.png" />
-# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota9.png" />
-# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota10.png" />
-# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota11.png" />
-# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota12.png" />
+# 第一个命令运行完毕后，运行第二个命令，命令顺利结束后您应该就是看到图片步骤开始了
+
+# <img src="https://github.com/281677160/agent/blob/main/doc/baota1.png" />
+# <img src="https://github.com/281677160/agent/blob/main/doc/baota2.png" />
+# <img src="https://github.com/281677160/agent/blob/main/doc/baota3.png" />
+# <img src="https://github.com/281677160/agent/blob/main/doc/baota4.png" />
+# <img src="https://github.com/281677160/agent/blob/main/doc/baota5.png" />
+# <img src="https://github.com/281677160/agent/blob/main/doc/baota6.png" />
+# <img src="https://github.com/281677160/agent/blob/main/doc/baota7.png" />
+# <img src="https://github.com/281677160/agent/blob/main/doc/baota8.png" />
+# <img src="https://github.com/281677160/agent/blob/main/doc/baota9.png" />
+# <img src="https://github.com/281677160/agent/blob/main/doc/baota10.png" />
+# <img src="https://github.com/281677160/agent/blob/main/doc/baota11.png" />
+# <img src="https://github.com/281677160/agent/blob/main/doc/baota12.png" />

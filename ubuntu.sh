@@ -1,16 +1,30 @@
 #!/bin/bash
 
+
+if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
+	curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
+	export ANML="sudo yum install"
+elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
+	curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+	export ANML="sudo apt-get install"
+elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
+	curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
+	export ANML="sudo apt-get install"
+else
+	echo -e "\033[31m 不支持该系统 \033[0m"
+	exit 1
+fi
 echo
 echo -e "\033[33m 请输入您的前端网页域名[比如：wy.v2ray.com] \033[0m"
 read -p " 请输入您的前端网页域名：" wzym
-export wzym=${wzym}
+export wzym="${wzym}"
 echo -e "\033[32m 您的前端网页域名为：${wzym} \033[0m"
 echo
 sleep 3
 echo
 echo -e "\033[33m 请输入您的后端服务器地址域名[比如：fwq.v2ray.com] \033[0m"
 read -p " 请输入您的后端服务器地址域名：" fwym
-export fwym=${fwym}
+export fwym="${fwym}"
 echo -e "\033[32m 您的后端服务器地址域名为：${fwym} \033[0m"
 echo
 sleep 3
@@ -18,8 +32,7 @@ cat >/root/sub_suc <<-EOF
 wzym=${wzym}
 fwym=${fwym}
 EOF
-curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
-sudo apt-get install -y nodejs
+${ANML} -y nodejs
 if [[ `node --version |egrep -o "v[0-9]+\.[0-9]+\.[0-9]+"` ]]; then
 	echo ""
 else

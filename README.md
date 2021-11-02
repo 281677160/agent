@@ -1,8 +1,5 @@
 # 各种常用代理一键搭建
 #
-
-https://git.io/clashzh1.sh
-https://git.io/clashzh2.sh
 ---
 ```yaml
 首先您要有一个外网的服务器，一般来说线路用香港、日本、新加坡的应该比较好
@@ -132,6 +129,16 @@ V2Ray 配置文件路径：/etc/v2ray/config.json
 Caddy 配置文件路径：/etc/caddy/Caddyfile
 
 脚本配置文件路径: /etc/v2ray/233blog_v2ray_backup.conf
+```
+#
+---
+#
+---
+- clash节点转换安装三部曲
+```yaml
+bash <(curl -fsSL git.io/clashzh1.sh)
+bash <(curl -fsSL git.io/clashzh2.sh)
+bash <(curl -fsSL git.io/clashzh3.sh)
 ```
 #
 ---

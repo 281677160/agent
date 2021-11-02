@@ -14,6 +14,7 @@ if [[ $? -ne 0 ]];then
 else
   tar -zxvf subconverter_linux64.tar.gz
 fi
+chmod +x /root/subconverter/pref.ini
 Api2="api_access_token\=$(date +e%Swoid%YiI6IC%dIyIiwK%HInBz%MIjogIjIzM3Y)"
 Api1="$(cat /root/subconverter/pref.ini |grep "api_access_token=")"
 sed -i "s/${Api1}/${Api2}/g" /root/subconverter/pref.ini
@@ -40,6 +41,7 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 EOF
+chmod +x /etc/systemd/system/sub.service
 systemctl daemon-reload
 systemctl start sub
 systemctl enable sub

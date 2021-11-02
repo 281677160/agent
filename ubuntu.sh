@@ -23,25 +23,25 @@ sudo apt-get install -y nodejs
 if [[ `node --version |egrep -o "v[0-9]+\.[0-9]+\.[0-9]+"` ]]; then
 	echo ""
 else
-	echo "node安装失败!"
+	echo -e "\033[31m node安装失败! \033[0m"
   exit 1
 fi
 if [[ `npm --version |egrep -o "[0-9]+\.[0-9]+\.[0-9]+"` ]]; then
 	echo ""
 else
-	echo "npm安装失败!"
+	echo -e "\033[31m npm安装失败! \033[0m"
   exit 1
 fi
 npm install -g yarn
 if [[ `yarn --version |egrep -o "[0-9]+\.[0-9]+\.[0-9]+"` ]]; then
 	echo ""
 else
-	echo "yarn安装失败!"
+	echo -e "\033[31m yarn安装失败! \033[0m"
   exit 1
 fi
 rm -fr sub-web && git clone https://github.com/CareyWang/sub-web.git
 if [[ $? -ne 0 ]];then
-	echo "sub-web下载失败!"
+	echo -e "\033[31m sub-web下载失败! \033[0m"
 	exit 1
 else
 	cd sub-web

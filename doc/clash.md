@@ -1,1 +1,12 @@
-111
+# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota1.png" />
+# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota2.png" />
+# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota3.png" />
+# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota4.png" />
+# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota5.png" />
+# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota6.png" />
+# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota7.png" />
+# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota8.png" />
+# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota9.png" />
+# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota10.png" />
+# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota11.png" />
+# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/baota12.png" />

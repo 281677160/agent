@@ -16,7 +16,7 @@ elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
 	export AZML="sudo apt-get install"
 elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
 	curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
-	export AZML="sudo apt-get install"
+	export AZML="sudo apt install"
 else
 	echo -e "\033[31m 不支持该系统 \033[0m"
 	exit 1

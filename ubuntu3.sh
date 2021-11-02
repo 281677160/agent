@@ -25,6 +25,7 @@ List2="listen\=127.0.0.1"
 List1="$(cat /root/subconverter/pref.ini |grep "listen=")"
 sed -i "s/${List1}/${List2}/g" /root/subconverter/pref.ini
 rm -fr /root/sub_suc
+rm -fr /root/subconverter_linux64.tar.gz
 [[ ! -d /etc/systemd/system ]] && mkdir -p /etc/systemd/system
 cat >/etc/systemd/system/sub.service <<-EOF
 [Unit]

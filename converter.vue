@@ -258,7 +258,7 @@ export default {
         backendOptions: [{ value: "https://192.168.1.1/sub?" }],
         remoteConfig: [
         {
-            label: "ACL4SSR",
+            label: "请选择规则",
             options: [
               {
                 label: "无Urltest",

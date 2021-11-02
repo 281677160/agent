@@ -2,6 +2,8 @@
 
 - # 前端跟后端域名都要添加节点和部署好SSL证书，后端域名还要添加反向代理
 
+- # 以下图片步骤都确认无误完成后，运行第三个命令，继续安装
+
 - # <img src="https://github.com/281677160/agent/blob/main/doc/baota1.png" />
 - # <img src="https://github.com/281677160/agent/blob/main/doc/baota2.png" />
 - # <img src="https://github.com/281677160/agent/blob/main/doc/baota3.png" />

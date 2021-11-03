@@ -7,13 +7,13 @@
 支持ubunt18或以下系统，debian10或以下系统(用root用户登录，然后首先对你的系统使用以下两条命令)
 apt-get update && apt-get install -y wget curl git socat sudo
 
-apt-get install ca-certificates wget -y && update-ca-certificates
+apt-get install ca-certificates -y && update-ca-certificates
 
 
 支持CentOS7或者以下系统(用root用户登录，然后首先对你的系统使用以下两条命令)
 yum apt-get update && sudo yum install -y wget curl git socat
 
-yum install ca-certificates wget -y && update-ca-trust force-enable
+yum install ca-certificates -y && update-ca-trust force-enable
 ```
 #
 ---

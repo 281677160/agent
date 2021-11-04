@@ -24,17 +24,17 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                         "xver": 1
                     },
                     {
-                        "path": "/$(date +web%d号ck%M%S)", // 必须换成自定义的 PATH
+                        "path": "/${WEBS}", // 必须换成自定义的 PATH
                         "dest": 1234,
                         "xver": 1
                     },
                     {
-                        "path": "/$(date +vme%ds%Hs%S)", // 必须换成自定义的 PATH
+                        "path": "/${VMTCP}", // 必须换成自定义的 PATH
                         "dest": 2345,
                         "xver": 1
                     },
                     {
-                        "path": "/$(date +vm%Sw%M%Hs)", // 必须换成自定义的 PATH
+                        "path": "/${VMWS}", // 必须换成自定义的 PATH
                         "dest": 3456,
                         "xver": 1
                     }
@@ -101,7 +101,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                 "security": "none",
                 "wsSettings": {
                     "acceptProxyProtocol": true, // 提醒：若你用 Nginx/Caddy 等反代 WS，需要删掉这行
-                    "path": "/$(date +web%d号ck%M%S)" // 必须换成自定义的 PATH，需要和分流的一致
+                    "path": "/${WEBS}" // 必须换成自定义的 PATH，需要和分流的一致
                 }
             }
         },
@@ -127,7 +127,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                         "type": "http",
                         "request": {
                             "path": [
-                                "/$(date +vme%ds%Hs%S)" // 必须换成自定义的 PATH，需要和分流的一致
+                                "/${VMTCP}" // 必须换成自定义的 PATH，需要和分流的一致
                             ]
                         }
                     }
@@ -152,7 +152,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                 "security": "none",
                 "wsSettings": {
                     "acceptProxyProtocol": true, // 提醒：若你用 Nginx/Caddy 等反代 WS，需要删掉这行
-                    "path": "/$(date +vm%Sw%M%Hs)" // 必须换成自定义的 PATH，需要和分流的一致
+                    "path": "/${VMWS}" // 必须换成自定义的 PATH，需要和分流的一致
                 }
             }
         }

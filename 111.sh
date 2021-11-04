@@ -84,8 +84,8 @@ else
 	echo "acme.sh更新失败"
 	exit 1
 fi
-chmod 777 /usr/local/etc/xray/cert/cert.crt
-chmod 777 /usr/local/etc/xray/cert/private.key
+chmod 775 /usr/local/etc/xray/cert/cert.crt
+chmod 775 /usr/local/etc/xray/cert/private.key
 systemctl enable nginx
 if [[ -e /usr/lib/systemd/system/nginx.service ]]; then
 	echo "yes"

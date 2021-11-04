@@ -15,6 +15,7 @@ read -p " 请输入您的域名：" wzym
 export wzym="${wzym}"
 echo -e "\033[32m 您的域名为：${wzym} \033[0m"
 echo
+sleep 2
 rm -rf /etc/nginx
 rm -rf /usr/sbin/nginx
 rm /usr/share/man/man1/nginx.1.gz > /dev/null 2>&1
@@ -53,9 +54,12 @@ chmod +x /usr/local/etc/xray/config.json
 YUMING="$(ping cs.danshui.online -c 5 | egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" |awk 'NR==1')"
 getIpAddress=$(curl -sS --connect-timeout 10 -m 60 https://www.bt.cn/Api/getIpAddress)
 if [[ ! ${YUMING} == ${getIpAddress} ]]; then
-	echo "域名解析IP跟本机不一致"
-	echo "域名解析IP为：${YUMING}"
-	echo "本机IP为：${getIpAddress}"
+	echo
+	echo -e "\033[31m 域名解析IP跟本机不一致 \033[0m"
+	echo
+	echo -e "\033[32m 域名解析IP为：${YUMING} \033[0m"
+	echo
+	echo -e "\033[32m 本机IP为：${getIpAddress} \033[0m"
 	exit 1
 else
 	echo "yes"
@@ -65,7 +69,7 @@ curl https://get.acme.sh | sh |tee build.log
 if [[ `grep "Install success!" build.log` ]]; then
 	echo "yes"
 else
-	echo "acme.sh下载失败"
+	echo -e "\033[31m acme.sh下载失败 \033[0m"
 	exit 1
 fi
 ~/.acme.sh/acme.sh --upgrade
@@ -73,14 +77,14 @@ fi
 if [[ `grep "ACCOUNT_THUMBPRINT" build.log` ]]; then
 	echo "yes"
 else
-	echo "acme.sh运行错误"
+	echo -e "\033[31m acme.sh运行错误 \033[0m"
 	exit 1
 fi
 ~/.acme.sh/acme.sh  --issue  -d ${wzym}  --webroot /usr/share/nginx/html/ |tee build.log
 if [[ `grep "END CERTIFICATE" build.log` ]] && [[ `grep "Your cert key is in" build.log` ]]; then
 	echo "yes"
 else
-	echo "申请证书失败"
+	echo -e "\033[31m 申请证书失败 \033[0m"
 	exit 1
 fi
 mkdir -p /usr/local/etc/xray/cert
@@ -88,14 +92,14 @@ mkdir -p /usr/local/etc/xray/cert
 if [[ `grep "cert/private.key" build.log` ]] && [[ `grep "cert/cert.crt" build.log` ]]; then
 	echo "yes"
 else
-	echo "证书存放失败"
+	echo -e "\033[31m 证书存放失败 \033[0m"
 	exit 1
 fi
 ~/.acme.sh/acme.sh --upgrade --auto-upgrade |tee build.log
 if [[ `grep "Upgrade success!" build.log` ]]; then
 	echo "yes"
 else
-	echo "acme.sh更新失败"
+	echo -e "\033[31m 设置acme.sh自动更新失败 \033[0m"
 	exit 1
 fi
 rm -fr build.log
@@ -105,7 +109,7 @@ systemctl enable nginx
 if [[ -e /usr/lib/systemd/system/nginx.service ]]; then
 	echo "yes"
 else
-	echo "nginx设置开机启动失败"
+	echo -e "\033[31m nginx设置开机启动失败 \033[0m"
 	exit 1
 fi
 systemctl restart xray
@@ -116,13 +120,14 @@ unzip web.zip
 cd /root
 systemctl restart nginx
 if [[ `systemctl status xray |grep -c "active (running) "` == '1' ]]; then
-	echo "xray运行正常"
+	echo -e "\033[33m xray运行正常 \033[0m"
 else
 	echo "xray没有运行"
 fi
-if [[ `ps -ef  |grep -c "/usr/sbin/nginx"` == '1' ]]; then
-	echo "nginx运行正常"
-	echo "安装结束"
+if [[ `ps -ef |grep nginx` ]]; then
+	echo -e "\033[33m nginx运行正常 \033[0m"
+	echo
+	echo -e "\033[32m 安装结束 \033[0m"
 else
 	echo "nginx没有运行"
 	exit 1

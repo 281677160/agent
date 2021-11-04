@@ -53,6 +53,7 @@ else
 	echo "acme.sh下载错误"
 	exit 1
 fi
+~/.acme.sh/acme.sh --upgrade
 ~/.acme.sh/acme.sh --register-account -m xxxx@xxxx.com |tee build.log
 if [[ `grep "ACCOUNT_THUMBPRINT" build.log` ]]; then
 	echo "yes"

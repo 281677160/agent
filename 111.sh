@@ -15,30 +15,32 @@ read -p " 请输入您的域名：" wzym
 export wzym="${wzym}"
 echo -e "\033[32m 您的域名为：${wzym} \033[0m"
 echo
-if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
-	yum install epel-release wget -y
-	yum update -y
-	yum install curl tar nginx -y
-	firewall-cmd --zone=public --add-port=80/tcp --permanent > /dev/null 2>&1
-	firewall-cmd --zone=public --add-port=443/tcp --permanent > /dev/null 2>&1
-	firewall-cmd --reload > /dev/null 2>&1
-	export ANZHUANG="sudo apt-get"
-elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
-	apt-get update && apt-get install -y wget git socat sudo ca-certificates && update-ca-certificates
-	export ANZHUANG="sudo apt-get"
-elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
-	apt-get update && apt-get install -y wget git socat sudo ca-certificates && update-ca-certificates
-	export ANZHUANG="sudo apt-get"
-else
-	echo -e "\033[31m 不支持该系统 \033[0m"
-	exit 1
-fi
 rm -rf /etc/nginx
 rm -rf /usr/sbin/nginx
 rm /usr/share/man/man1/nginx.1.gz > /dev/null 2>&1
 ${ANZHUANG} remove nginx
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove --purge
 rm -rf /usr/local/share/xray
+if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
+	yum remove nginx
+	yum install epel-release wget -y
+	yum update -y
+	yum install curl tar nginx -y
+	firewall-cmd --zone=public --add-port=80/tcp --permanent > /dev/null 2>&1
+	firewall-cmd --zone=public --add-port=443/tcp --permanent > /dev/null 2>&1
+	firewall-cmd --reload > /dev/null 2>&1
+elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
+	apt-get remove nginx
+	apt-get update && apt-get install -y wget git socat sudo ca-certificates && update-ca-certificates
+	apt-get install curl tar nginx -y
+elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
+	apt-get remove nginx
+	apt-get update && apt-get install -y wget git socat sudo ca-certificates && update-ca-certificates
+	apt-get install curl tar nginx -y
+else
+	echo -e "\033[31m 不支持该系统 \033[0m"
+	exit 1
+fi
 systemctl restart nginx
 systemctl start nginx
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root

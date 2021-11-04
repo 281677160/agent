@@ -44,7 +44,11 @@ YUMING="$(ping cs.danshui.online -c 5 | egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+
 getIpAddress=$(curl -sS --connect-timeout 10 -m 60 https://www.bt.cn/Api/getIpAddress)
 if [[ ! ${YUMING} == ${getIpAddress} ]]; then
 	echo "域名解析IP跟本机不一致"
+	echo "域名解析IP为：${YUMING}"
+	echo "本机IP为：${getIpAddress}"
 	exit 1
+else
+	echo "yes"
 fi
 rm -fr ~/.acme.sh
 curl https://get.acme.sh | sh |tee build.log

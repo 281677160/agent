@@ -106,9 +106,14 @@ cd /root
 systemctl restart nginx
 if [[ `systemctl status xray |grep -c "active (running) "` == '1' ]]; then
 	echo "xray运行正常"
-	echo "安装结束"
 else
 	echo "xray没有运行"
+fi
+if [[ `ps -ef  |grep -c "/usr/sbin/nginx"` == '1' ]]; then
+	echo "nginx运行正常"
+	echo "安装结束"
+else
+	echo "nginx没有运行"
 	exit 1
 fi
 exit 0

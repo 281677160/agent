@@ -112,12 +112,16 @@ else
 	exit 1
 fi
 systemctl restart xray
+sleep 3
+systemctl start xray
 rm -rf /usr/share/nginx/html/*
 cd /usr/share/nginx/html/
 wget https://github.com/V2RaySSR/Trojan/raw/master/web.zip
 unzip web.zip
 cd /root
 systemctl restart nginx
+sleep 3
+systemctl start nginx
 if [[ `systemctl status xray |grep -c "active (running) "` == '1' ]]; then
 	echo -e "\033[33m xray运行正常 \033[0m"
 else

@@ -99,5 +99,11 @@ cd /usr/share/nginx/html/
 wget https://github.com/V2RaySSR/Trojan/raw/master/web.zip
 unzip web.zip
 systemctl restart nginx
-systemctl status xray
+if [[ `systemctl status xray |grep -c "active (running) "` == '1' ]]; then
+	echo "xray运行正常"
+	echo "安装结束"
+else
+	echo "xray没有运行"
+	exit 1
+fi
 cd /root

@@ -1,5 +1,5 @@
 #!/bin/bash
-cat >/usr/local/etc/xray/config.json <<-EOF
+cat >123 <<-EOF
 {
     "log": {
         "loglevel": "warning"

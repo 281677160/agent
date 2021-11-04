@@ -89,7 +89,7 @@ systemctl enable nginx
 if [[ -e /usr/lib/systemd/system/nginx.service ]]; then
 	echo "yes"
 else
-	echo "nginx设置开启启动失败"
+	echo "nginx设置开机启动失败"
 	exit 1
 fi
 systemctl restart nginx

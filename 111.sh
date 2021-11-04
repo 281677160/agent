@@ -63,3 +63,4 @@ cd /usr/share/nginx/html/
 wget https://github.com/V2RaySSR/Trojan/raw/master/web.zip
 unzip web.zip
 systemctl restart nginx
+cd /root

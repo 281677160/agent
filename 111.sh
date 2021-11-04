@@ -49,7 +49,7 @@ else
 	echo "acme.sh更新失败"
 	exit 1
 fi
-chmod -R 755 /usr/local/etc/xray/cer
+chmod -R +x /usr/local/etc/xray/cer
 systemctl enable nginx |tee build.log
 if [[ `grep "nginx.service" build.log` ]]; then
 	echo "yes"

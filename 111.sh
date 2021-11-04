@@ -22,15 +22,23 @@ if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
 	firewall-cmd --zone=public --add-port=80/tcp --permanent > /dev/null 2>&1
 	firewall-cmd --zone=public --add-port=443/tcp --permanent > /dev/null 2>&1
 	firewall-cmd --reload > /dev/null 2>&1
+	export ANZHUANG="sudo apt-get"
 elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
 	apt-get update && apt-get install -y wget git socat sudo ca-certificates && update-ca-certificates
+	export ANZHUANG="sudo apt-get"
 elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
 	apt-get update && apt-get install -y wget git socat sudo ca-certificates && update-ca-certificates
-	export AZML="sudo apt install"
+	export ANZHUANG="sudo apt-get"
 else
 	echo -e "\033[31m 不支持该系统 \033[0m"
 	exit 1
 fi
+rm -rf /etc/nginx
+rm -rf /usr/sbin/nginx
+rm /usr/share/man/man1/nginx.1.gz > /dev/null 2>&1
+${ANZHUANG} remove nginx
+bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove --purge
+rm -rf /usr/local/share/xray
 systemctl restart nginx
 systemctl start nginx
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root
@@ -88,6 +96,7 @@ else
 	echo "acme.sh更新失败"
 	exit 1
 fi
+rm -fr build.log
 chmod 775 /usr/local/etc/xray/cert/cert.crt
 chmod 775 /usr/local/etc/xray/cert/private.key
 systemctl enable nginx

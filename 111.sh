@@ -39,6 +39,12 @@ export WEBS="$(date +web%dck%M%S)"
 export VMTCP="$(date +vme%ds%Hs%S)"
 export VMWS="$(date +vm%Sw%M%Hs)"
 bash <(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/config.sh)
+YUMING="$(ping cs.danshui.online -c 5 | egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" |awk 'NR==1')"
+getIpAddress=$(curl -sS --connect-timeout 10 -m 60 https://www.bt.cn/Api/getIpAddress)
+if [[ ! ${YUMING} == ${getIpAddress} ]]; then
+	echo "域名解析IP跟本机不一致"
+	exit 1
+fi
 curl https://get.acme.sh | sh |tee build.log
 if [[ `grep "Install success!" build.log` ]]; then
 	echo "yes"

@@ -13,7 +13,6 @@ export WEBS="$(date +web%dck%M%S)"
 export VMTCP="$(date +vme%ds%Hs%S)"
 export VMWS="$(date +vm%Sw%M%Hs)"
 bash <(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/config.sh)
-
 curl https://get.acme.sh | sh |tee build.log
 if [[ `grep "Install success!" build.log` ]]; then
 	echo "yes"

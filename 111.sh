@@ -42,6 +42,7 @@ else
 	exit 1
 fi
 systemctl restart nginx
+sleep 3
 systemctl start nginx
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root
 export MSID="$(cat /proc/sys/kernel/random/uuid)"

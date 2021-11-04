@@ -46,6 +46,7 @@ if [[ ! ${YUMING} == ${getIpAddress} ]]; then
 	echo "域名解析IP跟本机不一致"
 	exit 1
 fi
+rm -fr ~/.acme.sh
 curl https://get.acme.sh | sh |tee build.log
 if [[ `grep "Install success!" build.log` ]]; then
 	echo "yes"

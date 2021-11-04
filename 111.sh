@@ -34,7 +34,7 @@ else
 	echo "申请证书失败"
 	exit 1
 fi
-mkdir /usr/local/etc/xray/cert
+mkdir -p /usr/local/etc/xray/cert
 ~/.acme.sh/acme.sh --installcert -d 1.bozai.us --key-file /usr/local/etc/xray/cert/private.key --fullchain-file /usr/local/etc/xray/cert/cert.crt |tee build.log
 if [[ `grep "cert/private.key" build.log` ]] && [[ `grep "cert/cert.crt" build.log` ]]; then
 	echo "yes"

@@ -84,7 +84,8 @@ else
 	echo "acme.sh更新失败"
 	exit 1
 fi
-chmod -R +x /usr/local/etc/xray/cert
+chmod 777 /usr/local/etc/xray/cert/cert.crt
+chmod 777 /usr/local/etc/xray/cert/private.key
 systemctl enable nginx
 if [[ -e /usr/lib/systemd/system/nginx.service ]]; then
 	echo "yes"
@@ -92,10 +93,11 @@ else
 	echo "nginx设置开机启动失败"
 	exit 1
 fi
-systemctl restart nginx
+systemctl restart xray
 rm -rf /usr/share/nginx/html/*
 cd /usr/share/nginx/html/
 wget https://github.com/V2RaySSR/Trojan/raw/master/web.zip
 unzip web.zip
 systemctl restart nginx
+systemctl status xray
 cd /root

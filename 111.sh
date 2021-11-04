@@ -53,15 +53,15 @@ else
 	echo "acme.sh运行错误"
 	exit 1
 fi
-~/.acme.sh/acme.sh  --issue  -d 1.bozai.us  --webroot /usr/share/nginx/html/ |tee build.log
-if [[ `grep "private.key" build.log` ]] && [[ `grep "cert.crt" build.log` ]]; then
+~/.acme.sh/acme.sh  --issue  -d ${wzym}  --webroot /usr/share/nginx/html/ |tee build.log
+if [[ `grep "${wzym}/private.key" build.log` ]] && [[ `grep "${wzym}/cert.crt" build.log` ]]; then
 	echo "yes"
 else
 	echo "申请证书失败"
 	exit 1
 fi
 mkdir -p /usr/local/etc/xray/cert
-~/.acme.sh/acme.sh --installcert -d 1.bozai.us --key-file /usr/local/etc/xray/cert/private.key --fullchain-file /usr/local/etc/xray/cert/cert.crt |tee build.log
+~/.acme.sh/acme.sh --installcert -d ${wzym} --key-file /usr/local/etc/xray/cert/private.key --fullchain-file /usr/local/etc/xray/cert/cert.crt |tee build.log
 if [[ `grep "cert/private.key" build.log` ]] && [[ `grep "cert/cert.crt" build.log` ]]; then
 	echo "yes"
 else

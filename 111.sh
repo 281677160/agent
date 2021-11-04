@@ -60,7 +60,7 @@ else
 	exit 1
 fi
 ~/.acme.sh/acme.sh  --issue  -d ${wzym}  --webroot /usr/share/nginx/html/ |tee build.log
-if [[ `grep "${wzym}/private.key" build.log` ]] && [[ `grep "${wzym}/cert.crt" build.log` ]]; then
+if [[ `grep "END CERTIFICATE" build.log` ]] && [[ `grep "Your cert key is in" build.log` ]]; then
 	echo "yes"
 else
 	echo "申请证书失败"

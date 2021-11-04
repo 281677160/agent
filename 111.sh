@@ -82,8 +82,8 @@ else
 	exit 1
 fi
 chmod -R +x /usr/local/etc/xray/cer
-systemctl enable nginx |tee build.log
-if [[ `grep "nginx.service" build.log` ]]; then
+systemctl enable nginx
+if [[ -e /usr/lib/systemd/system/nginx.service ]]; then
 	echo "yes"
 else
 	echo "nginx设置开启启动失败"

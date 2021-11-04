@@ -9,7 +9,7 @@ systemctl restart nginx
 systemctl start nginx
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root
 export MSID="$(cat /proc/sys/kernel/random/uuid)"
-export WEBS="$(date +web%d号ck%M%S)"
+export WEBS="$(date +web%dck%M%S)"
 export VMTCP="$(date +vme%ds%Hs%S)"
 export VMWS="$(date +vm%Sw%M%Hs)"
-
+bash <(curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/config.sh)

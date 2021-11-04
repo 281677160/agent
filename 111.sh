@@ -65,7 +65,7 @@ curl https://get.acme.sh | sh |tee build.log
 if [[ `grep "Install success!" build.log` ]]; then
 	echo "yes"
 else
-	echo "acme.sh下载错误"
+	echo "acme.sh下载失败"
 	exit 1
 fi
 ~/.acme.sh/acme.sh --upgrade

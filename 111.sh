@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 if [[ ! "$USER" == "root" ]]; then
@@ -8,7 +9,6 @@ if [[ ! "$USER" == "root" ]]; then
 	sleep 2
 	exit 1
 fi
-clear
 
 echo
 echo

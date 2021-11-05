@@ -179,7 +179,6 @@ if [[ "$osSELINUXCheck" == "SELINUX=permissive" ]]; then
 	exit 1
 fi
 if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
-	yum remove nginx -y
 	yum install epel-release wget unzip net-tools socat git tar -y
 	yum update -y
 	yum install nginx -y
@@ -187,11 +186,9 @@ if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
 	firewall-cmd --zone=public --add-port=443/tcp --permanent > /dev/null 2>&1
 	firewall-cmd --reload > /dev/null 2>&1
 elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
-	apt purge nginx -y
 	apt-get update && apt-get install -y wget git unzip net-tools socat sudo tar ca-certificates && update-ca-certificates
 	apt-get install nginx -y
 elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
-	apt purge nginx -y
 	apt-get update && apt-get install -y wget git unzip net-tools socat tar sudo ca-certificates && update-ca-certificates
 	apt-get install nginx -y
 fi

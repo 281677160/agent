@@ -39,7 +39,7 @@ bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release
 rm -rf /usr/local/share/xray
 if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
 	yum remove -y nginx
-	yum install epel-release wget -y
+	yum install epel-release wget unzip -y
 	yum update -y
 	yum install git tar nginx -y
 	firewall-cmd --zone=public --add-port=80/tcp --permanent > /dev/null 2>&1
@@ -47,11 +47,11 @@ if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
 	firewall-cmd --reload > /dev/null 2>&1
 elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
 	apt-get remove -y nginx
-	apt-get update && apt-get install -y wget git socat sudo ca-certificates && update-ca-certificates
+	apt-get update && apt-get install -y wget git unzip socat sudo ca-certificates && update-ca-certificates
 	apt-get install tar nginx -y
 elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
 	apt-get remove -y nginx
-	apt-get update && apt-get install -y wget git socat sudo ca-certificates && update-ca-certificates
+	apt-get update && apt-get install -y wget git unzip socat sudo ca-certificates && update-ca-certificates
 	apt-get install tar nginx -y
 else
 	echo -e "\033[31m 不支持该系统 \033[0m"

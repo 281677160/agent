@@ -88,7 +88,10 @@ else
 	echo "nginx没有运行"
 	exit 1
 fi
+mkdir /usr/local/bin >/dev/null 2>&1
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root
+export HOME="$PWD"
+export WebSite="/usr/share/nginx/html/"
 export MSID="$(cat /proc/sys/kernel/random/uuid)"
 export WEBS="$(date +VLEws%d%M%S)"
 export VMTCP="$(date +VME%S%d%H)"
@@ -116,15 +119,15 @@ else
 	echo -e "\033[31m acme.sh下载失败 \033[0m"
 	exit 1
 fi
-~/.acme.sh/acme.sh --upgrade
-~/.acme.sh/acme.sh --register-account -m xxxx@xxxx.com |tee build.log
+"$HOME"/.acme.sh/acme.sh --upgrade
+"$HOME"/.acme.sh/acme.sh --register-account -m xxxx@xxxx.com |tee build.log
 if [[ `grep "ACCOUNT_THUMBPRINT" build.log` ]]; then
 	echo "yes"
 else
 	echo -e "\033[31m acme.sh运行错误 \033[0m"
 	exit 1
 fi
-~/.acme.sh/acme.sh --issue -d "${wzym}" --webroot /usr/share/nginx/html/ -k ec-256 --force |tee build.log
+"$HOME"/.acme.sh/acme.sh --issue -d "${wzym}" --webroot "${WebSite}" -k ec-256 --force |tee build.log
 if [[ `grep "END CERTIFICATE" build.log` ]] && [[ `grep "Your cert key is in" build.log` ]]; then
 	echo "yes"
 else
@@ -132,14 +135,14 @@ else
 	exit 1
 fi
 mkdir -p /usr/local/etc/xray/cert
-~/.acme.sh/acme.sh --installcert -d ${wzym} --key-file /usr/local/etc/xray/cert/private.key --fullchain-file /usr/local/etc/xray/cert/cert.crt |tee build.log
+"$HOME"/.acme.sh/acme.sh --installcert -d ${wzym} --key-file /usr/local/etc/xray/cert/private.key --fullchain-file /usr/local/etc/xray/cert/cert.crt |tee build.log
 if [[ `grep "cert/private.key" build.log` ]] && [[ `grep "cert/cert.crt" build.log` ]]; then
 	echo "yes"
 else
 	echo -e "\033[31m 证书存放失败 \033[0m"
 	exit 1
 fi
-~/.acme.sh/acme.sh --upgrade --auto-upgrade |tee build.log
+"$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade |tee build.log
 if [[ `grep "Upgrade success!" build.log` ]]; then
 	echo "yes"
 else

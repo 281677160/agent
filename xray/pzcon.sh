@@ -51,7 +51,7 @@ echo -e "\033[31m VLESS+WS+TLS \033[0m"
 echo
 echo "vless://${MSID}@${wzym}:${PORT}?host=&path=%2F${WEBS}&type=ws&encryption=none&security=tls&sni=${wzym}#VLESS+WS+TLS"
 echo
-echo -e "\033[33m 节点备注/别名：VLESS+TPC+TLS（可自行修改） \033[0m"
+echo -e "\033[33m 节点备注/别名：VLESS+WS+TLS（可自行修改） \033[0m"
 echo -e "\033[33m 节点类型：XRay \033[0m"
 echo -e "\033[33m 协议：VLESS \033[0m"
 echo -e "\033[33m 服务器地址：${wzym} \033[0m"

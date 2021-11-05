@@ -117,8 +117,7 @@ read -p " 请输入您的域名：" wzym
 export wzym="${wzym}"
 if [[ -z ${wzym} ]]; then
 	echo -e "\033[33m 域名不能为空 \033[0m"
-	read -p " 请输入您的域名：" wzym
-	export wzym="${wzym}"
+	break
 done
 echo
 echo -e "\033[33m 请输入端口号(建议直接回车使用默认：443) \033[0m"

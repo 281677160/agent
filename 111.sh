@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ ! "$USER" == "root" ]]; then
+if [[ -e /usr/local/etc/xray/pzcon ]]; then
 	clear
 	echo
 	echo -e "\033[31m 警告：请使用root用户操作!~~ \033[0m"
@@ -9,7 +9,65 @@ if [[ ! "$USER" == "root" ]]; then
 	exit 1
 fi
 clear
-echo -e "\033[32m 欢迎使用全世界最辣鸡的一键安装Xray脚本 \033[0m"
+if [[ -e /usr/local/etc/xray/pzcon ]]; then
+	clear
+	echo
+	echo " 1. 查看节点配置文件"
+	echo
+	echo " 2. 御载本脚本安装的xray和nginx"
+	echo
+	echo " 3. 退出程序"
+	echo
+	while :; do
+	TIME g "请输入[ 1、2、3 ]然后回车确认您的选择！"
+	read -p " 输入您的选择： " CHOOSE
+	case $CHOOSE in
+		1)
+			source /usr/local/etc/xray/pzcon
+		break
+		;;
+		2)
+			install_xray_ws
+			YuZzai="YES"
+		break
+		;;
+		3)
+			exit 0
+		break
+    		;;
+    		*)
+			echo "警告：输入错误,请输入正确的编号!"
+		;;
+	esac
+	done
+else
+	clear
+	echo
+	echo " 1. 安装Xray和nginx"
+	echo
+	echo " 2. 退出安装程序"
+	echo
+	while :; do
+	echo "请输入[ 1、2 ]然后回车确认您的选择！"
+	read -p " 输入您的选择： " CHOOSE
+	case $CHOOSE in
+		1)
+			echo
+		break
+		;;
+		2)
+			sleep 2
+			exit 1
+		break
+    		;;
+    		*)
+			echo "警告：输入错误,请输入正确的编号!"
+		;;
+	esac
+	done
+fi
+echo
+echo
 echo
 echo
 echo -e "\033[33m 请输入您的域名[比如：v2.xray.com] \033[0m"
@@ -34,28 +92,37 @@ case $NNKC in
 	;;
 esac
 echo
-systemctl stop nginx
-if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
-	yum remove -y nginx
-elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
-	apt-get remove -y nginx
-elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
-	apt-get remove -y nginx
-else
-	echo -e "\033[31m 不支持该系统 \033[0m"
-	exit 1
+install_xray_ws
+function install_xray_ws() {
+	systemctl stop nginx
+	systemctl stop xray
+	if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
+		yum remove -y nginx
+	elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
+		apt-get remove -y nginx
+	elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
+		apt-get remove -y nginx
+	else
+		echo -e "\033[31m 不支持该系统 \033[0m"
+		exit 1
+	fi
+	rm -rf /etc/nginx
+	rm -rf /usr/sbin/nginx
+	rm -rf /usr/share/nginx
+	rm /usr/share/man/man1/nginx.1.gz > /dev/null 2>&1
+	bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove --purge
+	rm -rf /usr/local/bin/xray
+	rm -rf /usr/local/share/xray
+	rm -rf /usr/local/etc/xray
+	rm -rf /var/log/xray/
+	rm -rf /etc/systemd/system/xray.service
+	rm -rf /etc/systemd/system/xray@.service
+	rm -fr /root/acme.sh
+}
+if [[ "${YuZzai}" == "YES" ]]; then
+	sleep 2
+	exit 0
 fi
-rm -rf /etc/nginx
-rm -rf /usr/sbin/nginx
-rm -rf /usr/share/nginx
-rm /usr/share/man/man1/nginx.1.gz > /dev/null 2>&1
-bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove --purge
-rm -rf /usr/local/bin/xray
-rm -rf /usr/local/share/xray
-rm -rf /usr/local/etc/xray
-rm -rf /var/log/xray/
-rm -rf /etc/systemd/system/xray.service
-rm -rf /etc/systemd/system/xray@.service
 if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
 	yum remove -y nginx
 	yum install epel-release wget unzip -y
@@ -111,7 +178,6 @@ if [[ ! ${YUMING} == ${getIpAddress} ]]; then
 else
 	echo "yes"
 fi
-rm -fr /root/acme.sh
 curl https://get.acme.sh | sh |tee build.log
 if [[ `grep "Install success!" build.log` ]]; then
 	echo "yes"

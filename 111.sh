@@ -49,7 +49,7 @@ if [[ -e /usr/local/etc/xray/pzcon ]]; then
 			rm -rf /var/log/xray/
 			rm -rf /etc/systemd/system/xray.service
 			rm -rf /etc/systemd/system/xray@.service
-			rm -fr /root/acme.sh
+			rm -fr /root/.acme.sh
 			sleep 2
 			exit 1
 		break
@@ -133,7 +133,7 @@ rm -rf /usr/local/etc/xray
 rm -rf /var/log/xray/
 rm -rf /etc/systemd/system/xray.service
 rm -rf /etc/systemd/system/xray@.service
-rm -fr /root/acme.sh
+rm -fr /root/.acme.sh
 if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
 	yum remove -y nginx
 	yum install epel-release wget unzip -y

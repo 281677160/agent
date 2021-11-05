@@ -197,6 +197,9 @@ curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray/pzcon.sh 
 if [[ ${XRAYYX} == "YES" ]] && [[ ${NGINXYX} == "YES" ]]; then
 	source /root/pzcon.sh
 	sleep 2
+	clear
+	echo
+	echo
 	source /usr/local/etc/xray/pzcon
 fi
 rm -fr /root/pzcon.sh

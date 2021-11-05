@@ -16,7 +16,7 @@ echo -e "\033[33m 请输入您的域名[比如：v2.xray.com] \033[0m"
 read -p " 请输入您的域名：" wzym
 export wzym="${wzym}"
 echo
-echo -e "\033[33m 请输入端口号(默认：443) \033[0m"
+echo -e "\033[33m 请输入端口号(建议直接回车使用默认：443) \033[0m"
 read -p " 请输入 1-65535 之间的值：" PORT
 export PORT=${PORT:-"443"}
 echo

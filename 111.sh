@@ -9,6 +9,8 @@ if [[ ! "$USER" == "root" ]]; then
 	exit 1
 fi
 clear
+echo -e "\033[32m 欢迎使用全世界最辣鸡的一键安装Xray脚本 \033[0m"
+echo
 echo
 echo -e "\033[33m 请输入您的域名[比如：v2.xray.com] \033[0m"
 read -p " 请输入您的域名：" wzym
@@ -21,7 +23,7 @@ echo
 echo
 echo -e "\033[32m 您的域名为：${wzym} \033[0m"
 echo -e "\033[32m 您的端口为：${PORT} \033[0m"
-read -p " [检测是否正确,正确回车继续,不正确按Q回车退出]： " NNKC
+read -p " [检测是否正确,正确回车继续,不正确按Q回车重新输入]： " NNKC
 case $NNKC in
 		[Qq])
 		bash <(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/111.sh)
@@ -36,6 +38,12 @@ rm -rf /etc/nginx
 rm -rf /usr/sbin/nginx
 rm /usr/share/man/man1/nginx.1.gz > /dev/null 2>&1
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove --purge
+if [[ $? -ne 0 ]];then
+	echo -e "\033[31m xray源码安装失败 \033[0m"
+	exit 1
+else
+	echo "yes"
+fi
 rm -rf /usr/local/share/xray
 if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
 	yum remove -y nginx

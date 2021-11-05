@@ -115,6 +115,10 @@ install_xray_ws() {
 	rm -rf /etc/systemd/system/xray.service
 	rm -rf /etc/systemd/system/xray@.service
 	rm -fr /root/acme.sh
+	if [[ "${YuZzai}" == "YES" ]]; then
+		sleep 2
+		exit 0
+	fi
 }
 if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
 	yum remove -y nginx

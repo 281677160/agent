@@ -69,7 +69,7 @@ systemctl restart nginx
 sleep 3
 systemctl start nginx
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root
-if [[ $? -ne 0 ]];then
+if [[ $? == 0 ]];then
 	echo -e "\033[31m xray源码安装失败 \033[0m"
 	exit 1
 else

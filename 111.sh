@@ -84,8 +84,8 @@ sleep 3
 systemctl start nginx
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root
 export MSID="$(cat /proc/sys/kernel/random/uuid)"
-export WEBS="$(date +VLExtls%d%M%S)"
-export VMTCP="$(date +VMEtls%S%d%H)"
+export WEBS="$(date +VLEws%d%M%S)"
+export VMTCP="$(date +VME%S%d%H)"
 export VMWS="$(date +VMEws%M%S%H)"
 bash <(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/config.sh)
 chmod +x /usr/local/etc/xray/config.json

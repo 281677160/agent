@@ -38,12 +38,6 @@ rm -rf /etc/nginx
 rm -rf /usr/sbin/nginx
 rm /usr/share/man/man1/nginx.1.gz > /dev/null 2>&1
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove --purge
-if [[ $? -ne 0 ]];then
-	echo -e "\033[31m xray源码安装失败 \033[0m"
-	exit 1
-else
-	echo "yes"
-fi
 rm -rf /usr/local/share/xray
 if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
 	yum remove -y nginx
@@ -75,6 +69,12 @@ systemctl restart nginx
 sleep 3
 systemctl start nginx
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root
+if [[ $? -ne 0 ]];then
+	echo -e "\033[31m xray源码安装失败 \033[0m"
+	exit 1
+else
+	echo "yes"
+fi
 export MSID="$(cat /proc/sys/kernel/random/uuid)"
 export WEBS="$(date +ket%dck%M%S)"
 export VMTCP="$(date +vmtcp%ds%Hs%S)"

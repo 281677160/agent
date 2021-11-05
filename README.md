@@ -12,6 +12,7 @@ apt-get update && apt-get install -y wget curl git socat sudo ca-certificates &&
 yum apt-get update && sudo yum install -y wget curl git socat ca-certificates && update-ca-trust force-enable
 
 ```
+bash <(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray_install)
 #
 ---
 #

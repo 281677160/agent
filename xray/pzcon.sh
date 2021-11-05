@@ -8,7 +8,7 @@ echo -e "\033[31m VLESS+TCP+XTLS \033[0m"
 echo
 echo "vless://${MSID}@${getIpAddress}:${PORT}?headerType=none&type=tcp&encryption=none&flow=xtls-rprx-direct&security=xtls&sni=${wzym}#VLESS+TCP+XTLS${PORT}"
 echo
-echo -e "\033[33m 节点备注/别名：VLESS+TCP+XTLS（可自行修改） \033[0m"
+echo -e "\033[33m 节点备注/别名：VLESS+TCP+XTLS${PORT}（可自行修改） \033[0m"
 echo -e "\033[33m 节点类型：XRay \033[0m"
 echo -e "\033[33m 协议：VLESS \033[0m"
 echo -e "\033[33m 服务器地址：${getIpAddress} \033[0m"
@@ -30,7 +30,7 @@ echo -e "\033[31m VLESS+TPC+TLS \033[0m"
 echo
 echo "vless://${MSID}@${wzym}:${PORT}?headerType=none&type=tcp&encryption=none&security=tls&sni=${wzym}#VLESS+TPC+TLS${PORT}"
 echo
-echo -e "\033[33m 节点备注/别名：VLESS+TPC+TLS（可自行修改） \033[0m"
+echo -e "\033[33m 节点备注/别名：VLESS+TPC+TLS${PORT}（可自行修改） \033[0m"
 echo -e "\033[33m 节点类型：XRay \033[0m"
 echo -e "\033[33m 协议：VLESS \033[0m"
 echo -e "\033[33m 服务器地址：${wzym} \033[0m"
@@ -51,7 +51,7 @@ echo -e "\033[31m VLESS+WS+TLS \033[0m"
 echo
 echo "vless://${MSID}@${wzym}:${PORT}?host=&path=%2F${WEBS}&type=ws&encryption=none&security=tls&sni=${wzym}#VLESS+WS+TLS${PORT}"
 echo
-echo -e "\033[33m 节点备注/别名：VLESS+WS+TLS（可自行修改） \033[0m"
+echo -e "\033[33m 节点备注/别名：VLESS+WS+TLS${PORT}（可自行修改） \033[0m"
 echo -e "\033[33m 节点类型：XRay \033[0m"
 echo -e "\033[33m 协议：VLESS \033[0m"
 echo -e "\033[33m 服务器地址：${wzym} \033[0m"

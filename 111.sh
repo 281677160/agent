@@ -34,13 +34,28 @@ case $NNKC in
 	;;
 esac
 echo
+systemctl stop nginx
+if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
+	yum remove -y nginx
+elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
+	apt-get remove -y nginx
+elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
+	apt-get remove -y nginx
+else
+	echo -e "\033[31m 不支持该系统 \033[0m"
+	exit 1
+fi
 rm -rf /etc/nginx
 rm -rf /usr/sbin/nginx
 rm -rf /usr/share/nginx
 rm /usr/share/man/man1/nginx.1.gz > /dev/null 2>&1
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove --purge
+rm -rf /usr/local/bin/xray
 rm -rf /usr/local/share/xray
+rm -rf /usr/local/etc/xray
+rm -rf /var/log/xray/
 rm -rf /etc/systemd/system/xray.service
+rm -rf /etc/systemd/system/xray@.service
 if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
 	yum remove -y nginx
 	yum install epel-release wget unzip -y
@@ -57,9 +72,6 @@ elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
 	apt-get remove -y nginx
 	apt-get update && apt-get install -y wget git unzip socat sudo ca-certificates && update-ca-certificates
 	apt-get install tar nginx -y
-else
-	echo -e "\033[31m 不支持该系统 \033[0m"
-	exit 1
 fi
 systemctl stop firewalld
 systemctl disable firewalld

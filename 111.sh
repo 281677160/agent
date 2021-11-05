@@ -94,20 +94,19 @@ echo
 echo -e "\033[33m 请输入您的域名[比如：v2.xray.com] \033[0m"
 read -p " 请输入您的域名：" wzym
 export wzym="${wzym}"
+while :; do
 if [[ -z "${wzym}" ]] || [[ "$(echo ${wzym} |grep -c '\.')" = '0' ]]; then
-	while :; do
-		Y="$1"
-		case $Y in
-		"$1")
-		echo -e "\033[31m 域名不能为空或请输入正确域名 \033[0m"
-		read -p " 请输入您的域名：" wzym
-		export wzym="${wzym}"
-		break
-		;;
-		esac
-	done
+	Y="$1"
+	case $Y in
+	"$1")
+	echo -e "\033[31m 域名不能为空或请输入正确域名 \033[0m"
+	read -p " 请输入您的域名：" wzym
+	export wzym="${wzym}"
+	break
+	;;
+	esac
 fi
-
+done
 echo
 echo -e "\033[33m 请输入端口号(建议直接回车使用默认：443) \033[0m"
 read -p " 请输入 1-65535 之间的值：" PORT

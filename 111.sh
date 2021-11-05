@@ -68,8 +68,6 @@ else
 fi
 echo
 echo
-echo
-echo
 echo -e "\033[33m 请输入您的域名[比如：v2.xray.com] \033[0m"
 read -p " 请输入您的域名：" wzym
 export wzym="${wzym}"

@@ -92,8 +92,8 @@ else
 fi
 echo
 echo -e "\033[33m 请输入您的域名[比如：v2.xray.com] \033[0m"
-while :; do
 read -p " 请输入您的域名：" wzym
+while :; do
 export wzym="${wzym}"
 if [[ -z "${wzym}" ]] || [[ "$(echo ${wzym} |grep -c '\.')" = '0' ]]; then
 	Y="$1"

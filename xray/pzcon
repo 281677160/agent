@@ -1,5 +1,5 @@
 #!/bin/bash
-cat >/usr/local/etc/xray/xxcon.sh <<-EOF
+cat >/usr/local/etc/xray/pzcon <<-EOF
 echo -e "\033[31m VLESS+TCP+XTLS \033[0m"
 echo
 echo -e "\033[32m vless://${MSID}@${getIpAddress}:443?headerType=none&type=tcp&encryption=none&flow=xtls-rprx-direct&security=xtls&sni=${YUMING}#VLESS+TCP+XTLS \033[0m"

@@ -119,6 +119,8 @@ if [[ -z "${wzym}" ]]; then
 	case $wzym in
 	*)
 	echo -e "\033[33m 域名不能为空 \033[0m"
+	read -p " 请输入您的域名：" wzym
+	export wzym="${wzym}"
 	break
 	;;
 	esac

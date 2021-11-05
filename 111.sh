@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ -e /usr/local/etc/xray/pzcon ]]; then
+if [[ "$USER" == "root" ]]; then
 	clear
 	echo
 	echo -e "\033[31m 警告：请使用root用户操作!~~ \033[0m"

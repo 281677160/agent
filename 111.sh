@@ -23,7 +23,7 @@ echo
 echo
 echo -e "\033[32m 您的域名为：${wzym} \033[0m"
 echo -e "\033[32m 您的端口为：${PORT} \033[0m"
-read -p " [检测是否正确,正确回车继续,不正确按Q回车重新输入]： " NNKC
+read -p " [检查是否正确,正确回车继续,不正确按Q回车重新输入]： " NNKC
 case $NNKC in
 		[Qq])
 		bash <(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/111.sh)

@@ -217,8 +217,8 @@ export VMTCP="$(date +VME%S%d%H)"
 export VMWS="$(date +VMEws%M%S%H)"
 bash <(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray/config.sh)
 chmod +x /usr/local/etc/xray/config.json
-export YUMING="$(ping cs.danshui.online -c 5 | egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" |awk 'NR==1')"
-export getIpAddress=$(curl -sS --connect-timeout 10 -m 60 https://www.bt.cn/Api/getIpAddress)
+export YUMING=$(ping "${domain}" -c 1 | sed '1{s/[^(]*(//;s/).*//;q}')
+export getIpAddress=$(curl -4L api64.ipify.org)
 if [[ ! ${YUMING} == ${getIpAddress} ]]; then
 	echo
 	echo -e "\033[31m 域名解析IP跟本机不一致 \033[0m"

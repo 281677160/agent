@@ -40,11 +40,11 @@ if [[ -e /usr/local/etc/xray/pzcon ]] && [[ -e /usr/local/etc/xray/cert/private.
 				sudo apt-get --purge remove nginx-common
 				sudo apt-get --purge remove nginx-core
 			elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
-				sudo apt-get --purge remove nginx
-				sudo apt-get autoremove
-				sudo apt-get --purge remove nginx
-				sudo apt-get --purge remove nginx-common
-				sudo apt-get --purge remove nginx-core
+				sudo apt-get --purge remove -y nginx
+				sudo apt-get autoremove -y
+				sudo apt-get --purge remove -y nginx
+				sudo apt-get --purge remove -y nginx-common
+				sudo apt-get --purge remove -y nginx-core
 			fi
 			rm -rf /etc/nginx
 			rm -rf /usr/sbin/nginx
@@ -129,17 +129,17 @@ echo
 if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
 	yum remove nginx -y
 elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
-	sudo apt-get --purge remove nginx
-	sudo apt-get autoremove
-	sudo apt-get --purge remove nginx
-	sudo apt-get --purge remove nginx-common
-	sudo apt-get --purge remove nginx-core
+	sudo apt-get --purge remove -y nginx
+	sudo apt-get autoremove -y
+	sudo apt-get --purge remove -y nginx
+	sudo apt-get --purge remove -y nginx-common
+	sudo apt-get --purge remove -y nginx-core
 elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
-	sudo apt-get --purge remove nginx
-	sudo apt-get autoremove
-	sudo apt-get --purge remove nginx
-	sudo apt-get --purge remove nginx-common
-	sudo apt-get --purge remove nginx-core
+	sudo apt-get --purge remove -y nginx
+	sudo apt-get autoremove -y
+	sudo apt-get --purge remove -y nginx
+	sudo apt-get --purge remove -y nginx-common
+	sudo apt-get --purge remove -y nginx-core
 fi
 rm -rf /etc/nginx
 rm -rf /usr/sbin/nginx

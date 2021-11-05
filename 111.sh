@@ -12,14 +12,14 @@ fi
 if [[ -e /usr/local/etc/xray/pzcon ]]; then
 	clear
 	echo
-	echo " 1. 查看节点配置文件"
+	echo -e "\033[30m 1. 查看节点配置文件 \033[0m"
 	echo
-	echo " 2. 御载本脚本安装的xray和nginx"
+	echo -e "\033[34m 2. 御载本脚本安装的xray和nginx \033[0m"
 	echo
-	echo " 3. 退出程序"
+	echo -e "\033[31m 3. 退出程序 \033[0m"
 	echo
 	while :; do
-	TIME g "请输入[ 1、2、3 ]然后回车确认您的选择！"
+	echo -e "\033[36m 请输入[ 1、2、3 ]然后回车确认您的选择！ \033[0m"
 	read -p " 输入您的选择： " CHOOSE
 	case $CHOOSE in
 		1)
@@ -36,7 +36,7 @@ if [[ -e /usr/local/etc/xray/pzcon ]]; then
 		break
     		;;
     		*)
-			echo "警告：输入错误,请输入正确的编号!"
+			echo -e "\033[35m 警告：输入错误,请输入正确的编号! \033[0m"
 		;;
 	esac
 	done
@@ -90,7 +90,8 @@ case $NNKC in
 	;;
 esac
 echo
-install_xray_ws() {
+install_xray_ws
+function install_xray_ws() {
 	systemctl stop nginx
 	systemctl stop xray
 	if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then

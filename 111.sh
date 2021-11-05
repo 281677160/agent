@@ -86,7 +86,7 @@ if [[ ! ${YUMING} == ${getIpAddress} ]]; then
 else
 	echo "yes"
 fi
-rm -fr ~/.acme.sh
+rm -fr /root/acme.sh
 curl https://get.acme.sh | sh |tee build.log
 if [[ `grep "Install success!" build.log` ]]; then
 	echo "yes"

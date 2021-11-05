@@ -82,6 +82,12 @@ systemctl disable ufw
 systemctl restart nginx
 sleep 3
 systemctl start nginx
+if [[ `ps -ef |grep nginx` ]]; then
+	echo -e "\033[33m nginx运行正常 \033[0m"
+else
+	echo "nginx没有运行"
+	exit 1
+fi
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root
 export MSID="$(cat /proc/sys/kernel/random/uuid)"
 export WEBS="$(date +VLEws%d%M%S)"

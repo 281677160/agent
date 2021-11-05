@@ -245,7 +245,7 @@ else
 	exit 1
 fi
 mkdir -p /usr/local/etc/xray/cert
-"$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /usr/local/etc/xray/cert/cert.crt --keypath /usr/local/etc/xray/cert/private.key --reloadcmd "systemctl restart xray" --ecc --force
+"$HOME"/.acme.sh/acme.sh --installcert -d "${wzym}" --fullchainpath /usr/local/etc/xray/cert/cert.crt --keypath /usr/local/etc/xray/cert/private.key --reloadcmd "systemctl restart xray" --ecc --force
 if [[ `grep "cert/private.key" build.log` ]] && [[ `grep "cert/cert.crt" build.log` ]]; then
 	echo "yes"
 else

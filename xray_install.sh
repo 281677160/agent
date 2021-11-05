@@ -34,13 +34,26 @@ if [[ -e /usr/local/etc/xray/pzcon ]] && [[ -e /usr/local/etc/xray/cert/private.
 			if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
 				yum remove -y nginx
 			elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
-				apt purge nginx -y
+				sudo apt-get --purge remove nginx
+				sudo apt-get autoremove
+				sudo apt-get --purge remove nginx
+				sudo apt-get --purge remove nginx-common
+				sudo apt-get --purge remove nginx-core
 			elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
-				apt purge nginx -y
+				sudo apt-get --purge remove nginx
+				sudo apt-get autoremove
+				sudo apt-get --purge remove nginx
+				sudo apt-get --purge remove nginx-common
+				sudo apt-get --purge remove nginx-core
 			fi
 			rm -rf /etc/nginx
 			rm -rf /usr/sbin/nginx
 			rm -rf /usr/share/nginx
+			rm -rf /usr/lib/python3/dist-packages/sos/report/plugins/__pycache__/nginx.cpython-38.pyc
+			rm -rf /usr/lib/python3/dist-packages/sos/report/plugins/nginx.py
+			rm -rf /var/cache/apt/archives/nginx-common_1.18.0-0ubuntu1.2_all.deb
+			rm -rf /var/cache/apt/archives/nginx-core_1.18.0-0ubuntu1.2_amd64.deb
+			rm -rf /var/cache/apt/archives/nginx_1.18.0-0ubuntu1.2_all.deb
 			rm /usr/share/man/man1/nginx.1.gz > /dev/null 2>&1
 			bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove --purge
 			rm -rf /usr/local/bin/xray

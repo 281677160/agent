@@ -12,7 +12,7 @@ fi
 if [[ -e /usr/local/etc/xray/pzcon ]] && [[ -e /usr/local/etc/xray/cert/private.key ]]; then
 	clear
 	echo
-	echo -e "\033[32m 1. 查看节点配置文件 \033[0m"
+	echo -e "\033[32m 1. 查看节点配置信息 \033[0m"
 	echo
 	echo -e "\033[32m 2. 御载本脚本安装的xray和nginx \033[0m"
 	echo

@@ -119,7 +119,7 @@ if [[ -z "${wzym}" ]] || [[ echo "${wzym}" |grep -c "."` == '0' ]]; then
 	Y="$1"
 	case $Y in
 	"$1")
-	echo -e "\033[31m 域名不能为空 \033[0m"
+	echo -e "\033[31m 域名不能为空,请输入正确域名 \033[0m"
 	read -p " 请输入您的域名：" wzym
 	export wzym="${wzym}"
 	break

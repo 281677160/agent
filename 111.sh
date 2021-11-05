@@ -165,4 +165,5 @@ if [[ ${XRAYYX} == "YES" ]] && [[ ${NGINXYX} == "YES" ]]; then
 	sleep 2
 	source /usr/local/etc/xray/pzcon
 fi
+rm -fr /root/pzcon.sh
 exit 0

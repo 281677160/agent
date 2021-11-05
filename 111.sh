@@ -233,6 +233,8 @@ mkdir -p /usr/local/etc/xray/cert
 "$HOME"/.acme.sh/acme.sh --installcert -d "${wzym}" --fullchainpath /usr/local/etc/xray/cert/cert.crt --keypath /usr/local/etc/xray/cert/private.key --reloadcmd "systemctl restart xray" --ecc --force
 if [[ -e /usr/local/etc/xray/cert/private.key ]] && [[ -e /usr/local/etc/xray/cert/cert.crt ]]; then
 	echo "yes"
+	chmod 775 /usr/local/etc/xray/cert/cert.crt
+	chmod 775 /usr/local/etc/xray/cert/private.key
 else
 	echo -e "\033[31m 证书存放失败 \033[0m"
 	exit 1
@@ -254,8 +256,6 @@ if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
    setenforce 0
 fi
 rm -fr build.log
-chmod 775 /usr/local/etc/xray/cert/cert.crt
-chmod 775 /usr/local/etc/xray/cert/private.key
 systemctl enable nginx
 if [[ -e /usr/lib/systemd/system/nginx.service ]]; then
 	echo "yes"

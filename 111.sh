@@ -91,7 +91,7 @@ case $NNKC in
 esac
 echo
 install_xray_ws
-function install_xray_ws() {
+install_xray_ws() {
 	systemctl stop nginx
 	systemctl stop xray
 	if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then

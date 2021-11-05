@@ -36,6 +36,7 @@ esac
 echo
 rm -rf /etc/nginx
 rm -rf /usr/sbin/nginx
+rm -rf /usr/share/nginx
 rm /usr/share/man/man1/nginx.1.gz > /dev/null 2>&1
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove --purge
 rm -rf /usr/local/share/xray

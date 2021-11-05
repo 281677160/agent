@@ -10,12 +10,28 @@ if [[ ! "$USER" == "root" ]]; then
 fi
 clear
 echo
-echo -e "\033[33m 请输入您的域名[比如：wy.v2ray.com] \033[0m"
+echo -e "\033[33m 请输入您的域名[比如：v2.xray.com] \033[0m"
 read -p " 请输入您的域名：" wzym
-export wzym="${wzym}"
-echo -e "\033[32m 您的域名为：${wzym} \033[0m"
+export wzym="${$wzym}"
 echo
-sleep 2
+echo -e "\033[33m 请输入端口号(默认：443) \033[0m"
+read -p " 请输入 0-65535 之间的值：" PORT
+export PORT=${PORT:-"443"}
+echo
+echo
+echo -e "\033[32m 您的域名为：${wzym} \033[0m"
+echo -e "\033[32m 您的端口为：${PORT} \033[0m"
+read -p " [检测是否正确,正确回车继续,不正确按Q回车退出]： " NNKC
+case $NNKC in
+		[Qq])
+		bash <(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/111.sh)
+		exit 1
+	;;
+	*)
+		echo -e "\033[33m 开始安装Xray,请耐心等候... \033[0m"
+	;;
+esac
+echo
 rm -rf /etc/nginx
 rm -rf /usr/sbin/nginx
 rm /usr/share/man/man1/nginx.1.gz > /dev/null 2>&1
@@ -41,6 +57,12 @@ else
 	echo -e "\033[31m 不支持该系统 \033[0m"
 	exit 1
 fi
+systemctl stop firewalld
+systemctl disable firewalld
+systemctl stop nftables
+systemctl disable nftables
+systemctl stop ufw
+systemctl disable ufw
 systemctl restart nginx
 sleep 3
 systemctl start nginx
@@ -139,6 +161,7 @@ fi
 curl -fsSL https://raw.githubusercontent.com/281677160/agent/blob/main/xray/pzcon.sh > /root/pzcon.sh
 if [[ ${XRAYYX} == "YES" ]] && [[ ${NGINXYX} == "YES" ]]; then
 	source pzcon.sh
+	sleep 2
 	source /usr/local/etc/xray/pzcon
 fi
 exit 0

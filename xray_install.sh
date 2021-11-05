@@ -9,7 +9,7 @@ if [[ ! "$USER" == "root" ]]; then
 	sleep 2
 	exit 1
 fi
-if [[ -e /usr/local/etc/xray/pzcon ]]; then
+if [[ -e /usr/local/etc/xray/pzcon ]] && [[ -e /usr/local/etc/xray/cert/private.key ]]; then
 	clear
 	echo
 	echo -e "\033[32m 1. 查看节点配置文件 \033[0m"

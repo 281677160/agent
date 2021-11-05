@@ -116,8 +116,9 @@ while :; do
 read -p " 请输入您的域名：" wzym
 export wzym="${wzym}"
 if [[ -z "${wzym}" ]]; then
-	case $wzym in
-	*)
+	Y="$1"
+	case $Y in
+	$1)
 	echo -e "\033[33m 域名不能为空 \033[0m"
 	read -p " 请输入您的域名：" wzym
 	export wzym="${wzym}"

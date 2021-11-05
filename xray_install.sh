@@ -105,7 +105,7 @@ echo -e "\033[32m 您的端口为：${PORT} \033[0m"
 read -p " [检查是否正确,正确回车继续,不正确按Q回车重新输入]： " NNKC
 case $NNKC in
 		[Qq])
-		bash <(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/111.sh)
+		bash <(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray_install.sh)
 		exit 1
 	;;
 	*)
@@ -192,7 +192,7 @@ export MSID="$(cat /proc/sys/kernel/random/uuid)"
 export WEBS="$(date +VLEws%d%M%S)"
 export VMTCP="$(date +VME%S%d%H)"
 export VMWS="$(date +VMEws%M%S%H)"
-bash <(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/config.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray/config.sh)
 chmod +x /usr/local/etc/xray/config.json
 export YUMING="$(ping cs.danshui.online -c 5 | egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" |awk 'NR==1')"
 export getIpAddress=$(curl -sS --connect-timeout 10 -m 60 https://www.bt.cn/Api/getIpAddress)

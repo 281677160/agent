@@ -51,8 +51,8 @@ export VMTCP="$(date +vmtcp%ds%Hs%S)"
 export VMWS="$(date +vmws%Sw%M%Hs)"
 bash <(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/config.sh)
 chmod +x /usr/local/etc/xray/config.json
-YUMING="$(ping cs.danshui.online -c 5 | egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" |awk 'NR==1')"
-getIpAddress=$(curl -sS --connect-timeout 10 -m 60 https://www.bt.cn/Api/getIpAddress)
+export YUMING="$(ping cs.danshui.online -c 5 | egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" |awk 'NR==1')"
+export getIpAddress=$(curl -sS --connect-timeout 10 -m 60 https://www.bt.cn/Api/getIpAddress)
 if [[ ! ${YUMING} == ${getIpAddress} ]]; then
 	echo
 	echo -e "\033[31m 域名解析IP跟本机不一致 \033[0m"

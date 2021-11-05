@@ -124,7 +124,7 @@ else
 	echo -e "\033[31m acme.sh运行错误 \033[0m"
 	exit 1
 fi
-~/.acme.sh/acme.sh  --issue  -d ${wzym}  --webroot /usr/share/nginx/html/nginx.conf |tee build.log
+~/.acme.sh/acme.sh --issue -d "${wzym}" --webroot /usr/share/nginx/html/ -k ec-256 --force |tee build.log
 if [[ `grep "END CERTIFICATE" build.log` ]] && [[ `grep "Your cert key is in" build.log` ]]; then
 	echo "yes"
 else
@@ -145,6 +145,15 @@ if [[ `grep "Upgrade success!" build.log` ]]; then
 else
 	echo -e "\033[31m 设置acme.sh自动更新失败 \033[0m"
 	exit 1
+fi
+sed -i '/^\*\ *soft\ *nofile\ *[[:digit:]]*/d' /etc/security/limits.conf
+sed -i '/^\*\ *hard\ *nofile\ *[[:digit:]]*/d' /etc/security/limits.conf
+echo '* soft nofile 65536' >>/etc/security/limits.conf
+echo '* hard nofile 65536' >>/etc/security/limits.conf
+
+if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
+   sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
+   setenforce 0
 fi
 rm -fr build.log
 chmod 775 /usr/local/etc/xray/cert/cert.crt

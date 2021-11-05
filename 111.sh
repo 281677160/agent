@@ -150,6 +150,7 @@ if [[ `systemctl status xray |grep -c "active (running) "` == '1' ]]; then
 	XRAYYX="YES"
 else
 	echo "xray没有运行"
+	exit 1
 fi
 if [[ `ps -ef |grep nginx` ]]; then
 	echo -e "\033[33m nginx运行正常 \033[0m"

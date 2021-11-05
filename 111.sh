@@ -158,9 +158,9 @@ else
 	echo "nginx没有运行"
 	exit 1
 fi
-curl -fsSL https://raw.githubusercontent.com/281677160/agent/blob/main/xray/pzcon.sh > /root/pzcon.sh
+curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray/pzcon.sh > /root/pzcon.sh
 if [[ ${XRAYYX} == "YES" ]] && [[ ${NGINXYX} == "YES" ]]; then
-	source pzcon.sh
+	source /root/pzcon.sh
 	sleep 2
 	source /usr/local/etc/xray/pzcon
 fi

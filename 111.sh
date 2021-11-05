@@ -125,15 +125,20 @@ sleep 3
 systemctl start nginx
 if [[ `systemctl status xray |grep -c "active (running) "` == '1' ]]; then
 	echo -e "\033[33m xray运行正常 \033[0m"
+	XRAYYX="YES"
 else
 	echo "xray没有运行"
 fi
 if [[ `ps -ef |grep nginx` ]]; then
 	echo -e "\033[33m nginx运行正常 \033[0m"
-	echo
-	echo -e "\033[32m 安装结束 \033[0m"
+	NGINXYX="YES"
 else
 	echo "nginx没有运行"
 	exit 1
+fi
+curl -fsSL https://raw.githubusercontent.com/281677160/agent/blob/main/xray/pzcon.sh > /root/pzcon.sh
+if [[ ${XRAYYX} == "YES" ]] && [[ ${NGINXYX} == "YES" ]]; then
+	source pzcon.sh
+	source /usr/local/etc/xray/pzcon
 fi
 exit 0

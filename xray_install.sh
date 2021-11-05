@@ -217,7 +217,7 @@ export VMTCP="$(date +VME%S%d%H)"
 export VMWS="$(date +VMEws%M%S%H)"
 bash <(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray/config.sh)
 chmod +x /usr/local/etc/xray/config.json
-export YUMING=$(ping "${domain}" -c 1 | sed '1{s/[^(]*(//;s/).*//;q}')
+export YUMING=$(ping "${wzym}" -c 1 | sed '1{s/[^(]*(//;s/).*//;q}')
 export getIpAddress=$(curl -4L api64.ipify.org)
 if [[ ! ${YUMING} == ${getIpAddress} ]]; then
 	echo

@@ -231,7 +231,7 @@ else
 fi
 mkdir -p /usr/local/etc/xray/cert
 "$HOME"/.acme.sh/acme.sh --installcert -d "${wzym}" --fullchainpath /usr/local/etc/xray/cert/cert.crt --keypath /usr/local/etc/xray/cert/private.key --reloadcmd "systemctl restart xray" --ecc --force
-if [[ `grep "cert/private.key" build.log` ]] && [[ `grep "cert/cert.crt" build.log` ]]; then
+if [[ -e /usr/local/etc/xray/cert/private.key ]] && [[ -e /usr/local/etc/xray/cert/cert.crt ]]; then
 	echo "yes"
 else
 	echo -e "\033[31m 证书存放失败 \033[0m"

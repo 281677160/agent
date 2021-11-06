@@ -195,11 +195,15 @@ fi
 osSELINUXCheck=$(grep SELINUX= /etc/selinux/config | grep -v "#")
 if [[ "$osSELINUXCheck" == "SELINUX=enforcing" ]]; then
 	echo -e "\033[35m 检测到SELinux为开启强制模式状态，为防止申请证书失败，请先重启VPS后，再执行本脚本 \033[0m"
-	exit 1
+            sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+            setenforce 0
+            reboot
 fi
 if [[ "$osSELINUXCheck" == "SELINUX=permissive" ]]; then
 	echo -e "\033[35m 检测到SELinux为宽容模式状态，为防止申请证书失败，请先重启VPS后，再执行本脚本 \033[0m"
-	exit 1
+            sed -i 's/SELINUX=permissive/SELINUX=disabled/g' /etc/selinux/config
+            setenforce 0
+            reboot
 fi
 sleep 3
 mkdir /usr/local/bin >/dev/null 2>&1

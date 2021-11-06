@@ -6,6 +6,8 @@ echo -e "\033[31m Trojan \033[0m"
 echo
 echo "trojan://${QJPASS}@${domain}:${PORT}#trojan+${PORT}"
 echo
+echo -e "\033[32m 二维码链接(浏览器打开)：https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=trojan://${QJPASS}@${domain}:${PORT}#trojan+${PORT} \033[0m"
+echo
 echo -e "\033[33m 节点备注/别名：Trojan+${PORT}（可自行修改） \033[0m"
 echo -e "\033[33m 节点类型：XRay \033[0m"
 echo -e "\033[33m 协议：Trojan \033[0m"

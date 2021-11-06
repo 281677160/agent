@@ -158,26 +158,6 @@ rm -rf /var/log/xray/
 rm -rf /etc/systemd/system/xray.service
 rm -rf /etc/systemd/system/xray@.service
 rm -fr /root/.acme.sh
-osPort80=`netstat -tlpn | awk -F '[: ]+' '$1=="tcp"{print $5}' | grep -w 80`
-osPort443=`netstat -tlpn | awk -F '[: ]+' '$1=="tcp"{print $5}' | grep -w 443`
-if [[ -n "$osPort80" ]]; then
-	process80=`netstat -tlpn | awk -F '[: ]+' '$5=="80"{print $9}'`
-	echo -e "\033[35m 检测到80端口被占用，占用进程为：${process80}，本次安装结束 \033[0m"
-	exit 1
-fi
-if [[ -n "$osPort443" ]]; then
-	process443=`netstat -tlpn | awk -F '[: ]+' '$5=="443"{print $9}'`
-	echo -e "\033[35m 检测到443端口被占用，占用进程为：${process443} \033[0m"
-fi
-osSELINUXCheck=$(grep SELINUX= /etc/selinux/config | grep -v "#")
-if [[ "$osSELINUXCheck" == "SELINUX=enforcing" ]]; then
-	echo -e "\033[35m 检测到SELinux为开启强制模式状态，为防止申请证书失败，请先重启VPS后，再执行本脚本 \033[0m"
-	exit 1
-fi
-if [[ "$osSELINUXCheck" == "SELINUX=permissive" ]]; then
-	echo -e "\033[35m 检测到SELinux为宽容模式状态，为防止申请证书失败，请先重启VPS后，再执行本脚本 \033[0m"
-	exit 1
-fi
 if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
 	yum install epel-release wget unzip net-tools socat git tar -y
 	yum update -y
@@ -199,6 +179,26 @@ systemctl disable nftables
 systemctl stop ufw
 systemctl disable ufw
 systemctl restart nginx
+osPort80=`netstat -tlpn | awk -F '[: ]+' '$1=="tcp"{print $5}' | grep -w 80`
+osPort443=`netstat -tlpn | awk -F '[: ]+' '$1=="tcp"{print $5}' | grep -w 443`
+if [[ -n "$osPort80" ]]; then
+	process80=`netstat -tlpn | awk -F '[: ]+' '$5=="80"{print $9}'`
+	echo -e "\033[35m 检测到80端口被占用，占用进程为：${process80}，本次安装结束 \033[0m"
+	exit 1
+fi
+if [[ -n "$osPort443" ]]; then
+	process443=`netstat -tlpn | awk -F '[: ]+' '$5=="443"{print $9}'`
+	echo -e "\033[35m 检测到443端口被占用，占用进程为：${process443} \033[0m"
+fi
+osSELINUXCheck=$(grep SELINUX= /etc/selinux/config | grep -v "#")
+if [[ "$osSELINUXCheck" == "SELINUX=enforcing" ]]; then
+	echo -e "\033[35m 检测到SELinux为开启强制模式状态，为防止申请证书失败，请先重启VPS后，再执行本脚本 \033[0m"
+	exit 1
+fi
+if [[ "$osSELINUXCheck" == "SELINUX=permissive" ]]; then
+	echo -e "\033[35m 检测到SELinux为宽容模式状态，为防止申请证书失败，请先重启VPS后，再执行本脚本 \033[0m"
+	exit 1
+fi
 sleep 3
 sudo systemctl stop nginx
 sudo service nginx stop

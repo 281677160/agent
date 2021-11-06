@@ -254,7 +254,10 @@ if [[ `grep "END CERTIFICATE" build.log` ]] && [[ `grep "Your cert key is in" bu
 	echo "yes"
 else
 	echo -e "\033[31m 申请证书失败 \033[0m"
-	~/.acme.sh/acme.sh  --issue  -d ${wzym}  --webroot /usr/share/nginx/html/ |tee build.log
+	rm -fr /root/.acme.sh
+	curl https://get.acme.sh | sh
+	"$HOME"/.acme.sh/acme.sh --upgrade
+	"$HOME"/.acme.sh/acme.sh --issue -d "${wzym}" --webroot "${WebSite}" -k ec-256 --force |tee build.log
 fi
 if [[ `grep "END CERTIFICATE" build.log` ]] && [[ `grep "Your cert key is in" build.log` ]]; then
 	echo "yes"

@@ -63,7 +63,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
             "settings": {
                 "clients": [
                     {
-                        "password": "00000000",
+                        "password": "${QJPASS}",
                         "level": 0,
                         "email": "love@example.com"
                     }

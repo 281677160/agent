@@ -179,6 +179,8 @@ systemctl disable nftables
 systemctl stop ufw
 systemctl disable ufw
 systemctl restart nginx
+sudo systemctl stop nginx
+sudo service nginx stop
 osPort80=`netstat -tlpn | awk -F '[: ]+' '$1=="tcp"{print $5}' | grep -w 80`
 osPort443=`netstat -tlpn | awk -F '[: ]+' '$1=="tcp"{print $5}' | grep -w 443`
 if [[ -n "$osPort80" ]]; then
@@ -200,9 +202,6 @@ if [[ "$osSELINUXCheck" == "SELINUX=permissive" ]]; then
 	exit 1
 fi
 sleep 3
-sudo systemctl stop nginx
-sudo service nginx stop
-
 mkdir /usr/local/bin >/dev/null 2>&1
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root
 export HOME="$PWD"

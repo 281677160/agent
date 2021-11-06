@@ -11,7 +11,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
             "settings": {
                 "clients": [
                     {
-                        "id": "${MSID}",
+                        "id": "${UUID}",
                         "flow": "xtls-rprx-direct",
                         "level": 0,
                         "email": "love@example.com"
@@ -24,17 +24,17 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                         "xver": 1
                     },
                     {
-                        "path": "/${WEBS}",
+                        "path": "${WS_PATH}",
                         "dest": 1234,
                         "xver": 1
                     },
                     {
-                        "path": "/${VMTCP}",
+                        "path": "${VMTCP}",
                         "dest": 2345,
                         "xver": 1
                     },
                     {
-                        "path": "/${VMWS}",
+                        "path": "${VMWS}",
                         "dest": 3456,
                         "xver": 1
                     }
@@ -49,8 +49,8 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                     ],
                     "certificates": [
                         {
-                            "certificateFile": "/usr/local/etc/xray/cert/cert.crt",
-                            "keyFile": "/usr/local/etc/xray/cert/private.key"
+                            "certificateFile": "/ssl/xray.crt",
+                            "keyFile": "/ssl/xray.key"
                         }
                     ]
                 }
@@ -89,7 +89,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
             "settings": {
                 "clients": [
                     {
-                        "id": "${MSID}",
+                        "id": "${UUID}",
                         "level": 0,
                         "email": "love@example.com"
                     }
@@ -101,7 +101,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                 "security": "none",
                 "wsSettings": {
                     "acceptProxyProtocol": true,
-                    "path": "/${WEBS}"
+                    "path": "${WS_PATH}"
                 }
             }
         },
@@ -112,7 +112,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
             "settings": {
                 "clients": [
                     {
-                        "id": "${MSID}",
+                        "id": "${UUID}",
                         "level": 0,
                         "email": "love@example.com"
                     }
@@ -127,7 +127,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                         "type": "http",
                         "request": {
                             "path": [
-                                "/${VMTCP}"
+                                "${VMTCP}"
                             ]
                         }
                     }
@@ -141,7 +141,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
             "settings": {
                 "clients": [
                     {
-                        "id": "${MSID}",
+                        "id": "${UUID}",
                         "level": 0,
                         "email": "love@example.com"
                     }
@@ -152,7 +152,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                 "security": "none",
                 "wsSettings": {
                     "acceptProxyProtocol": true,
-                    "path": "/${VMWS}"
+                    "path": "${VMWS}"
                 }
             }
         }

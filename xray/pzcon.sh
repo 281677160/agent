@@ -67,5 +67,5 @@ echo -e "\033[33m alpn：默认 \033[0m"
 echo -e "\033[33m 域名：${domain} \033[0m"
 echo -e "\033[33m 传输协议：WebSocket \033[0m"
 echo -e "\033[33m WebSocket Host：空 \033[0m"
-echo -e "\033[33m WebSocket Path：/${WS_PATH} \033[0m"
+echo -e "\033[33m WebSocket Path：/${WS_PATH}/ \033[0m"
 EOF

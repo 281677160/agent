@@ -2,6 +2,7 @@
 cat >/usr/local/etc/xray/pzcon <<-EOF
 #!/bin/bash
 clear
+echo "trojan://${QJPASS}@${domain}:${PORT}#trojan"
 echo
 echo
 echo -e "\033[31m VLESS+TCP+XTLS \033[0m"

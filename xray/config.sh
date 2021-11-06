@@ -24,17 +24,17 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                         "xver": 1
                     },
                     {
-                        "path": "${WS_PATH}",
+                        "path": "/${WS_PATH}/",
                         "dest": 1234,
                         "xver": 1
                     },
                     {
-                        "path": "${VMTCP}",
+                        "path": "/${VMTCP}/",
                         "dest": 2345,
                         "xver": 1
                     },
                     {
-                        "path": "${VMWS}",
+                        "path": "/${VMWS}/",
                         "dest": 3456,
                         "xver": 1
                     }
@@ -101,7 +101,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                 "security": "none",
                 "wsSettings": {
                     "acceptProxyProtocol": true,
-                    "path": "${WS_PATH}"
+                    "path": "/${WS_PATH}/"
                 }
             }
         },
@@ -127,7 +127,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                         "type": "http",
                         "request": {
                             "path": [
-                                "${VMTCP}"
+                                "/${VMTCP}/"
                             ]
                         }
                     }
@@ -152,7 +152,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                 "security": "none",
                 "wsSettings": {
                     "acceptProxyProtocol": true,
-                    "path": "${VMWS}"
+                    "path": "/${VMWS}/"
                 }
             }
         }

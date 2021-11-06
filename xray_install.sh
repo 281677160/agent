@@ -200,13 +200,9 @@ systemctl stop ufw
 systemctl disable ufw
 systemctl restart nginx
 sleep 3
-systemctl start nginx
-if [[ `ps -ef |grep nginx` ]]; then
-	echo
-else
-	echo "nginx没有运行"
-	exit 1
-fi
+sudo systemctl stop nginx
+sudo service nginx stop
+
 mkdir /usr/local/bin >/dev/null 2>&1
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root
 export HOME="$PWD"

@@ -25,6 +25,7 @@ echo -e "\033[33m 指纹伪造：禁用 \033[0m"
 echo -e "\033[33m TLS Host：空 \033[0m"
 echo
 echo
+echo
 echo -e "\033[31m VLESS+TCP+XTLS \033[0m"
 echo
 echo "vless://${UUID}@${domain_ip}:${PORT}?headerType=none&type=tcp&encryption=none&flow=xtls-rprx-direct&security=xtls&sni=${domain}#VLESS+TCP+XTLS+${PORT}"
@@ -48,7 +49,6 @@ echo -e "\033[33m 伪装协议：未配置/none \033[0m"
 echo
 echo
 echo
-echo
 echo -e "\033[31m VLESS+TPC+TLS \033[0m"
 echo
 echo "vless://${UUID}@${domain}:${PORT}?headerType=none&type=tcp&encryption=none&security=tls&sni=${domain}#VLESS+TPC+TLS+${PORT}"
@@ -68,7 +68,6 @@ echo -e "\033[33m alpn：默认 \033[0m"
 echo -e "\033[33m 域名：${domain} \033[0m"
 echo -e "\033[33m 传输协议：TCP \033[0m"
 echo -e "\033[33m 伪装协议：未配置/none \033[0m"
-echo
 echo
 echo
 echo

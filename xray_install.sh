@@ -246,7 +246,7 @@ else
 	echo -e "\033[31m acme.sh运行错误 \033[0m"
 	exit 1
 fi
-"$HOME"/.acme.sh/acme.sh --issue -d "${wzym}" --webroot "${WebSite}" -k ec-256 --force |tee build.log
+~/.acme.sh/acme.sh  --issue  -d ${wzym}  --webroot /usr/share/nginx/html/ |tee build.log
 if [[ `grep "END CERTIFICATE" build.log` ]] && [[ `grep "Your cert key is in" build.log` ]]; then
 	echo "yes"
 else

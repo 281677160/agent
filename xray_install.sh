@@ -226,6 +226,11 @@ if [[ ! ${YUMING} == ${getIpAddress} ]]; then
 else
 	echo "yes"
 fi
+if [[ -n "$osPort80" ]]; then
+	process80=`netstat -tlpn | awk -F '[: ]+' '$5=="80"{print $9}'`
+	echo -e "\033[35m 检测到80端口被占用，占用进程为：${process80}，本次安装结束 \033[0m"
+	exit 1
+fi
 curl https://get.acme.sh | sh |tee build.log
 if [[ `grep "Install success!" build.log` ]]; then
 	echo "yes"

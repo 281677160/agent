@@ -1,7 +1,6 @@
 #!/bin/bash
 cat >/usr/local/etc/xray/pzcon <<-EOF
 #!/bin/bash
-clear
 echo
 echo
 echo -e "\033[41;33m 查询链接于：$(date +%Y年%m月%d号%H时%M分%S秒)  \033[0m"

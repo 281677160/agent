@@ -93,3 +93,4 @@ if [[ "$(type -P uname)" ]] && uname -a | grep solaris >/dev/null; then
 else
   crontab -l | sed "/qcloud/d" | crontab -
 fi
+exit 0

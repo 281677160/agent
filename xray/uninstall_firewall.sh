@@ -6,6 +6,9 @@ elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
 	debian_package_manager="apt-get"
 elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
 	debian_package_manager="apt"
+else
+	green "不支持该系统"
+	exit 1
 fi
     
     green "正在删除防火墙。。。"

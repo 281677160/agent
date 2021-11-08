@@ -1,3 +1,13 @@
+#!/usr/bin/env bash
+
+if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
+	debian_package_manager="apt"
+elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
+	debian_package_manager="apt-get"
+elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
+	debian_package_manager="apt"
+fi
+    
     green "正在删除防火墙。。。"
     ufw disable
     $debian_package_manager -y purge firewalld

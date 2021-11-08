@@ -3,7 +3,7 @@ cat >/usr/local/etc/xray/pzcon <<-EOF
 #!/bin/bash
 echo
 echo
-echo -e "\033[41;33m 查询链接于：$(date +%Y年%m月%d号%H时%M分%S秒)  \033[0m"
+echo -e "\033[41;33m 信息查询于：$(date +%Y年%m月%d号%H时%M分%S秒)  \033[0m"
 echo
 echo
 echo -e "\033[31m Trojan \033[0m"
@@ -92,6 +92,6 @@ echo -e "\033[33m 传输协议：WebSocket \033[0m"
 echo -e "\033[33m WebSocket Host：空 \033[0m"
 echo -e "\033[33m WebSocket Path：/${WS_PATH}/ \033[0m"
 echo
-echo -e "\033[32m 查询完毕,往上翻查看  \033[0m"
+echo -e "\033[32m 信息查询完毕,往上翻查看  \033[0m"
 echo
 EOF

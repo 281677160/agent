@@ -7,7 +7,7 @@ echo
 echo -e "\033[41;33m 信息查询于：$(date +%Y年%m月%d号%H时%M分%S秒)  \033[0m"
 echo
 echo
-echo -e "\033[31m Trojan \033[0m"
+echo -e "\033[31m （1）Trojan \033[0m"
 echo
 echo "trojan://${QJPASS}@${domain}:${PORT}#trojan+${PORT}"
 echo
@@ -27,7 +27,7 @@ echo -e "\033[33m TLS Host：空 \033[0m"
 echo
 echo
 echo
-echo -e "\033[31m VLESS+TCP+XTLS \033[0m"
+echo -e "\033[31m （2）VLESS+TCP+XTLS \033[0m"
 echo
 echo "vless://${UUID}@${domain_ip}:${PORT}?headerType=none&type=tcp&encryption=none&flow=xtls-rprx-direct&security=xtls&sni=${domain}#VLESS+TCP+XTLS+${PORT}"
 echo
@@ -50,7 +50,7 @@ echo -e "\033[33m 伪装协议：未配置/none \033[0m"
 echo
 echo
 echo
-echo -e "\033[31m VLESS+TPC+TLS \033[0m"
+echo -e "\033[31m （3）VLESS+TPC+TLS \033[0m"
 echo
 echo "vless://${UUID}@${domain}:${PORT}?headerType=none&type=tcp&encryption=none&security=tls&sni=${domain}#VLESS+TPC+TLS+${PORT}"
 echo
@@ -72,7 +72,7 @@ echo -e "\033[33m 伪装协议：未配置/none \033[0m"
 echo
 echo
 echo
-echo -e "\033[31m VLESS+WS+TLS \033[0m"
+echo -e "\033[31m （4）VLESS+WS+TLS \033[0m"
 echo
 echo "vless://${UUID}@${domain}:${PORT}?host=&path=%2F${WS_PATH}%2F&type=ws&encryption=none&security=tls&sni=${domain}#VLESS+WS+TLS+${PORT}"
 echo

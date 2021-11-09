@@ -9,7 +9,7 @@ apt-get update && apt-get install -y wget curl git socat sudo ca-certificates &&
 
 
 支持CentOS7或者以下系统(用root用户登录，然后首先对你的系统使用以下命令)
-yum apt-get update && sudo yum install -y wget curl git socat ca-certificates && update-ca-trust force-enable
+yum install -y wget curl git socat ca-certificates && update-ca-trust force-enable && yum update
 
 ```
 bash <(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray_install.sh)

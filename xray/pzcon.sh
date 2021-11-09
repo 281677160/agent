@@ -11,7 +11,7 @@ echo -e "\033[31m （1）Trojan \033[0m"
 echo
 echo "trojan://${QJPASS}@${domain}:${PORT}#trojan+${PORT}"
 echo
-echo -e "\033[32m 二维码链接(浏览器打开)：https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=trojan://${QJPASS}@${domain}:${PORT}#trojan+${PORT} \033[0m"
+echo -e "\033[32m 二维码链接(浏览器打开):https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=trojan://${QJPASS}@${domain}:${PORT}#trojan+${PORT} \033[0m"
 echo
 echo -e "\033[33m 节点备注/别名：Trojan+${PORT}（可自行修改） \033[0m"
 echo -e "\033[33m 节点类型：XRay \033[0m"
@@ -31,7 +31,7 @@ echo -e "\033[31m （2）VLESS+TCP+XTLS \033[0m"
 echo
 echo "vless://${UUID}@${domain_ip}:${PORT}?headerType=none&type=tcp&encryption=none&flow=xtls-rprx-direct&security=xtls&sni=${domain}#VLESS+TCP+XTLS+${PORT}"
 echo
-echo -e "\033[32m 二维码链接(浏览器打开)：https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=vless://${UUID}@${domain_ip}:${PORT}?headerType=none&type=tcp&encryption=none&flow=xtls-rprx-direct&security=xtls&sni=${domain}#VLESS+TCP+XTLS+${PORT} \033[0m"
+echo -e "\033[32m 二维码链接(浏览器打开):https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=vless://${UUID}@${domain_ip}:${PORT}?headerType=none&type=tcp&encryption=none&flow=xtls-rprx-direct&security=xtls&sni=${domain}#VLESS+TCP+XTLS+${PORT} \033[0m"
 echo
 echo -e "\033[33m 节点备注/别名：VLESS+TCP+XTLS${PORT}（可自行修改） \033[0m"
 echo -e "\033[33m 节点类型：XRay \033[0m"
@@ -54,7 +54,7 @@ echo -e "\033[31m （3）VLESS+TPC+TLS \033[0m"
 echo
 echo "vless://${UUID}@${domain}:${PORT}?headerType=none&type=tcp&encryption=none&security=tls&sni=${domain}#VLESS+TPC+TLS+${PORT}"
 echo
-echo -e "\033[32m 二维码链接(浏览器打开)：https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=vless://${UUID}@${domain}:${PORT}?headerType=none&type=tcp&encryption=none&security=tls&sni=${domain}#VLESS+TPC+TLS+${PORT} \033[0m"
+echo -e "\033[32m 二维码链接(浏览器打开):https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=vless://${UUID}@${domain}:${PORT}?headerType=none&type=tcp&encryption=none&security=tls&sni=${domain}#VLESS+TPC+TLS+${PORT} \033[0m"
 echo
 echo -e "\033[33m 节点备注/别名：VLESS+TPC+TLS${PORT}（可自行修改） \033[0m"
 echo -e "\033[33m 节点类型：XRay \033[0m"
@@ -76,7 +76,7 @@ echo -e "\033[31m （4）VLESS+WS+TLS \033[0m"
 echo
 echo "vless://${UUID}@${domain}:${PORT}?host=&path=%2F${WS_PATH}%2F&type=ws&encryption=none&security=tls&sni=${domain}#VLESS+WS+TLS+${PORT}"
 echo
-echo -e "\033[32m 二维码链接(浏览器打开)：https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=vless://${UUID}@${domain}:${PORT}?host=&path=%2F${WS_PATH}%2F&type=ws&encryption=none&security=tls&sni=${domain}#VLESS+WS+TLS+${PORT} \033[0m"
+echo -e "\033[32m 二维码链接(浏览器打开):https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=vless://${UUID}@${domain}:${PORT}?host=&path=%2F${WS_PATH}%2F&type=ws&encryption=none&security=tls&sni=${domain}#VLESS+WS+TLS+${PORT} \033[0m"
 echo
 echo -e "\033[33m 节点备注/别名：VLESS+WS+TLS${PORT}（可自行修改） \033[0m"
 echo -e "\033[33m 节点类型：XRay \033[0m"

@@ -93,6 +93,6 @@ echo -e "\033[33m 传输协议：WebSocket \033[0m"
 echo -e "\033[33m WebSocket Host：空 \033[0m"
 echo -e "\033[33m WebSocket Path：/${WS_PATH}/ \033[0m"
 echo
-echo -e "\033[32m 信息查询完毕,往上翻查看  \033[0m"
+echo -e "\033[32m 总共4条信息查询完毕,往上翻查看  \033[0m"
 echo
 EOF

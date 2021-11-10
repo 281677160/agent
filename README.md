@@ -12,11 +12,18 @@ apt-get update && apt-get install -y wget curl git socat sudo ca-certificates &&
 yum install -y wget curl git socat ca-certificates && update-ca-trust force-enable && yum update -y
 
 ```
-bash <(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray_install.sh)
 #
 ---
 #
 ---
+- [带x-ui网页版的xray](https://github.com/vaxilu/x-ui)，需要域名，按下面步骤一步步输入命令即可(xxxx@gmail.com邮箱无需理会，就这样就可以)
+```yaml
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/Xray_onekey/main/install.sh)"
+#
+---
+#
+---
+```
 - [带x-ui网页版的xray](https://github.com/vaxilu/x-ui)，需要域名，按下面步骤一步步输入命令即可(xxxx@gmail.com邮箱无需理会，就这样就可以)
 ```yaml
 curl https://get.acme.sh | sh

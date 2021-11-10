@@ -16,14 +16,14 @@ yum install -y wget curl git socat ca-certificates && update-ca-trust force-enab
 ---
 #
 ---
-- [带x-ui网页版的xray](https://github.com/vaxilu/x-ui)，需要域名，按下面步骤一步步输入命令即可(xxxx@gmail.com邮箱无需理会，就这样就可以)
+- 自制xary一键脚本，需要域名
 ```yaml
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/Xray_onekey/main/install.sh)"
-#
----
-#
----
 ```
+#
+---
+#
+---
 - [带x-ui网页版的xray](https://github.com/vaxilu/x-ui)，需要域名，按下面步骤一步步输入命令即可(xxxx@gmail.com邮箱无需理会，就这样就可以)
 ```yaml
 curl https://get.acme.sh | sh
@@ -66,22 +66,6 @@ bash <(wget -qO- https://git.io/mtg.sh)
 - [八合一的一键搭建(V2ray/Xray/Trojan)](https://github.com/mack-a/v2ray-agent)，需要域名，后期管理命令：vasma
 ```yaml
 wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
-```
-#
----
-#
----
-- [SS一键搭建](https://github.com/shidahuilang/SS-SSR-TG-iptables-bt)，后期管理再次输入命令
-```yaml
-wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS-SSR-TG-iptables-bt/main/sh/ss-go.sh && chmod +x ss-go.sh && bash ss-go.sh
-```
-#
----
-#
----
-- [SS/SSR一键搭建](https://github.com/shidahuilang/SS-SSR-TG-iptables-bt)，后期管理再次输入命令
-```yaml
-wget -N --no-check-certificate https://raw.githubusercontent.com/shidahuilang/SS-SSR-TG-iptables-bt/main/sh/ssr.sh && chmod +x ssr.sh && bash ssr.sh
 ```
 #
 ---

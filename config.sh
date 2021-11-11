@@ -378,7 +378,7 @@ do_install() {
 
 do_print_links() {
     info "Detecting IP address"
-    IP=`tt.danshui.life`
+    IP="tt.danshui.life"
     info "Detected external IP is ${IP}"
 
     URL_PREFIX="https://t.me/proxy?server=${IP}&port=${PORT}&secret="

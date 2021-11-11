@@ -378,10 +378,10 @@ do_install() {
 
 do_print_links() {
     info "Detecting IP address"
-    IP="tt.danshui.life"
+    IP=`curl -s -4 -m 10 http://ipv4.seriyps.ru || curl -s -4 -m 10 https://digitalresistance.dog/myIp`
     info "Detected external IP is ${IP}"
 
-    URL_PREFIX="https://t.me/proxy?server=${IP}&port=${PORT}&secret="
+    URL_PREFIX="https://t.me/proxy?server=tt.danshui.life&port=${PORT}&secret="
 
     ESCAPED_SECRET=$(echo -n $SECRET | sed 's/../\\x&/g') # bytes
     ESCAPED_TLS_SECRET="\xee${ESCAPED_SECRET}"${TLS_DOMAIN}

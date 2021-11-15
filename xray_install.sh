@@ -367,6 +367,15 @@ function xray_install() {
   judge "Xray 安装"
 }
 
+function configure_nginx() {
+  nginx_conf="/etc/nginx/conf.d/${domain}.conf"
+  cd /etc/nginx/conf.d/ && rm -f ${domain}.conf && wget -O ${domain}.conf https://raw.githubusercontent.com/281677160/agent/main/xray/web.conf
+  sed -i "s/xxx/${domain}/g" ${nginx_conf}
+  judge "Nginx 配置 修改"
+
+  systemctl restart nginx
+}
+
 function generate_certificate() {
   signedcert=$(xray tls cert -domain="$local_ip" -name="$local_ip" -org="$local_ip" -expire=87600h)
   echo $signedcert | jq '.certificate[]' | sed 's/\"//g' | tee $cert_dir/self_signed_cert.pem
@@ -379,11 +388,11 @@ function generate_certificate() {
 
 function ssl_judge_and_install() {
   [[ ! -d /ssl ]] && mkdir -p /ssl
-  if [[ -f "$HOME/.acme.sh/${domain}/${domain}.key" && -f "$HOME/.acme.sh/${domain}/${domain}.cer" && -f "$HOME/.acme.sh/acme.sh" ]]; then
+  if [[ -f "$HOME/.acme.sh/${domain}_ecc/${domain}.key" && -f "$HOME/.acme.sh/${domain}_ecc/${domain}.cer" ]]; then
     print_ok "[${domain}]证书已存在，重新启用证书"
     sleep 2
     rm -fr /ssl/* >/dev/null 2>&1
-    "$HOME"/.acme.sh/acme.sh --installcert -d ${domain} --key-file /ssl/xray.key --fullchain-file /ssl/xray.crt
+    "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --ecc
     judge "证书启用"
     sleep 2
     "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
@@ -404,28 +413,28 @@ function ssl_judge_and_install() {
 }
 
 function acme() {
-  systemctl stop nginx
-  curl -L get.acme.sh | bash
-  "$HOME"/.acme.sh/acme.sh --register-account -m xxxx@gmail.com
-  
-  if "$HOME"/.acme.sh/acme.sh  --issue -d ${domain}   --standalone; then
-    print_ok "SSL 证书生成 成功"
+  "$HOME"/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+
+  sed -i "6s/^/#/" "$nginx_conf"
+  sed -i "6a\\\troot $website_dir;" "$nginx_conf"
+  systemctl restart nginx
+
+  if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --webroot "$website_dir" -k ec-256 --force; then
+    print_ok "SSL 证书生成成功"
     sleep 2
-    if "$HOME"/.acme.sh/acme.sh --installcert -d ${domain} --key-file /ssl/xray.key --fullchain-file /ssl/xray.crt; then
-      print_ok "SSL 证书配置 成功"
-      sleep 2
+    if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --reloadcmd "systemctl restart xray" --ecc --force; then
+      print_ok "SSL 证书配置成功"
       "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
-      systemctl restart nginx
-      echo $domain >"$HOME"/.acme.sh/domainjilu
-      judge "域名记录"
+      sleep 2
     fi
   else
     print_error "SSL 证书生成失败"
-    rm -rf "$HOME/.acme.sh/${domain}"
-    rm -rf "$HOME/.acme.sh/domainjilu"
-    rm -rf /ssl/*
+    rm -rf "$HOME/.acme.sh/${domain}_ecc"
     exit 1
   fi
+
+  sed -i "7d" "$nginx_conf"
+  sed -i "6s/#//" "$nginx_conf"
 }
 
 function xrayliugen_conf() {

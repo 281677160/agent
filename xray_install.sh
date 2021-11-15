@@ -84,7 +84,7 @@ judge() {
 function running_state() {
   [[ -f '/usr/local/bin/xray' ]] && XRAY_VERSION="$(/usr/local/bin/xray -version | awk 'NR==1 {print $2}')"
   nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
-  [[ -f '$cloudreve_path/latest_ver' ]] && CLOUDREVE_VERSION="$(cat $cloudreve_path/latest_ver)"
+  [[ -f '/usr/local/cloudreve/latest_ver' ]] && CLOUDREVE_VERSION="$(cat /usr/local/cloudreve/latest_ver)"
   if [[ `command -v xray |grep -c "xray"` == '0' ]]; then
     export XRAY_ZT="${Blue} Xray状态${Font}：${Red}未安装${Font}"
   elif [[ `systemctl status xray |grep -c "active (running) "` == '1' ]]; then

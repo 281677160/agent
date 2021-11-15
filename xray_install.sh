@@ -725,6 +725,7 @@ function install_xray_ws() {
   xray_install
   configure_xray_ws
   nginx_install
+  configure_nginx
   generate_certificate
   ssl_judge_and_install
   configure_cloudreve

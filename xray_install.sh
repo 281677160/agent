@@ -398,7 +398,6 @@ function ssl_judge_and_install() {
     "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
     echo $domain >"$HOME"/.acme.sh/domainjilu
     judge "域名记录"
-    sleep 2
   else
     rm -rf /ssl/* > /dev/null 2>&1
     rm -fr /root/.acme.sh > /dev/null 2>&1
@@ -428,7 +427,8 @@ function acme() {
     if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --reloadcmd "systemctl restart xray" --ecc --force; then
       print_ok "SSL 证书配置成功"
       "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
-      sleep 2
+      echo $domain >"$HOME"/.acme.sh/domainjilu
+      judge "域名记录"
     fi
   else
     print_error "SSL 证书生成失败"

@@ -18,7 +18,7 @@ yum install -y wget curl git socat ca-certificates && update-ca-trust force-enab
 ---
 - 自制xary一键脚本，需要域名
 ```yaml
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/Xray_onekey/main/install.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray_install.sh)"
 ```
 #
 ---

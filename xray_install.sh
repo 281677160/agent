@@ -413,6 +413,9 @@ function ssl_judge_and_install() {
 }
 
 function acme() {
+  curl -L get.acme.sh | bash
+  judge "安装 SSL 证书生成脚本"
+  
   "$HOME"/.acme.sh/acme.sh --set-default-ca --server letsencrypt
 
   sed -i "6s/^/#/" "$nginx_conf"

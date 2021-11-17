@@ -163,11 +163,11 @@ do_configure_os() {
             info "Installing required APT packages"
             sudo apt -y install erlang-nox erlang-dev make sed diffutils tar systemd
             ;;
-        centos-7)
+        centos-8)
             info "Installing extra repositories"
-            sudo yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
-                 wget \
-                 https://packages.erlang-solutions.com/erlang-solutions-1.0-1.noarch.rpm
+            curl -sL https://rpm.nodesource.com/setup_12.x | bash -
+            sudo yum -y nodejs
+            npm install -g yarn
             info "Installing required RPM packages"
             sudo yum -y install chrony erlang-compiler erlang-erts erlang-kernel erlang-stdlib erlang-syntax_tools systemd \
                  erlang-crypto erlang-inets erlang-sasl erlang-ssl

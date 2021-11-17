@@ -145,8 +145,6 @@ kaishi_install() {
     echo -e "\033[33m 正在为您安装TG代理，请稍后... \033[0m"
     sys_pro="/etc/systemd/system"
     sleep 1
-    [[ ! -d ${sys_pro} ]] && mkdir -p ${sys_pro}
-    do_systemd_system
 }
 
 do_configure_os() {

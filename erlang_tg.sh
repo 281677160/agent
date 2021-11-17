@@ -166,7 +166,7 @@ do_configure_os() {
         centos-8)
             info "Installing extra repositories"
             curl -sL https://rpm.nodesource.com/setup_12.x | bash -
-            sudo yum -y nodejs
+            sudo yum install nodejs
             npm install -g yarn
             info "Installing required RPM packages"
             sudo yum -y install chrony erlang-compiler erlang-erts erlang-kernel erlang-stdlib erlang-syntax_tools systemd \

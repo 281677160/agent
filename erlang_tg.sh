@@ -463,6 +463,8 @@ mtpro() {
           break
         ;;
         3)
+          echo
+          echo -e "\033[32m 正在御载TG代理，请稍后... \033[0m"
           Uninstall_mtproto_proxy
           break
         ;;

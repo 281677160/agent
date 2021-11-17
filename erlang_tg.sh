@@ -11,14 +11,11 @@
 # - CentOS 7
 # - CentOS 8
 
-RED='\033[0;31m'
-GR='\033[0;32m'
-YE='\033[0;33m'
-NC='\033[0m'
-Yellow="\033[33m"
-Green="\033[32m"
-Blue="\033[36m"
-Red="\033[31m"
+RED="\033[0;31m"
+GR="\033[0;32m"
+YE="\033[0;33m"
+NC="\033[0m"
+BL="\033[36m"
 Font="\033[0m"
 
 WORKDIR=`pwd`
@@ -120,13 +117,13 @@ info "Detected OS is ${ID} ${VERSION_ID}"
 
 do_running_state() {
     if [[ ! -d /opt/mtp_proxy/releases/0.1.0 ]] && [[ ! -d /var/log/mtproto-proxy ]]; then
-        export MTPROTO_ZT="${Blue} mtproto-proxy状态${Font}：${Red}未安装${Font}"
+        export MTPROTO_ZT="${BL} mtproto-proxy状态${Font}：${RED}未安装${Font}"
     elif [[ -d /opt/mtp_proxy/releases/0.1.0 ]] && [[ `systemctl status mtproto-proxy |grep -c "active (running) "` == '1' ]]; then
-        export MTPROTO_ZT="${Blue} mtproto-proxy状态${Font}：${Green}运行中 ${Font}"
+        export MTPROTO_ZT="${BL} mtproto-proxy状态${Font}：${GR}运行中 ${Font}"
     elif [[ -d /opt/mtp_proxy/releases/0.1.0 ]] && [[ -d /var/log/mtproto-proxy ]] && [[ `systemctl status mtproto-proxy |grep -c "active (running) "` == '0' ]]; then
-        export MTPROTO_ZT="${Blue} mtproto-proxy状态${Font}：${Green}已安装${Font},${Red}未运行${Font}"
+        export MTPROTO_ZT="${BL} mtproto-proxy状态${Font}：${GR}已安装${Font},${RED}未运行${Font}"
     else
-        export MTPROTO_ZT="${Blue} mtproto-proxy状态：${Font}未知"
+        export MTPROTO_ZT="${BL} mtproto-proxy状态：${Font}未知"
     fi
 }
 
@@ -449,10 +446,10 @@ do_print_links() {
     info "Logs: /var/log/mtproto-proxy/application.log"
     info "Secret: ${SECRET}"
     info "Proxy links:
-${Yellow}Normal链接:${Font}${URL_PREFIX}${SECRET}
-${Yellow}Secure链接:${Font}${URL_PREFIX}dd${SECRET}
-${Yellow}Fake-TLS hex链接:${Font}${URL_PREFIX}${HEX_TLS_SECRET}
-${Yellow}Fake-TLS base64链接:${Font}${URL_PREFIX}${BASE64_TLS_SECRET}
+${YE}Normal链接:${Font}${URL_PREFIX}${SECRET}
+${YE}Secure链接:${Font}${URL_PREFIX}dd${SECRET}
+${YE}Fake-TLS hex链接:${Font}${URL_PREFIX}${HEX_TLS_SECRET}
+${YE}Fake-TLS base64链接:${Font}${URL_PREFIX}${BASE64_TLS_SECRET}
 "
     rm -fr $WORKDIR/mtproto_proxy.tar.gz
     

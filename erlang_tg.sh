@@ -173,6 +173,12 @@ do_configure_os() {
         centos)
             info "Installing extra repositories"
             sudo yum -y install wget make sed diffutils tar systemd
+            yum update -y
+            wget https://packages.erlang-solutions.com/erlang-solutions-2.0-1.noarch.rpm
+            rpm -Uvh erlang-solutions-2.0-1.noarch.rpm
+            if [[ `timeout -k 1s 3s erl |grep -c "Eshell V"` == '0' ]]; then
+                sudo yum -y install esl-erlang
+            fi
             ;;
         *)
             echo -e "\033[31m 不支持您的系统进行安装 \033[0m"

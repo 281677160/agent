@@ -370,13 +370,10 @@ ${Yellow}Fake-TLS base64链接:${Font}${URL_PREFIX}${BASE64_TLS_SECRET}
     rm -fr $WORKDIR/mtproto_proxy.tar.gz
     
 cat >$WORKDIR/mtproto_proxy/conck <<-EOF
-#!/bin/bash
-Yellow="\033[33m"
-Font="\033[0m"
-${Yellow}Normal链接:${Font}${URL_PREFIX}${SECRET}
-${Yellow}Secure链接:${Font}${URL_PREFIX}dd${SECRET}
-${Yellow}Fake-TLS hex链接:${Font}${URL_PREFIX}${HEX_TLS_SECRET}
-${Yellow}Fake-TLS base64链接:${Font}${URL_PREFIX}${BASE64_TLS_SECRET}
+echo -e "\033[33mNormal链接:\033[0m ${URL_PREFIX}${SECRET}"
+echo -e "\033[33mSecure链接:\033[0m ${URL_PREFIX}dd${SECRET}"
+echo -e "\033[33mFake-TLS hex链接:\033[0m ${URL_PREFIX}${HEX_TLS_SECRET}"
+echo -e "\033[33mFake-TLS base64链接:\033[0m ${URL_PREFIX}${BASE64_TLS_SECRET}"
 EOF
 }
 

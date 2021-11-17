@@ -173,7 +173,6 @@ do_configure_os() {
             sudo yum -y install wget
             wget https://packages.erlang-solutions.com/erlang-solutions-2.0-1.noarch.rpm
             rpm -Uvh erlang-solutions-2.0-1.noarch.rpm
-            info "Installing required RPM packages"
             sudo yum -y install erlang
             yum update -y
             ;;

@@ -172,7 +172,7 @@ do_configure_os() {
             ;;
         centos)
             info "Installing extra repositories"
-            sudo yum -y install wget
+            sudo yum -y install wget make sed diffutils tar systemd
             yum update -y
             wget https://packages.erlang-solutions.com/erlang-solutions-2.0-1.noarch.rpm
             rpm -Uvh erlang-solutions-2.0-1.noarch.rpm

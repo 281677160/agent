@@ -396,6 +396,8 @@ Uninstall_mtproto_proxy() {
     sudo systemctl stop mtproto-proxy
     sudo systemctl disable mtproto-proxy
     find / -iname 'mtproto_proxy' | xargs -i rm -rf {}
+    find / -iname 'mtp_proxy' | xargs -i rm -rf {}
+    rm -rf /etc/systemd/system/mtproto-proxy.service
 }
 
 mtpro() {

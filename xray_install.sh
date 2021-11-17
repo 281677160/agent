@@ -43,25 +43,20 @@ random_num=$((RANDOM % 12 + 4))
 function print_ok() {
   echo -e " ${OK} ${Blue} $1 ${Font}"
 }
-
 function print_Hi() {
   echo -e " ${Hi} ${Blue} $1 ${Font}"
 }
-
 function print_error() {
   echo -e "${ERROR} ${RedBG} $1 ${Font}"
 }
-
 function ECHOY()
 {
   echo -e "${Yellow} $1 ${Font}"
 }
-
 function ECHOG()
 {
   echo -e "${Green} $1 ${Font}"
 }
-
 function is_root() {
   if [[ 0 == "$UID" ]]; then
     print_ok "当前用户是 root 用户，请开始您的骚操作"
@@ -70,7 +65,6 @@ function is_root() {
     exit 1
   fi
 }
-
 judge() {
   if [[ 0 -eq $? ]]; then
     print_ok "$1 完成"

@@ -152,7 +152,7 @@ do_configure_os() {
     case "${ID}-${VERSION_ID}" in
         ubuntu-19.*|ubuntu-20.*|ubuntu-21.*|debian-10)
             info "Installing required APT packages"
-            sudo apt -y install erlang-nox erlang-dev make sed diffutils tar
+            sudo apt -y install erlang-nox erlang-dev make sed diffutils tar systemd
             ;;
         debian-9|debian-8|ubuntu-18.*)
             info "Installing extra repositories"
@@ -160,7 +160,7 @@ do_configure_os() {
             sudo dpkg -i erlang-solutions_1.0_all.deb
             sudo apt -y update
             info "Installing required APT packages"
-            sudo apt -y install erlang-nox erlang-dev make sed diffutils tar
+            sudo apt -y install erlang-nox erlang-dev make sed diffutils tar systemd
             ;;
         centos-7)
             info "Installing extra repositories"
@@ -168,7 +168,7 @@ do_configure_os() {
                  wget \
                  https://packages.erlang-solutions.com/erlang-solutions-1.0-1.noarch.rpm
             info "Installing required RPM packages"
-            sudo yum -y install chrony erlang-compiler erlang-erts erlang-kernel erlang-stdlib erlang-syntax_tools \
+            sudo yum -y install chrony erlang-compiler erlang-erts erlang-kernel erlang-stdlib erlang-syntax_tools systemd \
                  erlang-crypto erlang-inets erlang-sasl erlang-ssl
             ;;
         *)

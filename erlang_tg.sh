@@ -172,8 +172,7 @@ do_configure_os() {
             sudo yum -y install -y nodejs
             npm install -g yarn
             info "Installing required RPM packages"
-            sudo yum -y install chrony erlang-compiler erlang-erts erlang-kernel erlang-stdlib erlang-syntax_tools systemd \
-                 erlang-crypto erlang-inets erlang-sasl erlang-ssl
+            sudo yum -y install chrony erlang
             ;;
         *)
             echo -e "\033[31m 不支持您的系统进行安装 \033[0m"

@@ -166,10 +166,10 @@ do_configure_os() {
         centos-8)
             info "Installing extra repositories"
             curl -sL https://rpm.nodesource.com/setup_12.x | bash -
-            sudo yum install nodejs
+            sudo dnf install -y nodejs
             npm install -g yarn
             info "Installing required RPM packages"
-            sudo yum -y install chrony erlang-compiler erlang-erts erlang-kernel erlang-stdlib erlang-syntax_tools systemd \
+            sudo dnf install -y chrony erlang-compiler erlang-erts erlang-kernel erlang-stdlib erlang-syntax_tools systemd \
                  erlang-crypto erlang-inets erlang-sasl erlang-ssl
             ;;
         *)

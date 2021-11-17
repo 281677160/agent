@@ -360,6 +360,15 @@ function xray_install() {
   judge "Xray 安装"
 }
 
+function configure_nginx() {
+  nginx_conf="/etc/nginx/conf.d/${domain}.conf"
+  cd /etc/nginx/conf.d/ && rm -f ${domain}.conf && wget -O ${domain}.conf https://raw.githubusercontent.com/281677160/agent/main/xray/web.conf
+  sed -i "s/xxx/${domain}/g" ${nginx_conf}
+  judge "Nginx 配置 修改"
+
+  systemctl restart nginx
+}
+
 function generate_certificate() {
   signedcert=$(xray tls cert -domain="$local_ip" -name="$local_ip" -org="$local_ip" -expire=87600h)
   echo $signedcert | jq '.certificate[]' | sed 's/\"//g' | tee $cert_dir/self_signed_cert.pem
@@ -401,6 +410,8 @@ function acme() {
   
   "$HOME"/.acme.sh/acme.sh --set-default-ca --server letsencrypt
 
+  sed -i "6s/^/#/" "$nginx_conf"
+  sed -i "6a\\\troot $website_dir;" "$nginx_conf"
   systemctl restart nginx
 
   if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --webroot "$website_dir" -k ec-256 --force; then
@@ -417,6 +428,9 @@ function acme() {
     rm -rf "$HOME/.acme.sh/${domain}_ecc"
     exit 1
   fi
+
+  sed -i "7d" "$nginx_conf"
+  sed -i "6s/#//" "$nginx_conf"
 }
 
 function xrayliugen_conf() {
@@ -707,6 +721,7 @@ function install_xray_ws() {
   xray_install
   configure_xray_ws
   nginx_install
+  configure_nginx
   generate_certificate
   ssl_judge_and_install
   configure_cloudreve

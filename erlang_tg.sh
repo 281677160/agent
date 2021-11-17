@@ -9,6 +9,7 @@
 # - Debian 9 stretch
 # - Debinn 8 jessie (not well-tested)
 # - CentOS 7
+# - CentOS 8
 
 RED='\033[0;31m'
 GR='\033[0;32m'

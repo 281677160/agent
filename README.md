@@ -46,7 +46,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
 ---
 - [TG代理一键搭建](https://github.com/seriyps/mtproto_proxy)
 ```yaml
-curl -L -o mtp_install.sh https://git.io/fj5ru && bash mtp_install.sh
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/Xray_onekey/main/mtg_tg.sh)"
 ```
 #
 ---

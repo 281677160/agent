@@ -165,11 +165,14 @@ do_configure_os() {
             ;;
         centos-8)
             info "Installing extra repositories"
+            curl -s https://packagecloud.io/install/repositories/rabbitmq/erlang/script.rpm.sh | sudo bash
+            sudo yum -y clean all
+            sudo yum -y makecache
             curl -sL https://rpm.nodesource.com/setup_12.x | bash -
-            sudo dnf install -y nodejs
+            sudo yum -y install -y nodejs
             npm install -g yarn
             info "Installing required RPM packages"
-            sudo dnf install -y chrony erlang-compiler erlang-erts erlang-kernel erlang-stdlib erlang-syntax_tools systemd \
+            sudo yum -y install chrony erlang-compiler erlang-erts erlang-kernel erlang-stdlib erlang-syntax_tools systemd \
                  erlang-crypto erlang-inets erlang-sasl erlang-ssl
             ;;
         *)

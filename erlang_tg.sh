@@ -173,10 +173,10 @@ do_configure_os() {
         centos)
             info "Installing extra repositories"
             sudo yum -y install wget
+            yum update -y
             wget https://packages.erlang-solutions.com/erlang-solutions-2.0-1.noarch.rpm
             rpm -Uvh erlang-solutions-2.0-1.noarch.rpm
             sudo yum -y install erlang
-            yum update -y
             ;;
         *)
             echo -e "\033[31m 不支持您的系统进行安装 \033[0m"

@@ -16,6 +16,7 @@ GR='\033[0;32m'
 YE='\033[0;33m'
 NC='\033[0m'
 Yellow="\033[33m"
+Green="\033[32m"
 Blue="\033[36m"
 Font="\033[0m"
 
@@ -115,6 +116,18 @@ set -e
 
 source /etc/os-release
 info "Detected OS is ${ID} ${VERSION_ID}"
+
+running_state() {
+    if [[ ! -d /opt/mtp_proxy/releases/0.1.0 ]] && [[ ! -d /var/log/mtproto-proxy ]]; then
+        export MTPROTO_ZT="${Blue} mtproto-proxy状态${Font}：${Red}未安装${Font}"
+    elif [[ -d /opt/mtp_proxy/releases/0.1.0 ]] && [[ `systemctl status cloudreve |grep -c "active (running) "` == '1' ]]; then
+        export MTPROTO_ZT="${Blue} mtproto-proxy状态${Font}：${Green}运行中 ${Font}"
+    elif [[ -d /opt/mtp_proxy/releases/0.1.0 ]] && [[ -d /var/log/mtproto-proxy ]] && [[ `systemctl status cloudreve |grep -c "active (running) "` == '0' ]]; then
+        export MTPROTO_ZT="${Blue} mtproto-proxy状态${Font}：${Green}已安装${Font},${Red}未运行${Font}"
+    else
+        export MTPROTO_ZT="${Blue} mtproto-proxy状态：${Font}未知"
+    fi
+}
 
 kaishi_install() {
     sed -i '/^\*\ *soft\ *nofile\ *[[:digit:]]*/d' /etc/security/limits.conf
@@ -475,6 +488,9 @@ mtpro() {
     clear
     echo
     echo
+    running_state
+    echo -e "${CLOUDREVE_ZT}"
+    echo 
     echo -e "\033[33m 1、安装 TG代理 \033[0m"
     echo -e "\033[33m 2、打印 TG代理链接 \033[0m"
     echo -e "\033[33m 3、御载 TG代理 \033[0m"

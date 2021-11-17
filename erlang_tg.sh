@@ -141,6 +141,8 @@ kaishi_install() {
     esac
     done
     echo -e "\033[32m 您设置端口为：${PORT} \033[0m"
+    echo
+    echo -e "\033[33m 正在为您安装TG代理，请稍后... \033[0m"
     sleep 2
 }
 

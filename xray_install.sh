@@ -400,10 +400,10 @@ function ssl_judge_and_install() {
     judge "域名记录"
   else
     rm -rf /ssl/* > /dev/null 2>&1
-    rm -fr /root/.acme.sh > /dev/null 2>&1
-    sed -i '/acme.sh/d' /root/.bashrc > /dev/null 2>&1
-    sed -i '/acme.sh/d' /root/.cshrc > /dev/null 2>&1
-    sed -i '/acme.sh/d' /root/.tcshrc > /dev/null 2>&1
+    rm -fr "$HOME"/.acme.sh > /dev/null 2>&1
+    sed -i '/acme.sh/d' "$HOME"/.bashrc > /dev/null 2>&1
+    sed -i '/acme.sh/d' "$HOME"/.cshrc > /dev/null 2>&1
+    sed -i '/acme.sh/d' "$HOME"/.tcshrc > /dev/null 2>&1
     cp -a $cert_dir/self_signed_cert.pem /ssl/xray.crt
     cp -a $cert_dir/self_signed_key.pem /ssl/xray.key
     acme

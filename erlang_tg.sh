@@ -420,7 +420,6 @@ EOF
 
 install_mtproto_proxy() {
     kaishi_install
-    Uninstall_mtproto_proxy
     do_configure_os
     do_get_source
     cd $SRC_DIR/

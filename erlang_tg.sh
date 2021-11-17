@@ -206,7 +206,6 @@ do_configure_os() {
             yum update -y
             ;;
         centos8)
-            echo -e "\033[31m centos8 \033[0m"
             info "Installing extra repositories"
             sudo yum -y install wget make sed diffutils tar systemd
             if [[ `timeout -k 1s 3s erl |grep -c "Eshell V"` == '0' ]]; then

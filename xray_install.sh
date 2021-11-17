@@ -388,7 +388,7 @@ function generate_certificate() {
 
 function ssl_judge_and_install() {
   [[ ! -d /ssl ]] && mkdir -p /ssl
-  if [[ -f "$HOME/.acme.sh/${domain}_ecc/${domain}.key" && -f "$HOME/.acme.sh/${domain}_ecc/${domain}.cer" ]]; then
+  if [[ -f "$HOME/.acme.sh/${domain}_ecc/${domain}.key" && -f "$HOME/.acme.sh/${domain}_ecc/${domain}.cer" && -f "$HOME/.acme.sh/acme.sh ]]; then
     print_ok "[${domain}]证书已存在，重新启用证书"
     sleep 2
     rm -fr /ssl/* >/dev/null 2>&1

@@ -149,28 +149,33 @@ kaishi_install() {
 
 do_configure_os() {
     # We need at least 'make' 'sed' 'diff' 'od' 'install' 'tar' 'base64' 'awk'
-
-    case "${ID}-${VERSION_ID}" in
-        ubuntu-19.*|ubuntu-20.*|ubuntu-21.*|debian-10)
+    source '/etc/os-release'
+    case "${ID}" in
+        ubuntu)
             info "Installing required APT packages"
-            sudo apt -y install erlang-nox erlang-dev make sed diffutils tar systemd
-            ;;
-        debian-9|debian-8|ubuntu-18.*)
-            info "Installing extra repositories"
-            curl -L https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb -o erlang-solutions_1.0_all.deb
-            sudo dpkg -i erlang-solutions_1.0_all.deb
             sudo apt -y update
-            info "Installing required APT packages"
-            sudo apt -y install erlang-nox erlang-dev make sed diffutils tar systemd
+            sudo apt-get -y install wget
+            wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb
+            sudo dpkg -i erlang-solutions_2.0_all.deb
+            sudo apt-get -y install erlang make sed diffutils tar systemd
             ;;
-        centos-7)
+        debian)
             info "Installing extra repositories"
-            sudo yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
-                 wget \
-                 https://packages.erlang-solutions.com/erlang-solutions-1.0-1.noarch.rpm
+            sudo apt -y update
+            sudo apt-get -y install wget
+            wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb
+            sudo dpkg -i erlang-solutions_2.0_all.deb
+            info "Installing required APT packages"
+            sudo apt-get -y install erlang make sed diffutils tar systemd
+            ;;
+        centos)
+            info "Installing extra repositories"
+            sudo yum -y install wget
+            wget https://packages.erlang-solutions.com/erlang-solutions-2.0-1.noarch.rpm
+            rpm -Uvh erlang-solutions-2.0-1.noarch.rpm
             info "Installing required RPM packages"
-            sudo yum -y install chrony erlang-compiler erlang-erts erlang-kernel erlang-stdlib erlang-syntax_tools systemd \
-                 erlang-crypto erlang-inets erlang-sasl erlang-ssl
+            sudo yum -y install erlang
+            yum update -y
             ;;
         *)
             echo -e "\033[31m 不支持您的系统进行安装 \033[0m"

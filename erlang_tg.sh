@@ -288,15 +288,15 @@ do_build_config() {
 
     PORT="${PORT}"
 
-    if [[ "${ID}" = "centos" -a "`sudo firewall-cmd --state 2>&1`" = "running" ]]; then
-        info "Opening ${PORT} port"
-        sudo firewall-cmd --zone=public --add-port=${PORT}/tcp --permanent
-        sudo firewall-cmd --reload
-    else
-        warn "Please make sure proxy port ${PORT} is open on firewall!
-        Use smth like:
-        firewall-cmd --zone=public --add-port=${PORT}/tcp --permanent
-        firewall-cmd --reload"
+    if [ "${ID}" = "centos" -a "`sudo firewall-cmd --state 2>&1`" = "running" ]; then
+                info "Opening ${PORT} port"
+                sudo firewall-cmd --zone=public --add-port=${PORT}/tcp --permanent
+                sudo firewall-cmd --reload
+            else
+                warn "Please make sure proxy port ${PORT} is open on firewall!
+                Use smth like:
+                firewall-cmd --zone=public --add-port=${PORT}/tcp --permanent
+                firewall-cmd --reload"
     fi
 
     if [[ -z "${SECRET}" ]]; then

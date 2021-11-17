@@ -158,7 +158,9 @@ do_kaishi_install() {
     echo
     echo -e "\033[33m 正在为您安装TG代理，请稍后... \033[0m"
     sys_pro="/etc/systemd/system"
-    [[ -d ${WORKDIR}/mtproto_proxy ]] && Uninstall_mtproto_proxy
+    if [[ -d /opt/mtp_proxy/releases/0.1.0 ]] && [[ -d /var/log/mtproto-proxy ]]; then
+        Uninstall_mtproto_proxy
+    fi
     [[ ! -d ${sys_pro} ]] && mkdir -p ${sys_pro}
     do_systemd_system
 }

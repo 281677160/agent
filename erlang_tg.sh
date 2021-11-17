@@ -366,6 +366,16 @@ ${Yellow}Fake-TLS hex链接:${Font}${URL_PREFIX}${HEX_TLS_SECRET}
 ${Yellow}Fake-TLS base64链接:${Font}${URL_PREFIX}${BASE64_TLS_SECRET}
 "
     rm -fr $WORKDIR/mtproto_proxy.tar.gz
+    
+cat >$WORKDIR/mtproto_proxy/conck <<-EOF
+#!/bin/bash
+Yellow="\033[33m"
+Font="\033[0m"
+${Yellow}Normal链接:${Font}${URL_PREFIX}${SECRET}
+${Yellow}Secure链接:${Font}${URL_PREFIX}dd${SECRET}
+${Yellow}Fake-TLS hex链接:${Font}${URL_PREFIX}${HEX_TLS_SECRET}
+${Yellow}Fake-TLS base64链接:${Font}${URL_PREFIX}${BASE64_TLS_SECRET}
+EOF
 }
 
 # info "Executing $CMD"
@@ -393,8 +403,9 @@ mtpr() {
   clear
   echo
   echo -e "\033[33m 1、安装 TG代理 \033[0m"
-  echo -e "\033[33m 2、御载 TG代理 \033[0m"
-  echo -e "\033[33m 3、退出 \033[0m"
+  echo -e "\033[33m 2、打印 TG代理链接 \033[0m"
+  echo -e "\033[33m 3、御载 TG代理 \033[0m"
+  echo -e "\033[33m 4、退出 \033[0m"
   echo
   XUANZHE_mtpr="请输入数字"
   while :; do
@@ -405,10 +416,14 @@ mtpr() {
     break
     ;;
   2)
-    Uninstall_mtproto_proxy
+    source $WORKDIR/mtproto_proxy/conck
     break
     ;;
   3)
+    Uninstall_mtproto_proxy
+    break
+    ;;
+  4)
     exit 0
     break
     ;;

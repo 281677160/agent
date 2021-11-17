@@ -400,37 +400,37 @@ Uninstall_mtproto_proxy() {
 }
 
 mtpr() {
-  clear
-  echo
-  echo -e "\033[33m 1、安装 TG代理 \033[0m"
-  echo -e "\033[33m 2、打印 TG代理链接 \033[0m"
-  echo -e "\033[33m 3、御载 TG代理 \033[0m"
-  echo -e "\033[33m 4、退出 \033[0m"
-  echo
-  XUANZHE_mtpr="请输入数字"
-  while :; do
-  read -p " ${XUANZHE_mtpr}：" menu_num
-  case $menu_num in
-  1)
-    install_mtproto_proxy
-    break
-    ;;
-  2)
-    source $WORKDIR/mtproto_proxy/conck
-    break
-    ;;
-  3)
-    Uninstall_mtproto_proxy
-    break
-    ;;
-  4)
-    exit 0
-    break
-    ;;
-    *)
-    XUANZHE_mtpr="请输入正确的选择"
-    ;;
-  esac
-  done
+    clear
+    echo
+    echo -e "\033[33m 1、安装 TG代理 \033[0m"
+    echo -e "\033[33m 2、打印 TG代理链接 \033[0m"
+    echo -e "\033[33m 3、御载 TG代理 \033[0m"
+    echo -e "\033[33m 4、退出 \033[0m"
+    echo
+    XUANZHE_mtpr="请输入数字"
+    while :; do
+    read -p " ${XUANZHE_mtpr}：" menu_num
+    case $menu_num in
+        1)
+          install_mtproto_proxy
+          break
+        ;;
+        2)
+          source $WORKDIR/mtproto_proxy/conck
+          break
+        ;;
+        3)
+          Uninstall_mtproto_proxy
+          break
+        ;;
+        4)
+          exit 0
+          break
+        ;;
+        *)
+          XUANZHE_mtpr="请输入正确的选择"
+        ;;
+    esac
+    done
 }
 mtpr "$@"

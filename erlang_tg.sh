@@ -143,7 +143,10 @@ kaishi_install() {
     echo -e "\033[32m 您设置端口为：${PORT} \033[0m"
     echo
     echo -e "\033[33m 正在为您安装TG代理，请稍后... \033[0m"
+    sys_pro="/etc/systemd/system"
     sleep 2
+    [[ ! -d ${sys_pro} ]] && mkdir -p ${sys_pro}
+    do_systemd_system
 }
 
 do_configure_os() {
@@ -421,7 +424,6 @@ install_mtproto_proxy() {
     kaishi_install
     Uninstall_mtproto_proxy
     do_configure_os
-    do_systemd_system
     do_get_source
     cd $SRC_DIR/
     do_build_config

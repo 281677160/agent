@@ -266,7 +266,6 @@ function dependency_install() {
   else
     touch /var/spool/cron/crontabs/root && chmod 600 /var/spool/cron/crontabs/root
     systemctl start cron && systemctl enable cron
-
   fi
   judge "crontab 自启动配置 "
 

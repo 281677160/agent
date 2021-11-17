@@ -152,6 +152,9 @@ kaishi_install() {
 do_configure_os() {
     # We need at least 'make' 'sed' 'diff' 'od' 'install' 'tar' 'base64' 'awk'
     source '/etc/os-release'
+    if [[ ${ID} == centos ]] && [[ ${VERSION} == 8 ]]; then
+       ID="centos8"
+    fi
     case "${ID}" in
         ubuntu)
             info "Installing required APT packages"
@@ -182,7 +185,18 @@ do_configure_os() {
             if [[ `timeout -k 1s 3s erl |grep -c "Eshell V"` == '0' ]]; then
                 wget https://packages.erlang-solutions.com/erlang-solutions-2.0-1.noarch.rpm
                 rpm -Uvh erlang-solutions-2.0-1.noarch.rpm
-                sudo yum -y install esl-erlang
+                sudo yum -y install erlang
+            fi
+            yum update -y
+            ;;
+        centos8)
+            info "Installing extra repositories"
+            sudo yum -y install wget make sed diffutils tar systemd
+            if [[ `timeout -k 1s 3s erl |grep -c "Eshell V"` == '0' ]]; then
+                curl -s https://packagecloud.io/install/repositories/rabbitmq/erlang/script.rpm.sh | sudo bash
+                sudo yum -y clean all
+                sudo yum -y makecache
+                sudo yum -y install erlang
             fi
             yum update -y
             ;;

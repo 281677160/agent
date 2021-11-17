@@ -158,12 +158,13 @@ do_configure_os() {
     case "${ID}" in
         ubuntu)
             info "Installing required APT packages"
-            sudo apt -y update
+            sudo apt-get -y update
             sudo apt-get -y install wget
             sudo apt-get -y install make sed diffutils tar systemd
             if [[ `timeout -k 1s 3s erl |grep -c "Eshell V"` == '0' ]]; then
                 wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb
                 sudo dpkg -i erlang-solutions_2.0_all.deb
+                sudo apt-get -y update
                 sudo apt-get -y install erlang
             fi
             ;;

@@ -163,16 +163,14 @@ do_configure_os() {
             info "Installing required APT packages"
             sudo apt -y install erlang-nox erlang-dev make sed diffutils tar systemd
             ;;
-        centos-8)
+        centos-7)
             info "Installing extra repositories"
-            curl -s https://packagecloud.io/install/repositories/rabbitmq/erlang/script.rpm.sh | sudo bash
-            sudo yum -y clean all
-            sudo yum -y makecache
-            curl -sL https://rpm.nodesource.com/setup_12.x | bash -
-            sudo yum -y install -y nodejs
-            npm install -g yarn
+            sudo yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
+                 wget \
+                 https://packages.erlang-solutions.com/erlang-solutions-1.0-1.noarch.rpm
             info "Installing required RPM packages"
-            sudo yum -y install chrony erlang
+            sudo yum -y install chrony erlang-compiler erlang-erts erlang-kernel erlang-stdlib erlang-syntax_tools systemd \
+                 erlang-crypto erlang-inets erlang-sasl erlang-ssl
             ;;
         *)
             echo -e "\033[31m 不支持您的系统进行安装 \033[0m"

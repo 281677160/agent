@@ -185,6 +185,44 @@ do_configure_os() {
     info "Current time: `date`"
 }
 
+do_systemd_system() {
+sys_proxy="/etc/systemd/system/mtproto-proxy.service"
+cat >$sys_proxy <<-EOF
+[Unit]
+SourcePath=/opt/mtp_proxy/bin/mtp_proxy
+Description=Starts the mtproto_proxy server
+After=local-fs.target
+After=remote-fs.target
+After=network-online.target
+After=systemd-journald-dev-log.socket
+After=nss-lookup.target
+Wants=network-online.target
+Requires=epmd.service
+
+[Service]
+Type=simple
+User=mtproto-proxy
+Group=mtproto-proxy
+Environment="RUNNER_LOG_DIR=/var/log/mtproto-proxy"
+Restart=on-failure
+TimeoutSec=1min
+IgnoreSIGPIPE=no
+KillMode=process
+GuessMainPID=no
+RemainAfterExit=no
+LimitNOFILE=40960
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+ExecStart=/opt/mtp_proxy/bin/mtp_proxy foreground
+ExecStop=/opt/mtp_proxy/bin/mtp_proxy stop
+ExecReload=/opt/mtp_proxy/bin/mtp_proxy rpcterms mtproto_proxy_app reload_config
+TimeoutStopSec=15s
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl daemon-reload
+}
+
 do_get_source() {
     info "Downloading proxy source code"
     curl -L https://github.com/seriyps/mtproto_proxy/archive/master.tar.gz -o mtproto_proxy.tar.gz
@@ -383,6 +421,7 @@ install_mtproto_proxy() {
     kaishi_install
     Uninstall_mtproto_proxy
     do_configure_os
+    do_systemd_system
     do_get_source
     cd $SRC_DIR/
     do_build_config

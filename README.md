@@ -46,7 +46,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
 ---
 - [TG代理一键搭建](https://github.com/seriyps/mtproto_proxy)
 ```yaml
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/mtg_tg.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/erlang_tg.sh)"
 ```
 #
 ---

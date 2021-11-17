@@ -159,7 +159,10 @@ do_configure_os() {
             sudo apt-get -y install wget
             wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb
             sudo dpkg -i erlang-solutions_2.0_all.deb
-            sudo apt-get -y install erlang make sed diffutils tar systemd
+            sudo apt-get -y install make sed diffutils tar systemd
+            if [[ `timeout -k 1s 3s erl |grep -c "Eshell V"` == '0' ]]; then
+                sudo apt-get -y install erlang
+            fi
             ;;
         debian)
             info "Installing extra repositories"
@@ -168,7 +171,10 @@ do_configure_os() {
             wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb
             sudo dpkg -i erlang-solutions_2.0_all.deb
             info "Installing required APT packages"
-            sudo apt-get -y install erlang make sed diffutils tar systemd
+            sudo apt-get -y install make sed diffutils tar systemd
+            if [[ `timeout -k 1s 3s erl |grep -c "Eshell V"` == '0' ]]; then
+                sudo apt-get -y install erlang
+            fi
             ;;
         centos)
             info "Installing extra repositories"

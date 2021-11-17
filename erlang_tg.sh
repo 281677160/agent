@@ -399,7 +399,7 @@ Uninstall_mtproto_proxy() {
     find / -iname 'mtproto_proxy' | xargs -i rm -rf {}
 }
 
-mtpr() {
+mtpro() {
     clear
     echo
     echo -e "\033[33m 1、安装 TG代理 \033[0m"
@@ -409,8 +409,8 @@ mtpr() {
     echo
     XUANZHE_mtpr="请输入数字"
     while :; do
-    read -p " ${XUANZHE_mtpr}：" menu_num
-    case $menu_num in
+    read -p " ${XUANZHE_mtpr}：" menu_mtpro
+    case $menu_mtpro in
         1)
           install_mtproto_proxy
           break
@@ -433,4 +433,4 @@ mtpr() {
     esac
     done
 }
-mtpr "$@"
+mtpro "$@"

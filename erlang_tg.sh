@@ -289,64 +289,64 @@ do_build_config() {
     PORT="${PORT}"
 
     if [ "${ID}" = "centos" -a "`sudo firewall-cmd --state 2>&1`" = "running" ]; then
-                info "Opening ${PORT} port"
-                sudo firewall-cmd --zone=public --add-port=${PORT}/tcp --permanent
-                sudo firewall-cmd --reload
-            else
-                warn "Please make sure proxy port ${PORT} is open on firewall!
-                Use smth like:
-                firewall-cmd --zone=public --add-port=${PORT}/tcp --permanent
-                firewall-cmd --reload"
+        info "Opening ${PORT} port"
+        sudo firewall-cmd --zone=public --add-port=${PORT}/tcp --permanent
+        sudo firewall-cmd --reload
+    else
+        warn "Please make sure proxy port ${PORT} is open on firewall!
+        Use smth like:
+        firewall-cmd --zone=public --add-port=${PORT}/tcp --permanent
+        firewall-cmd --reload"
     fi
 
-    if [[ -z "${SECRET}" ]]; then
+    if [ -z "${SECRET}" ]; then
         export SECRET=`head -c 16 /dev/urandom | to_hex`
         info "Using random secret ${SECRET}"
     fi
 
-    if [[ -z "${TAG}" ]]; then
+    if [ -z "${TAG}" ]; then
         export TAG="$(date +8b%d1%M5ec12abd%S6faeb2f%Mefbdcb)"
         info "Using no AD TAG"
     fi
 
-    if [[ -z "${DD_ONLY}" ]]; then
+    if [ -z "${DD_ONLY}" ]; then
         export DD_ONLY="y"
         info "Using dd-only mode"
     fi
 
-    if [[ -z "${TLS_ONLY}" ]]; then
+    if [ -z "${TLS_ONLY}" ]; then
         export TLS_ONLY="y"
         info "Using TLS-only mode"
     fi
 
-    if [[ -z "${TLS_DOMAIN}" -a \( -n "${TLS_ONLY}" -o -z "${DD_ONLY}" \) ]]; then
+    if [ -z "${TLS_DOMAIN}" -a \( -n "${TLS_ONLY}" -o -z "${DD_ONLY}" \) ]; then
         # If tls_domain is not set and fake-tls is enabled, ask for domain
         export TLS_DOMAIN="s3.amazonaws.com"
         info "Using '${TLS_DOMAIN}' for fake-TLS SNI"
     fi
 
     PROTO_ARG=""
-    if [[ -n "${DD_ONLY}" -a -n "${TLS_ONLY}" ]]; then
+    if [ -n "${DD_ONLY}" -a -n "${TLS_ONLY}" ]; then
         export PROTO_ARG='{allowed_protocols, [mtp_fake_tls,mtp_secure]},'
-    elif [[ -n "${DD_ONLY}" ]]; then
+    elif [ -n "${DD_ONLY}" ]; then
         export PROTO_ARG='{allowed_protocols, [mtp_secure]},'
-    elif [[ -n "${TLS_ONLY}" ]]; then
+    elif [ -n "${TLS_ONLY}" ]; then
         export PROTO_ARG='{allowed_protocols, [mtp_fake_tls]},'
     fi
 
-    [[ -z "${PORT}" -o -z "${SECRET}" -o -z "${TAG}" ]] && \
+    [ -z "${PORT}" -o -z "${SECRET}" -o -z "${TAG}" ] && \
         error "Not enough options: port='${PORT}' secret='${SECRET}' ad_tag='${TAG}'"
 
-    [[ ${PORT} -gt 0 -a ${PORT} -lt 65535 ]] || \
+    [ ${PORT} -gt 0 -a ${PORT} -lt 65535 ] || \
         error "Invalid port value: ${PORT}"
 
-    [[ -n "`echo $SECRET | grep -x '[[:xdigit:]]\{32\}'`" ]] || \
+    [ -n "`echo $SECRET | grep -x '[[:xdigit:]]\{32\}'`" ] || \
         error "Invalid secret. Should be 32 chars of 0-9 a-f"
 
-    [[ -n "`echo $TAG | grep -x '[[:xdigit:]]\{32\}'`" ]] || \
+    [ -n "`echo $TAG | grep -x '[[:xdigit:]]\{32\}'`" ] || \
         error "Invalid tag. Should be 32 chars of 0-9 a-f"
 
-    [[ -z "${TLS_DOMAIN}" -o -n "`echo $TLS_DOMAIN | grep -xE '^([0-9a-z_-]+\.)+[a-z]{2,6}$'`" ]] || \
+    [ -z "${TLS_DOMAIN}" -o -n "`echo $TLS_DOMAIN | grep -xE '^([0-9a-z_-]+\.)+[a-z]{2,6}$'`" ] || \
         error "Invalid TLS domain '${TLS_DOMAIN}'. Should be valid domain name!"
 
     echo '

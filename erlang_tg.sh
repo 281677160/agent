@@ -402,6 +402,7 @@ Uninstall_mtproto_proxy() {
 mtpro() {
     clear
     echo
+    echo
     echo -e "\033[33m 1、安装 TG代理 \033[0m"
     echo -e "\033[33m 2、打印 TG代理链接 \033[0m"
     echo -e "\033[33m 3、御载 TG代理 \033[0m"

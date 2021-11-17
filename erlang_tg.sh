@@ -157,10 +157,10 @@ do_configure_os() {
             info "Installing required APT packages"
             sudo apt -y update
             sudo apt-get -y install wget
-            wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb
-            sudo dpkg -i erlang-solutions_2.0_all.deb
             sudo apt-get -y install make sed diffutils tar systemd
             if [[ `timeout -k 1s 3s erl |grep -c "Eshell V"` == '0' ]]; then
+                wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb
+                sudo dpkg -i erlang-solutions_2.0_all.deb
                 sudo apt-get -y install erlang
             fi
             ;;
@@ -168,23 +168,23 @@ do_configure_os() {
             info "Installing extra repositories"
             sudo apt -y update
             sudo apt-get -y install wget
-            wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb
-            sudo dpkg -i erlang-solutions_2.0_all.deb
             info "Installing required APT packages"
             sudo apt-get -y install make sed diffutils tar systemd
             if [[ `timeout -k 1s 3s erl |grep -c "Eshell V"` == '0' ]]; then
+                wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb
+                sudo dpkg -i erlang-solutions_2.0_all.deb
                 sudo apt-get -y install erlang
             fi
             ;;
         centos)
             info "Installing extra repositories"
             sudo yum -y install wget make sed diffutils tar systemd
-            yum update -y
-            wget https://packages.erlang-solutions.com/erlang-solutions-2.0-1.noarch.rpm
-            rpm -Uvh erlang-solutions-2.0-1.noarch.rpm
             if [[ `timeout -k 1s 3s erl |grep -c "Eshell V"` == '0' ]]; then
+                wget https://packages.erlang-solutions.com/erlang-solutions-2.0-1.noarch.rpm
+                rpm -Uvh erlang-solutions-2.0-1.noarch.rpm
                 sudo yum -y install esl-erlang
             fi
+            yum update -y
             ;;
         *)
             echo -e "\033[31m 不支持您的系统进行安装 \033[0m"

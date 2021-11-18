@@ -405,6 +405,10 @@ function acme() {
 function restart_all() {
   x-ui enable
   restart_xui
+cat >/ssl/conck <<-EOF
+echo -e "\033[32m面板证书公钥文件路径:\033[0m/ssl/xray.crt"
+echo -e "\033[32m面板证书密钥文件路径:\033[0m/ssl/xray.key"
+EOF
   echo
   ECHOY "1、用浏览器打开此链接： http://${local_ip}:54321"
   ECHOY "2、初始管理员账号：admin"
@@ -520,9 +524,10 @@ menu() {
   echo -e "${NGINX_ZT}"
   echo
   ECHOY "1、安装 x-ui面板和nginx"
-  ECHOY "2、卸载 x-ui面板和nginx"
-  ECHOY "3、重启 x-ui面板和nginx"
-  ECHOY "4、退出"
+  ECHOY "2、重启 x-ui面板和nginx"
+  ECHOY "3、查询 证书路径"
+  ECHOY "4、卸载 x-ui面板和nginx"
+  ECHOY "5、退出"
   echo
   echo
   XUANZHE="请输入数字"
@@ -534,14 +539,18 @@ menu() {
     break
     ;;
   2)
-    xui_uninstall
-    break
-    ;;
-  3)
     restart_xui
     break
     ;;
+  3)
+    source /ssl/conck
+    break
+    ;;
   4)
+    xui_uninstall
+    break
+    ;;
+  5)
     exit 0
     break
     ;;

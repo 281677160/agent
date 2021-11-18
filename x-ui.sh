@@ -390,20 +390,7 @@ function acme() {
 
 function restart_all() {
   x-ui enable
-  systemctl restart nginx
-  sleep 3
-  if [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then
-    print_ok "nginx运行 正常"
-  else
-    print_error "nginx没有运行"
-    exit 1
-  fi
-  if [[ `systemctl status x-ui |grep -c "active (running) "` == '1' ]]; then
-    print_ok "x-ui运行 正常"
-  else
-    print_error "x-ui没有运行"
-    exit 1
-  fi
+  restart_xui
   echo
   ECHOY "1、用浏览器打开此链接： http://${local_ip}:54321"
   ECHOY "2、初始管理员账号：admin"

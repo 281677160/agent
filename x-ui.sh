@@ -37,6 +37,7 @@ cert_dir="/usr/local/x-ui"
 domain_tmp_dir="/usr/local/x-ui"
 cert_group="nobody"
 random_num=$((RANDOM % 12 + 4))
+HOME="/root"
 
 function print_ok() {
   echo -e " ${OK} ${Blue} $1 ${Font}"

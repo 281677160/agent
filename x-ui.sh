@@ -456,11 +456,11 @@ function xui_uninstall() {
   find / -iname 'nginx' | xargs -i rm -rf {}
   print_ok "nginx御载 完成"
   sleep 2
-  if [[ -e "$HOME"/.acme.sh ]]; then
+  if [[ -d "$HOME"/.acme.sh ]]; then
     clear
     echo
-    if [[ -f "$HOME/.acme.sh/domainjilu" ]] && [[ -d "$HOME/.acme.sh/${domain}_ecc" ]]; then
-        PROFILE="$(cat $HOME/.acme.sh/domainjilu)"
+    [[ -f "$HOME/.acme.sh/domainjilu" ]] && PROFILE="$(cat $HOME/.acme.sh/domainjilu)"
+    if [[ -f "$HOME/.acme.sh/${PROFILE}_ecc/${PROFILE}.cer" ]] && [[ -f "$HOME/.acme.sh/${PROFILE}_ecc/${PROFILE}.key" ]]; then
         export TISHI="提示：[ ${PROFILE} ]证书已经存在,如果还继续使用此域名建议勿删除.acme.sh"
      else
         export WUTISHI="Y"

@@ -273,12 +273,6 @@ function port_exist_check() {
   fi
 }
 
-function configure_xray_ws() {
-  bash -c "$(curl -L https://raw.githubusercontent.com/281677160/agent/main/xray/config.sh)"
-  judge "修改 Xray 配置文件"
-  chmod +x $domain_tmp_dir/config.json
-}
-
 function xray_install() {
   print_ok "安装 Xray"
   bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
@@ -454,7 +448,6 @@ function install_xray_ws() {
   domain_check
   port_exist_check 80
   xray_install
-  configure_xray_ws
   nginx_install
   configure_nginx
   configure_web

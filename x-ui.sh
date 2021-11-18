@@ -526,8 +526,9 @@ menu() {
   ECHOY "1、安装 x-ui面板和nginx"
   ECHOY "2、重启 x-ui面板和nginx"
   ECHOY "3、查询 证书路径"
-  ECHOY "4、卸载 x-ui面板和nginx"
-  ECHOY "5、退出"
+  ECHOY "4、安装 BBR、锐速加速"
+  ECHOY "5、卸载 x-ui面板和nginx"
+  ECHOY "6、退出"
   echo
   echo
   XUANZHE="请输入数字"
@@ -547,10 +548,14 @@ menu() {
     break
     ;;
   4)
-    xui_uninstall
+    wget -N --no-check-certificate "https://raw.githubusercontent.com/ylx2016/Linux-NetSpeed/master/tcp.sh" && chmod +x tcp.sh && ./tcp.sh
     break
     ;;
   5)
+    xui_uninstall
+    break
+    ;;
+  6)
     exit 0
     break
     ;;

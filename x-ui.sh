@@ -336,7 +336,7 @@ function acme() {
   if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --webroot "$website_dir" -k ec-256 --force; then
     print_ok "SSL 证书生成成功"
     sleep 2
-    if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --reloadcmd "systemctl restart xray" --ecc --force; then
+    if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --ecc --force; then
       print_ok "SSL 证书配置成功"
       "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
       echo $domain >"$HOME"/.acme.sh/domainjilu

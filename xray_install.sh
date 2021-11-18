@@ -39,6 +39,7 @@ cloudreve_path="/usr/local/cloudreve"
 cloudreve_service="/etc/systemd/system"
 cert_group="nobody"
 random_num=$((RANDOM % 12 + 4))
+HOME="/root"
 
 function print_ok() {
   echo -e " ${OK} ${Blue} $1 ${Font}"

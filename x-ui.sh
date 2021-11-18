@@ -172,7 +172,6 @@ function kaishi_install() {
   ;;
   esac
   done
-  done
   echo
   ECHOG "您的域名为：${domain}"
   echo

@@ -543,7 +543,7 @@ menu() {
     break
     ;;
   3)
-    source /ssl/conck
+    [[ -f /ssl/conck ]] && source /ssl/conck || ECHOY "无此文件或者没有证书"
     break
     ;;
   4)

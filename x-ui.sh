@@ -75,13 +75,13 @@ judge() {
 
 function running_state() {
   if [[ ! -f /etc/x-ui/x-ui.db ]] && [[ ! -f /usr/local/x-ui/x-ui.service ]]; then
-    export X-UI_ZT="${Blue} x-ui状态${Font}：${Red}未安装${Font}"
+    export XUI_ZT="${Blue} x-ui状态${Font}：${Red}未安装${Font}"
   elif [[ `systemctl status x-ui |grep -c "active (running) "` == '1' ]]; then
-    export X-UI_ZT="${Blue} x-ui状态${Font}：${Green}运行中 ${Font}|${Blue} 版本${Font}：${Green}v${NGINX_VERSION}${Font}"
+    export XUI_ZT="${Blue} x-ui状态${Font}：${Green}运行中 ${Font}|${Blue} 版本${Font}：${Green}v0.3.2${Font}"
   elif [[ -f /usr/local/x-ui/x-ui.service ]] && [[ `systemctl status cloudreve |grep -c "active (running) "` == '0' ]]; then
-    export X-UI_ZT="${Blue} x-ui状态${Font}：${Green}已安装${Font},${Red}未运行${Font}"
+    export XUI_ZT="${Blue} x-ui状态${Font}：${Green}已安装${Font},${Red}未运行${Font}"
   else
-    export X-UI_ZT="${Blue} x-ui状态：${Font}未知"
+    export XUI_ZT="${Blue} x-ui状态：${Font}未知"
   fi
 
   if [[ `command -v nginx |grep -c "nginx"` == '0' ]]; then
@@ -483,7 +483,7 @@ menu() {
   echo
   echo
   running_state
-  echo -e "${X-UI_ZT}"
+  echo -e "${XUI_ZT}"
   echo -e "${NGINX_ZT}"
   echo
   ECHOY "1、安装 x-ui面板和nginx"

@@ -494,7 +494,6 @@ function install_xui() {
   configure_nginx
   generate_certificate
   ssl_judge_and_install
-  configure_cloudreve
   restart_all
 }
 menu() {

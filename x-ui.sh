@@ -402,6 +402,7 @@ function restart_all() {
 
 function xray_uninstall() {
   x-ui stop
+  x-ui disable
   x-ui uninstall
   find / -iname 'x-ui' | xargs -i rm -rf {}
   print_ok "x-ui面板御载 完成"

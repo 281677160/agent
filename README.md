@@ -163,6 +163,14 @@ bash <(curl -L -s https://raw.githubusercontent.com/lmc999/RegionRestrictionChec
 #
 ---
 #
+#
+- # 捐赠
+- 如果你觉得此项目对你有帮助，请请我喝一杯82年的凉白开，感谢！
+
+-微信-
+# <img src="https://github.com/danshui-git/shuoming/blob/master/doc/weixin4.png" />
+#
+#
 ---
 ```yaml
 https://www.namecheap.com

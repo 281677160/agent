@@ -218,6 +218,7 @@ do_configure_os() {
             ;;
         *)
             echo -e "\033[31m 不支持您的系统进行安装 \033[0m"
+            exit 1
     esac
 
     info "Making sure clock synchronization is enabled"

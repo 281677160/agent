@@ -405,10 +405,6 @@ function acme() {
 function restart_all() {
   x-ui enable
   restart_xui
-cat >/ssl/conck <<-EOF
-echo -e "\033[32m面板证书公钥文件路径:\033[0m/ssl/xray.crt"
-echo -e "\033[32m面板证书密钥文件路径:\033[0m/ssl/xray.key"
-EOF
   echo
   ECHOY "1、用浏览器打开此链接： http://${local_ip}:54321"
   ECHOY "2、初始管理员账号：admin"
@@ -417,6 +413,10 @@ EOF
   ECHOY "5、面板证书密钥文件路径：/ssl/xray.key"
   ECHOY "6、[54321]端口自行修改成其他的"
   ECHOY "7、全部修改完成重启面板后可以用 https://${domain}:端口 访问"
+  cat >/ssl/conck <<-EOF
+  echo -e "\033[32m面板证书公钥文件路径：\033[0m/ssl/xray.crt"
+  echo -e "\033[32m面板证书密钥文件路径：\033[0m/ssl/xray.key"
+EOF
 }
 
 function restart_xui() {

@@ -295,10 +295,10 @@ function port_exist_check() {
   fi
 }
 
-function xray_install() {
-  print_ok "安装 Xray"
+function xui_install() {
+  print_ok "安装 x-ui"
   bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
-  judge "Xray 安装"
+  judge "x-ui 安装"
 }
 
 function configure_nginx() {
@@ -463,7 +463,7 @@ function xray_uninstall() {
   exit 0
 }
 
-function install_xray_ws() {
+function install_xui() {
   is_root
   kaishi_install
   system_check
@@ -471,7 +471,7 @@ function install_xray_ws() {
   basic_optimization
   domain_check
   port_exist_check 80
-  xray_install
+  xui_install
   nginx_install
   configure_nginx
   generate_certificate
@@ -498,7 +498,7 @@ menu() {
   read -p " ${XUANZHE}：" menu_num
   case $menu_num in
   1)
-    install_xray_ws
+    install_xui
     break
     ;;
   2)

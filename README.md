@@ -11,7 +11,7 @@ apt-get update && apt-get install -y wget curl git socat sudo ca-certificates &&
 
 - 支持CentOS7或者以下系统，(用root用户登录，然后首先对你的系统使用以下命令)
 ```yaml
-yum install -y wget curl git socat ca-certificates && update-ca-trust force-enable && yum update -y
+yum install -y wget curl git socat ca-certificates && update-ca-trust force-enable
 ```
 #
 ---

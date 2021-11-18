@@ -172,8 +172,21 @@ function kaishi_install() {
   ;;
   esac
   done
+  done
   echo
   ECHOG "您的域名为：${domain}"
+  echo
+  read -p " [检查是否正确,正确回车继续,不正确按Q回车重新输入]： " NNKC
+  case $NNKC in
+  [Qq])
+    install_xui
+    exit 0
+  ;;
+  *)
+    echo
+    print_ok "您已确认无误!"
+  ;;
+  esac
   echo
   ECHOY "开始执行安装程序,请耐心等候..."
   sleep 3
@@ -401,7 +414,7 @@ function restart_all() {
   ECHOY "7、全部修改完成重启面板后可以用 https://${domain}:端口 访问"
 }
 
-function xray_uninstall() {
+function xui_uninstall() {
   x-ui stop
   x-ui disable
   x-ui uninstall
@@ -503,7 +516,7 @@ menu() {
     break
     ;;
   2)
-    xray_uninstall
+    xui_uninstall
     break
     ;;
   3)

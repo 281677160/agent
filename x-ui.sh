@@ -74,11 +74,11 @@ judge() {
 }
 
 function running_state() {
-  if [[ ! -f /etc/x-ui/x-ui.db ]] && [[ ! -f /usr/local/x-ui/x-ui.service ]]; then
+  if [[ `command -v x-ui |grep -c "x-ui"` == '0' ]]; then
     export XUI_ZT="${Blue} x-ui状态${Font}：${Red}未安装${Font}"
   elif [[ `systemctl status x-ui |grep -c "active (running) "` == '1' ]]; then
     export XUI_ZT="${Blue} x-ui状态${Font}：${Green}运行中 ${Font}|${Blue} 版本${Font}：${Green}v0.3.2${Font}"
-  elif [[ -f /usr/local/x-ui/x-ui.service ]] && [[ `systemctl status cloudreve |grep -c "active (running) "` == '0' ]]; then
+  elif [[ `command -v x-ui |grep -c "x-ui"` -ge '1' ]] && [[ `systemctl status cloudreve |grep -c "active (running) "` == '0' ]]; then
     export XUI_ZT="${Blue} x-ui状态${Font}：${Green}已安装${Font},${Red}未运行${Font}"
   else
     export XUI_ZT="${Blue} x-ui状态：${Font}未知"

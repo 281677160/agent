@@ -414,6 +414,24 @@ function restart_all() {
   ECHOY "7、全部修改完成重启面板后可以用 https://${domain}:端口 访问"
 }
 
+function restart_xui() {
+  systemctl restart nginx
+  x-ui restart
+  sleep 1
+  if [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then
+    print_ok "nginx运行 正常"
+  else
+    print_error "nginx没有运行"
+    exit 1
+  fi
+  if [[ `systemctl status x-ui |grep -c "active (running) "` == '1' ]]; then
+    print_ok "x-ui运行 正常"
+  else
+    print_error "x-ui没有运行"
+    exit 1
+  fi
+}
+
 function xui_uninstall() {
   x-ui stop
   x-ui disable
@@ -520,8 +538,7 @@ menu() {
     break
     ;;
   3)
-    x-ui restart
-    systemctl restart nginx
+    restart_xui
     break
     ;;
   4)

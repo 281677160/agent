@@ -73,6 +73,28 @@ judge() {
   fi
 }
 
+function running_state() {
+  if [[ ! -f /etc/x-ui/x-ui.db ]] && [[ ! -f /usr/local/x-ui/x-ui.service ]]; then
+    export X-UI_ZT="${Blue} x-ui状态${Font}：${Red}未安装${Font}"
+  elif [[ -f /usr/local/x-ui/x-ui.service ]] && [[ `systemctl status x-ui |grep -c "active (running) "` == '1' ]]; then
+    export X-UI_ZT="${Blue} x-ui状态${Font}：${Green}运行中 ${Font}|${Blue} 版本${Font}：${Green}v0.3.2${Font}"
+  elif [[ -f /usr/local/x-ui/x-ui.service ]] && [[ `systemctl status cloudreve |grep -c "active (running) "` == '0' ]]; then
+    export X-UI_ZT="${Blue} x-ui状态${Font}：${Green}已安装${Font},${Red}未运行${Font}"
+  else
+    export X-UI_ZT="${Blue} x-ui状态：${Font}未知"
+  fi
+
+  if [[ `command -v nginx |grep -c "nginx"` == '0' ]]; then
+    export NGINX_ZT="${Blue} Nginx状态${Font}：${Red}未安装${Font}"
+  elif [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then
+    export NGINX_ZT="${Blue} Nginx状态${Font}：${Green}运行中 ${Font}|${Blue} 版本${Font}：${Green}v${NGINX_VERSION}${Font}"
+  elif [[ `command -v nginx |grep -c "nginx"` -ge '1' ]] && [[ `systemctl status nginx |grep -c "active (running) "` == '0' ]]; then
+    export NGINX_ZT="${Blue} Nginx状态${Font}：${Green}已安装${Font},${Red}未运行${Font}"
+  else
+    export NGINX_ZT="${Blue} Nginx状态：${Font}未知"
+  fi
+}
+
 function system_check() {
   source '/etc/os-release'
 
@@ -446,10 +468,14 @@ menu() {
   clear
   echo
   echo
+  running_state
+  echo -e "${X-UI_ZT}"
+  echo -e "${NGINX_ZT}"
+  echo
   ECHOY "1、安装 x-ui面板和nginx"
-  ECHOY "7、卸载 x-ui面板和nginx"
-  ECHOY "8、重启 x-ui面板和nginx"
-  ECHOY "9、退出"
+  ECHOY "2、卸载 x-ui面板和nginx"
+  ECHOY "3、重启 x-ui面板和nginx"
+  ECHOY "4、退出"
   echo
   echo
   XUANZHE="请输入数字"
@@ -460,16 +486,16 @@ menu() {
     install_xray_ws
     break
     ;;
-  7)
+  2)
     xray_uninstall
     break
     ;;
-  8)
+  3)
     x-ui restart
     systemctl restart nginx
     break
     ;;
-  9)
+  4)
     exit 0
     break
     ;;

@@ -450,8 +450,8 @@ function xui_uninstall() {
   if [[ -e "$HOME"/.acme.sh ]]; then
     clear
     echo
-    [[ -f $HOME/.acme.sh/domainjilu ]] && PROFILE="$(cat $HOME/.acme.sh/domainjilu)"
-    if [[ -n ${PROFILE} ]]; then
+    if [[ -f "$HOME/.acme.sh/domainjilu" ]] && [[ -d "$HOME/.acme.sh/${domain}_ecc" ]]; then
+        PROFILE="$(cat $HOME/.acme.sh/domainjilu)"
         export TISHI="提示：[ ${PROFILE} ]证书已经存在,如果还继续使用此域名建议勿删除.acme.sh"
      else
         export WUTISHI="Y"

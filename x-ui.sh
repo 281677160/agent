@@ -74,6 +74,7 @@ judge() {
 }
 
 function running_state() {
+  nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
   if [[ `command -v x-ui |grep -c "x-ui"` == '0' ]]; then
     export XUI_ZT="${Blue} x-ui状态${Font}：${Red}未安装${Font}"
   elif [[ `systemctl status x-ui |grep -c "active (running) "` == '1' ]]; then

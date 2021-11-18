@@ -384,6 +384,20 @@ function restart_all() {
     print_error "nginx没有运行"
     exit 1
   fi
+  if [[ `systemctl status x-ui |grep -c "active (running) "` == '1' ]]; then
+    print_ok "x-ui运行 正常"
+  else
+    print_error "x-ui没有运行"
+    exit 1
+  fi
+  echo
+  ECHOY "1、用浏览器打开此链接： http://${local_ip}:54321"
+  ECHOY "2、初始管理员账号：admin"
+  ECHOY "3、初始管理员密码：admin"
+  ECHOY "4、面板证书公钥文件路径：/ssl/xray.crt"
+  ECHOY "5、面板证书密钥文件路径：/ssl/xray.key"
+  ECHOY "6、[54321]端口自行修改成其他的"
+  ECHOY "7、全部修改完成重启面板后可以用 https://${domain}:端口 访问"
 }
 
 function xray_uninstall() {

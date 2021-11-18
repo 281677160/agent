@@ -670,8 +670,8 @@ function xray_uninstall() {
   if [[ -e "$HOME"/.acme.sh ]]; then
     clear
     echo
-    [[ -f $HOME/.acme.sh/domainjilu ]] && PROFILE="$(cat $HOME/.acme.sh/domainjilu)"
-    if [[ -n ${PROFILE} ]]; then
+    [[ -f "$HOME/.acme.sh/domainjilu" ]] && PROFILE="$(cat $HOME/.acme.sh/domainjilu)"
+    if [[ -f "$HOME/.acme.sh/${PROFILE}_ecc/${PROFILE}.cer" ]] && [[ -f "$HOME/.acme.sh/${PROFILE}_ecc/${PROFILE}.key" ]]; then
         export TISHI="提示：[ ${PROFILE} ]证书已经存在,如果还继续使用此域名建议勿删除.acme.sh"
      else
         export WUTISHI="Y"

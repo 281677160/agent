@@ -188,7 +188,7 @@ function kaishi_install() {
   esac
   echo
   ECHOY "开始执行安装程序,请耐心等候..."
-  sleep 3
+  sleep 2
   echo
 }
 

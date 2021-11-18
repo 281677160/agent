@@ -336,7 +336,7 @@ function acme() {
   if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --webroot "$website_dir" -k ec-256 --force; then
     print_ok "SSL 证书生成成功"
     sleep 2
-    if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --ecc --force; then
+    if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --reloadcmd "x-ui restart" --ecc --force; then
       print_ok "SSL 证书配置成功"
       "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
       echo $domain >"$HOME"/.acme.sh/domainjilu
@@ -352,16 +352,8 @@ function acme() {
   sed -i "6s/#//" "$nginx_conf"
 }
 
-function configure_web() {
-  rm -rf /www/xray_web
-  mkdir -p /www/xray_web
-  wget -O web.tar.gz https://raw.githubusercontent.com/wulabing/Xray_onekey/main/basic/web.tar.gz
-  tar xzf web.tar.gz -C /www/xray_web
-  judge "站点伪装"
-  rm -f web.tar.gz
-}
-
 function restart_all() {
+  x-ui enable
   systemctl restart nginx
   sleep 3
   if [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then
@@ -373,15 +365,10 @@ function restart_all() {
 }
 
 function xray_uninstall() {
-  bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove --purge
-  find / -iname 'xray' | xargs -i rm -rf {}
-  print_ok "Xray御载 完成"
-  sleep 2
-  systemctl stop cloudreve
-  systemctl disable cloudreve
-  systemctl daemon-reload
-  find / -iname 'cloudreve' | xargs -i rm -rf {}
-  print_ok "cloudreve御载 完成"
+  x-ui stop
+  x-ui uninstall
+  find / -iname 'x-ui' | xargs -i rm -rf {}
+  print_ok "x-ui面板御载 完成"
   sleep 2
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]] || [[ "$(. /etc/os-release && echo "$ID")" == "ol" ]]; then
     yum remove nginx -y
@@ -450,7 +437,6 @@ function install_xray_ws() {
   xray_install
   nginx_install
   configure_nginx
-  configure_web
   generate_certificate
   ssl_judge_and_install
   configure_cloudreve
@@ -460,14 +446,9 @@ menu() {
   clear
   echo
   echo
-  ECHOY "1、安装 Xray、nginx和cloudreve"
-  ECHOY "2、打印 Xray 节点信息"
-  ECHOY "3、安装 BBR、锐速加速"
-  ECHOY "4、更新 Xray"
-  ECHOY "5、修改 UUID/端口/路径/Tronjian密码"
-  ECHOY "6、删除 阿里云盾或腾讯云盾"
-  ECHOY "7、卸载 Xray、nginx和cloudreve"
-  ECHOY "8、重启 Xray、nginx和cloudreve"
+  ECHOY "1、安装 x-ui面板和nginx"
+  ECHOY "7、卸载 x-ui面板和nginx"
+  ECHOY "8、重启 x-ui面板和nginx"
   ECHOY "9、退出"
   echo
   echo
@@ -479,35 +460,13 @@ menu() {
     install_xray_ws
     break
     ;;
-  2)
-    source $domain_tmp_dir/pzcon
-    break
-    ;;
-  3)
-    wget -N --no-check-certificate "https://raw.githubusercontent.com/ylx2016/Linux-NetSpeed/master/tcp.sh" && chmod +x tcp.sh && ./tcp.sh
-    break
-    ;;
-  4)
-    systemctl stop xray
-    bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" - install
-    restart_all
-    break
-    ;;
-  5)
-    configure_gaipeizhi
-    break
-    ;;
-    
-  6)
-    bash -c "$(curl -Ls https://raw.githubusercontent.com/281677160/agent/main/xray/uninstall_firewall.sh)"
-    break
-    ;;
   7)
     xray_uninstall
     break
     ;;
   8)
-    restart_all
+    x-ui restart
+    systemctl restart nginx
     break
     ;;
   9)

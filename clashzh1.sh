@@ -67,6 +67,6 @@ if [[ $? -ne 0 ]];then
 else
 	cd sub-web
 	yarn install
-	yarn serve
+	timeout -k 1s 30s yarn serve
 fi
 exit 0

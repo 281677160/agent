@@ -359,15 +359,24 @@ function generate_certificate() {
 
 function ssl_judge_and_install() {
   [[ ! -d /ssl ]] && mkdir -p /ssl
+  if [[ ! -f "$HOME/.acme.sh" ]]; then
+    curl -L get.acme.sh | bash
+    judge "安装 SSL 证书生成脚本"
+  fi
+  if [[ ${houduan} == "1" ]]; then
+    clxray="clashhd"
+  else
+    clxray="clashqd"
+  fi
   if [[ -f "$HOME/.acme.sh/${domain}_ecc/${domain}.key" && -f "$HOME/.acme.sh/${domain}_ecc/${domain}.cer" && -f "$HOME/.acme.sh/acme.sh" ]]; then
     print_ok "[${domain}]证书已存在，重新启用证书"
     sleep 2
     rm -fr /ssl/* >/dev/null 2>&1
-    "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --ecc
+    "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/${clxray}.crt --keypath /ssl/${clxray}.key --ecc
     judge "证书启用"
     sleep 2
     "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
-    echo $domain >"$HOME"/.acme.sh/domainjilu
+    echo $domain >"$HOME"/.acme.sh/${clxray}
     judge "域名记录"
   else
     rm -rf /ssl/* > /dev/null 2>&1
@@ -383,16 +392,7 @@ function ssl_judge_and_install() {
 }
 
 function acme() {
-  if [[ ! -f "$HOME/.acme.sh" ]]; then
-    curl -L get.acme.sh | bash
-    judge "安装 SSL 证书生成脚本"
-  fi
-  if [[ ${houduan} == "1" ]]; then
-    clxray="clashhd"
-  else
-    clxray="clashqd"
-  fi
-  
+
   "$HOME"/.acme.sh/acme.sh --set-default-ca --server letsencrypt
 
   sed -i "6s/^/#/" "$nginx_conf"
@@ -407,7 +407,6 @@ function acme() {
       "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
       echo $domain >"$HOME"/.acme.sh/${clxray}
       judge "域名记录"
-      acme2
     fi
   else
     print_error "SSL 证书生成失败"
@@ -507,6 +506,7 @@ function install_xray_ws() {
   configure_nginx
   generate_certificate
   ssl_judge_and_install
+  acme2
 }
 menu() {
   clear

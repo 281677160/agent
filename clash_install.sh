@@ -512,11 +512,6 @@ menu() {
   clear
   echo
   echo
-  running_state
-  echo -e "${XRAY_ZT}"
-  echo -e "${NGINX_ZT}"
-  echo -e "${CLOUDREVE_ZT}"
-  echo
   ECHOY "1、安装 Xray、nginx和cloudreve"
   ECHOY "2、打印 Xray 节点信息"
   ECHOY "3、安装 BBR、锐速加速"

@@ -507,10 +507,6 @@ function install_xray_ws() {
   configure_nginx
   generate_certificate
   ssl_judge_and_install
-  configure_cloudreve
-  restart_all
-  configure_pzcon
-  cloudreve_xinxi
 }
 menu() {
   clear

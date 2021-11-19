@@ -217,7 +217,7 @@ function nodejs_install() {
   else
     cd sub-web
     yarn install
-    timeout -k 1s 10s yarn serve
+    timeout -k 1s 30s yarn serve
   fi
 }
 

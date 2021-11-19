@@ -375,8 +375,6 @@ function ssl_judge_and_install() {
     echo $domain >"$HOME"/.acme.sh/${clxray}
     judge "域名记录"
   else
-    cp -a $cert_dir/self_signed_cert.pem /ssl/${clxray}.crt
-    cp -a $cert_dir/self_signed_key.pem /ssl/${clxray}.key
     acme
   fi
   chown -R nobody.$cert_group /ssl/*
@@ -499,7 +497,6 @@ function install_xray_ws() {
   port_exist_check 80
   nginx_install
   configure_nginx
-  generate_certificate
   ssl_judge_and_install
   acme2
 }

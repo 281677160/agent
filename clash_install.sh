@@ -236,6 +236,7 @@ function nginx_install() {
   # 遗留问题处理
   mkdir -p /etc/nginx/conf.d >/dev/null 2>&1
 }
+
 function dependency_install() {
   ${INS} lsof tar
   judge "安装 lsof tar"
@@ -506,8 +507,6 @@ function install_xray_ws() {
   basic_optimization
   domain_check
   port_exist_check 80
-  xray_install
-  configure_xray_ws
   nginx_install
   configure_nginx
   generate_certificate

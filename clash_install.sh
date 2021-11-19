@@ -375,11 +375,6 @@ function ssl_judge_and_install() {
     echo $domain >"$HOME"/.acme.sh/${clxray}
     judge "域名记录"
   else
-    rm -rf /ssl/* > /dev/null 2>&1
-    rm -fr "$HOME"/.acme.sh > /dev/null 2>&1
-    sed -i '/acme.sh/d' "$HOME"/.bashrc > /dev/null 2>&1
-    sed -i '/acme.sh/d' "$HOME"/.cshrc > /dev/null 2>&1
-    sed -i '/acme.sh/d' "$HOME"/.tcshrc > /dev/null 2>&1
     cp -a $cert_dir/self_signed_cert.pem /ssl/${clxray}.crt
     cp -a $cert_dir/self_signed_key.pem /ssl/${clxray}.key
     acme

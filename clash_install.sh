@@ -29,14 +29,10 @@ ERROR="${Red}[ERROR]${Font}"
 
 # 变量
 github_branch="main"
-xray_conf_dir="/usr/local/etc/xray"
+xray_conf_dir="/root/sub-web"
 website_dir="/www/xray_web/"
-xray_access_log="/var/log/xray/access.log"
-xray_error_log="/var/log/xray/error.log"
-cert_dir="/usr/local/etc/xray"
-domain_tmp_dir="/usr/local/etc/xray"
-cloudreve_path="/usr/local/cloudreve"
-cloudreve_service="/etc/systemd/system"
+cert_dir="/root/sub-web"
+domain_tmp_dir="/root/sub-web"
 cert_group="nobody"
 random_num=$((RANDOM % 12 + 4))
 HOME="/root"

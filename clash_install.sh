@@ -217,7 +217,7 @@ function nodejs_install() {
   else
     cd sub-web
     yarn install
-    timeout -k 1s 30s yarn serve
+    timeout -k 1s 10s yarn serve
   fi
 }
 
@@ -359,10 +359,6 @@ function generate_certificate() {
 
 function ssl_judge_and_install() {
   [[ ! -d /ssl ]] && mkdir -p /ssl
-  if [[ ! -f "$HOME/.acme.sh" ]]; then
-    curl -L get.acme.sh | bash
-    judge "安装 SSL 证书生成脚本"
-  fi
   if [[ ${houduan} == "1" ]]; then
     clxray="clashhd"
   else
@@ -384,14 +380,18 @@ function ssl_judge_and_install() {
     sed -i '/acme.sh/d' "$HOME"/.bashrc > /dev/null 2>&1
     sed -i '/acme.sh/d' "$HOME"/.cshrc > /dev/null 2>&1
     sed -i '/acme.sh/d' "$HOME"/.tcshrc > /dev/null 2>&1
-    cp -a $cert_dir/self_signed_cert.pem /ssl/xray.crt
-    cp -a $cert_dir/self_signed_key.pem /ssl/xray.key
+    cp -a $cert_dir/self_signed_cert.pem /ssl/${clxray}.crt
+    cp -a $cert_dir/self_signed_key.pem /ssl/${clxray}.key
     acme
   fi
   chown -R nobody.$cert_group /ssl/*
 }
 
 function acme() {
+  if [[ ! -f "$HOME/.acme.sh" ]]; then
+    curl -L get.acme.sh | bash
+    judge "安装 SSL 证书生成脚本"
+  fi
 
   "$HOME"/.acme.sh/acme.sh --set-default-ca --server letsencrypt
 

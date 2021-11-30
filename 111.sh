@@ -263,6 +263,7 @@ judge "加载自定义文件"
 
 function port_exist_check() {
 ECHOG "正在加载源和安装源,请耐心等候~~~"
+cd $Home
 echo
 cat >$NETIP <<-EOF
 uci set network.lan.ipaddr='$ip'
@@ -301,6 +302,7 @@ make menuconfig
 
 function xray_install() {
 ECHOG "正在生成配置文件，请稍后..."
+cd $Home
 echo
 source build/${firmware}/common.sh && Diy_chajian
 make defconfig
@@ -341,6 +343,7 @@ export COMFIRMWARE="openwrt/bin/targets/${TARGET_BOARD}/${TARGET_SUBTARGET}"
 function configure_nginx() {
 ECHOG "正在下载DL文件,请耐心等待..."
 QLMEUN="输入[ Nn ]回车,退出下载，更换节点后按回车继续尝试下载DL"
+cd $Home
 while :; do
 [[ -n ${QLMEUN2} ]] && ECHOG "${QLMEUN2}"
 rm -fr build.log
@@ -379,6 +382,7 @@ done
 }
 
 function generate_certificate() {
+cd $Home
 rm -rf build.log
 cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c > CPU
 cat /proc/cpuinfo | grep "cpu cores" | uniq >> CPU

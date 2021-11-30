@@ -47,7 +47,7 @@ function ECHOG()
 }
 if [[ "$USER" == "root" ]]; then
   echo
-  print_error "当前用户是 root 用户，请切换到非 root 用户后重新执行脚本"
+  print_error "警告：请勿使用root用户编译，换一个普通用户吧~~"
   echo
   exit 1
 fi

@@ -414,7 +414,7 @@ else
 	ECHOY "正在使用[$(nproc)线程]编译固件,预计要[1]小时左右,请耐心等待..."
 fi
 sleep 15
-make -j$(nproc) V=s 2>&1 |tee build.log
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin make -j$(($(nproc) + 1)) V=s 2>&1 |tee build.log
 }
 
 function generate_cer() {

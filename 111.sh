@@ -442,7 +442,7 @@ menu() {
 	echo
 	echo
 	while :; do
-	TIME g "请选择编译源码,输入[ 1、2、3、4、5 ]然后回车确认您的选择！"
+	ECHOY "请选择编译源码,输入[ 1、2、3、4、5 ]然后回车确认您的选择！"
 	read -p " 输入您的选择： " CHOOSE
 	case $CHOOSE in
 		1)

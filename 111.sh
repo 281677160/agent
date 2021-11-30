@@ -341,27 +341,24 @@ export COMFIRMWARE="openwrt/bin/targets/${TARGET_BOARD}/${TARGET_SUBTARGET}"
 }
 
 function configure_nginx() {
-ECHOG "正在下载DL文件,请耐心等待..."
-QLMEUN="输入[ Nn ]回车,退出下载，更换节点后按回车继续尝试下载DL"
 cd $Home
-while :; do
-[[ -n ${QLMEUN2} ]] && ECHOG "${QLMEUN2}"
+ECHOG "QLMEUN2"
+QLMEUN="输入[ Nn ]回车,退出下载，更换节点后按回车继续尝试下载DL"
 rm -fr build.log
 make -j8 download 2>&1 |tee build.log
 find dl -size -1024c -exec ls -l {} \;
 find dl -size -1024c -exec rm -f {} \;
+while :; do
 read -p " ${QLMEUN}： " MENU1
 if [[ `grep -c "make with -j1 V=s or V=sc" build.log` == '0' ]]; then
-	MENU1="Y"
+	S="Y"
 else
 	print_error "DL文件下载失败"
-	MENU1="V"
-	
 fi
 if [[ ${MENU1} == "N" ]] || [[ ${MENU1} == "n" ]]; then
-	MENU1="N"
+	S="Y"
 fi
-case $MENU1 in
+case $S in
 	Y)
 		echo
 		ECHOG "DL文件下载成功"
@@ -378,6 +375,7 @@ case $MENU1 in
     	*)
 		QLMEUN="输入[ Nn ]回车,退出下载，更换节点后按回车继续尝试下载DL"
 		QLMEUN2="正在重新下载DL文件"
+		configure_nginx
 	;;
 esac
 done

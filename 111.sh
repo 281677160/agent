@@ -7,14 +7,6 @@
 #	email: admin@wulabing.com
 #====================================================
 
-export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-stty erase ^?
-
-cd "$(
-  cd "$(dirname "$0")" || exit
-  pwd
-)" || exit
-
 # 字体颜色配置
 Green="\033[32m"
 Red="\033[31m"

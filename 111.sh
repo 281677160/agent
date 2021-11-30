@@ -350,16 +350,18 @@ rm -fr build.log
 make -j8 download 2>&1 |tee build.log
 find dl -size -1024c -exec ls -l {} \;
 find dl -size -1024c -exec rm -f {} \;
-read -p " ${QLMEUN}： " MENU
+read -p " ${QLMEUN}： " MENU1
 if [[ `grep -c "make with -j1 V=s or V=sc" build.log` == '0' ]]; then
-	S="Y"
+	MENU1="Y"
 else
 	print_error "DL文件下载失败"
+	MENU1="V"
+	
 fi
-if [[ ${MENU} == "N" ]] || [[ ${MENU} == "n" ]]; then
-	S="N"
+if [[ ${MENU1} == "N" ]] || [[ ${MENU1} == "n" ]]; then
+	MENU1="N"
 fi
-case $S in
+case $MENU1 in
 	Y)
 		echo
 		ECHOG "DL文件下载成功"

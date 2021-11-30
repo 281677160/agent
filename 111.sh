@@ -47,7 +47,9 @@ function ECHOG()
 }
 function is_root() {
   if [[ "$USER" == "root" ]]; then
+    echo
     print_error "当前用户是 root 用户，请切换到非 root 用户后重新执行脚本"
+    echo
     exit 1
   fi
 }

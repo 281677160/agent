@@ -342,43 +342,44 @@ export COMFIRMWARE="openwrt/bin/targets/${TARGET_BOARD}/${TARGET_SUBTARGET}"
 
 function configure_nginx() {
 cd $Home
-ECHOG "QLMEUN2"
-QLMEUN="输入[ Nn ]回车,退出下载，更换节点后按回车继续尝试下载DL"
+ECHOG "下载DL文件，请耐心等候..."
 rm -fr build.log
 make -j8 download 2>&1 |tee build.log
 find dl -size -1024c -exec ls -l {} \;
 find dl -size -1024c -exec rm -f {} \;
-while :; do
-read -p " ${QLMEUN}： " MENU1
+configure_dl
+}
+
+function configure_dl() {
 if [[ `grep -c "make with -j1 V=s or V=sc" build.log` == '0' ]]; then
-	S="Y"
+	ECHOG "DL文件下载成功"
 else
-	print_error "DL文件下载失败"
+	clear
+	echo
+	echo
+	ECHOR "下载DL失败，更换节点后再尝试下载？"
+	QLMEUN="输入[ Nn ]回车,退出下载，更换节点后按y回车继续尝试下载DL"
+	while :; do
+	read -p " [${QLMEUN}]： " XZDLE
+		case $XZDLE in
+			Y)
+				configure_nginx
+			break
+			;;
+			N)
+				echo
+				TIME r "退出安装程序!"
+				echo
+				sleep 2
+				exit 1
+			break
+    			;;
+    			*)
+				QLMEUN="输入[ Nn ]回车,退出下载，更换节点后按y回车继续尝试下载DL"
+			;;
+		esac
+	done
 fi
-if [[ ${MENU1} == "N" ]] || [[ ${MENU1} == "n" ]]; then
-	S="Y"
-fi
-case $S in
-	Y)
-		echo
-		ECHOG "DL文件下载成功"
-	break
-	;;
-	N)
-		echo
-		ECHOR "退出安装程序!"
-		echo
-		sleep 1
-		exit 1
-	break
-    	;;
-    	*)
-		QLMEUN="输入[ Nn ]回车,退出下载，更换节点后按回车继续尝试下载DL"
-		QLMEUN2="正在重新下载DL文件"
-		configure_nginx
-	;;
-esac
-done
 }
 
 function generate_certificate() {

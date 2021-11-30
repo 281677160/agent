@@ -49,7 +49,7 @@ function ECHOG()
 }
   function ECHOR()
 {
-  echo -e "${Green} $1 ${Font}"
+  echo -e "${Red} $1 ${Font}"
 }
 
 judge() {
@@ -348,8 +348,10 @@ make -j8 download 2>&1 |tee build.log
 find dl -size -1024c -exec ls -l {} \;
 find dl -size -1024c -exec rm -f {} \;
 read -p " ${QLMEUN}： " MENU
-if [[ `grep -c "make with -j1 V=s or V=sc" build.log` -ge '1' ]]; then
+if [[ `grep -c "make with -j1 V=s or V=sc" build.log` -ge '0' ]]; then
 	S="Y"
+else
+	print_error "DL文件下载失败"
 fi
 if [[ ${MENU} == "N" ]] || [[ ${MENU} == "n" ]]; then
 	S="N"

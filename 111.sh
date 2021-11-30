@@ -20,15 +20,16 @@ Hi="${Green}[Hi]${Font}"
 ERROR="${Red}[ERROR]${Font}"
 
 # 变量
-export GITHUB_WORKSPACE="$PWD"
-export Home="$PWD/openwrt"
-export NETIP="package/base-files/files/etc/networkip"
+
 if [[ "$USER" == "root" ]]; then
   echo
   print_error "警告：请勿使用root用户编译，换一个普通用户吧~~"
   echo
   exit 1
 fi
+export GITHUB_WORKSPACE="$PWD"
+export Home="$PWD/openwrt"
+export NETIP="package/base-files/files/etc/networkip"
 
 function print_ok() {
   echo -e " ${OK} ${Blue} $1 ${Font}"
@@ -85,7 +86,6 @@ function running_state() {
 	sudo apt-get install -y build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 lib32stdc++6 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler g++-multilib antlr3 gperf wget curl rename libpcap0.8-dev swig rsync
 	judge "安装/升级必要依赖"
 	sudo timedatectl set-timezone Asia/Shanghai
-	echo "compile" > .compile
 }
 
 function system_kongjian() {

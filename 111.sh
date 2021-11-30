@@ -71,13 +71,13 @@ function running_state() {
 	echo
 	echo
 	echo
-	TIME z "|*******************************************|"
-	TIME g "|                                           |"
-	TIME y "|    首次编译,请输入Ubuntu密码继续下一步    |"
-	TIME g "|                                           |"
-	TIME z "|              编译环境部署                 |"
-	TIME g "|                                           |"
-	TIME r "|*******************************************|"
+	ECHOR "|*******************************************|"
+	ECHOG "|                                           |"
+	ECHOY "|    首次编译,请输入Ubuntu密码继续下一步    |"
+	ECHOG "|                                           |"
+	ECHOY "|              编译环境部署                 |"
+	ECHOG "|                                           |"
+	ECHOR "|*******************************************|"
 	echo
 	echo
 	sudo apt-get update -y

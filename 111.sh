@@ -412,85 +412,89 @@ make -j$(nproc) V=s 2>&1 |tee build.log
 
 function install_xray_ws() {
   is_root
+  running_state
+  system_kongjian
   kaishi_install
-  system_check
-  dependency_install
+  nginx_install
   basic_optimization
   domain_check
-  port_exist_check 80
-  xray_install
+  port_exist_check
   configure_xray_ws
-  nginx_install
+  xray_install
   configure_nginx
   generate_certificate
-  ssl_judge_and_install
-  configure_cloudreve
-  restart_all
-  configure_pzcon
-  cloudreve_xinxi
 }
 menu() {
-  clear
-  echo
-  echo
-  ECHOY "1、安装 Xray、nginx和cloudreve"
-  ECHOY "2、打印 Xray 节点信息"
-  ECHOY "3、安装 BBR、锐速加速"
-  ECHOY "4、更新 Xray"
-  ECHOY "5、修改 UUID/端口/路径/Tronjian密码"
-  ECHOY "6、删除 阿里云盾或腾讯云盾"
-  ECHOY "7、卸载 Xray、nginx和cloudreve"
-  ECHOY "8、重启 Xray、nginx和cloudreve"
-  ECHOY "9、退出"
-  echo
-  echo
-  XUANZHE="请输入数字"
-  while :; do
-  read -p " ${XUANZHE}：" menu_num
-  case $menu_num in
-  1)
-    install_xray_ws
-    break
-    ;;
-  2)
-    source $domain_tmp_dir/pzcon
-    break
-    ;;
-  3)
-    wget -N --no-check-certificate "https://raw.githubusercontent.com/ylx2016/Linux-NetSpeed/master/tcp.sh" && chmod +x tcp.sh && ./tcp.sh
-    break
-    ;;
-  4)
-    systemctl stop xray
-    bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" - install
-    restart_all
-    break
-    ;;
-  5)
-    configure_gaipeizhi
-    break
-    ;;
-    
-  6)
-    bash -c "$(curl -Ls https://raw.githubusercontent.com/281677160/agent/main/xray/uninstall_firewall.sh)"
-    break
-    ;;
-  7)
-    xray_uninstall
-    break
-    ;;
-  8)
-    restart_all
-    break
-    ;;
-  9)
-    exit 0
-    break
-    ;;
-    *)
-    XUANZHE="请输入正确的选择"
-    ;;
-  esac
-  done
+	clear
+	echo
+	echo
+	echo
+	TIME l " 1. Lede_5.4内核,LUCI 18.06版本(Lede_source)"
+	echo
+	TIME l " 2. Lienol_4.14内核,LUCI 19.07版本(Lienol_source)"
+	echo
+	TIME l " 3. Immortalwrt_5.4内核,LUCI 21.02版本(Mortal_source)"
+	echo
+	TIME l " 4. N1和晶晨系列CPU盒子专用(openwrt_amlogic)"
+	echo
+	TIME l " 5. 退出编译程序"
+	echo
+	echo
+	echo
+	while :; do
+	TIME g "请选择编译源码,输入[ 1、2、3、4、5 ]然后回车确认您的选择！"
+	read -p " 输入您的选择： " CHOOSE
+	case $CHOOSE in
+		1)
+			export firmware="Lede_source"
+			export CODE="lede"
+			export Core=".Lede_core"
+			export Modelfile="Lede_source"
+			source Lede_source/.Lede_core > /dev/null 2>&1
+			TIME y "您选择了：Lede_5.4内核,LUCI 18.06版本"
+			install_xray_ws
+		break
+		;;
+		2)
+			export firmware="Lienol_source"
+			export CODE="lienol"
+			export Core=".Lienol_core"
+			export Modelfile="Lienol_source"
+			source Lienol_source/.Lienol_core > /dev/null 2>&1
+			TIME y "您选择了：Lienol_4.14内核,LUCI 19.07版本"
+			install_xray_ws
+		break
+		;;
+		3)
+			export firmware="Mortal_source"
+			export CODE="mortal"
+			export Core=".Mortal_core"
+			export Modelfile="Mortal_source"
+			source Mortal_source/.Mortal_core > /dev/null 2>&1
+			TIME y "您选择了：Immortalwrt_5.4内核,LUCI 21.02版本"
+			install_xray_ws
+		break
+		;;
+		4)
+			export firmware="openwrt_amlogic"
+			export CODE="lede"
+			export Core=".amlogic_core"
+			export Modelfile="openwrt_amlogic"
+			source openwrt_amlogic/.amlogic_core > /dev/null 2>&1
+			TIME y "您选择了：N1和晶晨系列CPU盒子专用"
+			install_xray_ws
+		break
+		;;
+		5)
+			rm -rf compile.sh
+			TIME r "您选择了退出编译程序"
+			exit 0
+		break
+    		;;
+    		*)
+			TIME r "警告：输入错误,请输入正确的编号!"
+		;;
+	esac
+	done
 }
 menu "$@"

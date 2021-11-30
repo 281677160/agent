@@ -352,7 +352,7 @@ function configure_nginx() {
 ECHOG "正在下载DL文件,请耐心等待..."
 QLMEUN="输入[ Nn ]回车,退出下载，更换节点后按回车继续尝试下载DL"
 while :; do
-ECHOG "${QLMEUN2}"
+[[ -n ${QLMEUN2} ]] && ECHOG "${QLMEUN2}"
 rm -fr build.log
 make -j8 download 2>&1 |tee build.log
 find dl -size -1024c -exec ls -l {} \;

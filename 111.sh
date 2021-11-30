@@ -447,40 +447,28 @@ menu() {
 	case $CHOOSE in
 		1)
 			export firmware="Lede_source"
-			export CODE="lede"
-			export Core=".Lede_core"
 			export Modelfile="Lede_source"
-			source Lede_source/.Lede_core > /dev/null 2>&1
 			ECHOG "您选择了：Lede_5.4内核,LUCI 18.06版本"
 			install_xray_ws
 		break
 		;;
 		2)
 			export firmware="Lienol_source"
-			export CODE="lienol"
-			export Core=".Lienol_core"
 			export Modelfile="Lienol_source"
-			source Lienol_source/.Lienol_core > /dev/null 2>&1
 			ECHOG "您选择了：Lienol_4.14内核,LUCI 19.07版本"
 			install_xray_ws
 		break
 		;;
 		3)
 			export firmware="Mortal_source"
-			export CODE="mortal"
-			export Core=".Mortal_core"
 			export Modelfile="Mortal_source"
-			source Mortal_source/.Mortal_core > /dev/null 2>&1
 			ECHOG "您选择了：Immortalwrt_5.4内核,LUCI 21.02版本"
 			install_xray_ws
 		break
 		;;
 		4)
 			export firmware="openwrt_amlogic"
-			export CODE="lede"
-			export Core=".amlogic_core"
 			export Modelfile="openwrt_amlogic"
-			source openwrt_amlogic/.amlogic_core > /dev/null 2>&1
 			ECHOG "您选择了：N1和晶晨系列CPU盒子专用"
 			install_xray_ws
 		break

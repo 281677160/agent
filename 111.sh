@@ -523,4 +523,73 @@ menu() {
 	esac
 	done
 }
-menu "$@"
+
+menp() {
+  clear
+  echo
+  echo
+  ECHOY "1、安装 Xray、nginx和cloudreve"
+  ECHOY "2、打印 Xray 节点信息"
+  ECHOY "3、安装 BBR、锐速加速"
+  ECHOY "4、更新 Xray"
+  ECHOY "5、修改 UUID/端口/路径/Tronjian密码"
+  ECHOY "6、删除 阿里云盾或腾讯云盾"
+  ECHOY "7、卸载 Xray、nginx和cloudreve"
+  ECHOY "8、重启 Xray、nginx和cloudreve"
+  ECHOY "9、退出"
+  echo
+  echo
+  XUANZHE="请输入数字"
+  while :; do
+  read -p " ${XUANZHE}：" menu_num
+  case $menu_num in
+  1)
+    install_xray_ws
+    break
+    ;;
+  2)
+    source $domain_tmp_dir/pzcon
+    break
+    ;;
+  3)
+    wget -N --no-check-certificate "https://raw.githubusercontent.com/ylx2016/Linux-NetSpeed/master/tcp.sh" && chmod +x tcp.sh && ./tcp.sh
+    break
+    ;;
+  4)
+    systemctl stop xray
+    bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" - install
+    restart_all
+    break
+    ;;
+  5)
+    configure_gaipeizhi
+    break
+    ;;
+    
+  6)
+    bash -c "$(curl -Ls https://raw.githubusercontent.com/281677160/agent/main/xray/uninstall_firewall.sh)"
+    break
+    ;;
+  7)
+    xray_uninstall
+    break
+    ;;
+  8)
+    restart_all
+    break
+    ;;
+  9)
+    exit 0
+    break
+    ;;
+    *)
+    XUANZHE="请输入正确的选择"
+    ;;
+  esac
+  done
+}
+if [[ -f $Home/build/cheng ]]; then
+	menp "$@"
+else
+	menu "$@"
+fi

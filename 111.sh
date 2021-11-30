@@ -23,6 +23,12 @@ ERROR="${Red}[ERROR]${Font}"
 export GITHUB_WORKSPACE="$PWD"
 export Home="$PWD/openwrt"
 export NETIP="package/base-files/files/etc/networkip"
+if [[ "$USER" == "root" ]]; then
+  echo
+  print_error "警告：请勿使用root用户编译，换一个普通用户吧~~"
+  echo
+  exit 1
+fi
 
 function print_ok() {
   echo -e " ${OK} ${Blue} $1 ${Font}"
@@ -45,12 +51,7 @@ function ECHOG()
 {
   echo -e "${Green} $1 ${Font}"
 }
-if [[ "$USER" == "root" ]]; then
-  echo
-  print_error "警告：请勿使用root用户编译，换一个普通用户吧~~"
-  echo
-  exit 1
-fi
+
 judge() {
   if [[ 0 -eq $? ]]; then
     echo

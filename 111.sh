@@ -45,14 +45,12 @@ function ECHOG()
 {
   echo -e "${Green} $1 ${Font}"
 }
-function is_root() {
-  if [[ "$USER" == "root" ]]; then
-    echo
-    print_error "当前用户是 root 用户，请切换到非 root 用户后重新执行脚本"
-    echo
-    exit 1
-  fi
-}
+if [[ "$USER" == "root" ]]; then
+  echo
+  print_error "当前用户是 root 用户，请切换到非 root 用户后重新执行脚本"
+  echo
+  exit 1
+fi
 judge() {
   if [[ 0 -eq $? ]]; then
     echo
@@ -412,7 +410,6 @@ make -j$(nproc) V=s 2>&1 |tee build.log
 }
 
 function install_xray_ws() {
-  is_root
   running_state
   system_kongjian
   kaishi_install

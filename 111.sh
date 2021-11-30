@@ -84,7 +84,7 @@ function running_state() {
 	sudo apt-get full-upgrade -y
 	sudo apt-get install -y build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 lib32stdc++6 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler g++-multilib antlr3 gperf wget curl rename libpcap0.8-dev swig rsync
 	judge "安装/升级必要依赖"
-  sudo timedatectl set-timezone Asia/Shanghai
+	sudo timedatectl set-timezone Asia/Shanghai
 	echo "compile" > .compile
 }
 
@@ -93,7 +93,7 @@ export Ubunkj="$(df -h|grep -v tmpfs |grep "/dev/.*" |awk '{print $4}' |awk 'NR=
 export FINAL=`echo ${Ubunkj: -1}`
 if [[ "${FINAL}" =~ (M|K) ]]; then
 	echo
-	ECHOR "敬告：可用空间小于[ 1G ]退出编译,建议可用空间大于20G,是否继续?"
+	print_error "敬告：可用空间小于[ 1G ]退出编译,建议可用空间大于20G,是否继续?"
 	sleep 2
 	exit 1
 	echo
@@ -104,7 +104,7 @@ if [[ "${Ubuntu_kj}" -lt "20" ]];then
 	echo
 	ECHOY "您当前系统可用空间为${Ubuntu_kj}G"
 	echo ""
-	ECHOR "敬告：可用空间小于[ 20G ]编译容易出错,建议可用空间大于20G,是否继续?"
+	print_error "敬告：可用空间小于[ 20G ]编译容易出错,建议可用空间大于20G,是否继续?"
 	echo
 	read -p " [回车退出，Y/y确认继续]： " YN
 	case ${YN} in
@@ -412,7 +412,43 @@ sleep 15
 make -j$(nproc) V=s 2>&1 |tee build.log
 }
 
+function generate_cer() {
+	if [[ "${firmware}" == "Lede_source" ]] || [[ -n "$(ls -A "openwrt/.Lede_core" 2>/dev/null)" ]]; then
+		export firmware="Lede_source"
+		export CODE="lede"
+		export Modelfile="Lede_source"
+		export Core=".Lede_core"
+		export PATH1="$PWD/openwrt/build/${firmware}"
+		[[ -f openwrt/.Lede_core ]] && source openwrt/.Lede_core
+	fi
+	if [[ "${firmware}" == "Lienol_core" ]] || [[ -n "$(ls -A "openwrt/.Lienol_core" 2>/dev/null)" ]]; then
+		export firmware="Lienol_source"
+		export CODE="lienol"
+		export Modelfile="Lienol_source"
+		export Core=".Lienol_core"
+		export PATH1="$PWD/openwrt/build/${firmware}"
+		[[ -f openwrt/.Lienol_core ]] && source openwrt/.Lienol_core
+	fi
+	if [[ "${firmware}" == "Mortal_core" ]] || [[ -n "$(ls -A "openwrt/.Mortal_core" 2>/dev/null)" ]]; then
+		export firmware="Mortal_source"
+		export CODE="mortal"
+		export Modelfile="Mortal_source"
+		export Core=".Mortal_core"
+		export PATH1="$PWD/openwrt/build/${firmware}"
+		[[ -f openwrt/.Mortal_core ]] && source openwrt/.Mortal_core
+	fi
+	if [[ "${firmware}" == "amlogic_core" ]] || [[ -n "$(ls -A "openwrt/.amlogic_core" 2>/dev/null)" ]]; then
+		export firmware="openwrt_amlogic"
+		export CODE="lede"
+		export Modelfile="openwrt_amlogic"
+		export Core=".amlogic_core"
+		export PATH1="$PWD/openwrt/build/${firmware}"
+		[[ -f openwrt/.amlogic_core ]] && source openwrt/.amlogic_core
+	fi
+}
+
 function install_xray_ws() {
+  generate_cer
   running_state
   system_kongjian
   kaishi_install
@@ -448,15 +484,13 @@ menu() {
 	case $CHOOSE in
 		1)
 			export firmware="Lede_source"
-			export Modelfile="Lede_source"
-			export PATH1="$PWD/openwrt/build/${firmware}"
+			
 			ECHOG "您选择了：Lede_5.4内核,LUCI 18.06版本"
 			install_xray_ws
 		break
 		;;
 		2)
 			export firmware="Lienol_source"
-			export Modelfile="Lienol_source"
 			export PATH1="$PWD/openwrt/build/${firmware}"
 			ECHOG "您选择了：Lienol_4.14内核,LUCI 19.07版本"
 			install_xray_ws
@@ -464,7 +498,6 @@ menu() {
 		;;
 		3)
 			export firmware="Mortal_source"
-			export Modelfile="Mortal_source"
 			export PATH1="$PWD/openwrt/build/${firmware}"
 			ECHOG "您选择了：Immortalwrt_5.4内核,LUCI 21.02版本"
 			install_xray_ws

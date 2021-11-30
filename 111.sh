@@ -429,15 +429,15 @@ menu() {
 	echo
 	echo
 	echo
-	TIME l " 1. Lede_5.4内核,LUCI 18.06版本(Lede_source)"
+	ECHOY " 1. Lede_5.4内核,LUCI 18.06版本(Lede_source)"
 	echo
-	TIME l " 2. Lienol_4.14内核,LUCI 19.07版本(Lienol_source)"
+	ECHOY " 2. Lienol_4.14内核,LUCI 19.07版本(Lienol_source)"
 	echo
-	TIME l " 3. Immortalwrt_5.4内核,LUCI 21.02版本(Mortal_source)"
+	ECHOY " 3. Immortalwrt_5.4内核,LUCI 21.02版本(Mortal_source)"
 	echo
-	TIME l " 4. N1和晶晨系列CPU盒子专用(openwrt_amlogic)"
+	ECHOY " 4. N1和晶晨系列CPU盒子专用(openwrt_amlogic)"
 	echo
-	TIME l " 5. 退出编译程序"
+	ECHOY " 5. 退出编译程序"
 	echo
 	echo
 	echo
@@ -451,7 +451,7 @@ menu() {
 			export Core=".Lede_core"
 			export Modelfile="Lede_source"
 			source Lede_source/.Lede_core > /dev/null 2>&1
-			TIME y "您选择了：Lede_5.4内核,LUCI 18.06版本"
+			ECHOG "您选择了：Lede_5.4内核,LUCI 18.06版本"
 			install_xray_ws
 		break
 		;;
@@ -461,7 +461,7 @@ menu() {
 			export Core=".Lienol_core"
 			export Modelfile="Lienol_source"
 			source Lienol_source/.Lienol_core > /dev/null 2>&1
-			TIME y "您选择了：Lienol_4.14内核,LUCI 19.07版本"
+			ECHOG "您选择了：Lienol_4.14内核,LUCI 19.07版本"
 			install_xray_ws
 		break
 		;;
@@ -471,7 +471,7 @@ menu() {
 			export Core=".Mortal_core"
 			export Modelfile="Mortal_source"
 			source Mortal_source/.Mortal_core > /dev/null 2>&1
-			TIME y "您选择了：Immortalwrt_5.4内核,LUCI 21.02版本"
+			ECHOG "您选择了：Immortalwrt_5.4内核,LUCI 21.02版本"
 			install_xray_ws
 		break
 		;;
@@ -481,18 +481,18 @@ menu() {
 			export Core=".amlogic_core"
 			export Modelfile="openwrt_amlogic"
 			source openwrt_amlogic/.amlogic_core > /dev/null 2>&1
-			TIME y "您选择了：N1和晶晨系列CPU盒子专用"
+			ECHOG "您选择了：N1和晶晨系列CPU盒子专用"
 			install_xray_ws
 		break
 		;;
 		5)
 			rm -rf compile.sh
-			TIME r "您选择了退出编译程序"
+			ECHOG "您选择了退出编译程序"
 			exit 0
 		break
     		;;
     		*)
-			TIME r "警告：输入错误,请输入正确的编号!"
+			ECHOY "警告：输入错误,请输入正确的编号!"
 		;;
 	esac
 	done

@@ -362,7 +362,7 @@ case $S in
 	;;
 	N)
 		echo
-		TIME r "退出安装程序!"
+		ECHOR "退出安装程序!"
 		echo
 		sleep 1
 		exit 1

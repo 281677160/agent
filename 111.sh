@@ -30,7 +30,6 @@ ERROR="${Red}[ERROR]${Font}"
 # 变量
 export GITHUB_WORKSPACE="$PWD"
 export Home="$PWD/openwrt"
-export PATH1="$PWD/openwrt/build/${firmware}"
 export NETIP="package/base-files/files/etc/networkip"
 
 function print_ok() {
@@ -458,6 +457,7 @@ menu() {
 		1)
 			export firmware="Lede_source"
 			export Modelfile="Lede_source"
+			export PATH1="$PWD/openwrt/build/${firmware}"
 			ECHOG "您选择了：Lede_5.4内核,LUCI 18.06版本"
 			install_xray_ws
 		break
@@ -465,6 +465,7 @@ menu() {
 		2)
 			export firmware="Lienol_source"
 			export Modelfile="Lienol_source"
+			export PATH1="$PWD/openwrt/build/${firmware}"
 			ECHOG "您选择了：Lienol_4.14内核,LUCI 19.07版本"
 			install_xray_ws
 		break
@@ -472,6 +473,7 @@ menu() {
 		3)
 			export firmware="Mortal_source"
 			export Modelfile="Mortal_source"
+			export PATH1="$PWD/openwrt/build/${firmware}"
 			ECHOG "您选择了：Immortalwrt_5.4内核,LUCI 21.02版本"
 			install_xray_ws
 		break
@@ -479,6 +481,7 @@ menu() {
 		4)
 			export firmware="openwrt_amlogic"
 			export Modelfile="openwrt_amlogic"
+			export PATH1="$PWD/openwrt/build/${firmware}"
 			ECHOG "您选择了：N1和晶晨系列CPU盒子专用"
 			install_xray_ws
 		break

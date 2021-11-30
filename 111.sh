@@ -46,10 +46,8 @@ function ECHOG()
   echo -e "${Green} $1 ${Font}"
 }
 function is_root() {
-  if [[ 0 == "$UID" ]]; then
-    print_ok "当前用户是 root 用户，请开始您的骚操作"
-  else
-    print_error "当前用户不是 root 用户，请切换到 root 用户后重新执行脚本"
+  if [[ "$USER" == "root" ]]; then
+    print_error "当前用户是 root 用户，请切换到非 root 用户后重新执行脚本"
     exit 1
   fi
 }

@@ -188,8 +188,8 @@ if [[ $firmware == "Lede_source" ]]; then
 	if [[ -d ${Home} ]]; then
 		git clone https://github.com/coolsnowwolf/lede ledeopen
 		judge "${firmware}源码下载"
-		rm -rf $Home/{build,package}
-		rm -rf ledeopen/{toolchain,tools} && cp -rf ledeopen/* openwrt
+		rm -rf ${Home}/{build,package}
+		rm -rf ledeopen/{toolchain,tools} && cp -rf ledeopen/* ${Home}
 		rm -rf ledeopen
 	else
 		git clone https://github.com/coolsnowwolf/lede openwrt
@@ -197,8 +197,8 @@ if [[ $firmware == "Lede_source" ]]; then
 	fi
 	export ZZZ="package/lean/default-settings/files/zzz-default-settings"
 	export OpenWrt_name="18.06"
-	echo -e "\nipdz=$ip" > openwrt/.Lede_core
-	echo -e "\nGit=$Github" >> openwrt/.Lede_core
+	echo -e "\nipdz=$ip" > ${Home}/.Lede_core
+	echo -e "\nGit=$Github" >> ${Home}/.Lede_core
 elif [[ $firmware == "Lienol_source" ]]; then
 	rm -rf openwrt && git clone -b 19.07 --single-branch https://github.com/Lienol/openwrt openwrt
 	judge "${firmware}源码下载"

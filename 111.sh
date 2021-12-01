@@ -30,8 +30,7 @@ fi
 export GITHUB_WORKSPACE="$PWD"
 export Home="$PWD/openwrt"
 export NETIP="package/base-files/files/etc/networkip"
-generate_cer
-[[ -f $PWD/openwrt/config_bf ]] && openwrt_config
+
 
 
 function print_ok() {
@@ -542,6 +541,8 @@ menu() {
 }
 
 menp() {
+  generate_cer
+  [[ -f $PWD/openwrt/config_bf ]] && openwrt_config
   clear
   echo
   ECHOG "作者：${CODE}"

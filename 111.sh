@@ -70,6 +70,7 @@ if [[ "$USER" == "root" ]]; then
 fi
 
 function running_state() {
+cd ${GITHUB_WORKSPACE}
 	clear
 	echo
 	echo
@@ -91,6 +92,7 @@ function running_state() {
 }
 
 function system_kongjian() {
+cd ${GITHUB_WORKSPACE}
 export Ubunkj="$(df -h|grep -v tmpfs |grep "/dev/.*" |awk '{print $4}' |awk 'NR==1')"
 export FINAL=`echo ${Ubunkj: -1}`
 if [[ "${FINAL}" =~ (M|K) ]]; then
@@ -117,6 +119,7 @@ fi
 }
 
 function kaishi_install() {
+cd ${GITHUB_WORKSPACE}
 [[ -z ${ipdz} ]] && export ipdz="192.168.1.1"
 ECHOG "设置openwrt的后台IP地址[ 回车默认 $ipdz ]"
 read -p " 请输入后台IP地址：" ip
@@ -176,6 +179,7 @@ nginx_ip
 }
 
 function nginx_ip() {
+cd ${GITHUB_WORKSPACE}
 cat >$PWD/${Core} <<-EOF
 ipdz=$ip
 Git=$Github
@@ -190,6 +194,7 @@ fi
 }
 
 function nginx_install() {
+cd ${GITHUB_WORKSPACE}
 ECHOG "正在下载源码中,请耐心等候~~~"
 if [[ $firmware == "Lede_source" ]]; then
 	if [[ -d ${Home} ]]; then
@@ -236,6 +241,7 @@ nginx_ip
 }
 
 function basic_optimization() {
+cd ${GITHUB_WORKSPACE}
 echo "Compile_Date=$(date +%Y%m%d%H%M)" > $Home/Openwrt.info && source $Home/Openwrt.info
 svn co https://github.com/281677160/build-actions/trunk/build $Home/build > /dev/null 2>&1
 judge "编译脚本下载"

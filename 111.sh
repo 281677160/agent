@@ -616,10 +616,14 @@ menp() {
     ;;
   2)
     export erci="erci"
+    system_kongjian
     kaishi_install
     nginx_ip
-    openwrt_config
+    port_exist_check
+    configure_xray_ws
+    xray_install
     configure_nginx
+    generate_certificate
     break
     ;;
   3)

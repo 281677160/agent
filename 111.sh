@@ -212,7 +212,7 @@ function nginx_install() {
 cd ${GITHUB_WORKSPACE}
 ECHOG "正在下载源码中,请耐心等候~~~"
 if [[ $firmware == "Lede_source" ]]; then
-	if [[ -d ${Home}/build_dir ]] && [[ -d ${Home}/toolchain ]] && [[ -d ${Home}/tools ]] && [[ -d ${Home}/staging_dir ]]; then
+	if [[ -d ${Home}/build_dir ]] && [[ -d ${Home}/toolchain ]] && [[ -d ${Home}/tools ]] && [[ -d ${Home}/staging_dir ]] && [[ -d ${Home}/build ]]; then
 		git clone https://github.com/coolsnowwolf/lede openwrte
 		judgeopen "${firmware}源码下载"
 		cp -rf openwrt/{build_dir,staging_dir,toolchain,tools,config_bf} ${GITHUB_WORKSPACE}/openwrte

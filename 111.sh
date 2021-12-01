@@ -185,7 +185,13 @@ EOF
 function nginx_install() {
 ECHOG "正在下载源码中,请耐心等候~~~"
 if [[ $firmware == "Lede_source" ]]; then
-	rm -rf openwrt && git clone https://github.com/coolsnowwolf/lede openwrt
+	if [[ -d ${Home} ]]; then
+		git clone https://github.com/coolsnowwolf/lede ledeopen
+		rm -rf ledeopen/{toolchain,tools} && cp -fr ledeopen/* openwrt
+		rm -rf ledeopen
+	else
+		git clone https://github.com/coolsnowwolf/lede openwrt
+	fi
 	judge "${firmware}源码下载"
 	export ZZZ="package/lean/default-settings/files/zzz-default-settings"
 	export OpenWrt_name="18.06"

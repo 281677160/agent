@@ -165,7 +165,6 @@ case $NNKC in
 		ECHOR "您已关闭上传固件到<奶牛快传>！"
 	;;
 esac
-echo
 [[ ! $firmware == "openwrt_amlogic" ]] && {
 	ECHOG "是否把定时更新插件编译进固件?"
 	read -p " [输入[ Y/y ]回车确认，直接回车跳过选择]： " RELE
@@ -190,7 +189,6 @@ echo
 	export Author="${Apidz%/*}"
 	export CangKu="${Apidz##*/}"
 }
-nginx_ip
 }
 
 function nginx_ip() {
@@ -291,13 +289,15 @@ cat >$NETIP <<-EOF
 uci set network.lan.ipaddr='$ip'
 uci commit network
 EOF
-sed -i "s/OpenWrt /${Ubuntu_mz} compiled in $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZZ
-sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ
-echo
-sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ./feeds/luci/applications`
-sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ./package`
-sed -i 's/"带宽监控"/"监控"/g' `grep "带宽监控" -rl ./feeds/luci/applications`
-sed -i 's/"Argon 主题设置"/"Argon设置"/g' `grep "Argon 主题设置" -rl ./feeds/luci/applications`
+if [[ -z ${erci} ]]; then
+	sed -i "s/OpenWrt /${Ubuntu_mz} compiled in $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZZ
+	sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ
+	echo
+	sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ./feeds/luci/applications`
+	sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ./package`
+	sed -i 's/"带宽监控"/"监控"/g' `grep "带宽监控" -rl ./feeds/luci/applications`
+	sed -i 's/"Argon 主题设置"/"Argon设置"/g' `grep "Argon 主题设置" -rl ./feeds/luci/applications`
+fi
 ./scripts/feeds update -a
 ./scripts/feeds install -a > /dev/null 2>&1
 ./scripts/feeds install -a
@@ -364,7 +364,9 @@ if [ "${REGULAR_UPDATE}" == "true" ]; then
 fi
 # 为编译做最后处理
 BY_INFORMATION="false"
-source build/${firmware}/common.sh && Diy_chuli
+if [[ -z ${erci} ]]; then
+	source build/${firmware}/common.sh && Diy_chuli
+fi
 }
 
 function configure_nginx() {
@@ -503,6 +505,8 @@ function install_xray_ws() {
   running_state
   system_kongjian
   kaishi_install
+  op_regupdate
+  nginx_ip
   nginx_install
   basic_optimization
   domain_check
@@ -580,7 +584,7 @@ menp() {
   ECHOG "源码：${firmware}"
   ECHOG "机型：${TARGET_PROFILE}"
   echo
-  ECHOY "1、安装 Xray、nginx和cloudreve"
+  ECHOY "1、更新源码和插件二次编译（保留缓存）"
   ECHOY "2、打印 Xray 节点信息"
   ECHOY "3、安装 BBR、锐速加速"
   ECHOY "4、更新 Xray"
@@ -599,6 +603,7 @@ menp() {
   generate_cer
   system_kongjian
   kaishi_install
+  op_regupdate
   nginx_install
   basic_optimization
   domain_check
@@ -610,7 +615,11 @@ menp() {
     break
     ;;
   2)
-    source $domain_tmp_dir/pzcon
+    export erci="erci"
+    kaishi_install
+    nginx_ip
+    openwrt_config
+    configure_nginx
     break
     ;;
   3)

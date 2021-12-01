@@ -20,18 +20,9 @@ Hi="${Green}[Hi]${Font}"
 ERROR="${Red}[ERROR]${Font}"
 
 # 变量
-
-if [[ "$USER" == "root" ]]; then
-  echo
-  print_error "警告：请勿使用root用户编译，换一个普通用户吧~~"
-  echo
-  exit 1
-fi
 export GITHUB_WORKSPACE="$PWD"
 export Home="$PWD/openwrt"
 export NETIP="package/base-files/files/etc/networkip"
-
-
 
 function print_ok() {
   echo
@@ -72,6 +63,11 @@ judge() {
     exit 1
   fi
 }
+
+if [[ "$USER" == "root" ]]; then
+  print_error "警告：请勿使用root用户编译，换一个普通用户吧~~"
+  exit 1
+fi
 
 function running_state() {
 	clear

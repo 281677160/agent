@@ -188,7 +188,7 @@ if [[ $firmware == "Lede_source" ]]; then
 	if [[ -d ${Home} ]]; then
 		git clone https://github.com/coolsnowwolf/lede ledeopen
 		judge "${firmware}源码下载"
-		rm -rf openwrt/package
+		rm -rf $Home/{build,package}
 		rm -rf ledeopen/{toolchain,tools} && cp -rf ledeopen/* openwrt
 		rm -rf ledeopen
 	else

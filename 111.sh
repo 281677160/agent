@@ -463,7 +463,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin make -j$(($(np
 }
 
 function generate_cer() {
-	if [[ "${firmware}" == "Lede_source" ]] || [[ -n "$(ls -A "openwrt/.Lede_core" 2>/dev/null)" ]]; then
+	if [[ "${firmware}" == "Lede_source" ]] || [[ -n "$(ls -A "$PWD/openwrt/.Lede_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Lede_core" ]]; then
 		export firmware="Lede_source"
 		export CODE="lede"
 		export Modelfile="Lede_source"
@@ -472,7 +472,7 @@ function generate_cer() {
 		[[ -f $PWD/.Lede_core ]] && source $PWD/.Lede_core
 		[[ -f $PWD/openwrt/.Lede_core ]] && source $PWD/openwrt/.Lede_core
 	fi
-	if [[ "${firmware}" == "Lienol_core" ]] || [[ -n "$(ls -A "openwrt/.Lienol_core" 2>/dev/null)" ]]; then
+	if [[ "${firmware}" == "Lienol_core" ]] || [[ -n "$(ls -A "$PWD/openwrt/.Lienol_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Lienol_core" ]]; then
 		export firmware="Lienol_source"
 		export CODE="lienol"
 		export Modelfile="Lienol_source"
@@ -481,7 +481,7 @@ function generate_cer() {
 		[[ -f $PWD/.Lienol_core ]] && source $PWD/.Lienol_core
 		[[ -f $PWD/openwrt/.Lienol_core ]] && source $PWD/openwrt/.Lienol_core
 	fi
-	if [[ "${firmware}" == "Mortal_core" ]] || [[ -n "$(ls -A "openwrt/.Mortal_core" 2>/dev/null)" ]]; then
+	if [[ "${firmware}" == "Mortal_core" ]] || [[ -n "$(ls -A "$PWD/openwrt/.Mortal_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Mortal_core" ]]; then
 		export firmware="Mortal_source"
 		export CODE="mortal"
 		export Modelfile="Mortal_source"
@@ -490,7 +490,7 @@ function generate_cer() {
 		[[ -f $PWD/.Mortal_core ]] && source $PWD/.Mortal_core
 		[[ -f $PWD/openwrt/.Mortal_core ]] && source $PWD/openwrt/.Mortal_core
 	fi
-	if [[ "${firmware}" == "amlogic_core" ]] || [[ -n "$(ls -A "openwrt/.amlogic_core" 2>/dev/null)" ]]; then
+	if [[ "${firmware}" == "amlogic_core" ]] || [[ -n "$(ls -A "$PWD/openwrt/.amlogic_core" 2>/dev/null)" ]] || [[ -f "$PWD/.amlogic_core" ]]; then
 		export firmware="openwrt_amlogic"
 		export CODE="lede"
 		export Modelfile="openwrt_amlogic"

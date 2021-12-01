@@ -198,11 +198,10 @@ cd ${GITHUB_WORKSPACE}
 ECHOG "正在下载源码中,请耐心等候~~~"
 if [[ $firmware == "Lede_source" ]]; then
 	if [[ -d ${Home} ]]; then
-		git clone https://github.com/coolsnowwolf/lede ledeopen
+		cp -rf openwrt/{build_dir,staging_dir,toolchain,tools,config_bf} ${GITHUB_WORKSPACE}
+		rm -fr openwrt && git clone https://github.com/coolsnowwolf/lede openwrt
 		judge "${firmware}源码下载"
-		rm -rf ${Home}/{build,package}
-		rm -rf ledeopen/{toolchain,tools} && cp -rf ledeopen/* ${Home}
-		rm -rf ledeopen
+		cp -rf ${GITHUB_WORKSPACE}/{build_dir,staging_dir,toolchain,tools,config_bf} ${Home}
 	else
 		git clone https://github.com/coolsnowwolf/lede openwrt
 		judge "${firmware}源码下载"

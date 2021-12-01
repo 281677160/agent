@@ -615,7 +615,7 @@ menp() {
     break
     ;;
   2)
-    export erci="erci"
+    erci="erci"
     system_kongjian
     kaishi_install
     nginx_ip

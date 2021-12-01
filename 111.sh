@@ -189,7 +189,7 @@ if [[ $firmware == "Lede_source" ]]; then
 		shopt -s extglob && cd openwrt
 		rm -fr !(toolchain|tools|.Lede_core|config_bf|build_dir|staging_dir) && cd ../
 		git clone https://github.com/coolsnowwolf/lede ledeopen
-		rm -rf ledeopen/{toolchain,tools} && cp -fr ledeopen/* openwrt
+		rm -rf ledeopen/{toolchain,tools} && cp -rf ledeopen/* openwrt
 		rm -rf ledeopen
 	else
 		git clone https://github.com/coolsnowwolf/lede openwrt

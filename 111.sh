@@ -64,6 +64,21 @@ judge() {
   fi
 }
 
+judgeopen() {
+  if [[ 0 -eq $? ]]; then
+    echo
+    print_ok "$1 完成"
+    echo
+    sleep 1
+  else
+    echo
+    print_error "$1 失败"
+    rm -rf openwrte
+    echo
+    exit 1
+  fi
+}
+
 if [[ "$USER" == "root" ]]; then
   print_error "警告：请勿使用root用户编译，换一个普通用户吧~~"
   exit 1
@@ -197,14 +212,14 @@ function nginx_install() {
 cd ${GITHUB_WORKSPACE}
 ECHOG "正在下载源码中,请耐心等候~~~"
 if [[ $firmware == "Lede_source" ]]; then
-	if [[ -d ${Home} ]]; then
-		cp -rf openwrt/{build_dir,staging_dir,toolchain,tools,config_bf} ${GITHUB_WORKSPACE}
-		rm -fr openwrt && git clone https://github.com/coolsnowwolf/lede openwrt
-		judge "${firmware}源码下载"
-		mv -f ${GITHUB_WORKSPACE}/{build_dir,staging_dir,toolchain,tools,config_bf} ${Home}
+	if [[ -d ${Home}/build_dir ]] && [[ -d ${Home}/toolchain ]] && [[ -d ${Home}/tools ]] && [[ -d ${Home}/staging_dir ]]; then
+		git clone https://github.com/coolsnowwolf/lede openwrte
+		judgeopen "${firmware}源码下载"
+		cp -rf openwrt/{build_dir,staging_dir,toolchain,tools,config_bf} ${GITHUB_WORKSPACE}/openwrte
+		rm -fr openwrte && mv -f openwrte openwrt
 	else
-		git clone https://github.com/coolsnowwolf/lede openwrt
-		judge "${firmware}源码下载"
+		rm -fr openwrte && git clone https://github.com/coolsnowwolf/lede openwrt
+		judgeopen "${firmware}源码下载"
 	fi
 	export ZZZ="package/lean/default-settings/files/zzz-default-settings"
 	export OpenWrt_name="18.06"

@@ -30,6 +30,37 @@ fi
 export GITHUB_WORKSPACE="$PWD"
 export Home="$PWD/openwrt"
 export NETIP="package/base-files/files/etc/networkip"
+if [[ -n "$(ls -A "$PWD/.Lede_core" 2>/dev/null)" ]]; then
+	export firmware="Lede_source"
+	export CODE="lede"
+	export Modelfile="Lede_source"
+	export Core=".Lede_core"
+	[[ -f $PWD/.Lede_core ]] && source $PWD/.Lede_core
+	[[ -f $PWD/openwrt/.Lede_core ]] && source $PWD/openwrt/.Lede_core
+elif [[ -n "$(ls -A "$PWD/.Lienol_core" 2>/dev/null)" ]]; then
+	export firmware="Lienol_source"
+	export CODE="lienol"
+	export Modelfile="Lienol_source"
+	export Core=".Lienol_core"
+	[[ -f $PWD/.Lienol_core ]] && source $PWD/.Lienol_core
+	[[ -f $PWD/openwrt/.Lienol_core ]] && source $PWD/openwrt/.Lienol_core
+elif [[ -n "$(ls -A "$PWD/.Mortal_core" 2>/dev/null)" ]]; then
+	export firmware="Mortal_source"
+	export CODE="mortal"
+	export Modelfile="Mortal_source"
+	export Core=".Mortal_core"
+	[[ -f $PWD/.Mortal_core ]] && source $PWD/.Mortal_core
+	[[ -f $PWD/openwrt/.Mortal_core ]] && source $PWD/openwrt/.Mortal_core
+elif [[ -n "$(ls -A "$PWD/.amlogic_core" 2>/dev/null)" ]]; then
+	export firmware="openwrt_amlogic"
+	export CODE="lede"
+	export Modelfile="openwrt_amlogic"
+	export Core=".amlogic_core"
+	[[ -f $PWD/.amlogic_core ]] && source $PWD/.amlogic_core
+	[[ -f $PWD/openwrt/.amlogic_core ]] && source $PWD/openwrt/.amlogic_core
+fi
+[[ -f $PWD/openwrt/config_bf ]] && openwrt_config
+
 
 function print_ok() {
   echo -e " ${OK} ${Blue} $1 ${Font}"
@@ -179,9 +210,11 @@ echo
 	export Author="${Apidz%/*}"
 	export CangKu="${Apidz##*/}"
 }
-echo
-mkdir -p ${firmware}
-cat >${firmware}/${Core} <<-EOF
+nginx_ip
+}
+
+function nginx_ip() {
+cat >${Core} <<-EOF
 ipdz=$ip
 Git=$Github
 EOF
@@ -303,10 +336,8 @@ make menuconfig
 function xray_install() {
 ECHOG "正在生成配置文件，请稍后..."
 cd $Home
-echo
 source build/${firmware}/common.sh && Diy_chajian
 make defconfig
-./scripts/diffconfig.sh > ${Home}/config_bf
 if [ -n "$(ls -A "${Home}/Chajianlibiao" 2>/dev/null)" ]; then
 	clear
 	echo
@@ -320,6 +351,12 @@ if [ -n "$(ls -A "${Home}/Chajianlibiao" 2>/dev/null)" ]; then
 	make defconfig > /dev/null 2>&1
 	sleep 30s
 fi
+openwrt_config
+openwrt_zuihouchuli
+}
+
+function openwrt_config() {
+cd $Home
 export TARGET_BOARD="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
 export TARGET_SUBTARGET="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
 if [[ `grep -c "CONFIG_TARGET_x86_64=y" .config` -eq '1' ]]; then
@@ -329,15 +366,18 @@ elif [[ `grep -c "CONFIG_TARGET.*DEVICE.*=y" .config` -eq '1' ]]; then
 else
           export TARGET_PROFILE="armvirt"
 fi
+export COMFIRMWARE="openwrt/bin/targets/${TARGET_BOARD}/${TARGET_SUBTARGET}"
+./scripts/diffconfig.sh > ${Home}/config_bf
+}
+
+function openwrt_zuihouchuli() {
+cd $Home
 if [ "${REGULAR_UPDATE}" == "true" ]; then
           source build/$firmware/upgrade.sh && Diy_Part2
 fi
-echo
-rm -rf ../{Lede_source,Lienol_source,Mortal_source,openwrt_amlogic}
 # 为编译做最后处理
 BY_INFORMATION="false"
 source build/${firmware}/common.sh && Diy_chuli
-export COMFIRMWARE="openwrt/bin/targets/${TARGET_BOARD}/${TARGET_SUBTARGET}"
 }
 
 function configure_nginx() {
@@ -351,6 +391,7 @@ configure_dl
 }
 
 function configure_dl() {
+cd $Home
 if [[ `grep -c "make with -j1 V=s or V=sc" build.log` == '0' ]]; then
 	ECHOG "DL文件下载成功"
 else
@@ -424,7 +465,8 @@ function generate_cer() {
 		export Modelfile="Lede_source"
 		export Core=".Lede_core"
 		export PATH1="$PWD/openwrt/build/${firmware}"
-		[[ -f openwrt/.Lede_core ]] && source openwrt/.Lede_core
+		[[ -f $PWD/.Lede_core ]] && source $PWD/.Lede_core
+		[[ -f $PWD/openwrt/.Lede_core ]] && source $PWD/openwrt/.Lede_core
 	fi
 	if [[ "${firmware}" == "Lienol_core" ]] || [[ -n "$(ls -A "openwrt/.Lienol_core" 2>/dev/null)" ]]; then
 		export firmware="Lienol_source"
@@ -432,7 +474,8 @@ function generate_cer() {
 		export Modelfile="Lienol_source"
 		export Core=".Lienol_core"
 		export PATH1="$PWD/openwrt/build/${firmware}"
-		[[ -f openwrt/.Lienol_core ]] && source openwrt/.Lienol_core
+		[[ -f $PWD/.Lienol_core ]] && source $PWD/.Lienol_core
+		[[ -f $PWD/openwrt/.Lienol_core ]] && source $PWD/openwrt/.Lienol_core
 	fi
 	if [[ "${firmware}" == "Mortal_core" ]] || [[ -n "$(ls -A "openwrt/.Mortal_core" 2>/dev/null)" ]]; then
 		export firmware="Mortal_source"
@@ -440,7 +483,8 @@ function generate_cer() {
 		export Modelfile="Mortal_source"
 		export Core=".Mortal_core"
 		export PATH1="$PWD/openwrt/build/${firmware}"
-		[[ -f openwrt/.Mortal_core ]] && source openwrt/.Mortal_core
+		[[ -f $PWD/.Mortal_core ]] && source $PWD/.Mortal_core
+		[[ -f $PWD/openwrt/.Mortal_core ]] && source $PWD/openwrt/.Mortal_core
 	fi
 	if [[ "${firmware}" == "amlogic_core" ]] || [[ -n "$(ls -A "openwrt/.amlogic_core" 2>/dev/null)" ]]; then
 		export firmware="openwrt_amlogic"
@@ -448,7 +492,8 @@ function generate_cer() {
 		export Modelfile="openwrt_amlogic"
 		export Core=".amlogic_core"
 		export PATH1="$PWD/openwrt/build/${firmware}"
-		[[ -f openwrt/.amlogic_core ]] && source openwrt/.amlogic_core
+		[[ -f $PWD/.amlogic_core ]] && source $PWD/.amlogic_core
+		[[ -f $PWD/openwrt/.amlogic_core ]] && source $PWD/openwrt/.amlogic_core
 	fi
 }
 
@@ -527,6 +572,9 @@ menu() {
 menp() {
   clear
   echo
+  ECHOG "作者：${CODE}"
+  ECHOG "源码：${firmware}"
+  ECHOG "机型：${TARGET_PROFILE}"
   echo
   ECHOY "1、安装 Xray、nginx和cloudreve"
   ECHOY "2、打印 Xray 节点信息"

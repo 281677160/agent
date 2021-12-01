@@ -186,7 +186,8 @@ function nginx_install() {
 ECHOG "正在下载源码中,请耐心等候~~~"
 if [[ $firmware == "Lede_source" ]]; then
 	if [[ -d ${Home} ]]; then
-		shopt -s extglob && cd openwrt
+		cd openwrt
+		shopt -s extglob
 		rm -fr !(toolchain|tools|config_bf|build_dir|staging_dir)
 		cd ../
 		git clone https://github.com/coolsnowwolf/lede ledeopen

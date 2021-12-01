@@ -338,11 +338,11 @@ else
           export TARGET_PROFILE="armvirt"
 fi
 export COMFIRMWARE="openwrt/bin/targets/${TARGET_BOARD}/${TARGET_SUBTARGET}"
-./scripts/diffconfig.sh > ${Home}/config_bf
 }
 
 function openwrt_zuihouchuli() {
 cd $Home
+./scripts/diffconfig.sh > ${Home}/config_bf
 if [ "${REGULAR_UPDATE}" == "true" ]; then
           source build/$firmware/upgrade.sh && Diy_Part2
 fi

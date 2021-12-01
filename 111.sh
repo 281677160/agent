@@ -577,6 +577,7 @@ menp() {
   generate_cer
   system_kongjian
   kaishi_install
+  nginx_install
   basic_optimization
   domain_check
   port_exist_check

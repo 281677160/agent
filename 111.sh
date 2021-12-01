@@ -446,41 +446,41 @@ echo "chenggong" >${Home}/build/chenggong
 }
 
 function generate_cer() {
-if [[ "${firmware}" == "Lede_source" ]] || [[ -n "$(ls -A "$PWD/openwrt/.Lede_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Lede_core" ]]; then
+if [[ "${firmware}" == "Lede_source" ]] || [[ -n "$(ls -A "${Home}/.Lede_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Lede_core" ]]; then
 	export firmware="Lede_source"
 	export CODE="lede"
 	export Modelfile="Lede_source"
 	export Core=".Lede_core"
-	export PATH1="$PWD/openwrt/build/${firmware}"
+	export PATH1="${Home}/build/${firmware}"
 	[[ -f $PWD/.Lede_core ]] && source $PWD/.Lede_core
-	[[ -f $PWD/openwrt/.Lede_core ]] && source $PWD/openwrt/.Lede_core
+	[[ -f ${Home}/.Lede_core ]] && source ${Home}/.Lede_core
 fi
-if [[ "${firmware}" == "Lienol_core" ]] || [[ -n "$(ls -A "$PWD/openwrt/.Lienol_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Lienol_core" ]]; then
+if [[ "${firmware}" == "Lienol_core" ]] || [[ -n "$(ls -A "${Home}/.Lienol_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Lienol_core" ]]; then
 	export firmware="Lienol_source"
 	export CODE="lienol"
 	export Modelfile="Lienol_source"
 	export Core=".Lienol_core"
-	export PATH1="$PWD/openwrt/build/${firmware}"
+	export PATH1="${Home}/build/${firmware}"
 	[[ -f $PWD/.Lienol_core ]] && source $PWD/.Lienol_core
-	[[ -f $PWD/openwrt/.Lienol_core ]] && source $PWD/openwrt/.Lienol_core
+	[[ -f ${Home}/.Lienol_core ]] && source ${Home}/.Lienol_core
 fi
-if [[ "${firmware}" == "Mortal_core" ]] || [[ -n "$(ls -A "$PWD/openwrt/.Mortal_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Mortal_core" ]]; then
+if [[ "${firmware}" == "Mortal_core" ]] || [[ -n "$(ls -A "${Home}/.Mortal_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Mortal_core" ]]; then
 	export firmware="Mortal_source"
 	export CODE="mortal"
 	export Modelfile="Mortal_source"
 	export Core=".Mortal_core"
-	export PATH1="$PWD/openwrt/build/${firmware}"
+	export PATH1="${Home}/build/${firmware}"
 	[[ -f $PWD/.Mortal_core ]] && source $PWD/.Mortal_core
-	[[ -f $PWD/openwrt/.Mortal_core ]] && source $PWD/openwrt/.Mortal_core
+	[[ -f ${Home}/.Mortal_core ]] && source ${Home}/.Mortal_core
 fi
-if [[ "${firmware}" == "amlogic_core" ]] || [[ -n "$(ls -A "$PWD/openwrt/.amlogic_core" 2>/dev/null)" ]] || [[ -f "$PWD/.amlogic_core" ]]; then
+if [[ "${firmware}" == "amlogic_core" ]] || [[ -n "$(ls -A "${Home}/.amlogic_core" 2>/dev/null)" ]] || [[ -f "$PWD/.amlogic_core" ]]; then
 	export firmware="openwrt_amlogic"
 	export CODE="lede"
 	export Modelfile="openwrt_amlogic"
 	export Core=".amlogic_core"
-	export PATH1="$PWD/openwrt/build/${firmware}"
+	export PATH1="${Home}/build/${firmware}"
 	[[ -f $PWD/.amlogic_core ]] && source $PWD/.amlogic_core
-	[[ -f $PWD/openwrt/.amlogic_core ]] && source $PWD/openwrt/.amlogic_core
+	[[ -f ${Home}/.amlogic_core ]] && source ${Home}/.amlogic_core
 fi
 }
 
@@ -559,6 +559,7 @@ menu() {
 menp() {
   generate_cer
   [[ -f $PWD/openwrt/config_bf ]] && openwrt_config
+  cd ${GITHUB_WORKSPACE}
   clear
   echo
   ECHOG "作者：${CODE}"

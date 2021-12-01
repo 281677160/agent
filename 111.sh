@@ -226,6 +226,7 @@ elif [[ $firmware == "openwrt_amlogic" ]]; then
 	judge "amlogic内核下载"
 	mv amlogic-s9xxx openwrt/amlogic-s9xxx
 	curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/make > openwrt/make
+	judge "内核版本文件下载"
 	mkdir -p openwrt/openwrt-armvirt
 	chmod 777 openwrt/make
 	export ZZZ="package/lean/default-settings/files/zzz-default-settings"
@@ -299,12 +300,13 @@ find . -name 'CONTRIBUTED.md' -o -name 'README_EN.md' -o -name 'DEVICE_NAME' | x
 }
 
 function configure_xray_ws() {
-[ "${Menuconfig}" == "YES" ] && {
-make menuconfig
-}
+if [[ "${Menuconfig}" == "YES" ]]; then
+	make menuconfig
+fi
 }
 
 function xray_install() {
+echo
 ECHOG "正在生成配置文件，请稍后..."
 cd $Home
 source build/${firmware}/common.sh && Diy_chajian
@@ -337,7 +339,7 @@ elif [[ `grep -c "CONFIG_TARGET.*DEVICE.*=y" .config` -eq '1' ]]; then
 else
           export TARGET_PROFILE="armvirt"
 fi
-export COMFIRMWARE="openwrt/bin/targets/${TARGET_BOARD}/${TARGET_SUBTARGET}"
+export COMFIRMWARE="${Home}/bin/targets/${TARGET_BOARD}/${TARGET_SUBTARGET}"
 }
 
 function openwrt_zuihouchuli() {
@@ -370,9 +372,9 @@ else
 	echo
 	echo
 	ECHOR "下载DL失败，更换节点后再尝试下载？"
-	QLMEUN="输入[ Nn ]回车,退出下载，更换节点后按y回车继续尝试下载DL"
+	QLMEUN="请更换节点后按[Y/y]回车继续尝试下载DL，或输入[N/n]回车,退出下载"
 	while :; do
-	read -p " [${QLMEUN}]： " XZDLE
+		read -p " [${QLMEUN}]： " XZDLE
 		case $XZDLE in
 			Y)
 				configure_nginx
@@ -387,7 +389,7 @@ else
 			break
     			;;
     			*)
-				QLMEUN="输入[ Nn ]回车,退出下载，更换节点后按y回车继续尝试下载DL"
+				QLMEUN="请更换节点后按[Y/y]回车继续尝试下载DL，或输入[N/n]回车,退出下载"
 			;;
 		esac
 	done
@@ -425,47 +427,67 @@ elif [[ "$(nproc)" =~ (8|9) ]]; then
 else
 	ECHOY "正在使用[$(nproc)线程]编译固件,预计要[1]小时左右,请耐心等待..."
 fi
-sleep 15
+rm -fr ${COMFIRMWARE}/*
+sleep 8
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin make -j$(($(nproc) + 1)) V=s 2>&1 |tee build.log
+judge "编译"
+if [[ ${firmware} == "Mortal_source" ]]; then
+	if [[ `ls -a ${COMFIRMWARE} | grep -c "immortalwrt"` == '0' ]]; then
+		echo
+		echo "没发现固件存在，编译失败~~!"
+		echo
+		sleep 1
+		exit 1
+	fi
+else
+	if [[ `ls -a ${COMFIRMWARE} | grep -c "openwrt"` == '0' ]]; then
+		echo
+		echo "没发现固件存在，编译失败~~!"
+		echo
+		sleep 1
+		exit 1
+	fi
+	
+fi
 }
 
 function generate_cer() {
-	if [[ "${firmware}" == "Lede_source" ]] || [[ -n "$(ls -A "$PWD/openwrt/.Lede_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Lede_core" ]]; then
-		export firmware="Lede_source"
-		export CODE="lede"
-		export Modelfile="Lede_source"
-		export Core=".Lede_core"
-		export PATH1="$PWD/openwrt/build/${firmware}"
-		[[ -f $PWD/.Lede_core ]] && source $PWD/.Lede_core
-		[[ -f $PWD/openwrt/.Lede_core ]] && source $PWD/openwrt/.Lede_core
-	fi
-	if [[ "${firmware}" == "Lienol_core" ]] || [[ -n "$(ls -A "$PWD/openwrt/.Lienol_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Lienol_core" ]]; then
-		export firmware="Lienol_source"
-		export CODE="lienol"
-		export Modelfile="Lienol_source"
-		export Core=".Lienol_core"
-		export PATH1="$PWD/openwrt/build/${firmware}"
-		[[ -f $PWD/.Lienol_core ]] && source $PWD/.Lienol_core
-		[[ -f $PWD/openwrt/.Lienol_core ]] && source $PWD/openwrt/.Lienol_core
-	fi
-	if [[ "${firmware}" == "Mortal_core" ]] || [[ -n "$(ls -A "$PWD/openwrt/.Mortal_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Mortal_core" ]]; then
-		export firmware="Mortal_source"
-		export CODE="mortal"
-		export Modelfile="Mortal_source"
-		export Core=".Mortal_core"
-		export PATH1="$PWD/openwrt/build/${firmware}"
-		[[ -f $PWD/.Mortal_core ]] && source $PWD/.Mortal_core
-		[[ -f $PWD/openwrt/.Mortal_core ]] && source $PWD/openwrt/.Mortal_core
-	fi
-	if [[ "${firmware}" == "amlogic_core" ]] || [[ -n "$(ls -A "$PWD/openwrt/.amlogic_core" 2>/dev/null)" ]] || [[ -f "$PWD/.amlogic_core" ]]; then
-		export firmware="openwrt_amlogic"
-		export CODE="lede"
-		export Modelfile="openwrt_amlogic"
-		export Core=".amlogic_core"
-		export PATH1="$PWD/openwrt/build/${firmware}"
-		[[ -f $PWD/.amlogic_core ]] && source $PWD/.amlogic_core
-		[[ -f $PWD/openwrt/.amlogic_core ]] && source $PWD/openwrt/.amlogic_core
-	fi
+if [[ "${firmware}" == "Lede_source" ]] || [[ -n "$(ls -A "$PWD/openwrt/.Lede_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Lede_core" ]]; then
+	export firmware="Lede_source"
+	export CODE="lede"
+	export Modelfile="Lede_source"
+	export Core=".Lede_core"
+	export PATH1="$PWD/openwrt/build/${firmware}"
+	[[ -f $PWD/.Lede_core ]] && source $PWD/.Lede_core
+	[[ -f $PWD/openwrt/.Lede_core ]] && source $PWD/openwrt/.Lede_core
+fi
+if [[ "${firmware}" == "Lienol_core" ]] || [[ -n "$(ls -A "$PWD/openwrt/.Lienol_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Lienol_core" ]]; then
+	export firmware="Lienol_source"
+	export CODE="lienol"
+	export Modelfile="Lienol_source"
+	export Core=".Lienol_core"
+	export PATH1="$PWD/openwrt/build/${firmware}"
+	[[ -f $PWD/.Lienol_core ]] && source $PWD/.Lienol_core
+	[[ -f $PWD/openwrt/.Lienol_core ]] && source $PWD/openwrt/.Lienol_core
+fi
+if [[ "${firmware}" == "Mortal_core" ]] || [[ -n "$(ls -A "$PWD/openwrt/.Mortal_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Mortal_core" ]]; then
+	export firmware="Mortal_source"
+	export CODE="mortal"
+	export Modelfile="Mortal_source"
+	export Core=".Mortal_core"
+	export PATH1="$PWD/openwrt/build/${firmware}"
+	[[ -f $PWD/.Mortal_core ]] && source $PWD/.Mortal_core
+	[[ -f $PWD/openwrt/.Mortal_core ]] && source $PWD/openwrt/.Mortal_core
+fi
+if [[ "${firmware}" == "amlogic_core" ]] || [[ -n "$(ls -A "$PWD/openwrt/.amlogic_core" 2>/dev/null)" ]] || [[ -f "$PWD/.amlogic_core" ]]; then
+	export firmware="openwrt_amlogic"
+	export CODE="lede"
+	export Modelfile="openwrt_amlogic"
+	export Core=".amlogic_core"
+	export PATH1="$PWD/openwrt/build/${firmware}"
+	[[ -f $PWD/.amlogic_core ]] && source $PWD/.amlogic_core
+	[[ -f $PWD/openwrt/.amlogic_core ]] && source $PWD/openwrt/.amlogic_core
+fi
 }
 
 function install_xray_ws() {

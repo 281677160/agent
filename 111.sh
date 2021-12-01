@@ -37,6 +37,7 @@ if [[ -n "$(ls -A "$PWD/.Lede_core" 2>/dev/null)" ]]; then
 	export Core=".Lede_core"
 	[[ -f $PWD/.Lede_core ]] && source $PWD/.Lede_core
 	[[ -f $PWD/openwrt/.Lede_core ]] && source $PWD/openwrt/.Lede_core
+	nginx_ip
 elif [[ -n "$(ls -A "$PWD/.Lienol_core" 2>/dev/null)" ]]; then
 	export firmware="Lienol_source"
 	export CODE="lienol"
@@ -44,6 +45,7 @@ elif [[ -n "$(ls -A "$PWD/.Lienol_core" 2>/dev/null)" ]]; then
 	export Core=".Lienol_core"
 	[[ -f $PWD/.Lienol_core ]] && source $PWD/.Lienol_core
 	[[ -f $PWD/openwrt/.Lienol_core ]] && source $PWD/openwrt/.Lienol_core
+	nginx_ip
 elif [[ -n "$(ls -A "$PWD/.Mortal_core" 2>/dev/null)" ]]; then
 	export firmware="Mortal_source"
 	export CODE="mortal"
@@ -51,6 +53,7 @@ elif [[ -n "$(ls -A "$PWD/.Mortal_core" 2>/dev/null)" ]]; then
 	export Core=".Mortal_core"
 	[[ -f $PWD/.Mortal_core ]] && source $PWD/.Mortal_core
 	[[ -f $PWD/openwrt/.Mortal_core ]] && source $PWD/openwrt/.Mortal_core
+	nginx_ip
 elif [[ -n "$(ls -A "$PWD/.amlogic_core" 2>/dev/null)" ]]; then
 	export firmware="openwrt_amlogic"
 	export CODE="lede"
@@ -58,6 +61,7 @@ elif [[ -n "$(ls -A "$PWD/.amlogic_core" 2>/dev/null)" ]]; then
 	export Core=".amlogic_core"
 	[[ -f $PWD/.amlogic_core ]] && source $PWD/.amlogic_core
 	[[ -f $PWD/openwrt/.amlogic_core ]] && source $PWD/openwrt/.amlogic_core
+	nginx_ip
 fi
 [[ -f $PWD/openwrt/config_bf ]] && openwrt_config
 

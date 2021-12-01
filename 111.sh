@@ -109,7 +109,7 @@ if [[ "${Ubuntu_kj}" -lt "20" ]];then
 			ECHOG  "可用空间太小严重影响编译,请满天神佛保佑您成功吧！"
 		;;
 		*)
-			ECHOG  "您已取消编译,请清理Ubuntu空间或增加硬盘容量..."
+			ECHOY  "您已取消编译,请清理Ubuntu空间或增加硬盘容量..."
 			sleep 1
 			exit 0
 	esac

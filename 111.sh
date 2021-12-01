@@ -566,7 +566,16 @@ menp() {
   read -p " ${XUANZHE}：" menu_num
   case $menu_num in
   1)
-    install_xray_ws
+  generate_cer
+  system_kongjian
+  kaishi_install
+  basic_optimization
+  domain_check
+  port_exist_check
+  configure_xray_ws
+  xray_install
+  configure_nginx
+  generate_certificate
     break
     ;;
   2)

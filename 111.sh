@@ -180,6 +180,13 @@ cat >$PWD/${Core} <<-EOF
 ipdz=$ip
 Git=$Github
 EOF
+
+if [[ -d ${Home} ]]; then
+cat >${Home}/${Core} <<-EOF
+ipdz=$ip
+Git=$Github
+EOF
+fi
 }
 
 function nginx_install() {
@@ -197,8 +204,6 @@ if [[ $firmware == "Lede_source" ]]; then
 	fi
 	export ZZZ="package/lean/default-settings/files/zzz-default-settings"
 	export OpenWrt_name="18.06"
-	echo -e "\nipdz=$ip" > ${Home}/.Lede_core
-	echo -e "\nGit=$Github" >> ${Home}/.Lede_core
 elif [[ $firmware == "Lienol_source" ]]; then
 	rm -rf openwrt && git clone -b 19.07 --single-branch https://github.com/Lienol/openwrt openwrt
 	judge "${firmware}源码下载"
@@ -211,8 +216,6 @@ elif [[ $firmware == "Mortal_source" ]]; then
 	judge "${firmware}源码下载"
 	export ZZZ="package/emortal/default-settings/files/zzz-default-settings"
 	export OpenWrt_name="21.02"
-	echo -e "\nipdz=$ip" > openwrt/.Mortal_core
-	echo -e "\nGit=$Github" >> openwrt/.Mortal_core
 elif [[ $firmware == "openwrt_amlogic" ]]; then
 	rm -rf openwrt && git clone https://github.com/coolsnowwolf/lede openwrt
 	judge "${firmware}源码下载"
@@ -228,9 +231,8 @@ elif [[ $firmware == "openwrt_amlogic" ]]; then
 	chmod 777 openwrt/make
 	export ZZZ="package/lean/default-settings/files/zzz-default-settings"
 	export OpenWrt_name="18.06"
-	echo -e "\nipdz=$ip" > openwrt/.amlogic_core
-	echo -e "\nGit=$Github" >> openwrt/.amlogic_core
 fi
+nginx_ip
 }
 
 function basic_optimization() {

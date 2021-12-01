@@ -216,7 +216,7 @@ if [[ $firmware == "Lede_source" ]]; then
 		git clone https://github.com/coolsnowwolf/lede openwrte
 		judgeopen "${firmware}源码下载"
 		cp -rf openwrt/{build_dir,staging_dir,toolchain,tools,config_bf} ${GITHUB_WORKSPACE}/openwrte
-		rm -fr openwrte && mv -f openwrte openwrt
+		rm -fr openwrt && mv -f openwrte openwrt
 	else
 		rm -fr openwrte && git clone https://github.com/coolsnowwolf/lede openwrt
 		judgeopen "${firmware}源码下载"

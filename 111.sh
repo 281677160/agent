@@ -427,6 +427,7 @@ else
 	fi
 	
 fi
+echo "chenggong" >${Home}/build/chenggong
 }
 
 function generate_cer() {
@@ -609,7 +610,7 @@ menp() {
   esac
   done
 }
-if [[ -f $Home/build/cheng ]] && [[ -d $Home/staging_dir/host ]]; then
+if [[ -f ${Home}/build/chenggong ]] && [[ -d ${Home}/staging_dir/host ]]; then
 	menp "$@"
 else
 	menu "$@"

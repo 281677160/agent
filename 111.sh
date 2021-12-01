@@ -94,28 +94,23 @@ function system_kongjian() {
 export Ubunkj="$(df -h|grep -v tmpfs |grep "/dev/.*" |awk '{print $4}' |awk 'NR==1')"
 export FINAL=`echo ${Ubunkj: -1}`
 if [[ "${FINAL}" =~ (M|K) ]]; then
-	echo
-	print_error "敬告：可用空间小于[ 1G ]退出编译,建议可用空间大于20G,是否继续?"
-	sleep 2
+	print_error "敬告：可用空间小于[ 1G ]退出编译,建议可用空间大于20G"
+	sleep 1
 	exit 1
-	echo
 fi
 export Ubuntu_mz="$(cat /etc/group | grep adm | cut -f2 -d,)"
 export Ubuntu_kj="$(df -h|grep -v tmpfs |grep "/dev/.*" |awk '{print $4}' |awk 'NR==1' |sed 's/.$//g')"
 if [[ "${Ubuntu_kj}" -lt "20" ]];then
-	echo
 	ECHOY "您当前系统可用空间为${Ubuntu_kj}G"
-	echo ""
 	print_error "敬告：可用空间小于[ 20G ]编译容易出错,建议可用空间大于20G,是否继续?"
-	echo
-	read -p " [回车退出，Y/y确认继续]： " YN
+	read -p " 回车退出，按[Y/y]回车确认继续编译： " YN
 	case ${YN} in
 		[Yy]) 
 			ECHOG  "可用空间太小严重影响编译,请满天神佛保佑您成功吧！"
 		;;
 		*)
 			ECHOG  "您已取消编译,请清理Ubuntu空间或增加硬盘容量..."
-			sleep 2s
+			sleep 1
 			exit 0
 	esac
 fi

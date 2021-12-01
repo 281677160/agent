@@ -265,7 +265,6 @@ chmod -R +x $Home/build/common
 chmod -R +x $Home/build/${firmware}
 source $Home/build/${firmware}/settings.ini
 export REGULAR_UPDATE="${REG_UPDATE}"
-cp -Rf $Home/build/common/Custom/compile.sh openwrt/compile.sh
 cp -Rf $Home/build/common/*.sh openwrt/build/${firmware}
 }
 
@@ -651,7 +650,7 @@ menp() {
   esac
   done
 }
-if [[ -d ${Home}/staging_dir/host ]]; then
+if [[ -f ${Home}/build/chenggong ]] && [[ -d ${Home}/staging_dir/host ]]; then
 	menp "$@"
 else
 	menu "$@"

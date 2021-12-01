@@ -34,25 +34,29 @@ export NETIP="package/base-files/files/etc/networkip"
 
 
 function print_ok() {
+  echo
   echo -e " ${OK} ${Blue} $1 ${Font}"
-}
-function print_Hi() {
-  echo -e " ${Hi} ${Blue} $1 ${Font}"
+  echo
 }
 function print_error() {
+  echo
   echo -e "${ERROR} ${RedBG} $1 ${Font}"
+  echo
 }
-function ECHOY()
-{
+function ECHOY() {
+  echo
   echo -e "${Yellow} $1 ${Font}"
+  echo
 }
-function ECHOG()
-{
+function ECHOG() {
+  echo
   echo -e "${Green} $1 ${Font}"
+  echo
 }
-  function ECHOR()
-{
+  function ECHOR() {
+  echo
   echo -e "${Red} $1 ${Font}"
+  echo
 }
 
 judge() {
@@ -112,11 +116,9 @@ if [[ "${Ubuntu_kj}" -lt "20" ]];then
 	case ${YN} in
 		[Yy]) 
 			ECHOG  "可用空间太小严重影响编译,请满天神佛保佑您成功吧！"
-			echo
 		;;
 		*)
 			ECHOG  "您已取消编译,请清理Ubuntu空间或增加硬盘容量..."
-			echo ""
 			sleep 2s
 			exit 0
 	esac
@@ -143,7 +145,6 @@ case $MENU in
 	;;
 esac
 echo
-echo
 ECHOG "是否把固件上传到<奶牛快传>?"
 read -p " [输入[ Y/y ]回车确认，直接回车跳过选择]： " NNKC
 case $NNKC in
@@ -155,7 +156,6 @@ case $NNKC in
 		ECHOR "您已关闭上传固件到<奶牛快传>！"
 	;;
 esac
-echo
 echo
 [[ ! $firmware == "openwrt_amlogic" ]] && {
 	ECHOG "是否把定时更新插件编译进固件?"
@@ -185,16 +185,14 @@ nginx_ip
 }
 
 function nginx_ip() {
-cat >${Core} <<-EOF
+cat >$PWD/${Core} <<-EOF
 ipdz=$ip
 Git=$Github
 EOF
 }
 
 function nginx_install() {
-echo
 ECHOG "正在下载源码中,请耐心等候~~~"
-echo
 if [[ $firmware == "Lede_source" ]]; then
 	rm -rf openwrt && git clone https://github.com/coolsnowwolf/lede openwrt
 	judge "${firmware}源码下载"
@@ -252,7 +250,6 @@ cp -Rf $Home/build/common/*.sh openwrt/build/${firmware}
 
 function domain_check() {
 ECHOG "正在加载自定义文件和下载插件,请耐心等候~~~"
-echo
 cd $Home
 ./scripts/feeds update -a > /dev/null 2>&1
 if [[ "${REPO_BRANCH}" == "master" ]]; then
@@ -306,7 +303,6 @@ fi
 }
 
 function xray_install() {
-echo
 ECHOG "正在生成配置文件，请稍后..."
 cd $Home
 source build/${firmware}/common.sh && Diy_chajian
@@ -315,11 +311,9 @@ if [ -n "$(ls -A "${Home}/Chajianlibiao" 2>/dev/null)" ]; then
 	clear
 	echo
 	echo
-	echo
 	chmod -R +x ${Home}/CHONGTU
 	source ${Home}/CHONGTU
 	rm -rf {CHONGTU,Chajianlibiao}
-	echo
 	ECHOG "如需重新编译请按 Ctrl+c 结束此次编译，否则30秒后继续编译!"
 	make defconfig > /dev/null 2>&1
 	sleep 30s
@@ -370,8 +364,7 @@ if [[ `grep -c "make with -j1 V=s or V=sc" build.log` == '0' ]]; then
 else
 	clear
 	echo
-	echo
-	ECHOR "下载DL失败，更换节点后再尝试下载？"
+	print_error "下载DL失败，更换节点后再尝试下载？"
 	QLMEUN="请更换节点后按[Y/y]回车继续尝试下载DL，或输入[N/n]回车,退出下载"
 	while :; do
 		read -p " [${QLMEUN}]： " XZDLE
@@ -381,9 +374,7 @@ else
 			break
 			;;
 			N)
-				echo
-				TIME r "退出安装程序!"
-				echo
+				ECHOR "退出编译程序!"
 				sleep 2
 				exit 1
 			break
@@ -433,17 +424,13 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin make -j$(($(np
 judge "编译"
 if [[ ${firmware} == "Mortal_source" ]]; then
 	if [[ `ls -a ${COMFIRMWARE} | grep -c "immortalwrt"` == '0' ]]; then
-		echo
-		echo "没发现固件存在，编译失败~~!"
-		echo
+		print_error "没发现固件存在，编译失败~~!"
 		sleep 1
 		exit 1
 	fi
 else
 	if [[ `ls -a ${COMFIRMWARE} | grep -c "openwrt"` == '0' ]]; then
-		echo
-		echo "没发现固件存在，编译失败~~!"
-		echo
+		print_error "没发现固件存在，编译失败~~!"
 		sleep 1
 		exit 1
 	fi

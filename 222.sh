@@ -496,6 +496,7 @@ function generate_cer() {
 
 function openwrt_by() {
     generate_cer
+    op_busuhuanjing
     op_kongjian
     bianyi_xuanxiang
     op_ip

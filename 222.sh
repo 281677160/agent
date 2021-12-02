@@ -251,7 +251,7 @@ function op_jiaoben() {
   rm -rf build-actions
   git clone https://github.com/281677160/common
   judge "额外扩展脚本下载"
-  chmod -R +x common && ${Home}/build
+  chmod -R +x common && cp -Rf common ${Home}/build
   rm -rf common
   cp -Rf ${Home}/build/common/*.sh ${Home}/build/${firmware}
 }

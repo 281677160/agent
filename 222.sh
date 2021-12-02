@@ -624,20 +624,12 @@ function openwrt_by() {
 menu() {
 	clear
 	echo
-	echo
-	echo
 	cd ${GITHUB_WORKSPACE}
 	ECHOY " 1. Lede_5.4内核,LUCI 18.06版本(Lede_source)"
-	echo
 	ECHOY " 2. Lienol_4.14内核,LUCI 19.07版本(Lienol_source)"
-	echo
 	ECHOY " 3. Immortalwrt_5.4内核,LUCI 21.02版本(Mortal_source)"
-	echo
 	ECHOY " 4. N1和晶晨系列CPU盒子专用(openwrt_amlogic)"
-	echo
 	ECHOY " 5. 退出编译程序"
-	echo
-	echo
 	echo
 	while :; do
 	ECHOY "请选择编译源码,输入[ 1、2、3、4、5 ]然后回车确认您的选择！"
@@ -698,7 +690,6 @@ menp() {
   ECHOY "3、更换源码或全新编译固件"
   ECHOY "4、打包晶晨系列CPU固件"
   ECHOY "5、退出"
-  echo
   echo
   XUANZHE="请输入数字"
   while :; do

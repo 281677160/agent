@@ -664,8 +664,8 @@ menu() {
 }
 
 menp() {
-  generate_cer
-  [[ -f $PWD/openwrt/config_bf ]] && openwrt_config
+  op_firmware
+  op_config
   cd ${GITHUB_WORKSPACE}
   clear
   echo
@@ -764,7 +764,7 @@ menp() {
   esac
   done
 }
-if [[ -d ${Home}/build_dir ]] && [[ -d ${Home}/toolchain ]] && [[ -d ${Home}/tools ]] && [[ -d ${Home}/staging_dir ]] && [[ -f ${Home}/build/chenggong ]]; then
+if [[ -d ${Home}/build_dir ]] && [[ -d ${Home}/toolchain ]] && [[ -d ${Home}/tools ]] && [[ -d ${Home}/staging_dir ]] && [[ -f ${Home}/build/chenggong ]] && [[ -f ${Home}/.config ]]; then
 	menp "$@"
 else
 	menu "$@"

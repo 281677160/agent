@@ -689,7 +689,7 @@ menp() {
   read -p " ${XUANZHE}：" menu_num
   case $menu_num in
   1)
-    generate_cer
+    op_firmware
     op_kongjian
     bianyi_xuanxiang
     op_ip
@@ -707,10 +707,13 @@ menp() {
     op_download
     op_cpuxinghao
     op_make
+    op_upgrade3
+    op_cowtransfer
+    op_end
     break
     ;;
   2)
-    generate_cer
+    op_firmware
     bianyi_xuanxiang
     op_ip
     op_upgrade1
@@ -720,6 +723,9 @@ menp() {
     op_upgrade2
     op_download
     op_make
+    op_upgrade3
+    op_cowtransfer
+    op_end
     break
     ;;
   3)

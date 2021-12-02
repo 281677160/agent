@@ -75,7 +75,7 @@ judgeopen() {
     print_error "$1 失败"
     rm -rf openwrte
     rm -rf openwrt
-    rm -rf ${Home}/amlogic-s9xxx
+    rm -rf amlogic-s9xxx
     echo
     exit 1
   fi
@@ -199,27 +199,29 @@ function op_ip() {
  EOF
 }
 
-function op_repo_branch() {
+function op_repobranch() {
   cd ${GITHUB_WORKSPACE}
   ECHOG "正在下载源码中,请耐心等候~~~"
   rm -rf openwrt && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrt
   judgeopen "${firmware}源码下载"
   if [[ "${firmware}" == "amlogic_core" ]]; then
     ECHOG "正在下载打包所需的内核,请耐心等候~~~"
-    rm -rf amlogic-s9xxx && svn co https://github.com/ophub/amlogic-s9xxx-openwrt/trunk/amlogic-s9xxx ${Home}/amlogic-s9xxx
+    rm -rf amlogic-s9xxx && svn co https://github.com/ophub/amlogic-s9xxx-openwrt/trunk/amlogic-s9xxx amlogic-s9xxx
     judgeopen "amlogic内核下载"
+    mv amlogic-s9xxx ${Home}/amlogic-s9xxx
     curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/make > ${Home}/make
     judge "内核运行文件下载"
     mkdir -p ${Home}/openwrt-armvirt
     chmod 777 ${Home}/make
   fi
-  cat >${Home}/${Core} <<-EOF
-  ipdz=$ip
-  Git=$Github
+cat >${Home}/${Core} <<-EOF
+ipdz=$ip
+Git=$Github
 EOF
 }
 
 function op_jiaoben() {
+  ECHOG "正在下载脚本中,请耐心等候~~~"
   cd ${GITHUB_WORKSPACE}
   echo "Compile_Date=$(date +%Y%m%d%H%M)" > ${Home}/Openwrt.info && source ${Home}/Openwrt.info
   git clone https://github.com/281677160/build-actions

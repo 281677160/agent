@@ -193,10 +193,10 @@ function bianyi_xuanxiang() {
 
 function op_ip() {
   cd ${GITHUB_WORKSPACE}
-  cat >${GITHUB_WORKSPACE}/${Core} <<-EOF
-  ipdz=$ip
-  Git=$Github
- EOF
+cat >${GITHUB_WORKSPACE}/${Core} <<-EOF
+ipdz=$ip
+Git=$Github
+EOF
 }
 
 function oprepobranch() {

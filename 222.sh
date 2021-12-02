@@ -368,11 +368,11 @@ function op_download() {
     while :; do
         read -p " [${QLMEUN}]： " XZDLE
         case $XZDLE in
-            Y)
+            [Yy])
                 op_download
             break
             ;;
-            N)
+            [Nn])
                 ECHOR "退出编译程序!"
                 sleep 2
                 exit 1

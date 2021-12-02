@@ -482,6 +482,11 @@ function op_cowtransfer() {
 }
 
 function op_amlogic() {
+  if [[ `ls -a ${Home}/bin/targets/armvirt/64 | grep -c "tar.gz"` == '0' ]]; then
+    print_error "没发现tar.gz格式固件存在"
+    exit 1
+  fi
+  
   ECHOY "全部可打包机型：s905x3_s905x2_s905x_s905d_s922x_s912"
   ECHOG "设置要打包固件的机型[ 直接回车则默认 N1 ]"
   read -p " 请输入您要设置的机型：" model
@@ -501,9 +506,14 @@ function op_amlogic() {
   minsize="$(egrep -o "ROOT_MB=[0-9]+" ${Home}/make)"
   rootfssize="ROOT_MB=${rootfs}"
   sed -i "s/${minsize}/${rootfssize}/g" ${Home}/make
-  
+  rm -rf ${Home}/out/*
   cp -Rf ${Home}/bin/targets/*/*/*.tar.gz ${Home}/openwrt-armvirt/ && sync
   cd openwrt && sudo ./make -d -b ${model} -k ${kernel}
+  if [[ `ls -a ${Home}/out | grep -c "openwrt"` -ge '1' ]]; then
+    ECHOG "打包完成，固件存放在[${Home}/out]文件夹"
+  else
+    print_error "打包完成失败，请再次尝试!"
+  fi
 }
 
 function op_end() {

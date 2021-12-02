@@ -76,7 +76,7 @@ judgeopen() {
     print_error "$1 失败"
     rm -rf openwrte
     rm -rf openwrt
-    rm -rf ${Home}/amlogic-s9xxx
+    rm -rf amlogic-s9xxx
     echo
     exit 1
   fi
@@ -213,6 +213,7 @@ function op_repo_branch() {
     judgeopen "amlogic内核下载"
     mv amlogic-s9xxx ${Home}
     curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/make > ${Home}/make
+    curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/.github/workflows/build-openwrt-lede.yml > ${Home}/amlogic-s9xxx/open.yml
     judge "内核运行文件下载"
     mkdir -p ${Home}/openwrt-armvirt
     chmod 777 ${Home}/make
@@ -472,6 +473,30 @@ function op_cowtransfer() {
     TIME y "奶牛快传：${cow}"
     rm -rf cowtransfer.log
   fi
+}
+
+function op_amlogic() {
+  ECHOY "全部可打包机型：s905x3_s905x2_s905x_s905d_s922x_s912"
+  ECHOG "设置要打包固件的机型[ 直接回车则默认 N1 ]"
+  read -p " 请输入您要设置的机型：" model
+  export model=${model:-"s905d"}
+  ECHOY "您设置的机型为：${model}"
+  
+  Make_kernel="$(cat ${Home}/amlogic-s9xxx/open.yml |grep ./make |cut -d "k" -f3 |sed s/[[:space:]]//g)"
+  ECHOG "设置打包的内核版本[ 直接回车则默认 ${Make_kernel} ]"
+  read -p " 请输入您要设置的内核：" kernel
+  export kernel=${kernel:-"$Make_kernel"}
+  ECHOY "您设置的内核版本为：${kernel}"
+  
+  ECHOG "设置ROOTFS分区大小[ 直接回车则默认 960 ]"
+  read -p " 请输入ROOTFS分区大小：" rootfs
+  export rootfs=${rootfs:-"960"}
+  ECHOY "您设置的ROOTFS分区大小为：${rootfs}"
+  minsize="$(egrep -o "ROOT_MB=+.*?[0-9]" ${Home}/make)"
+  sed -i "s/${minsize}/${rootfs}/g" ${Home}/make
+  
+  cp -Rf ${Home}/bin/targets/*/*/*.tar.gz ${Home}/openwrt-armvirt/ && sync
+  cd openwrt && sudo ./make -d -b ${model} -k ${kernel}
 }
 
 function op_end() {

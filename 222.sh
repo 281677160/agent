@@ -204,7 +204,7 @@ function op_repo_branch() {
   ECHOG "正在下载源码中,请耐心等候~~~"
   rm -rf openwrt && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrt
   judgeopen "${firmware}源码下载"
-  if [[ "${firmware}" == "amlogic_core" ]]
+  if [[ "${firmware}" == "amlogic_core" ]]; then
     ECHOG "正在下载打包所需的内核,请耐心等候~~~"
     rm -rf amlogic-s9xxx && svn co https://github.com/ophub/amlogic-s9xxx-openwrt/trunk/amlogic-s9xxx amlogic-s9xxx
     judgeopen "amlogic内核下载"
@@ -214,9 +214,9 @@ function op_repo_branch() {
     mkdir -p ${Home}/openwrt-armvirt
     chmod 777 ${Home}/make
   fi
-  cat >${Home}/${Core} <<-EOF
-  ipdz=$ip
-  Git=$Github
+cat >${Home}/${Core} <<-EOF
+ipdz=$ip
+Git=$Github
 EOF
 }
 
@@ -236,9 +236,9 @@ function ec_repo_branch() {
     mkdir -p ${Home}/openwrt-armvirt
     chmod 777 ${Home}/make
   fi
-  cat >${Home}/${Core} <<-EOF
-  ipdz=$ip
-  Git=$Github
+cat >${Home}/${Core} <<-EOF
+ipdz=$ip
+Git=$Github
 EOF
 }
 

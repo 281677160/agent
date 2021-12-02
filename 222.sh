@@ -279,10 +279,10 @@ function op_diy_part() {
   uci commit network
   " > $NETIP
   [[ `grep -c "CYXluq4wUaz" $ZZZ` == '1' ]] && sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ
-  sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ./feeds/luci/applications`
-  sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ./package`
-  sed -i 's/"带宽监控"/"监控"/g' `grep "带宽监控" -rl ./feeds/luci/applications`
-  sed -i 's/"Argon 主题设置"/"Argon设置"/g' `grep "Argon 主题设置" -rl ./feeds/luci/themes`
+  sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ./feeds/luci/applications` > /dev/null 2>&1
+  sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ./package` > /dev/null 2>&1
+  sed -i 's/"带宽监控"/"监控"/g' `grep "带宽监控" -rl ./feeds/luci/applications` > /dev/null 2>&1
+  sed -i 's/"Argon 主题设置"/"Argon设置"/g' `grep "Argon 主题设置" -rl ./feeds/luci/themes` > /dev/null 2>&1
 }
 
 function op_feeds_update() {
@@ -510,7 +510,8 @@ function op_amlogic() {
   cp -Rf ${Home}/bin/targets/*/*/*.tar.gz ${Home}/openwrt-armvirt/ && sync
   cd openwrt && sudo ./make -d -b ${model} -k ${kernel}
   if [[ `ls -a ${Home}/out | grep -c "openwrt"` -ge '1' ]]; then
-    ECHOG "打包完成，固件存放在[${Home}/out]文件夹"
+    explorer.exe .
+    ECHOY "打包完成，固件存放在[openwrt/out]文件夹"
   else
     print_error "打包失败，请再次尝试!"
   fi

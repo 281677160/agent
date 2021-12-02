@@ -360,7 +360,7 @@ function op_download() {
             ;;
         esac
     done
-    fi
+  fi
 }
 
 function op_cpuxinghao() {

@@ -75,7 +75,7 @@ judgeopen() {
     print_error "$1 失败"
     rm -rf openwrte
     rm -rf openwrt
-    rm -rf amlogic-s9xxx
+    rm -rf ${Home}/amlogic-s9xxx
     echo
     exit 1
   fi
@@ -193,18 +193,18 @@ function bianyi_xuanxiang() {
 
 function op_ip() {
   cd ${GITHUB_WORKSPACE}
-cat >${GITHUB_WORKSPACE}/${Core} <<-EOF
-ipdz=$ip
-Git=$Github
-EOF
+  cat >${GITHUB_WORKSPACE}/${Core} <<-EOF
+  ipdz=$ip
+  Git=$Github
+ EOF
 }
 
-function op_repobranch() {
+function op_repo_branch() {
+  cd ${GITHUB_WORKSPACE}
   ECHOG "正在下载源码中,请耐心等候~~~"
-  rm -rf openwrt
-  git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrt
+  rm -rf openwrt && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrt
   judgeopen "${firmware}源码下载"
-  if [[ "${firmware}" == "amlogic_core" ]]; then
+  if [[ "${firmware}" == "amlogic_core" ]]
     ECHOG "正在下载打包所需的内核,请耐心等候~~~"
     rm -rf amlogic-s9xxx && svn co https://github.com/ophub/amlogic-s9xxx-openwrt/trunk/amlogic-s9xxx amlogic-s9xxx
     judgeopen "amlogic内核下载"
@@ -214,14 +214,35 @@ function op_repobranch() {
     mkdir -p ${Home}/openwrt-armvirt
     chmod 777 ${Home}/make
   fi
-cat >${Home}/${Core} <<-EOF
-ipdz=$ip
-Git=$Github
+  cat >${Home}/${Core} <<-EOF
+  ipdz=$ip
+  Git=$Github
+EOF
+}
+
+function ec_repo_branch() {
+  cd ${GITHUB_WORKSPACE}
+  rm -rf openwrte && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrte
+  judgeopen "${firmware}源码下载"
+  cp -rf openwrt/{build_dir,staging_dir,toolchain,tools,config_bf} ${GITHUB_WORKSPACE}/openwrte
+  rm -fr openwrt && mv -f openwrte openwrt
+  if [[ "${firmware}" == "amlogic_core" ]]
+    ECHOG "正在下载打包所需的内核,请耐心等候~~~"
+    rm -rf amlogic-s9xxx && svn co https://github.com/ophub/amlogic-s9xxx-openwrt/trunk/amlogic-s9xxx amlogic-s9xxx
+    judgeopen "amlogic内核下载"
+    mv amlogic-s9xxx ${Home}/amlogic-s9xxx
+    curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/make > ${Home}/make
+    judge "内核运行文件下载"
+    mkdir -p ${Home}/openwrt-armvirt
+    chmod 777 ${Home}/make
+  fi
+  cat >${Home}/${Core} <<-EOF
+  ipdz=$ip
+  Git=$Github
 EOF
 }
 
 function op_jiaoben() {
-  ECHOG "正在下载脚本中,请耐心等候~~~"
   cd ${GITHUB_WORKSPACE}
   echo "Compile_Date=$(date +%Y%m%d%H%M)" > ${Home}/Openwrt.info && source ${Home}/Openwrt.info
   git clone https://github.com/281677160/build-actions
@@ -304,7 +325,7 @@ function make_defconfig() {
   fi
 }
 
-function op_config() {
+function openwrt_config() {
   cd $Home
   export TARGET_BOARD="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
   export TARGET_SUBTARGET="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
@@ -392,7 +413,7 @@ function op_cpuxinghao() {
   sleep 8
 }
 
-function op_make() {
+function op_cpuxinghao() {
   cd $Home
   rm -fr ${COMFIRMWARE}/*
   PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin make -j$(($(nproc) + 1)) V=s 2>&1 |tee build.log
@@ -465,21 +486,25 @@ function generate_cer() {
   fi
 }
 
-function install_xray_ws() {
-  generate_cer
-  running_state
-  system_kongjian
-  kaishi_install
-  op_regupdate
-  nginx_ip
-  nginx_install
-  basic_optimization
-  domain_check
-  port_exist_check
-  configure_xray_ws
-  xray_install
-  configure_nginx
-  generate_certificate
+function openwrt_by() {
+    generate_cer
+    op_kongjian
+    bianyi_xuanxiang
+    op_ip
+    op_repo_branch
+    op_jiaoben
+    op_diy_zdy
+    op_diy_part
+    op_feeds_update
+    op_upgrade1
+    op_menuconfig
+    make_defconfig
+    op_config
+    op_upgrade2
+    openwrt_zuihouchuli
+    op_download
+    op_cpuxinghao
+    op_make
 }
 menu() {
 	clear
@@ -505,29 +530,28 @@ menu() {
 		1)
 			export firmware="Lede_source"
 			ECHOG "您选择了：Lede_5.4内核,LUCI 18.06版本"
-			install_xray_ws
+			openwrt_by
 		break
 		;;
 		2)
 			export firmware="Lienol_source"
 			ECHOG "您选择了：Lienol_4.14内核,LUCI 19.07版本"
-			install_xray_ws
+			openwrt_by
 		break
 		;;
 		3)
 			export firmware="Mortal_source"
 			ECHOG "您选择了：Immortalwrt_5.4内核,LUCI 21.02版本"
-			install_xray_ws
+			openwrt_by
 		break
 		;;
 		4)
 			export firmware="openwrt_amlogic"
 			ECHOG "您选择了：N1和晶晨系列CPU盒子专用"
-			install_xray_ws
+			openwrt_by
 		break
 		;;
 		5)
-			rm -rf compile.sh
 			ECHOR "您选择了退出编译程序"
 			exit 0
 		break
@@ -565,29 +589,39 @@ menp() {
   read -p " ${XUANZHE}：" menu_num
   case $menu_num in
   1)
-			generate_cer
-			system_kongjian
-			kaishi_install
-			op_regupdate
-			nginx_install
-			basic_optimization
-			domain_check
-			port_exist_check
-			configure_xray_ws
-			xray_install
-			configure_nginx
-			generate_certificate
+    generate_cer
+    op_kongjian
+    bianyi_xuanxiang
+    op_ip
+    ec_repo_branch
+    op_jiaoben
+    op_diy_zdy
+    op_diy_part
+    op_feeds_update
+    op_upgrade1
+    op_menuconfig
+    make_defconfig
+    op_config
+    op_upgrade2
+    openwrt_zuihouchuli
+    op_download
+    op_cpuxinghao
+    op_make
     break
     ;;
   2)
-			system_kongjian
-			kaishi_install
-			nginx_ip
-			port_exist_check
-			configure_xray_ws
-			xray_install
-			configure_nginx
-			generate_certificate
+    generate_cer
+    bianyi_xuanxiang
+    op_ip
+    op_feeds_update
+    op_upgrade1
+    op_menuconfig
+    make_defconfig
+    op_config
+    op_upgrade2
+    op_download
+    op_cpuxinghao
+    op_make
     break
     ;;
   3)

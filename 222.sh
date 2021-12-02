@@ -512,7 +512,7 @@ function op_amlogic() {
   if [[ `ls -a ${Home}/out | grep -c "openwrt"` -ge '1' ]]; then
     ECHOG "打包完成，固件存放在[${Home}/out]文件夹"
   else
-    print_error "打包完成失败，请再次尝试!"
+    print_error "打包失败，请再次尝试!"
   fi
 }
 

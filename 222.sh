@@ -450,7 +450,7 @@ function op_firmware() {
     export DIY_PART_SH="diy-part.sh"
     [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
   fi
-  if [[ "${firmware}" == "Lienol_core" ]] || [[ -n "$(ls -A "${Home}/.Lienol_core" 2>/dev/null)" ]]; then
+  if [[ "${firmware}" == "Lienol_source" ]] || [[ -n "$(ls -A "${Home}/.Lienol_core" 2>/dev/null)" ]]; then
     export firmware="Lienol_source"
     export CODE="lienol"
     export Modelfile="Lienol_source"
@@ -464,7 +464,7 @@ function op_firmware() {
     export DIY_PART_SH="diy-part.sh"
     [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
   fi
-  if [[ "${firmware}" == "Mortal_core" ]] || [[ -n "$(ls -A "${Home}/.Mortal_core" 2>/dev/null)" ]]; then
+  if [[ "${firmware}" == "Mortal_source" ]] || [[ -n "$(ls -A "${Home}/.Mortal_core" 2>/dev/null)" ]]; then
     export firmware="Mortal_source"
     export CODE="mortal"
     export Modelfile="Mortal_source"
@@ -478,7 +478,7 @@ function op_firmware() {
     export DIY_PART_SH="diy-part.sh"
     [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
   fi
-  if [[ "${firmware}" == "amlogic_core" ]] || [[ -n "$(ls -A "${Home}/.amlogic_core" 2>/dev/null)" ]]; then
+  if [[ "${firmware}" == "openwrt_amlogic" ]] || [[ -n "$(ls -A "${Home}/.amlogic_core" 2>/dev/null)" ]]; then
     export firmware="openwrt_amlogic"
     export CODE="lede"
     export Modelfile="openwrt_amlogic"

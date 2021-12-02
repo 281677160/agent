@@ -145,10 +145,11 @@ function bianyi_xuanxiang() {
   read -p " [输入[ Y/y ]回车确认，直接回车则跳过选择]： " MENU
   case $MENU in
     [Yy])
-      export Menuconfig="YES"
+      export Menuconfig="true"
       ECHOY "您执行机型和增删插件命令,请耐心等待程序运行至窗口弹出进行机型和插件配置!"
     ;;
     *)
+      export Menuconfig="false"
       ECHOR "您已关闭选择机型和增删插件设置！"
     ;;
   esac
@@ -161,6 +162,7 @@ function bianyi_xuanxiang() {
       ECHOY "您执行了上传固件到<奶牛快传>!"
     ;;
     *)
+      export UPCOWTRANSFER="false"
       ECHOR "您已关闭上传固件到<奶牛快传>！"
     ;;
   esac
@@ -173,7 +175,8 @@ function bianyi_xuanxiang() {
       ;;
       *)
         ECHOR "您已关闭‘把定时更新插件’编译进固件！"
-        export Git="https://github.com/281677160/build-actions"
+        export REG_UPDATE="false"
+	export Git="https://github.com/281677160/build-actions"
       ;;
     esac
   fi
@@ -292,14 +295,14 @@ function op_feeds_update() {
 
 function op_upgrade1() {
   cd $Home
-  if [[ "${REGULAR_UPDATE}" == "true" ]]; then
+  if [[ "${REG_UPDATE}" == "true" ]]; then
     source build/$firmware/upgrade.sh && Diy_Part1
   fi
 }
 
 function op_menuconfig() {
   cd $Home
-  if [[ "${Menuconfig}" == "YES" ]]; then
+  if [[ "${Menuconfig}" == "true" ]]; then
     make menuconfig
   fi
 }
@@ -339,7 +342,7 @@ function op_config() {
 
 function op_upgrade2() {
   cd $Home
-  if [ "${REGULAR_UPDATE}" == "true" ]; then
+  if [ "${REG_UPDATE}" == "true" ]; then
     source build/$firmware/upgrade.sh && Diy_Part2
   fi
 }
@@ -432,6 +435,27 @@ function op_cpuxinghao() {
   echo "chenggong" >${Home}/build/chenggong
 }
 
+function op_upgrade3() {
+  if [[ "${REG_UPDATE}" == "true" ]]; then
+    [[ -f $Home/Openwrt.info ]] && source ${Home}/Openwrt.info
+    cp -Rf ${Home}/bin/targets/*/* ${Home}/upgrade
+    source ${Home}/build/${firmware}/upgrade.sh && Diy_Part3
+    ECHOY "加入‘定时升级固件插件’的固件已经放入[bin/Firmware]文件夹中"
+  fi
+}
+
+function op_cowtransfer() {
+  if [[ "${UPCOWTRANSFER}" == "true" ]]; then
+    ECHOY "正在上传固件至奶牛快传中，请稍后..."
+    curl -fsSL git.io/file-transfer | sh
+    mv ${COMFIRMWARE}/packages ${Home}/bin/targets/${TARGET_BOARD}/packages
+    ./transfer cow --block 2621440 -s -p 64 --no-progress ${COMFIRMWARE} 2>&1 | tee cowtransfer.log > /dev/null 2>&1
+    cow="$(cat cowtransfer.log | grep https | cut -f3 -d" ")"
+    echo "${cow}" > openwrt/bin/奶牛快传链接
+    TIME y "奶牛快传：${cow}"
+  fi
+}
+
 function op_firmware() {
   if [[ "${firmware}" == "Lede_source" ]] || [[ -n "$(ls -A "${Home}/.Lede_core" 2>/dev/null)" ]]; then
     export firmware="Lede_source"
@@ -511,6 +535,8 @@ function openwrt_by() {
     op_download
     op_cpuxinghao
     op_make
+    op_upgrade3
+    op_cowtransfer
 }
 menu() {
 	clear

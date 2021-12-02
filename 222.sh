@@ -77,6 +77,8 @@ judgeopen() {
     rm -rf openwrte
     rm -rf openwrt
     rm -rf amlogic-s9xxx
+    rm -rf build-actions
+    rm -rf common
     echo
     exit 1
   fi
@@ -249,11 +251,11 @@ function op_jiaoben() {
   cd ${GITHUB_WORKSPACE}
   echo "Compile_Date=$(date +%Y%m%d%H%M)" > ${Home}/Openwrt.info && source ${Home}/Openwrt.info
   git clone https://github.com/281677160/build-actions
-  judge "编译脚本下载"
+  judgeopen "编译脚本下载"
   chmod -R +x build-actions/build && cp -Rf build-actions/build ${Home}
   rm -rf build-actions
   git clone https://github.com/281677160/common
-  judge "额外扩展脚本下载"
+  judgeopen "额外扩展脚本下载"
   chmod -R +x common && cp -Rf common ${Home}/build
   rm -rf common
   cp -Rf ${Home}/build/common/*.sh ${Home}/build/${firmware}

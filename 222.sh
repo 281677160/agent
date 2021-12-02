@@ -434,7 +434,7 @@ function op_cpuxinghao() {
   echo "chenggong" >${Home}/build/chenggong
 }
 
-function generate_cer() {
+function op_firmware() {
   if [[ "${firmware}" == "Lede_source" ]] || [[ -n "$(ls -A "${Home}/.Lede_core" 2>/dev/null)" ]]; then
     export firmware="Lede_source"
     export CODE="lede"
@@ -491,8 +491,8 @@ function generate_cer() {
 }
 
 function openwrt_by() {
-    generate_cer
     op_busuhuanjing
+    op_firmware
     op_kongjian
     bianyi_xuanxiang
     op_ip

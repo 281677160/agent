@@ -228,6 +228,8 @@ function op_repo_branch() {
 
 function ec_repo_branch() {
   cd ${GITHUB_WORKSPACE}
+  ECHOG "正在下载源码中,请耐心等候~~~"
+  sleep 3
   rm -rf openwrte && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrte
   judgeopen "${firmware}源码下载"
   cp -rf openwrt/{build_dir,staging_dir,toolchain,tools,config_bf} ${GITHUB_WORKSPACE}/openwrte
@@ -250,6 +252,8 @@ function ec_repo_branch() {
 
 function qx_repo_branch() {
   cd ${GITHUB_WORKSPACE}
+  ECHOG "正在下载源码中,请耐心等候~~~"
+  sleep 3
   rm -rf openwrte && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrte
   judgeopen "${firmware}源码下载"
   if [[ -f ${Home}/config_bf ]]; then

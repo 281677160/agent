@@ -278,11 +278,11 @@ function op_diy_part() {
   uci set network.lan.ipaddr='$ip'
   uci commit network
   " > $NETIP
-  sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ > /dev/null 2>&1
+  [[ `grep -c "CYXluq4wUaz" $ZZZ` == '1' ]] && sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ
   sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ./feeds/luci/applications`
   sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ./package`
   sed -i 's/"带宽监控"/"监控"/g' `grep "带宽监控" -rl ./feeds/luci/applications`
-  sed -i 's/"Argon 主题设置"/"Argon设置"/g' `grep "Argon 主题设置" -rl ./feeds/luci/applications`
+  sed -i 's/"Argon 主题设置"/"Argon设置"/g' `grep "Argon 主题设置" -rl ./feeds/luci/themes`
 }
 
 function op_feeds_update() {
@@ -291,8 +291,12 @@ function op_feeds_update() {
   ./scripts/feeds update -a
   ./scripts/feeds install -a > /dev/null 2>&1
   ./scripts/feeds install -a
-  [[ -f ${Home}/config_bf ]] && cp -rf ${Home}/config_bf ${Home}/.config
-  if [[ `grep -c "CONFIG_PACKAGE_luci-theme-argon=y" ${Home}/.config` -eq '0' ]]; then
+  if [[ -f ${Home}/config_bf ]]; then
+    cp -rf ${Home}/config_bf ${Home}/.config
+  else
+    cp -rf ${Home}/build/${firmware}/.config ${Home}/.config
+  fi
+  if [[ `grep -c "CONFIG_PACKAGE_luci-theme-argon=y" ${Home}/.config` == '0' ]]; then
     echo -e "\nCONFIG_PACKAGE_luci-theme-argon=y" >> ${Home}/.config
   fi
 }

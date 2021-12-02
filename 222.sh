@@ -728,11 +728,11 @@ menp() {
     menu
     break
     ;;
-   4)
+  4)
     op_amlogic
     break
     ;;   
-  4)
+  5)
     exit 0
     break
     ;;

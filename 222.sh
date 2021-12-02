@@ -174,7 +174,7 @@ function bianyi_xuanxiang() {
       ;;
       *)
         ECHOR "您已关闭把‘定时更新插件’编译进固件！"
-        export Github="https://github.com/281677160/build-actions"
+        export Git="https://github.com/281677160/build-actions"
       ;;
     esac
   fi

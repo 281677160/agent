@@ -193,7 +193,7 @@ function bianyi_xuanxiang() {
 
 function op_ip() {
   cd ${GITHUB_WORKSPACE}
-cat >${GITHUB_WORKSPACE}/${Core} <<-EOF
+cat >${GITHUB_WORKSPACE}/ip <<-EOF
 ipdz=$ip
 Git=$Github
 EOF
@@ -435,7 +435,7 @@ function op_cpuxinghao() {
 }
 
 function generate_cer() {
-  if [[ "${firmware}" == "Lede_source" ]] || [[ -n "$(ls -A "${Home}/.Lede_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Lede_core" ]]; then
+  if [[ "${firmware}" == "Lede_source" ]] || [[ -n "$(ls -A "${Home}/.Lede_core" 2>/dev/null)" ]]; then
     export firmware="Lede_source"
     export CODE="lede"
     export Modelfile="Lede_source"
@@ -447,9 +447,8 @@ function generate_cer() {
     export Diy_zdy="Diy_lede"
     export CONFIG_FILE=".config"
     export DIY_PART_SH="diy-part.sh"
-    [[ -f ${GITHUB_WORKSPACE}/.Lede_core ]] && source ${GITHUB_WORKSPACE}/.Lede_core
-    [[ -f ${Home}/.Lede_core ]] && source ${Home}/.Lede_core
-  elif [[ "${firmware}" == "Lienol_core" ]] || [[ -n "$(ls -A "${Home}/.Lienol_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Lienol_core" ]]; then
+    [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
+  elif [[ "${firmware}" == "Lienol_core" ]] || [[ -n "$(ls -A "${Home}/.Lienol_core" 2>/dev/null)" ]]; then
     export firmware="Lienol_source"
     export CODE="lienol"
     export Modelfile="Lienol_source"
@@ -461,9 +460,8 @@ function generate_cer() {
     export Diy_zdy="Diy_lienol"
     export CONFIG_FILE=".config"
     export DIY_PART_SH="diy-part.sh"
-    [[ -f ${GITHUB_WORKSPACE}/.Lienol_core ]] && source ${GITHUB_WORKSPACE}/.Lienol_core
-    [[ -f ${Home}/.Lienol_core ]] && source ${Home}/.Lienol_core
-  elif [[ "${firmware}" == "Mortal_core" ]] || [[ -n "$(ls -A "${Home}/.Mortal_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Mortal_core" ]]; then
+    [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
+  elif [[ "${firmware}" == "Mortal_core" ]] || [[ -n "$(ls -A "${Home}/.Mortal_core" 2>/dev/null)" ]]; then
     export firmware="Mortal_source"
     export CODE="mortal"
     export Modelfile="Mortal_source"
@@ -475,9 +473,8 @@ function generate_cer() {
     export Diy_zdy="Diy_mortal"
     export CONFIG_FILE=".config"
     export DIY_PART_SH="diy-part.sh"
-    [[ -f ${GITHUB_WORKSPACE}/.Mortal_core ]] && source ${GITHUB_WORKSPACE}/.Mortal_core
-    [[ -f ${Home}/.Mortal_core ]] && source ${Home}/.Mortal_core
-  elif [[ "${firmware}" == "amlogic_core" ]] || [[ -n "$(ls -A "${Home}/.amlogic_core" 2>/dev/null)" ]] || [[ -f "$PWD/.amlogic_core" ]]; then
+    [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
+  elif [[ "${firmware}" == "amlogic_core" ]] || [[ -n "$(ls -A "${Home}/.amlogic_core" 2>/dev/null)" ]]; then
     export firmware="openwrt_amlogic"
     export CODE="lede"
     export Modelfile="openwrt_amlogic"
@@ -489,8 +486,7 @@ function generate_cer() {
     export Diy_zdy="Diy_lede"
     export CONFIG_FILE=".config"
     export DIY_PART_SH="diy-part.sh"
-    [[ -f ${GITHUB_WORKSPACE}/.amlogic_core ]] && source ${GITHUB_WORKSPACE}/.amlogic_core
-    [[ -f ${Home}/.amlogic_core ]] && source ${Home}/.amlogic_core
+    [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
   fi
 }
 
@@ -520,6 +516,7 @@ menu() {
 	echo
 	echo
 	echo
+	cd ${GITHUB_WORKSPACE}
 	ECHOY " 1. Lede_5.4内核,LUCI 18.06版本(Lede_source)"
 	echo
 	ECHOY " 2. Lienol_4.14内核,LUCI 19.07版本(Lienol_source)"
@@ -539,7 +536,6 @@ menu() {
 		1)
 			export firmware="Lede_source"
 			ECHOG "您选择了：Lede_5.4内核,LUCI 18.06版本"
-			rm -rf ./{Lede_source,Lienol_source,Mortal_source,openwrt_amlogic} > /dev/null 2>&1
 			rm -rf openwrt
 			openwrt_by
 		break
@@ -547,7 +543,6 @@ menu() {
 		2)
 			export firmware="Lienol_source"
 			ECHOG "您选择了：Lienol_4.14内核,LUCI 19.07版本"
-			rm -rf ./{Lede_source,Lienol_source,Mortal_source,openwrt_amlogic} > /dev/null 2>&1
 			rm -rf openwrt
 			openwrt_by
 		break
@@ -555,7 +550,6 @@ menu() {
 		3)
 			export firmware="Mortal_source"
 			ECHOG "您选择了：Immortalwrt_5.4内核,LUCI 21.02版本"
-			rm -rf ./{Lede_source,Lienol_source,Mortal_source,openwrt_amlogic} > /dev/null 2>&1
 			rm -rf openwrt
 			openwrt_by
 		break
@@ -563,7 +557,6 @@ menu() {
 		4)
 			export firmware="openwrt_amlogic"
 			ECHOG "您选择了：N1和晶晨系列CPU盒子专用"
-			rm -rf ./{Lede_source,Lienol_source,Mortal_source,openwrt_amlogic} > /dev/null 2>&1
 			rm -rf openwrt
 			openwrt_by
 		break

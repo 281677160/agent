@@ -226,7 +226,7 @@ function ec_repo_branch() {
   judgeopen "${firmware}源码下载"
   cp -rf openwrt/{build_dir,staging_dir,toolchain,tools,config_bf} ${GITHUB_WORKSPACE}/openwrte
   rm -fr openwrt && mv -f openwrte openwrt
-  if [[ "${firmware}" == "amlogic_core" ]]
+  if [[ "${firmware}" == "amlogic_core" ]]; then
     ECHOG "正在下载打包所需的内核,请耐心等候~~~"
     rm -rf amlogic-s9xxx && svn co https://github.com/ophub/amlogic-s9xxx-openwrt/trunk/amlogic-s9xxx amlogic-s9xxx
     judgeopen "amlogic内核下载"

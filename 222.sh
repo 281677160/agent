@@ -488,7 +488,7 @@ function op_amlogic() {
   fi
   
   ECHOY "全部可打包机型：s905x3_s905x2_s905x_s905d_s922x_s912"
-  ECHOG "设置要打包固件的机型[ 直接回车则默认 N1 ]"
+  ECHOG "设置要打包固件的机型[ 直接回车则默认 N1/s905d ]"
   read -p " 请输入您要设置的机型：" model
   export model=${model:-"s905d"}
   ECHOY "您设置的机型为：${model}"

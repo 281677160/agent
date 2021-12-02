@@ -639,7 +639,6 @@ menp() {
     break
     ;;
   4)
-    systemctl stop xray
     bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" - install
     restart_all
     break

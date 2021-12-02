@@ -206,6 +206,7 @@ function op_ip() {
 function op_repo_branch() {
   cd ${GITHUB_WORKSPACE}
   ECHOG "正在下载源码中,请耐心等候~~~"
+  sleep 3
   rm -rf openwrt && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrt
   judgeopen "${firmware}源码下载"
   if [[ "${firmware}" == "openwrt_amlogic" ]]; then

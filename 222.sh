@@ -202,14 +202,7 @@ function op_ip() {
 function op_repobranch() {
   cd ${GITHUB_WORKSPACE}
   ECHOG "正在下载源码中,请耐心等候~~~"
-  rm -rf openwrt
-  git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrt
-  judgeopen "${firmware}源码下载"
 
-cat >${Home}/${Core} <<-EOF
-ipdz=$ip
-Git=$Github
-EOF
 }
 
 function op_jiaoben() {

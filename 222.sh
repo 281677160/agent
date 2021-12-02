@@ -661,7 +661,7 @@ menp() {
   esac
   done
 }
-if [[ -f ${Home}/build/chenggong ]] && [[ -d ${Home}/staging_dir/host ]]; then
+if [[ -d ${Home}/build_dir ]] && [[ -d ${Home}/toolchain ]] && [[ -d ${Home}/tools ]] && [[ -d ${Home}/staging_dir ]] && [[ -f ${Home}/build/chenggong ]]; then
 	menp "$@"
 else
 	menu "$@"

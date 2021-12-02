@@ -200,7 +200,6 @@ function op_ip() {
 }
 
 function oprepobranch() {
-  cd ${GITHUB_WORKSPACE}
   ECHOG "正在下载源码中,请耐心等候~~~"
   rm -rf openwrt
   git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrt

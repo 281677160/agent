@@ -472,7 +472,7 @@ function op_cowtransfer() {
   fi
 }
 
-function op_cowtransfer() {
+function op_end() {
   clear
   echo
   echo
@@ -571,6 +571,7 @@ function openwrt_by() {
     op_make
     op_upgrade3
     op_cowtransfer
+    op_end
 }
 menu() {
 	clear

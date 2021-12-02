@@ -539,24 +539,28 @@ menu() {
 		1)
 			export firmware="Lede_source"
 			ECHOG "您选择了：Lede_5.4内核,LUCI 18.06版本"
+			rm -rf ${Core} > /dev/null 2>&1
 			openwrt_by
 		break
 		;;
 		2)
 			export firmware="Lienol_source"
 			ECHOG "您选择了：Lienol_4.14内核,LUCI 19.07版本"
+			rm -rf ${Core} > /dev/null 2>&1
 			openwrt_by
 		break
 		;;
 		3)
 			export firmware="Mortal_source"
 			ECHOG "您选择了：Immortalwrt_5.4内核,LUCI 21.02版本"
+			rm -rf ${Core} > /dev/null 2>&1
 			openwrt_by
 		break
 		;;
 		4)
 			export firmware="openwrt_amlogic"
 			ECHOG "您选择了：N1和晶晨系列CPU盒子专用"
+			rm -rf ${Core} > /dev/null 2>&1
 			openwrt_by
 		break
 		;;

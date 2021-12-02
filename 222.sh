@@ -434,7 +434,6 @@ function op_cpuxinghao() {
 }
 
 function op_firmware() {
-  ECHOY "正在op_firmware"
   if [[ "${firmware}" == "Lede_source" ]] || [[ -z "${firmware}" ]] && [[ -n "$(ls -A "${Home}/.Lede_core" 2>/dev/null)" ]]; then
     export firmware="Lede_source"
     export CODE="lede"

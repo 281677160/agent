@@ -208,7 +208,7 @@ function op_repo_branch() {
     ECHOG "正在下载打包所需的内核,请耐心等候~~~"
     rm -rf amlogic-s9xxx && svn co https://github.com/ophub/amlogic-s9xxx-openwrt/trunk/amlogic-s9xxx amlogic-s9xxx
     judgeopen "amlogic内核下载"
-    mv amlogic-s9xxx ${Home}/amlogic-s9xxx
+    mv amlogic-s9xxx ${Home}
     curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/make > ${Home}/make
     judge "内核运行文件下载"
     mkdir -p ${Home}/openwrt-armvirt
@@ -230,7 +230,7 @@ function ec_repo_branch() {
     ECHOG "正在下载打包所需的内核,请耐心等候~~~"
     rm -rf amlogic-s9xxx && svn co https://github.com/ophub/amlogic-s9xxx-openwrt/trunk/amlogic-s9xxx amlogic-s9xxx
     judgeopen "amlogic内核下载"
-    mv amlogic-s9xxx ${Home}/amlogic-s9xxx
+    mv amlogic-s9xxx ${Home}
     curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/make > ${Home}/make
     judge "内核运行文件下载"
     mkdir -p ${Home}/openwrt-armvirt

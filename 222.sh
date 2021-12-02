@@ -88,117 +88,115 @@ fi
 
 function op_busuhuanjing() {
 cd ${GITHUB_WORKSPACE}
-	clear
-	echo
-	echo
-	echo
-	ECHOR "|*******************************************|"
-	ECHOG "|                                           |"
-	ECHOY "|    首次编译,请输入Ubuntu密码继续下一步    |"
-	ECHOG "|                                           |"
-	ECHOY "|              编译环境部署                 |"
-	ECHOG "|                                           |"
-	ECHOR "|*******************************************|"
-	echo
-	echo
-	sudo apt-get update -y
-	sudo apt-get full-upgrade -y
-	sudo apt-get install -y build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 lib32stdc++6 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler g++-multilib antlr3 gperf wget curl rename libpcap0.8-dev swig rsync
-	judge "部署编译环境"
-	sudo timedatectl set-timezone Asia/Shanghai
+  clear
+  echo
+  ECHOR "|*******************************************|"
+  ECHOG "|                                           |"
+  ECHOY "|    首次编译,请输入Ubuntu密码继续下一步    |"
+  ECHOG "|                                           |"
+  ECHOY "|              编译环境部署                 |"
+  ECHOG "|                                           |"
+  ECHOR "|*******************************************|"
+  echo
+  sudo apt-get update -y
+  sudo apt-get full-upgrade -y
+  sudo apt-get install -y build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 lib32stdc++6 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler g++-multilib antlr3 gperf wget curl rename libpcap0.8-dev swig rsync
+  judge "部署编译环境"
+  sudo timedatectl set-timezone Asia/Shanghai
 }
 
 function op_kongjian() {
-cd ${GITHUB_WORKSPACE}
-export Ubunkj="$(df -h|grep -v tmpfs |grep "/dev/.*" |awk '{print $4}' |awk 'NR==1')"
-export FINAL=`echo ${Ubunkj: -1}`
-if [[ "${FINAL}" =~ (M|K) ]]; then
-	print_error "敬告：可用空间小于[ 1G ]退出编译,建议可用空间大于20G"
-	sleep 1
-	exit 1
-fi
-export Ubuntu_mz="$(cat /etc/group | grep adm | cut -f2 -d,)"
-export Ubuntu_kj="$(df -h|grep -v tmpfs |grep "/dev/.*" |awk '{print $4}' |awk 'NR==1' |sed 's/.$//g')"
-if [[ "${Ubuntu_kj}" -lt "20" ]];then
-	ECHOY "您当前系统可用空间为${Ubuntu_kj}G"
-	print_error "敬告：可用空间小于[ 20G ]编译容易出错,建议可用空间大于20G,是否继续?"
-	read -p " 回车退出，按[Y/y]回车确认继续编译： " YN
-	case ${YN} in
-		[Yy]) 
-			ECHOG  "可用空间太小严重影响编译,请满天神佛保佑您成功吧！"
-		;;
-		*)
-			ECHOY  "您已取消编译,请清理Ubuntu空间或增加硬盘容量..."
-			sleep 1
-			exit 0
-	esac
-fi
+  cd ${GITHUB_WORKSPACE}
+  export Ubunkj="$(df -h|grep -v tmpfs |grep "/dev/.*" |awk '{print $4}' |awk 'NR==1')"
+  export FINAL=`echo ${Ubunkj: -1}`
+  if [[ "${FINAL}" =~ (M|K) ]]; then
+    print_error "敬告：可用空间小于[ 1G ]退出编译,建议可用空间大于20G"
+    sleep 1
+    exit 1
+  fi
+  export Ubuntu_mz="$(cat /etc/group | grep adm | cut -f2 -d,)"
+  export Ubuntu_kj="$(df -h|grep -v tmpfs |grep "/dev/.*" |awk '{print $4}' |awk 'NR==1' |sed 's/.$//g')"
+  if [[ "${Ubuntu_kj}" -lt "20" ]];then
+    ECHOY "您当前系统可用空间为${Ubuntu_kj}G"
+    print_error "敬告：可用空间小于[ 20G ]编译容易出错,建议可用空间大于20G,是否继续?"
+    read -p " 回车退出，按[Y/y]回车确认继续编译： " YN
+    case ${YN} in
+      [Yy]) 
+        ECHOG  "可用空间太小严重影响编译,请满天神佛保佑您成功吧！"
+      ;;
+      *)
+        ECHOY  "您已取消编译,请清理Ubuntu空间或增加硬盘容量..."
+        sleep 1
+        exit 0
+      ;;
+    esac
+  fi
 }
 
 function bianyi_xuanxiang() {
-cd ${GITHUB_WORKSPACE}
-[[ -z ${ipdz} ]] && export ipdz="192.168.1.1"
-ECHOG "设置openwrt的后台IP地址[ 回车默认 $ipdz ]"
-read -p " 请输入后台IP地址：" ip
-export ip=${ip:-"$ipdz"}
-ECHOY "您的后台地址为：$ip"
-echo
-echo
-ECHOG "是否需要选择机型和增删插件?"
-read -p " [输入[ Y/y ]回车确认，直接回车跳过选择]： " MENU
-case $MENU in
-	[Yy])
-		export Menuconfig="YES"
-		ECHOY "您执行机型和增删插件命令,请耐心等待程序运行至窗口弹出进行机型和插件配置!"
-	;;
-	*)
-		ECHOR "您已关闭选择机型和增删插件设置！"
-	;;
-esac
-echo
-ECHOG "是否把固件上传到<奶牛快传>?"
-read -p " [输入[ Y/y ]回车确认，直接回车跳过选择]： " NNKC
-case $NNKC in
-	[Yy])
-		export UPCOWTRANSFER="true"
-		ECHOY "您执行了上传固件到<奶牛快传>!"
-	;;
-	*)
-		ECHOR "您已关闭上传固件到<奶牛快传>！"
-	;;
-esac
-[[ ! $firmware == "openwrt_amlogic" ]] && {
-	ECHOG "是否把定时更新插件编译进固件?"
-	read -p " [输入[ Y/y ]回车确认，直接回车跳过选择]： " RELE
-	case $RELE in
-		[Yy])
-			export REG_UPDATE="true"
-		;;
-		*)
-			ECHOR "您已关闭把‘定时更新插件’编译进固件！"
-			export Github="https://github.com/281677160/build-actions"
-		;;
-	esac
-}
-[[ "${REG_UPDATE}" == "true" ]] && {
-	[[ -z ${Git} ]] && export Git="https://github.com/281677160/build-actions"
-	ECHOG "设置Github地址,定时更新固件需要把固件传至对应地址的Releases"
-	ECHOY "回车默认为：$Git"
-	read -p " 请输入Github地址：" Github
-	export Github=${Github:-"$Git"}
-	ECHOG "您的Github地址为：$Github"
-	export Apidz="${Github##*com/}"
-	export Author="${Apidz%/*}"
-	export CangKu="${Apidz##*/}"
-}
+  cd ${GITHUB_WORKSPACE}
+  [[ -z ${ipdz} ]] && export ipdz="192.168.1.1"
+  ECHOG "设置openwrt的后台IP地址[ 回车默认 $ipdz ]"
+  read -p " 请输入后台IP地址：" ip
+  export ip=${ip:-"$ipdz"}
+  ECHOY "您的后台地址为：$ip"
+  echo
+  echo
+  ECHOG "是否需要选择机型和增删插件?"
+  read -p " [输入[ Y/y ]回车确认，直接回车跳过选择]： " MENU
+  case $MENU in
+    [Yy])
+      export Menuconfig="YES"
+      ECHOY "您执行机型和增删插件命令,请耐心等待程序运行至窗口弹出进行机型和插件配置!"
+    ;;
+    *)
+      ECHOR "您已关闭选择机型和增删插件设置！"
+    ;;
+  esac
+  echo
+  ECHOG "是否把固件上传到<奶牛快传>?"
+  read -p " [输入[ Y/y ]回车确认，直接回车跳过选择]： " NNKC
+  case $NNKC in
+    [Yy])
+      export UPCOWTRANSFER="true"
+      ECHOY "您执行了上传固件到<奶牛快传>!"
+    ;;
+    *)
+      ECHOR "您已关闭上传固件到<奶牛快传>！"
+    ;;
+  esac
+  if [[ ! $firmware == "openwrt_amlogic" ]]; then
+    ECHOG "是否把定时更新插件编译进固件?"
+    read -p " [输入[ Y/y ]回车确认，直接回车跳过选择]： " RELE
+    case $RELE in
+      [Yy])
+        export REG_UPDATE="true"
+      ;;
+      *)
+        ECHOR "您已关闭把‘定时更新插件’编译进固件！"
+        export Github="https://github.com/281677160/build-actions"
+      ;;
+    esac
+  fi
+  if [[ "${REG_UPDATE}" == "true" ]]; then
+    [[ -z ${Git} ]] && export Git="https://github.com/281677160/build-actions"
+    ECHOG "设置Github地址,定时更新固件需要把固件传至对应地址的Releases"
+    ECHOY "回车默认为：$Git"
+    read -p " 请输入Github地址：" Github
+    export Github=${Github:-"$Git"}
+    ECHOG "您的Github地址为：$Github"
+    export Apidz="${Github##*com/}"
+    export Author="${Apidz%/*}"
+    export CangKu="${Apidz##*/}"
+  fi
 }
 
 function op_ip() {
-cd ${GITHUB_WORKSPACE}
-cat >${GITHUB_WORKSPACE}/${Core} <<-EOF
-ipdz=$ip
-Git=$Github
-EOF
+  cd ${GITHUB_WORKSPACE}
+  cat >${GITHUB_WORKSPACE}/${Core} <<-EOF
+  ipdz=$ip
+  Git=$Github
+ EOF
 }
 
 function op_repo_branch() {

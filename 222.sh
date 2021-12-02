@@ -136,14 +136,14 @@ function op_kongjian() {
 function bianyi_xuanxiang() {
   cd ${GITHUB_WORKSPACE}
   [[ -z ${ipdz} ]] && export ipdz="192.168.1.1"
-  ECHOG "设置openwrt的后台IP地址[ 回车默认 $ipdz ]"
+  ECHOG "设置openwrt的后台IP地址[ 直接回车则默认 $ipdz ]"
   read -p " 请输入后台IP地址：" ip
   export ip=${ip:-"$ipdz"}
   ECHOY "您的后台地址为：$ip"
   echo
   echo
   ECHOG "是否需要选择机型和增删插件?"
-  read -p " [输入[ Y/y ]回车确认，直接回车跳过选择]： " MENU
+  read -p " [输入[ Y/y ]回车确认，直接回车则跳过选择]： " MENU
   case $MENU in
     [Yy])
       export Menuconfig="YES"
@@ -155,7 +155,7 @@ function bianyi_xuanxiang() {
   esac
   echo
   ECHOG "是否把固件上传到<奶牛快传>?"
-  read -p " [输入[ Y/y ]回车确认，直接回车跳过选择]： " NNKC
+  read -p " [输入[ Y/y ]回车确认，直接回车则跳过选择]： " NNKC
   case $NNKC in
     [Yy])
       export UPCOWTRANSFER="true"
@@ -167,13 +167,13 @@ function bianyi_xuanxiang() {
   esac
   if [[ ! $firmware == "openwrt_amlogic" ]]; then
     ECHOG "是否把定时更新插件编译进固件?"
-    read -p " [输入[ Y/y ]回车确认，直接回车跳过选择]： " RELE
+    read -p " [输入[ Y/y ]回车确认，直接回车则跳过选择]： " RELE
     case $RELE in
       [Yy])
         export REG_UPDATE="true"
       ;;
       *)
-        ECHOR "您已关闭把‘定时更新插件’编译进固件！"
+        ECHOR "您已关闭‘把定时更新插件’编译进固件！"
         export Git="https://github.com/281677160/build-actions"
       ;;
     esac
@@ -181,7 +181,7 @@ function bianyi_xuanxiang() {
   if [[ "${REG_UPDATE}" == "true" ]]; then
     [[ -z ${Git} ]] && export Git="https://github.com/281677160/build-actions"
     ECHOG "设置Github地址,定时更新固件需要把固件传至对应地址的Releases"
-    ECHOY "回车默认为：$Git"
+    ECHOY "回车则默认为：$Git"
     read -p " 请输入Github地址：" Github
     export Github=${Github:-"$Git"}
     ECHOG "您的Github地址为：$Github"
@@ -193,10 +193,10 @@ function bianyi_xuanxiang() {
 
 function op_ip() {
   cd ${GITHUB_WORKSPACE}
-cat >${GITHUB_WORKSPACE}/ip <<-EOF
-ipdz=$ip
-Git=$Github
-EOF
+  echo "
+  ipdz=$ip
+  Git=$Github
+  " > ${GITHUB_WORKSPACE}/ip
 }
 
 function op_repo_branch() {
@@ -214,10 +214,10 @@ function op_repo_branch() {
     mkdir -p ${Home}/openwrt-armvirt
     chmod 777 ${Home}/make
   fi
-cat >${Home}/${Core} <<-EOF
-ipdz=$ip
-Git=$Github
-EOF
+  echo "
+  ipdz=$ip
+  Git=$Github
+  " > ${Home}/${Core}
 }
 
 function ec_repo_branch() {
@@ -236,10 +236,10 @@ function ec_repo_branch() {
     mkdir -p ${Home}/openwrt-armvirt
     chmod 777 ${Home}/make
   fi
-cat >${Home}/${Core} <<-EOF
-ipdz=$ip
-Git=$Github
-EOF
+  echo "
+  ipdz=$ip
+  Git=$Github
+  " > ${Home}/${Core}
 }
 
 function op_jiaoben() {
@@ -261,19 +261,18 @@ function op_diy_zdy() {
   cd $Home
   ./scripts/feeds update -a > /dev/null 2>&1
   source "${PATH1}/common.sh" && ${Diy_zdy}
-  judge "插件包下载"
+  judge "passwall和ssr plus下载"
   source build/${firmware}/common.sh && Diy_all
   judge "插件包下载"
 }
 
 function op_diy_part() {
-  ECHOG "正在加载自定义文件,请耐心等候~~~"
   cd $Home
   echo "
   uci set network.lan.ipaddr='$ip'
   uci commit network
   " > $NETIP
-  sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ
+  sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ > /dev/null 2>&1
   sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ./feeds/luci/applications`
   sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ./package`
   sed -i 's/"带宽监控"/"监控"/g' `grep "带宽监控" -rl ./feeds/luci/applications`
@@ -358,7 +357,7 @@ function op_download() {
   make -j8 download 2>&1 |tee ${Home}/build.log
   find dl -size -1024c -exec ls -l {} \;
   find dl -size -1024c -exec rm -f {} \;
-  if [[ `grep -c "make with -j1 V=s or V=sc" ${Home}/build.log` == '0' ]]; then
+  if [[ `grep -c "make with -j1 V=s or V=sc" ${Home}/build.log` == '0' ]] || [[ `grep -c "ERROR" ${Home}/build.log` == '0' ]]; then
     ECHOG "DL文件下载成功"
   else
     clear

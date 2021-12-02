@@ -445,6 +445,8 @@ function generate_cer() {
     export REPO_BRANCH="master"
     export ZZZ="package/lean/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_lede"
+    export CONFIG_FILE=".config"
+    export DIY_PART_SH="diy-part.sh"
     [[ -f $PWD/.Lede_core ]] && source $PWD/.Lede_core
     [[ -f ${Home}/.Lede_core ]] && source ${Home}/.Lede_core
   elif [[ "${firmware}" == "Lienol_core" ]] || [[ -n "$(ls -A "${Home}/.Lienol_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Lienol_core" ]]; then
@@ -457,6 +459,8 @@ function generate_cer() {
     export REPO_BRANCH="19.07"
     export ZZZ="package/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_lienol"
+    export CONFIG_FILE=".config"
+    export DIY_PART_SH="diy-part.sh"
     [[ -f $PWD/.Lienol_core ]] && source $PWD/.Lienol_core
     [[ -f ${Home}/.Lienol_core ]] && source ${Home}/.Lienol_core
   elif [[ "${firmware}" == "Mortal_core" ]] || [[ -n "$(ls -A "${Home}/.Mortal_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Mortal_core" ]]; then
@@ -467,8 +471,10 @@ function generate_cer() {
     export PATH1="${Home}/build/${firmware}"
     export REPO_URL="https://github.com/immortalwrt/immortalwrt"
     export REPO_BRANCH="openwrt-21.02"
-    export export ZZZ="package/emortal/default-settings/files/zzz-default-settings"
+    export ZZZ="package/emortal/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_mortal"
+    export CONFIG_FILE=".config"
+    export DIY_PART_SH="diy-part.sh"
     [[ -f $PWD/.Mortal_core ]] && source $PWD/.Mortal_core
     [[ -f ${Home}/.Mortal_core ]] && source ${Home}/.Mortal_core
   elif [[ "${firmware}" == "amlogic_core" ]] || [[ -n "$(ls -A "${Home}/.amlogic_core" 2>/dev/null)" ]] || [[ -f "$PWD/.amlogic_core" ]]; then
@@ -481,6 +487,8 @@ function generate_cer() {
     export REPO_BRANCH="master"
     export ZZZ="package/lean/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_lede"
+    export CONFIG_FILE=".config"
+    export DIY_PART_SH="diy-part.sh"
     [[ -f $PWD/.amlogic_core ]] && source $PWD/.amlogic_core
     [[ -f ${Home}/.amlogic_core ]] && source ${Home}/.amlogic_core
   fi

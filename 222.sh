@@ -199,7 +199,7 @@ Git=$Github
 EOF
 }
 
-function oprepobranch() {
+function op_repobranch() {
   ECHOG "正在下载源码中,请耐心等候~~~"
   rm -rf openwrt
   git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrt
@@ -304,7 +304,7 @@ function make_defconfig() {
   fi
 }
 
-function openwrt_config() {
+function op_config() {
   cd $Home
   export TARGET_BOARD="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
   export TARGET_SUBTARGET="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"

@@ -475,8 +475,8 @@ function op_cowtransfer() {
     mv ${COMFIRMWARE}/packages ${Home}/bin/targets/${TARGET_BOARD}/packages
     ./transfer cow --block 2621440 -s -p 64 --no-progress ${COMFIRMWARE} 2>&1 | tee cowtransfer.log > /dev/null 2>&1
     cow="$(cat cowtransfer.log | grep https | cut -f3 -d" ")"
-    echo "${cow}" > openwrt/bin/奶牛快传链接
-    TIME y "奶牛快传：${cow}"
+    echo "${cow}" > ${Home}/bin/奶牛快传链接
+    ECHOY "奶牛快传：${cow}"
     rm -rf cowtransfer.log
   fi
 }

@@ -445,6 +445,7 @@ function op_make() {
 }
 
 function op_upgrade3() {
+  cd $Home
   if [[ "${REG_UPDATE}" == "true" ]]; then
     [[ -f ${Home}/Openwrt.info ]] && source ${Home}/Openwrt.info
     cp -Rf ${Home}/bin/targets/*/* ${Home}/upgrade
@@ -469,6 +470,7 @@ function op_cowtransfer() {
     cow="$(cat cowtransfer.log | grep https | cut -f3 -d" ")"
     echo "${cow}" > openwrt/bin/奶牛快传链接
     TIME y "奶牛快传：${cow}"
+    rm -rf cowtransfer.log
   fi
 }
 

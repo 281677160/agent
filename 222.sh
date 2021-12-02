@@ -248,6 +248,32 @@ function ec_repo_branch() {
   " > ${Home}/${Core}
 }
 
+function qx_repo_branch() {
+  cd ${GITHUB_WORKSPACE}
+  rm -rf openwrte && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrte
+  judgeopen "${firmware}源码下载"
+  if [[ -f ${Home}/config_bf ]]; then
+    cp -rf ${Home}/config_bf ${GITHUB_WORKSPACE}/openwrte
+  else
+    cp -rf ${Home}/.config ${GITHUB_WORKSPACE}/openwrte/config_bf
+  fi
+  rm -fr openwrt && mv -f openwrte openwrt
+  if [[ "${firmware}" == "openwrt_amlogic" ]]; then
+    ECHOG "正在下载打包所需的内核,请耐心等候~~~"
+    rm -rf amlogic-s9xxx && svn co https://github.com/ophub/amlogic-s9xxx-openwrt/trunk/amlogic-s9xxx amlogic-s9xxx
+    judgeopen "amlogic内核下载"
+    mv amlogic-s9xxx ${Home}
+    curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/make > ${Home}/make
+    judge "内核运行文件下载"
+    mkdir -p ${Home}/openwrt-armvirt
+    chmod 777 ${Home}/make
+  fi
+  echo "
+  ipdz=$ip
+  Git=$Github
+  " > ${Home}/${Core}
+}
+
 function op_jiaoben() {
   cd ${GITHUB_WORKSPACE}
   echo "Compile_Date=$(date +%Y%m%d%H%M)" > ${Home}/Openwrt.info && source ${Home}/Openwrt.info
@@ -318,7 +344,7 @@ function op_menuconfig() {
 function make_defconfig() {
   ECHOG "正在生成配置文件，请稍后..."
   cd $Home
-  source build/${firmware}/common.sh && Diy_chajian
+  source ${Home}/build/${firmware}/common.sh && Diy_chajian
   make defconfig
   ./scripts/diffconfig.sh > ${Home}/config_bf
   if [ -n "$(ls -A "${Home}/Chajianlibiao" 2>/dev/null)" ]; then
@@ -688,17 +714,42 @@ menp() {
   ECHOG "源码：${firmware}"
   ECHOG "机型：${TARGET_PROFILE}"
   echo
-  ECHOY "1、更新源码和插件二次编译（保留缓存）"
-  ECHOY "2、不更新插件和源码二次编译（编译速度快）"
-  ECHOY "3、更换源码或全新编译固件"
-  ECHOY "4、打包晶晨系列CPU固件"
-  ECHOY "5、退出"
+  ECHOY "1、保留配置全新编译"
+  ECHOY "2、保留缓存和配置二次编译"
+  ECHOY "3、不更新插件和源码二次编译"
+  ECHOY "4、更换源码"
+  ECHOY "5、打包晶晨系列CPU固件"
+  ECHOY "6、退出"
   echo
   XUANZHE="请输入数字"
   while :; do
   read -p " ${XUANZHE}：" menu_num
   case $menu_num in
   1)
+    op_firmware
+    op_kongjian
+    bianyi_xuanxiang
+    op_ip
+    qx_repo_branch
+    op_jiaoben
+    op_diy_zdy
+    op_diy_part
+    op_feeds_update
+    op_upgrade1
+    op_menuconfig
+    make_defconfig
+    op_config
+    op_upgrade2
+    openwrt_zuihouchuli
+    op_download
+    op_cpuxinghao
+    op_make
+    op_upgrade3
+    op_cowtransfer
+    op_end
+  break
+  ;;
+  2)
     op_firmware
     op_kongjian
     bianyi_xuanxiang
@@ -720,9 +771,9 @@ menp() {
     op_upgrade3
     op_cowtransfer
     op_end
-    break
-    ;;
-  2)
+  break
+  ;;
+  3)
     op_firmware
     bianyi_xuanxiang
     op_ip
@@ -737,23 +788,23 @@ menp() {
     op_upgrade3
     op_cowtransfer
     op_end
-    break
-    ;;
-  3)
-    menu
-    break
-    ;;
+  break
+  ;;
   4)
-    op_amlogic
-    break
-    ;;   
+    menu
+  break
+  ;;
   5)
+    op_amlogic
+  break
+  ;;   
+  6)
     exit 0
     break
-    ;;
-    *)
+  ;;
+  *)
     XUANZHE="请输入正确的选择"
-    ;;
+  ;;
   esac
   done
 }

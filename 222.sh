@@ -474,7 +474,7 @@ function op_cowtransfer() {
     curl -fsSL git.io/file-transfer | sh
     mv ${COMFIRMWARE}/packages ${Home}/bin/targets/${TARGET_BOARD}/packages
     ./transfer cow --block 2621440 -s -p 64 --no-progress ${COMFIRMWARE} 2>&1 | tee cowtransfer.log > /dev/null 2>&1
-    cow="$(cat cowtransfer.log | grep https | cut -f3 -d" ")"
+    export cow="$(cat cowtransfer.log | grep https | cut -f3 -d" ")"
     echo "${cow}" > ${Home}/bin/奶牛快传链接
     ECHOY "奶牛快传：${cow}"
     rm -rf cowtransfer.log
@@ -533,6 +533,9 @@ function op_end() {
   ECHOG "开始时间：${Begin}"
   ECHOG "结束时间：${End}"
   ECHOY "固件已经存入${COMFIRMWARE}文件夹中"
+  if [[ "${UPCOWTRANSFER}" == "true" ]]; then
+    ECHOY "奶牛快传：${cow}"
+  fi
 }
 
 function op_firmware() {

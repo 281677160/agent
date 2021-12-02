@@ -447,7 +447,7 @@ function generate_cer() {
     export Diy_zdy="Diy_lede"
     export CONFIG_FILE=".config"
     export DIY_PART_SH="diy-part.sh"
-    [[ -f $PWD/.Lede_core ]] && source $PWD/.Lede_core
+    [[ -f ${GITHUB_WORKSPACE}/.Lede_core ]] && source ${GITHUB_WORKSPACE}/.Lede_core
     [[ -f ${Home}/.Lede_core ]] && source ${Home}/.Lede_core
   elif [[ "${firmware}" == "Lienol_core" ]] || [[ -n "$(ls -A "${Home}/.Lienol_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Lienol_core" ]]; then
     export firmware="Lienol_source"
@@ -461,7 +461,7 @@ function generate_cer() {
     export Diy_zdy="Diy_lienol"
     export CONFIG_FILE=".config"
     export DIY_PART_SH="diy-part.sh"
-    [[ -f $PWD/.Lienol_core ]] && source $PWD/.Lienol_core
+    [[ -f ${GITHUB_WORKSPACE}/.Lienol_core ]] && source ${GITHUB_WORKSPACE}/.Lienol_core
     [[ -f ${Home}/.Lienol_core ]] && source ${Home}/.Lienol_core
   elif [[ "${firmware}" == "Mortal_core" ]] || [[ -n "$(ls -A "${Home}/.Mortal_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Mortal_core" ]]; then
     export firmware="Mortal_source"
@@ -475,7 +475,7 @@ function generate_cer() {
     export Diy_zdy="Diy_mortal"
     export CONFIG_FILE=".config"
     export DIY_PART_SH="diy-part.sh"
-    [[ -f $PWD/.Mortal_core ]] && source $PWD/.Mortal_core
+    [[ -f ${GITHUB_WORKSPACE}/.Mortal_core ]] && source ${GITHUB_WORKSPACE}/.Mortal_core
     [[ -f ${Home}/.Mortal_core ]] && source ${Home}/.Mortal_core
   elif [[ "${firmware}" == "amlogic_core" ]] || [[ -n "$(ls -A "${Home}/.amlogic_core" 2>/dev/null)" ]] || [[ -f "$PWD/.amlogic_core" ]]; then
     export firmware="openwrt_amlogic"
@@ -489,7 +489,7 @@ function generate_cer() {
     export Diy_zdy="Diy_lede"
     export CONFIG_FILE=".config"
     export DIY_PART_SH="diy-part.sh"
-    [[ -f $PWD/.amlogic_core ]] && source $PWD/.amlogic_core
+    [[ -f ${GITHUB_WORKSPACE}/.amlogic_core ]] && source ${GITHUB_WORKSPACE}/.amlogic_core
     [[ -f ${Home}/.amlogic_core ]] && source ${Home}/.amlogic_core
   fi
 }

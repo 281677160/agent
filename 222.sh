@@ -325,7 +325,7 @@ function make_defconfig() {
   fi
 }
 
-function openwrt_config() {
+function op_config() {
   cd $Home
   export TARGET_BOARD="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
   export TARGET_SUBTARGET="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
@@ -613,14 +613,12 @@ menp() {
     generate_cer
     bianyi_xuanxiang
     op_ip
-    op_feeds_update
     op_upgrade1
     op_menuconfig
     make_defconfig
     op_config
     op_upgrade2
     op_download
-    op_cpuxinghao
     op_make
     break
     ;;

@@ -533,6 +533,9 @@ function op_end() {
   ECHOG "开始时间：${Begin}"
   ECHOG "结束时间：${End}"
   ECHOY "固件已经存入${COMFIRMWARE}文件夹中"
+  if [[ "${firmware}" == "openwrt_amlogic" ]]; then
+    ECHOR "提示：再次输入编译命令可选择打包N1和晶晨系列盒子专用固件"
+  fi
   if [[ "${UPCOWTRANSFER}" == "true" ]]; then
     ECHOY "奶牛快传：${cow}"
   fi
@@ -728,6 +731,7 @@ menp() {
     make_defconfig
     op_config
     op_upgrade2
+    rm -rf ${Home}/dl
     op_download
     op_make
     op_upgrade3

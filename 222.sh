@@ -202,18 +202,18 @@ EOF
 }
 
 function op_repo_branch() {
-	cd ${GITHUB_WORKSPACE}
-	ECHOG "正在下载源码中,请耐心等候~~~"
-	rm -rf openwrt && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrt
-	judgeopen "${firmware}源码下载"
-	if [[ "${firmware}" == "amlogic_core" ]]
-      ECHOG "正在下载打包所需的内核,请耐心等候~~~"
-	    rm -rf amlogic-s9xxx && svn co https://github.com/ophub/amlogic-s9xxx-openwrt/trunk/amlogic-s9xxx ${Home}/amlogic-s9xxx
-	    judgeopen "amlogic内核下载"
-	    curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/make > ${Home}/make
-	    judge "内核运行文件下载"
-	    mkdir -p ${Home}/openwrt-armvirt
-	    chmod 777 ${Home}/make
+  cd ${GITHUB_WORKSPACE}
+  ECHOG "正在下载源码中,请耐心等候~~~"
+  rm -rf openwrt && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrt
+  judgeopen "${firmware}源码下载"
+  if [[ "${firmware}" == "amlogic_core" ]]
+    ECHOG "正在下载打包所需的内核,请耐心等候~~~"
+    rm -rf amlogic-s9xxx && svn co https://github.com/ophub/amlogic-s9xxx-openwrt/trunk/amlogic-s9xxx ${Home}/amlogic-s9xxx
+    judgeopen "amlogic内核下载"
+    curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/make > ${Home}/make
+    judge "内核运行文件下载"
+    mkdir -p ${Home}/openwrt-armvirt
+    chmod 777 ${Home}/make
   fi
   cat >${Home}/${Core} <<-EOF
   ipdz=$ip
@@ -239,51 +239,50 @@ function op_diy_zdy() {
   ECHOG "正在下载插件包,请耐心等候~~~"
   cd $Home
   ./scripts/feeds update -a > /dev/null 2>&1
-	source "${PATH1}/common.sh" && ${Diy_zdy}
+  source "${PATH1}/common.sh" && ${Diy_zdy}
   judge "插件包下载"
   source build/${firmware}/common.sh && Diy_all
   judge "插件包下载"
 }
 
 function op_diy_part() {
-	ECHOG "正在加载自定义文件,请耐心等候~~~"
-	cd $Home
-	echo "
-	uci set network.lan.ipaddr='$ip'
-	uci commit network
-	" > $NETIP
-	sed -i "s/OpenWrt /${Ubuntu_mz} compiled in $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZZ
-	sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ
-	sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ./feeds/luci/applications`
-	sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ./package`
-	sed -i 's/"带宽监控"/"监控"/g' `grep "带宽监控" -rl ./feeds/luci/applications`
-	sed -i 's/"Argon 主题设置"/"Argon设置"/g' `grep "Argon 主题设置" -rl ./feeds/luci/applications`
+  ECHOG "正在加载自定义文件,请耐心等候~~~"
+  cd $Home
+  echo "
+  uci set network.lan.ipaddr='$ip'
+  uci commit network
+  " > $NETIP
+  sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ
+  sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ./feeds/luci/applications`
+  sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ./package`
+  sed -i 's/"带宽监控"/"监控"/g' `grep "带宽监控" -rl ./feeds/luci/applications`
+  sed -i 's/"Argon 主题设置"/"Argon设置"/g' `grep "Argon 主题设置" -rl ./feeds/luci/applications`
 }
 
 function op_feeds_update() {
-	ECHOG "正在加载源和安装源,请耐心等候~~~"
-	cd $Home
-	./scripts/feeds update -a
-	./scripts/feeds install -a > /dev/null 2>&1
-	./scripts/feeds install -a
-	[[ -f ${Home}/config_bf ]] && cp -rf ${Home}/config_bf ${Home}/.config
-	if [[ `grep -c "CONFIG_PACKAGE_luci-theme-argon=y" ${Home}/.config` -eq '0' ]]; then
-		echo -e "\nCONFIG_PACKAGE_luci-theme-argon=y" >> ${Home}/.config
-	fi
+  ECHOG "正在加载源和安装源,请耐心等候~~~"
+  cd $Home
+  ./scripts/feeds update -a
+  ./scripts/feeds install -a > /dev/null 2>&1
+  ./scripts/feeds install -a
+  [[ -f ${Home}/config_bf ]] && cp -rf ${Home}/config_bf ${Home}/.config
+  if [[ `grep -c "CONFIG_PACKAGE_luci-theme-argon=y" ${Home}/.config` -eq '0' ]]; then
+    echo -e "\nCONFIG_PACKAGE_luci-theme-argon=y" >> ${Home}/.config
+  fi
 }
 
 function op_upgrade1() {
-	cd $Home
+  cd $Home
   if [[ "${REGULAR_UPDATE}" == "true" ]]; then
-		source build/$firmware/upgrade.sh && Diy_Part1
-	fi
+    source build/$firmware/upgrade.sh && Diy_Part1
+  fi
 }
 
 function op_menuconfig() {
-	cd $Home
+  cd $Home
   if [[ "${Menuconfig}" == "YES" ]]; then
-		make menuconfig
-	fi
+    make menuconfig
+  fi
 }
 
 function make_defconfig() {
@@ -293,15 +292,15 @@ function make_defconfig() {
   make defconfig
   ./scripts/diffconfig.sh > ${Home}/config_bf
   if [ -n "$(ls -A "${Home}/Chajianlibiao" 2>/dev/null)" ]; then
-	  clear
-	  echo
-	  echo
-	  chmod -R +x ${Home}/CHONGTU
-	  source ${Home}/CHONGTU
-	  rm -rf {CHONGTU,Chajianlibiao}
-	  ECHOG "如需重新编译请按 Ctrl+c 结束此次编译，否则30秒后继续编译!"
-	  make defconfig > /dev/null 2>&1
-	  sleep 30
+    clear
+    echo
+    echo
+    chmod -R +x ${Home}/CHONGTU
+    source ${Home}/CHONGTU
+    rm -rf {CHONGTU,Chajianlibiao}
+    ECHOG "如需重新编译请按 Ctrl+C 结束此次编译，否则30秒后继续编译!"
+    make defconfig > /dev/null 2>&1
+    sleep 30
   fi
 }
 
@@ -321,14 +320,14 @@ function openwrt_config() {
 
 function op_upgrade2() {
   cd $Home
-	if [ "${REGULAR_UPDATE}" == "true" ]; then
-  	source build/$firmware/upgrade.sh && Diy_Part2
-	fi
+  if [ "${REGULAR_UPDATE}" == "true" ]; then
+    source build/$firmware/upgrade.sh && Diy_Part2
+  fi
 }
 
 function openwrt_zuihouchuli() {
-	# 为编译做最后处理
-	source build/${firmware}/common.sh && Diy_chuli
+  # 为编译做最后处理
+  source build/${firmware}/common.sh && Diy_chuli
 }
 
 function op_download() {
@@ -344,31 +343,31 @@ function op_download() {
 function op_dl() {
   cd $Home
   if [[ `grep -c "make with -j1 V=s or V=sc" ${Home}/build.log` == '0' ]]; then
-	  ECHOG "DL文件下载成功"
+    ECHOG "DL文件下载成功"
   else
-	clear
-	echo
-	print_error "下载DL失败，更换节点后再尝试下载？"
-	QLMEUN="请更换节点后按[Y/y]回车继续尝试下载DL，或输入[N/n]回车,退出下载"
-	while :; do
-		read -p " [${QLMEUN}]： " XZDLE
-		case $XZDLE in
-			Y)
-				configure_nginx
-			break
-			;;
-			N)
-				ECHOR "退出编译程序!"
-				sleep 2
-				exit 1
-			break
-			;;
-			*)
-				QLMEUN="请更换节点后按[Y/y]回车继续尝试下载DL，或输入[N/n]回车,退出下载"
-			;;
-		esac
-	done
-  fi
+    clear
+    echo
+    print_error "下载DL失败，更换节点后再尝试下载？"
+    QLMEUN="请更换节点后按[Y/y]回车继续尝试下载DL，或输入[N/n]回车,退出下载"
+    while :; do
+        read -p " [${QLMEUN}]： " XZDLE
+        case $XZDLE in
+            Y)
+                configure_nginx
+            break
+            ;;
+            N)
+                ECHOR "退出编译程序!"
+                sleep 2
+                exit 1
+            break
+            ;;
+            *)
+                QLMEUN="请更换节点后按[Y/y]回车继续尝试下载DL，或输入[N/n]回车,退出下载"
+            ;;
+        esac
+    done
+    fi
 }
 
 function op_cpuxinghao() {
@@ -404,71 +403,70 @@ function op_cpuxinghao() {
   PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin make -j$(($(nproc) + 1)) V=s 2>&1 |tee build.log
   judge "编译"
   if [[ ${firmware} == "Mortal_source" ]]; then
-	  if [[ `ls -a ${COMFIRMWARE} | grep -c "immortalwrt"` == '0' ]]; then
-		  print_error "没发现固件存在，编译失败~~!"
-		  sleep 1
-		  exit 1
-	  fi
+    if [[ `ls -a ${COMFIRMWARE} | grep -c "immortalwrt"` == '0' ]]; then
+      print_error "没发现固件存在，编译失败~~!"
+      sleep 1
+      exit 1
+    fi
   else
-	  if [[ `ls -a ${COMFIRMWARE} | grep -c "openwrt"` == '0' ]]; then
-		  print_error "没发现固件存在，编译失败~~!"
-		  sleep 1
-		  exit 1
-	  fi
-	
+    if [[ `ls -a ${COMFIRMWARE} | grep -c "openwrt"` == '0' ]]; then
+      print_error "没发现固件存在，编译失败~~!"
+      sleep 1
+      exit 1
+    fi
   fi
   echo "chenggong" >${Home}/build/chenggong
 }
 
 function generate_cer() {
   if [[ "${firmware}" == "Lede_source" ]] || [[ -n "$(ls -A "${Home}/.Lede_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Lede_core" ]]; then
-	  export firmware="Lede_source"
-	  export CODE="lede"
-	  export Modelfile="Lede_source"
-	  export Core=".Lede_core"
-	  export PATH1="${Home}/build/${firmware}"
-	  export REPO_URL="https://github.com/coolsnowwolf/lede"
-	  export REPO_BRANCH="master"
-	  export ZZZ="package/lean/default-settings/files/zzz-default-settings"
-	  export Diy_zdy="Diy_lede"
-	  [[ -f $PWD/.Lede_core ]] && source $PWD/.Lede_core
-	  [[ -f ${Home}/.Lede_core ]] && source ${Home}/.Lede_core
+    export firmware="Lede_source"
+    export CODE="lede"
+    export Modelfile="Lede_source"
+    export Core=".Lede_core"
+    export PATH1="${Home}/build/${firmware}"
+    export REPO_URL="https://github.com/coolsnowwolf/lede"
+    export REPO_BRANCH="master"
+    export ZZZ="package/lean/default-settings/files/zzz-default-settings"
+    export Diy_zdy="Diy_lede"
+    [[ -f $PWD/.Lede_core ]] && source $PWD/.Lede_core
+    [[ -f ${Home}/.Lede_core ]] && source ${Home}/.Lede_core
   elif [[ "${firmware}" == "Lienol_core" ]] || [[ -n "$(ls -A "${Home}/.Lienol_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Lienol_core" ]]; then
-	  export firmware="Lienol_source"
-	  export CODE="lienol"
-	  export Modelfile="Lienol_source"
-	  export Core=".Lienol_core"
-	  export PATH1="${Home}/build/${firmware}"
-	  export REPO_URL="https://github.com/Lienol/openwrt"
-	  export REPO_BRANCH="19.07"
-	  export ZZZ="package/default-settings/files/zzz-default-settings"
-	  export Diy_zdy="Diy_lienol"
-	  [[ -f $PWD/.Lienol_core ]] && source $PWD/.Lienol_core
-	  [[ -f ${Home}/.Lienol_core ]] && source ${Home}/.Lienol_core
+    export firmware="Lienol_source"
+    export CODE="lienol"
+    export Modelfile="Lienol_source"
+    export Core=".Lienol_core"
+    export PATH1="${Home}/build/${firmware}"
+    export REPO_URL="https://github.com/Lienol/openwrt"
+    export REPO_BRANCH="19.07"
+    export ZZZ="package/default-settings/files/zzz-default-settings"
+    export Diy_zdy="Diy_lienol"
+    [[ -f $PWD/.Lienol_core ]] && source $PWD/.Lienol_core
+    [[ -f ${Home}/.Lienol_core ]] && source ${Home}/.Lienol_core
   elif [[ "${firmware}" == "Mortal_core" ]] || [[ -n "$(ls -A "${Home}/.Mortal_core" 2>/dev/null)" ]] || [[ -f "$PWD/.Mortal_core" ]]; then
-	  export firmware="Mortal_source"
-	  export CODE="mortal"
-	  export Modelfile="Mortal_source"
-	  export Core=".Mortal_core"
-	  export PATH1="${Home}/build/${firmware}"
-	  export REPO_URL="https://github.com/immortalwrt/immortalwrt"
-	  export REPO_BRANCH="openwrt-21.02"
-	  export export ZZZ="package/emortal/default-settings/files/zzz-default-settings"
-	  export Diy_zdy="Diy_mortal"
-	  [[ -f $PWD/.Mortal_core ]] && source $PWD/.Mortal_core
-	  [[ -f ${Home}/.Mortal_core ]] && source ${Home}/.Mortal_core
+    export firmware="Mortal_source"
+    export CODE="mortal"
+    export Modelfile="Mortal_source"
+    export Core=".Mortal_core"
+    export PATH1="${Home}/build/${firmware}"
+    export REPO_URL="https://github.com/immortalwrt/immortalwrt"
+    export REPO_BRANCH="openwrt-21.02"
+    export export ZZZ="package/emortal/default-settings/files/zzz-default-settings"
+    export Diy_zdy="Diy_mortal"
+    [[ -f $PWD/.Mortal_core ]] && source $PWD/.Mortal_core
+    [[ -f ${Home}/.Mortal_core ]] && source ${Home}/.Mortal_core
   elif [[ "${firmware}" == "amlogic_core" ]] || [[ -n "$(ls -A "${Home}/.amlogic_core" 2>/dev/null)" ]] || [[ -f "$PWD/.amlogic_core" ]]; then
-	  export firmware="openwrt_amlogic"
-	  export CODE="lede"
-	  export Modelfile="openwrt_amlogic"
-	  export Core=".amlogic_core"
-	  export PATH1="${Home}/build/${firmware}"
-	  export REPO_URL="https://github.com/coolsnowwolf/lede"
-	  export REPO_BRANCH="master"
-	  export ZZZ="package/lean/default-settings/files/zzz-default-settings"
-	  export Diy_zdy="Diy_lede"
-	  [[ -f $PWD/.amlogic_core ]] && source $PWD/.amlogic_core
-	  [[ -f ${Home}/.amlogic_core ]] && source ${Home}/.amlogic_core
+    export firmware="openwrt_amlogic"
+    export CODE="lede"
+    export Modelfile="openwrt_amlogic"
+    export Core=".amlogic_core"
+    export PATH1="${Home}/build/${firmware}"
+    export REPO_URL="https://github.com/coolsnowwolf/lede"
+    export REPO_BRANCH="master"
+    export ZZZ="package/lean/default-settings/files/zzz-default-settings"
+    export Diy_zdy="Diy_lede"
+    [[ -f $PWD/.amlogic_core ]] && source $PWD/.amlogic_core
+    [[ -f ${Home}/.amlogic_core ]] && source ${Home}/.amlogic_core
   fi
 }
 

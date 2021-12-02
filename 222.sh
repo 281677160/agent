@@ -335,11 +335,6 @@ function op_download() {
   make -j8 download 2>&1 |tee ${Home}/build.log
   find dl -size -1024c -exec ls -l {} \;
   find dl -size -1024c -exec rm -f {} \;
-  op_dl
-}
-
-function op_dl() {
-  cd $Home
   if [[ `grep -c "make with -j1 V=s or V=sc" ${Home}/build.log` == '0' ]]; then
     ECHOG "DL文件下载成功"
   else
@@ -351,7 +346,7 @@ function op_dl() {
         read -p " [${QLMEUN}]： " XZDLE
         case $XZDLE in
             Y)
-                configure_nginx
+                op_download
             break
             ;;
             N)

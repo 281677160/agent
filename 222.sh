@@ -392,7 +392,7 @@ function op_cpuxinghao() {
   sleep 8
 }
 
-function op_cpuxinghao() {
+function op_make() {
   cd $Home
   rm -fr ${COMFIRMWARE}/*
   PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin make -j$(($(nproc) + 1)) V=s 2>&1 |tee build.log

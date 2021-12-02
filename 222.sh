@@ -23,6 +23,7 @@ ERROR="${Red}[ERROR]${Font}"
 export GITHUB_WORKSPACE="$PWD"
 export Home="$PWD/openwrt"
 export NETIP="package/base-files/files/etc/networkip"
+export date1="$(date +'%m-%d')"
 
 function print_ok() {
   echo
@@ -349,6 +350,7 @@ function op_upgrade2() {
 
 function openwrt_zuihouchuli() {
   # 为编译做最后处理
+  cd $Home
   source build/${firmware}/common.sh && Diy_chuli
 }
 
@@ -365,7 +367,7 @@ function op_download() {
     clear
     echo
     print_error "下载DL失败，更换节点后再尝试下载？"
-    QLMEUN="请更换节点后按[Y/y]回车继续尝试下载DL，或输入[N/n]回车,退出下载"
+    QLMEUN="请更换节点后按[Y/y]回车继续尝试下载DL，或输入[N/n]回车,退出编译"
     while :; do
         read -p " [${QLMEUN}]： " XZDLE
         case $XZDLE in
@@ -380,7 +382,7 @@ function op_download() {
             break
             ;;
             *)
-                QLMEUN="请更换节点后按[Y/y]回车继续尝试下载DL，或输入[N/n]回车,退出下载"
+                QLMEUN="请更换节点后按[Y/y]回车继续尝试下载DL，或现在输入[N/n]回车,退出编译"
             ;;
         esac
     done
@@ -411,37 +413,51 @@ function op_cpuxinghao() {
   else
 	  ECHOY "正在使用[$(nproc)线程]编译固件,预计要[1]小时左右,请耐心等待..."
   fi
-  sleep 8
+  sleep 5
 }
 
-function op_cpuxinghao() {
+function op_make() {
   cd $Home
+  export Begin="$(date "+%Y/%m/%d-%H.%M")"
+  ECHOG "正在编译固件，请耐心等待..."
   rm -fr ${COMFIRMWARE}/*
   PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin make -j$(($(nproc) + 1)) V=s 2>&1 |tee build.log
   judge "编译"
   if [[ ${firmware} == "Mortal_source" ]]; then
     if [[ `ls -a ${COMFIRMWARE} | grep -c "immortalwrt"` == '0' ]]; then
       print_error "没发现固件存在，编译失败~~!"
+      explorer.exe .
+      ECHOG "请查看openwrt文件夹里面的[build.log]日志文件查找失败原因"
       sleep 1
       exit 1
     fi
   else
     if [[ `ls -a ${COMFIRMWARE} | grep -c "openwrt"` == '0' ]]; then
       print_error "没发现固件存在，编译失败~~!"
+      explorer.exe .
+      ECHOG "请查看openwrt文件夹里面的[build.log]日志文件查找失败原因"
       sleep 1
       exit 1
     fi
   fi
   echo "chenggong" >${Home}/build/chenggong
+  rm -rf ${Home}/build.log
 }
 
 function op_upgrade3() {
   if [[ "${REG_UPDATE}" == "true" ]]; then
-    [[ -f $Home/Openwrt.info ]] && source ${Home}/Openwrt.info
+    [[ -f ${Home}/Openwrt.info ]] && source ${Home}/Openwrt.info
     cp -Rf ${Home}/bin/targets/*/* ${Home}/upgrade
     source ${Home}/build/${firmware}/upgrade.sh && Diy_Part3
     ECHOY "加入‘定时升级固件插件’的固件已经放入[bin/Firmware]文件夹中"
   fi
+  cd ${COMFIRMWARE}
+  if [[ ${firmware} == "Mortal_source" ]]; then
+    rename -v "s/^immortalwrt/${date1}-${CODE}/" * > /dev/null 2>&1
+  else
+    rename -v "s/^openwrt/${date1}-${CODE}/" * > /dev/null 2>&1
+  fi
+  cd ${Home}
 }
 
 function op_cowtransfer() {
@@ -454,6 +470,24 @@ function op_cowtransfer() {
     echo "${cow}" > openwrt/bin/奶牛快传链接
     TIME y "奶牛快传：${cow}"
   fi
+}
+
+function op_cowtransfer() {
+  clear
+  echo
+  echo
+  export End="$(date "+%Y/%m/%d-%H.%M")"
+  if [[ ${firmware} == "openwrt_amlogic" ]]; then
+    ECHOY "使用[ ${firmware} ]文件夹，编译[ N1和晶晨系列盒子专用固件 ]顺利编译完成~~~"
+  else
+    ECHOY "使用[ ${firmware} ]文件夹，编译[ ${TARGET_PROFILE} ]顺利编译完成~~~"
+  fi
+  ECHOY "后台地址: $ip"
+  ECHOY "用户名: root"
+  ECHOY "密 码: 无"
+  ECHOG "开始时间：${Begin}"
+  ECHOG "结束时间：${End}"
+  ECHOY "固件已经存入${COMFIRMWARE}文件夹中"
 }
 
 function op_firmware() {

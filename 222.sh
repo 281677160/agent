@@ -712,7 +712,7 @@ menu() {
     ;;
     2)
       export firmware="Lienol_source"
-      ECHOG "您选择了：Lienol_4.14内核,LUCI 19.07版本"
+      ECHOG "您选择了：Lienol_4.14内核,LUCI 17.01版本"
       rm -rf ${GITHUB_WORKSPACE}/openwrt
       if [[ -d amlogic/amlogic-s9xxx ]]; then
         ECHOGG "发现老旧晶晨内核文件存在，请输入ubuntu密码删除老旧内核"

@@ -862,7 +862,7 @@ menuop() {
   break
   ;;
   5)
-    op_diy_part
+    op_amlogic
   break
   ;;   
   6)

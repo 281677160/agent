@@ -23,7 +23,6 @@ export GITHUB_WORKSPACE="$PWD"
 export Home="$PWD/openwrt"
 export NETIP="${Home}/package/base-files/files/etc/networkip"
 export date1="$(date +'%m-%d')"
-export Ubuntu_mz="$(cat /etc/group | grep adm | cut -f2 -d,)"
 
 function print_ok() {
   echo

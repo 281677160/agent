@@ -747,12 +747,12 @@ menp() {
   echo -e " ${Blue}当前源码${Font}：${Green}${firmware}${Font}"
   echo -e " ${Blue}编译机型${Font}：${Green}${TARGET_PROFILE}${Font}"
   echo
-  echo -e " ${Green}1${Font}、${Yellow}保留配置全新编译${Font}"
-  echo -e " ${Green}2${Font}、${Yellow}保留缓存和配置二次编译${Font}"
-  echo -e " ${Green}3${Font}、${Yellow}不更新插件和源码二次编译${Font}"
-  echo -e " ${Green}4${Font}、${Yellow}更换源码编译${Font}"
-  echo -e " ${Green}5${Font}、${Yellow}打包N1和晶晨系列CPU固件${Font}"
-  echo -e " ${Green}6${Font}、${Yellow}退出${Font}"
+  echo -e " ${Green}1${Font}.${Yellow}保留配置全新编译${Font}"
+  echo -e " ${Green}2${Font}.${Yellow}保留缓存和配置二次编译${Font}"
+  echo -e " ${Green}3${Font}.${Yellow}不更新插件和源码二次编译${Font}"
+  echo -e " ${Green}4${Font}.${Yellow}更换源码编译${Font}"
+  echo -e " ${Green}5${Font}.${Yellow}打包N1和晶晨系列CPU固件${Font}"
+  echo -e " ${Green}6${Font}.${Yellow}退出${Font}"
   echo
   XUANZHE="请输入数字"
   while :; do

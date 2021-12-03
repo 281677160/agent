@@ -100,13 +100,13 @@ function op_busuhuanjing() {
 cd ${GITHUB_WORKSPACE}
   clear
   echo
-  echo -e " ${Red}|*******************************************|${Font}"
-  echo -e " ${Green}|                                           |${Font}"
-  echo -e " ${Yellow}|    首次编译,请输入Ubuntu密码继续下一步    |${Font}"
-  echo -e " ${Green}|                                           |${Font}"
-  echo -e " ${Yellow}|              编译环境部署                 |${Font}"
-  echo -e " ${Red}|                                           |${Font}"
-  echo -e " ${Blue}|*******************************************|"${Font}"
+  ECHORR "|*******************************************|"
+  ECHOGG "|                                           |"
+  ECHOYY "|    首次编译,请输入Ubuntu密码继续下一步    |"
+  ECHOGG "|                                           |"
+  ECHOYY "|              编译环境部署                 |"
+  ECHORR "|                                           |"
+  ECHOGG "|*******************************************|"
   echo
   sudo apt-get update -y
   sudo apt-get install -y systemd build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 lib32stdc++6 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler g++-multilib antlr3 gperf wget curl rename libpcap0.8-dev swig rsync
@@ -722,16 +722,16 @@ menp() {
   cd ${GITHUB_WORKSPACE}
   clear
   echo
-  echo -e "${Blue} 当前使用${Font}"
-  echo -e "${Green} 源码${Font}：${Blue}${firmware}${Font}"
-  echo -e "${Green} 机型${Font}：${Blue}${TARGET_PROFILE}${Font}"
+  echo -e  " ${Green}当前使用${Font}"
+  echo -e  " ${Green}源码${Font}：${Blue}${firmware}${Font}"
+  echo -e  " ${Green}机型${Font}：${Blue}${TARGET_PROFILE}${Font}"
   echo
-  echo -e "${Green} 1${Font}.${Yellow}保留配置全新编译${Font}"
-  echo -e "${Green} 2${Font}.${Yellow}保留缓存和配置二次编译${Font}"
-  echo -e "${Green} 3${Font}.${Yellow}不更新插件和源码二次编译${Font}"
-  echo -e "${Green} 4${Font}.${Yellow}更换源码编译${Font}"
-  echo -e "${Green} 5${Font}.${Yellow}打包N1和晶晨系列CPU固件${Font}"
-  echo -e "${Green} 6${Font}.${Yellow}退出${Font}"
+  echo -e  " ${Green}1${Font}、${Yellow}保留配置全新编译${Font}"
+  echo -e  " ${Green}2${Font}、${Yellow}保留缓存和配置二次编译${Font}"
+  echo -e  " ${Green}3${Font}、${Yellow}不更新插件和源码二次编译${Font}"
+  echo -e  " ${Green}4${Font}、${Yellow}更换源码编译${Font}"
+  echo -e  " ${Green}5${Font}、${Yellow}打包N1和晶晨系列CPU固件${Font}"
+  echo -e  " ${Green}6${Font}、${Yellow}退出${Font}"
   echo
   XUANZHE="请输入数字"
   while :; do

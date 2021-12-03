@@ -16,7 +16,6 @@ Font="\033[0m"
 GreenBG="\033[42;37m"
 RedBG="\033[41;37m"
 OK="${Green}[OK]${Font}"
-Hi="${Green}[Hi]${Font}"
 ERROR="${Red}[ERROR]${Font}"
 
 # 变量
@@ -715,16 +714,16 @@ menp() {
   cd ${GITHUB_WORKSPACE}
   clear
   echo
-  ECHOG "作者：${CODE}"
-  ECHOG "源码：${firmware}"
-  ECHOG "机型：${TARGET_PROFILE}"
+  echo -e  "${Green}作者${Font}：${Blue}${CODE}${Font}"
+  echo -e  "${Green}源码${Font}：${Blue}${firmware}${Font}"
+  echo -e  "${Green}机型${Font}：${Blue}${TARGET_PROFILE}${Font}"
   echo
-  ECHOY "1、保留配置全新编译"
-  ECHOY "2、保留缓存和配置二次编译"
-  ECHOY "3、不更新插件和源码二次编译"
-  ECHOY "4、更换源码编译"
-  ECHOY "5、打包N1和晶晨系列CPU固件"
-  ECHOY "6、退出"
+  echo -e  "${Green}1${Font}、${Yellow}保留配置全新编译${Font}"
+  echo -e  "${Green}2${Font}、${Yellow}保留缓存和配置二次编译${Font}"
+  echo -e  "${Green}3${Font}、${Yellow}不更新插件和源码二次编译${Font}"
+  echo -e  "${Green}4${Font}、${Yellow}更换源码编译${Font}"
+  echo -e  "${Green}5${Font}、${Yellow}打包N1和晶晨系列CPU固件${Font}"
+  echo -e  "${Green}6${Font}、${Yellow}退出${Font}"
   echo
   XUANZHE="请输入数字"
   while :; do

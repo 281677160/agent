@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 #====================================================
-#	System Request:Debian 9+/Ubuntu 18.04+/Centos 7+
-#	Author:	wulabing
-#	Dscription: Xray onekey Management
-#	email: admin@wulabing.com
+#	System Request:Ubuntu 18.04+/20.04+
+#	Author:	281677160
+#	Dscription: openwrt onekey Management
+#	github: https://github.com/281677160/danshui
 #====================================================
 
 # 字体颜色配置

@@ -529,9 +529,9 @@ function op_amlogic() {
   read -p " 请输入ROOTFS分区大小：" rootfs
   export rootfs=${rootfs:-"960"}
   ECHOY "您设置的ROOTFS分区大小为：${rootfs}"
-  minsize="$(egrep -o "ROOT_MB=[0-9]+" ${Home}/make)"
+  minsize="$(egrep -o "ROOT_MB=[0-9]+" amlogic/make)"
   rootfssize="ROOT_MB=${rootfs}"
-  sed -i "s/${minsize}/${rootfssize}/g" ${Home}/make
+  sed -i "s/${minsize}/${rootfssize}/g" amlogic/make
   rm -rf amlogic/out/*
   cp -Rf ${Home}/bin/targets/*/*/*.tar.gz amlogic/openwrt-armvirt/ && sync
   cd amlogic && sudo ./make -d -b ${model} -k ${kernel}

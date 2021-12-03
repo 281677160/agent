@@ -448,8 +448,12 @@ function op_make() {
   cd $Home
   export Begin="$(date "+%Y/%m/%d-%H.%M")"
   ECHOG "正在编译固件，请耐心等待..."
+  npro="$(nproc)"
+  if [[ "${npro}" -gt "16" ]];then
+    npro="16"
+  fi
   rm -fr ${COMFIRMWARE}/*
-  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin make -j$(($(nproc) + 1)) V=s 2>&1 |tee build.log
+  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin make -j${npro} V=s 2>&1 |tee build.log
   judge "编译"
   if [[ ${firmware} == "Mortal_source" ]]; then
     if [[ `ls -a ${COMFIRMWARE} | grep -c "immortalwrt"` == '0' ]]; then

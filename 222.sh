@@ -151,7 +151,7 @@ function bianyi_xuanxiang() {
   echo
   echo
   ECHOGG "是否需要选择机型和增删插件?"
-  read -p " [输入[ Y/y ]回车确认，直接回车则不选择]： " MENU
+  read -p " [输入[ Y/y ]回车确认，直接回车则为否]： " MENU
   case $MENU in
     [Yy])
       export Menuconfig="true"
@@ -165,7 +165,7 @@ function bianyi_xuanxiang() {
   echo
   echo
   ECHOGG "是否把固件上传到<奶牛快传>?"
-  read -p " [输入[ Y/y ]回车确认，直接回车则不选择]： " NNKC
+  read -p " [输入[ Y/y ]回车确认，直接回车则为否]： " NNKC
   case $NNKC in
     [Yy])
       export UPCOWTRANSFER="true"
@@ -180,7 +180,7 @@ function bianyi_xuanxiang() {
   echo
   if [[ ! $firmware == "openwrt_amlogic" ]]; then
     ECHOGG "是否把定时更新插件编译进固件?"
-    read -p " [输入[ Y/y ]回车确认，直接回车则不选择]： " RELE
+    read -p " [输入[ Y/y ]回车确认，直接回车则为否]： " RELE
     case $RELE in
       [Yy])
         export REGULAR_UPDATE="true"

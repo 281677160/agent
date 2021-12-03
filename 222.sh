@@ -213,7 +213,7 @@ function op_ip() {
 function op_repo_branch() {
   cd ${GITHUB_WORKSPACE}
   ECHOG "正在下载源码中,请耐心等候~~~"
-  sleep 3
+  sleep 2
   rm -rf openwrt && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrt
   judgeopen "${firmware}源码下载"
 }
@@ -221,7 +221,7 @@ function op_repo_branch() {
 function ec_repo_branch() {
   cd ${GITHUB_WORKSPACE}
   ECHOG "正在下载源码中,请耐心等候~~~"
-  sleep 3
+  sleep 2
   rm -rf openwrte && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrte
   judgeopen "${firmware}源码下载"
   ECHOG "正在处理数据,请耐心等候~~~"
@@ -232,7 +232,7 @@ function ec_repo_branch() {
 function qx_repo_branch() {
   cd ${GITHUB_WORKSPACE}
   ECHOG "正在下载源码中,请耐心等候~~~"
-  sleep 3
+  sleep 2
   rm -rf openwrte && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrte
   judgeopen "${firmware}源码下载"
   ECHOG "正在处理数据,请耐心等候~~~"

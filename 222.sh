@@ -209,21 +209,6 @@ function op_repo_branch() {
   sleep 3
   rm -rf openwrt && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrt
   judgeopen "${firmware}源码下载"
-  if [[ "${firmware}" == "openwrt_amlogic" ]]; then
-    ECHOG "正在下载打包所需的内核,请耐心等候~~~"
-    rm -rf amlogic-s9xxx && svn co https://github.com/ophub/amlogic-s9xxx-openwrt/trunk/amlogic-s9xxx amlogic-s9xxx
-    judgeopen "amlogic内核下载"
-    mv amlogic-s9xxx ${Home}
-    curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/make > ${Home}/make
-    curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/.github/workflows/build-openwrt-lede.yml > ${Home}/amlogic-s9xxx/open.yml
-    judge "内核运行文件下载"
-    mkdir -p ${Home}/openwrt-armvirt
-    chmod 777 ${Home}/make
-  fi
-  echo "
-  ipdz=$ip
-  Git=$Github
-  " > ${Home}/${Core}
 }
 
 function ec_repo_branch() {
@@ -232,22 +217,9 @@ function ec_repo_branch() {
   sleep 3
   rm -rf openwrte && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrte
   judgeopen "${firmware}源码下载"
+  ECHOG "正在处理数据,请耐心等候~~~"
   cp -rf openwrt/{build_dir,staging_dir,toolchain,tools,config_bf} ${GITHUB_WORKSPACE}/openwrte
   rm -fr openwrt && mv -f openwrte openwrt
-  if [[ "${firmware}" == "openwrt_amlogic" ]]; then
-    ECHOG "正在下载打包所需的内核,请耐心等候~~~"
-    rm -rf amlogic-s9xxx && svn co https://github.com/ophub/amlogic-s9xxx-openwrt/trunk/amlogic-s9xxx amlogic-s9xxx
-    judgeopen "amlogic内核下载"
-    mv amlogic-s9xxx ${Home}
-    curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/make > ${Home}/make
-    judge "内核运行文件下载"
-    mkdir -p ${Home}/openwrt-armvirt
-    chmod 777 ${Home}/make
-  fi
-  echo "
-  ipdz=$ip
-  Git=$Github
-  " > ${Home}/${Core}
 }
 
 function qx_repo_branch() {
@@ -256,21 +228,28 @@ function qx_repo_branch() {
   sleep 3
   rm -rf openwrte && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrte
   judgeopen "${firmware}源码下载"
+  ECHOG "正在处理数据,请耐心等候~~~"
   if [[ -f ${Home}/config_bf ]]; then
     cp -rf ${Home}/config_bf ${GITHUB_WORKSPACE}/openwrte
   else
     cp -rf ${Home}/.config ${GITHUB_WORKSPACE}/openwrte/config_bf
   fi
   rm -fr openwrt && mv -f openwrte openwrt
+}
+
+function amlogic_s9xxx() {
+  cd ${GITHUB_WORKSPACE}
   if [[ "${firmware}" == "openwrt_amlogic" ]]; then
     ECHOG "正在下载打包所需的内核,请耐心等候~~~"
+    mkdir -p amlogic
+    mkdir -p amlogic/openwrt-armvirt
     rm -rf amlogic-s9xxx && svn co https://github.com/ophub/amlogic-s9xxx-openwrt/trunk/amlogic-s9xxx amlogic-s9xxx
     judgeopen "amlogic内核下载"
-    mv amlogic-s9xxx ${Home}
-    curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/make > ${Home}/make
+    mv amlogic-s9xxx amlogic
+    curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/make > amlogic
+    curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/.github/workflows/build-openwrt-lede.yml > amlogic/open.yml
     judge "内核运行文件下载"
-    mkdir -p ${Home}/openwrt-armvirt
-    chmod 777 ${Home}/make
+    chmod 777 amlogic/make
   fi
   echo "
   ipdz=$ip
@@ -569,6 +548,7 @@ function op_end() {
   if [[ "${UPCOWTRANSFER}" == "true" ]]; then
     ECHOY "奶牛快传：${cow}"
   fi
+  explorer.exe .
 }
 
 function op_firmware() {

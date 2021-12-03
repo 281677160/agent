@@ -518,7 +518,7 @@ function op_amlogic() {
   export model=${model:-"s905d"}
   ECHOY "您设置的机型为：${model}"
   
-  Make_kernel="$(cat ${Home}/amlogic-s9xxx/open.yml |grep ./make |cut -d "k" -f3 |sed s/[[:space:]]//g)"
+  Make_kernel="$(cat amlogic/open.yml |grep ./make |cut -d "k" -f3 |sed s/[[:space:]]//g)"
   ECHOG "设置打包的内核版本[ 直接回车则默认 ${Make_kernel} ]"
   read -p " 请输入您要设置的内核：" kernel
   export kernel=${kernel:-"${Make_kernel}"}

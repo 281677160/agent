@@ -250,7 +250,7 @@ function amlogic_s9xxx() {
   if [[ "${firmware}" == "openwrt_amlogic" ]]; then
     ECHOY "正在下载打包所需的内核,请耐心等候~~~"
     if [[ -d amlogic/amlogic-s9xxx ]]; then
-      ECHOGG "发现老旧内核存在，请输入ubuntu密码删除老旧内核"
+      ECHOGG "发现老旧晶晨内核文件存在，请输入ubuntu密码删除老旧内核"
       sudo rm -rf amlogic
     fi
     mkdir -p amlogic
@@ -688,7 +688,7 @@ menu() {
       ECHOG "您选择了：Lede_5.4内核,LUCI 18.06版本"
       rm -rf ${GITHUB_WORKSPACE}/openwrt
       if [[ -d amlogic/amlogic-s9xxx ]]; then
-        ECHOGG "发现老旧内核存在，请输入ubuntu密码删除老旧内核"
+        ECHOGG "发现老旧晶晨内核文件存在，请输入ubuntu密码删除老旧内核"
         sudo rm -rf amlogic
       fi
       openwrt_by
@@ -699,7 +699,7 @@ menu() {
       ECHOG "您选择了：Lienol_4.14内核,LUCI 19.07版本"
       rm -rf ${GITHUB_WORKSPACE}/openwrt
       if [[ -d amlogic/amlogic-s9xxx ]]; then
-        ECHOGG "发现老旧内核存在，请输入ubuntu密码删除老旧内核"
+        ECHOGG "发现老旧晶晨内核文件存在，请输入ubuntu密码删除老旧内核"
         sudo rm -rf amlogic
       fi
       openwrt_by
@@ -710,7 +710,7 @@ menu() {
       ECHOG "您选择了：Immortalwrt_5.4内核,LUCI 21.02版本"
       rm -rf ${GITHUB_WORKSPACE}/openwrt
       if [[ -d amlogic/amlogic-s9xxx ]]; then
-        ECHOGG "发现老旧内核存在，请输入ubuntu密码删除老旧内核"
+        ECHOGG "发现老旧晶晨内核文件存在，请输入ubuntu密码删除老旧内核"
         sudo rm -rf amlogic
       fi
       openwrt_by
@@ -721,7 +721,7 @@ menu() {
       ECHOG "您选择了：N1和晶晨系列CPU盒子专用"
       rm -rf ${GITHUB_WORKSPACE}/openwrt
       if [[ -d amlogic/amlogic-s9xxx ]]; then
-        ECHOGG "发现老旧内核存在，请输入ubuntu密码删除老旧内核"
+        ECHOGG "发现老旧晶晨内核文件存在，请输入ubuntu密码删除老旧内核"
         sudo rm -rf amlogic
       fi
       openwrt_by

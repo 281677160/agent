@@ -300,7 +300,7 @@ function op_diy_part() {
   uci commit network
   " > $NETIP
   sed -i '/CYXluq4wUazHjmCDBCqXF/d' ${ZZZ} > /dev/null 2>&1
-  sed -i "s#OpenWrt #${Ubuntu_mz} compiled in $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt #g" ${ZZZ}
+  sed -i "s#OpenWrt\ #${Ubuntu_mz}\ compiled\ in\ $(TZ=UTC-8 date "+%Y.%m.%d")\ \@\ OpenWrt #g" ${ZZZ}
   sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ${Home}/feeds/luci/applications` > /dev/null 2>&1
   sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ${Home}/package` > /dev/null 2>&1
   sed -i 's/"带宽监控"/"监控"/g' `grep "带宽监控" -rl ${Home}/feeds/luci/applications` > /dev/null 2>&1

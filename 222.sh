@@ -127,7 +127,7 @@ function op_kongjian() {
   if [[ "${Ubuntu_kj}" -lt "20" ]];then
     ECHOY "您当前系统可用空间为${Ubuntu_kj}G"
     print_error "敬告：可用空间小于[ 20G ]编译容易出错,建议可用空间大于20G,是否继续?"
-    read -p " 回车退出，按[Y/y]回车确认继续编译： " YN
+    read -p " 直接回车退出编译，按[Y/y]回车则继续编译： " YN
     case ${YN} in
       [Yy]) 
         ECHOG  "可用空间太小严重影响编译,请满天神佛保佑您成功吧！"
@@ -151,7 +151,7 @@ function bianyi_xuanxiang() {
   echo
   echo
   ECHOGG "是否需要选择机型和增删插件?"
-  read -p " [输入[ Y/y ]回车确认，直接回车则跳过选择]： " MENU
+  read -p " [输入[ Y/y ]回车确认，直接回车则不选择]： " MENU
   case $MENU in
     [Yy])
       export Menuconfig="true"
@@ -165,7 +165,7 @@ function bianyi_xuanxiang() {
   echo
   echo
   ECHOGG "是否把固件上传到<奶牛快传>?"
-  read -p " [输入[ Y/y ]回车确认，直接回车则跳过选择]： " NNKC
+  read -p " [输入[ Y/y ]回车确认，直接回车则不选择]： " NNKC
   case $NNKC in
     [Yy])
       export UPCOWTRANSFER="true"
@@ -180,7 +180,7 @@ function bianyi_xuanxiang() {
   echo
   if [[ ! $firmware == "openwrt_amlogic" ]]; then
     ECHOGG "是否把定时更新插件编译进固件?"
-    read -p " [输入[ Y/y ]回车确认，直接回车则跳过选择]： " RELE
+    read -p " [输入[ Y/y ]回车确认，直接回车则不选择]： " RELE
     case $RELE in
       [Yy])
         export REGULAR_UPDATE="true"
@@ -510,7 +510,8 @@ function op_cowtransfer() {
     export cow="$(cat cowtransfer.log | grep https | cut -f3 -d" ")"
     echo "${cow}" > ${Home}/bin/奶牛快传链接
     ECHOY "奶牛快传：${cow}"
-    rm -rf cowtransfer.log
+    rm -rf ${GITHUB_WORKSPACE}/cowtransfer.log
+    rm -rf ${GITHUB_WORKSPACE}/transfer
   fi
 }
 
@@ -576,9 +577,6 @@ function op_end() {
   ECHOY "固件已经存入${COMFIRMWARE}文件夹中"
   if [[ "${firmware}" == "openwrt_amlogic" ]]; then
     ECHOR "提示：再次输入编译命令可选择打包N1和晶晨系列盒子专用固件"
-  fi
-  if [[ "${UPCOWTRANSFER}" == "true" ]]; then
-    ECHOY "奶牛快传：${cow}"
   fi
   if [[ "${upgra}" == "1" ]]; then
     ECHOG "${dsgx}"
@@ -667,8 +665,8 @@ function openwrt_by() {
     op_cpuxinghao
     op_make
     op_upgrade3
-    op_cowtransfer
     op_end
+    op_cowtransfer
 }
 menu() {
   clear
@@ -781,8 +779,8 @@ menp() {
     op_cpuxinghao
     op_make
     op_upgrade3
-    op_cowtransfer
     op_end
+    op_cowtransfer
   break
   ;;
   2)
@@ -806,8 +804,8 @@ menp() {
     op_cpuxinghao
     op_make
     op_upgrade3
-    op_cowtransfer
     op_end
+    op_cowtransfer
   break
   ;;
   3)
@@ -823,8 +821,8 @@ menp() {
     op_download
     op_make
     op_upgrade3
-    op_cowtransfer
     op_end
+    op_cowtransfer
   break
   ;;
   4)

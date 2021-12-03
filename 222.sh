@@ -299,7 +299,7 @@ function op_diy_part() {
   uci set network.lan.ipaddr='$ip'
   uci commit network
   " > $NETIP
-  [[ `grep -c "CYXluq4wUaz" ${ZZZ}` == '1' ]] && sed -i '/CYXluq4wUazHjmCDBCqXF/d' ${ZZZ}
+  sed -i '/CYXluq4wUazHjmCDBCqXF/d' ${ZZZ} > /dev/null 2>&1
   sed -i "s/OpenWrt /${Ubuntu_mz} compiled in $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" ${ZZZ}
   sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ${Home}/feeds/luci/applications` > /dev/null 2>&1
   sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ${Home}/package` > /dev/null 2>&1

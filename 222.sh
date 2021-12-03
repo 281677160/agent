@@ -671,57 +671,73 @@ function openwrt_by() {
     op_end
 }
 menu() {
-	clear
-	echo
-	cd ${GITHUB_WORKSPACE}
-	ECHOY " 1. Lede_5.4内核,LUCI 18.06版本(Lede_source)"
-	ECHOY " 2. Lienol_4.14内核,LUCI 19.07版本(Lienol_source)"
-	ECHOY " 3. Immortalwrt_5.4内核,LUCI 21.02版本(Mortal_source)"
-	ECHOY " 4. N1和晶晨系列CPU盒子专用(openwrt_amlogic)"
-	ECHOY " 5. 退出编译程序"
-	echo
-	while :; do
-	ECHOY "请选择编译源码,输入[ 1、2、3、4、5 ]然后回车确认您的选择！"
-	read -p " 输入您的选择： " CHOOSE
-	case $CHOOSE in
-		1)
-			export firmware="Lede_source"
-			ECHOG "您选择了：Lede_5.4内核,LUCI 18.06版本"
-			rm -rf ${GITHUB_WORKSPACE}/openwrt
-			openwrt_by
-		break
-		;;
-		2)
-			export firmware="Lienol_source"
-			ECHOG "您选择了：Lienol_4.14内核,LUCI 19.07版本"
-			rm -rf ${GITHUB_WORKSPACE}/openwrt
-			openwrt_by
-		break
-		;;
-		3)
-			export firmware="Mortal_source"
-			ECHOG "您选择了：Immortalwrt_5.4内核,LUCI 21.02版本"
-			rm -rf ${GITHUB_WORKSPACE}/openwrt
-			openwrt_by
-		break
-		;;
-		4)
-			export firmware="openwrt_amlogic"
-			ECHOG "您选择了：N1和晶晨系列CPU盒子专用"
-			rm -rf ${GITHUB_WORKSPACE}/openwrt
-			openwrt_by
-		break
-		;;
-		5)
-			ECHOR "您选择了退出编译程序"
-			exit 0
-		break
-    		;;
-    		*)
-			ECHOR "警告：输入错误,请输入正确的编号!"
-		;;
-	esac
-	done
+  clear
+  echo
+  cd ${GITHUB_WORKSPACE}
+  ECHOY " 1. Lede_5.4内核,LUCI 18.06版本(Lede_source)"
+  ECHOY " 2. Lienol_4.14内核,LUCI 19.07版本(Lienol_source)"
+  ECHOY " 3. Immortalwrt_5.4内核,LUCI 21.02版本(Mortal_source)"
+  ECHOY " 4. N1和晶晨系列CPU盒子专用(openwrt_amlogic)"
+  ECHOY " 5. 退出编译程序"
+  echo
+  while :; do
+  ECHOY "请选择编译源码,输入[ 1、2、3、4、5 ]然后回车确认您的选择！"
+  read -p " 输入您的选择： " CHOOSE
+  case $CHOOSE in
+    1)
+      export firmware="Lede_source"
+      ECHOG "您选择了：Lede_5.4内核,LUCI 18.06版本"
+      rm -rf ${GITHUB_WORKSPACE}/openwrt
+      if [[ -d amlogic/amlogic-s9xxx ]]; then
+        ECHOGG "发现老旧内核存在，请输入ubuntu密码删除老旧内核"
+        sudo rm -rf amlogic
+      fi
+      openwrt_by
+    break
+    ;;
+    2)
+      export firmware="Lienol_source"
+      ECHOG "您选择了：Lienol_4.14内核,LUCI 19.07版本"
+      rm -rf ${GITHUB_WORKSPACE}/openwrt
+      if [[ -d amlogic/amlogic-s9xxx ]]; then
+        ECHOGG "发现老旧内核存在，请输入ubuntu密码删除老旧内核"
+        sudo rm -rf amlogic
+      fi
+      openwrt_by
+    break
+    ;;
+    3)
+      export firmware="Mortal_source"
+      ECHOG "您选择了：Immortalwrt_5.4内核,LUCI 21.02版本"
+      rm -rf ${GITHUB_WORKSPACE}/openwrt
+      if [[ -d amlogic/amlogic-s9xxx ]]; then
+        ECHOGG "发现老旧内核存在，请输入ubuntu密码删除老旧内核"
+        sudo rm -rf amlogic
+      fi
+      openwrt_by
+    break
+    ;;
+    4)
+      export firmware="openwrt_amlogic"
+      ECHOG "您选择了：N1和晶晨系列CPU盒子专用"
+      rm -rf ${GITHUB_WORKSPACE}/openwrt
+      if [[ -d amlogic/amlogic-s9xxx ]]; then
+        ECHOGG "发现老旧内核存在，请输入ubuntu密码删除老旧内核"
+        sudo rm -rf amlogic
+      fi
+      openwrt_by
+    break
+    ;;
+    5)
+      ECHOR "您选择了退出编译程序"
+      exit 0
+    break
+    ;;
+    *)
+      ECHOR "警告：输入错误,请输入正确的编号!"
+    ;;
+    esac
+    done
 }
 
 menp() {

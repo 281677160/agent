@@ -458,7 +458,7 @@ function op_make() {
   rm -fr ${COMFIRMWARE}/*
   PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin make -j${npro} V=s 2>&1 |tee build.log
   judge "编译"
-  if [[ ${firmware} == "Mortal_source" ]]; then
+  if [[ ${firmware} == "Mortal_source" ]] || [[ "${firmware}" == "Tianling_source" ]]; then
     if [[ `ls -a ${COMFIRMWARE} | grep -c "immortalwrt"` == '0' ]]; then
       print_error "没发现固件存在，编译失败~~!"
       explorer.exe .
@@ -494,7 +494,7 @@ function op_upgrade3() {
     export upgra="0"
   fi
   cd ${COMFIRMWARE}
-  if [[ ${firmware} == "Mortal_source" ]]; then
+  if [[ ${firmware} == "Mortal_source" ]] || [[ "${firmware}" == "Tianling_source" ]]; then
     rename -v "s/^immortalwrt/${date1}-${CODE}/" * > /dev/null 2>&1
   else
     rename -v "s/^openwrt/${date1}-${CODE}/" * > /dev/null 2>&1

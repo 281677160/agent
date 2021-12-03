@@ -473,7 +473,7 @@ function op_upgrade3() {
   fi
   if [[ `ls -a ${Home}/bin/Firmware | grep -c "${Compile_Date}"` -ge '1' ]]; then
     ECHOY "加入‘定时升级固件插件’的固件已经放入[bin/Firmware]文件夹中"
-    dsgx="加入‘定时升级固件插件’的固件已经放入[bin/Firmware]文件夹中"
+    export dsgx="加入‘定时升级固件插件’的固件已经放入[bin/Firmware]文件夹中"
   else
     print_error "加入‘定时升级固件插件’的固件失败，您的机型或者不支持定时更新!"
   fi
@@ -563,7 +563,7 @@ function op_end() {
   if [[ "${UPCOWTRANSFER}" == "true" ]]; then
     ECHOY "奶牛快传：${cow}"
   fi
-  if [[ "${REG_UPDATE}" == "true" ]]; then
+  if [[ -n "${dsgx}" ]]; then
     ECHOG "${dsgx}"
   fi
   explorer.exe .

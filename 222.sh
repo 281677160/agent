@@ -92,13 +92,13 @@ function op_busuhuanjing() {
 cd ${GITHUB_WORKSPACE}
   clear
   echo
-  ${Red} "|*******************************************|"${Font}
-  ${Green} "|                                           |"${Font}
-  ${Yellow} "|    首次编译,请输入Ubuntu密码继续下一步    |"${Font}
-  ${Green} "|                                           |"${Font}
-  ${Yellow} "|              编译环境部署                 |"${Font}
-  ${Red} "|                                           |"${Font}
-  ${Blue} "|*******************************************|"${Font}
+  echo -e  "${Red} |*******************************************|${Font}"
+  echo -e  "${Green} |                                           |${Font}"
+  echo -e  "${Yellow} |    首次编译,请输入Ubuntu密码继续下一步    |${Font}"
+  echo -e  "${Green} |                                           |${Font}"
+  echo -e  "${Yellow} |              编译环境部署                 |${Font}"
+  echo -e  "${Red} |                                           |${Font}"
+  echo -e  "${Blue} |*******************************************|"${Font}"
   echo
   sudo apt-get update -y
   sudo apt-get install -y systemd build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 lib32stdc++6 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler g++-multilib antlr3 gperf wget curl rename libpcap0.8-dev swig rsync

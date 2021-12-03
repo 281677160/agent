@@ -455,6 +455,7 @@ function op_make() {
     npro="16"
   fi
   rm -fr ${COMFIRMWARE}/*
+  rm -fr ${Home}/bin/Firmware/*
   PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin make -j${npro} V=s 2>&1 |tee build.log
   judge "编译"
   if [[ ${firmware} == "Mortal_source" ]] || [[ "${firmware}" == "Tianling_source" ]]; then

@@ -521,30 +521,32 @@ function op_amlogic() {
   fi
   
   ECHOY "全部可打包机型：s905x3_s905x2_s905x_s905d_s922x_s912"
-  ECHOG "设置要打包固件的机型[ 直接回车则默认 N1/s905d ]"
+  ECHOGG "设置要打包固件的机型[ 直接回车则默认 N1/s905d ]"
   read -p " 请输入您要设置的机型：" model
   export model=${model:-"s905d"}
-  ECHOY "您设置的机型为：${model}"
-  
+  ECHOYY "您设置的机型为：${model}"
+  echo
   Make_kernel="$(cat amlogic/open.yml |grep ./make |cut -d "k" -f3 |sed s/[[:space:]]//g)"
-  ECHOG "设置打包的内核版本[ 直接回车则默认 ${Make_kernel} ]"
+  ECHOGG "设置打包的内核版本[ 直接回车则默认 ${Make_kernel} ]"
   read -p " 请输入您要设置的内核：" kernel
   export kernel=${kernel:-"${Make_kernel}"}
-  ECHOY "您设置的内核版本为：${kernel}"
-  
-  ECHOG "设置ROOTFS分区大小[ 直接回车则默认 960 ]"
+  ECHOYY "您设置的内核版本为：${kernel}"
+  echo
+  ECHOGG "设置ROOTFS分区大小[ 直接回车则默认 960 ]"
   read -p " 请输入ROOTFS分区大小：" rootfs
   export rootfs=${rootfs:-"960"}
-  ECHOY "您设置的ROOTFS分区大小为：${rootfs}"
+  ECHOYY "您设置的ROOTFS分区大小为：${rootfs}"
   minsize="$(egrep -o "ROOT_MB=[0-9]+" amlogic/make)"
   rootfssize="ROOT_MB=${rootfs}"
   sed -i "s/${minsize}/${rootfssize}/g" amlogic/make
-  rm -rf amlogic/out/*
+  echo
+  rm -rf ${GITHUB_WORKSPACE}/amlogic/out/*
   cp -Rf ${Home}/bin/targets/*/*/*.tar.gz amlogic/openwrt-armvirt/ && sync
+  ECHOGG "请输入ubuntu密码进行固件打包程序"
   cd amlogic && sudo ./make -d -b ${model} -k ${kernel}
-  if [[ `ls -a amlogic/out | grep -c "openwrt"` -ge '1' ]]; then
+  if [[ `ls -a ${GITHUB_WORKSPACE}/amlogic/out | grep -c "openwrt"` -ge '1' ]]; then
     explorer.exe .
-    ECHOY "打包完成，固件存放在[openwrt/out]文件夹"
+    ECHOY "打包完成，固件存放在[amlogic/out]文件夹"
   else
     print_error "打包失败，请再次尝试!"
   fi

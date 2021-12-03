@@ -724,8 +724,8 @@ menp() {
   cd ${GITHUB_WORKSPACE}
   clear
   echo
-  echo -e " ${Green}当前源码${Font}：${Blue}${firmware}${Font}"
-  echo -e " ${Green}编译机型${Font}：${Blue}${TARGET_PROFILE}${Font}"
+  echo -e " ${Blue}当前源码${Font}：${Green}${firmware}${Font}"
+  echo -e " ${Blue}编译机型${Font}：${Green}${TARGET_PROFILE}${Font}"
   echo
   echo -e " ${Green}1${Font}、${Yellow}保留配置全新编译${Font}"
   echo -e " ${Green}2${Font}、${Yellow}保留缓存和配置二次编译${Font}"

@@ -249,6 +249,7 @@ function amlogic_s9xxx() {
     mkdir -p amlogic/openwrt-armvirt
     rm -rf amlogic-s9xxx && svn co https://github.com/ophub/amlogic-s9xxx-openwrt/trunk/amlogic-s9xxx amlogic-s9xxx
     judgeopen "amlogic内核下载"
+    rm -rf amlogic-s9xxx/{.svn,README.cn.md,README.md} > /dev/null 2>&1
     mv amlogic-s9xxx amlogic
     curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/make > amlogic/make
     curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/.github/workflows/build-openwrt-lede.yml > amlogic/open.yml

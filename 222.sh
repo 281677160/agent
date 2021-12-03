@@ -250,7 +250,7 @@ function amlogic_s9xxx() {
     rm -rf amlogic-s9xxx && svn co https://github.com/ophub/amlogic-s9xxx-openwrt/trunk/amlogic-s9xxx amlogic-s9xxx
     judgeopen "amlogic内核下载"
     mv amlogic-s9xxx amlogic
-    curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/make > amlogic
+    curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/make > amlogic/make
     curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/.github/workflows/build-openwrt-lede.yml > amlogic/open.yml
     judge "内核运行文件下载"
     chmod 777 amlogic/make
@@ -529,10 +529,10 @@ function op_amlogic() {
   minsize="$(egrep -o "ROOT_MB=[0-9]+" ${Home}/make)"
   rootfssize="ROOT_MB=${rootfs}"
   sed -i "s/${minsize}/${rootfssize}/g" ${Home}/make
-  rm -rf ${Home}/out/*
-  cp -Rf ${Home}/bin/targets/*/*/*.tar.gz ${Home}/openwrt-armvirt/ && sync
-  cd openwrt && sudo ./make -d -b ${model} -k ${kernel}
-  if [[ `ls -a ${Home}/out | grep -c "openwrt"` -ge '1' ]]; then
+  rm -rf amlogic/out/*
+  cp -Rf ${Home}/bin/targets/*/*/*.tar.gz amlogic/openwrt-armvirt/ && sync
+  cd amlogic && sudo ./make -d -b ${model} -k ${kernel}
+  if [[ `ls -a amlogic/out | grep -c "openwrt"` -ge '1' ]]; then
     explorer.exe .
     ECHOY "打包完成，固件存放在[openwrt/out]文件夹"
   else

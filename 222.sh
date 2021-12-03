@@ -49,7 +49,15 @@ function ECHOG() {
   echo -e "${Red} $1 ${Font}"
   echo
 }
-
+function ECHOYY() {
+  echo -e "${Yellow} $1 ${Font}"
+}
+function ECHOGG() {
+  echo -e "${Green} $1 ${Font}"
+}
+  function ECHORR() {
+  echo -e "${Red} $1 ${Font}"
+}
 judge() {
   if [[ 0 -eq $? ]]; then
     echo

@@ -259,7 +259,7 @@ function amlogic_s9xxx() {
     rm -rf amlogic-s9xxx/{.svn,README.cn.md,README.md} > /dev/null 2>&1
     mv amlogic-s9xxx amlogic
     curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/make > amlogic/make
-    curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/.github/workflows/build-openwrt-lede.yml > amlogic/open.yml
+    curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/.github/workflows/build-openwrt-lede.yml > amlogic/op_kernel
     judge "内核运行文件下载"
     chmod 777 amlogic/make
   fi
@@ -526,7 +526,7 @@ function op_amlogic() {
   export model=${model:-"s905d"}
   ECHOYY "您设置的机型为：${model}"
   echo
-  Make_kernel="$(cat ${GITHUB_WORKSPACE}/amlogic/open.yml |grep ./make |cut -d "k" -f3 |sed s/[[:space:]]//g)"
+  Make_kernel="$(cat ${GITHUB_WORKSPACE}/amlogic/op_kernel |grep ./make |cut -d "k" -f3 |sed s/[[:space:]]//g)"
   ECHOGG "设置打包的内核版本[ 直接回车则默认 ${Make_kernel} ]"
   read -p " 请输入您要设置的内核：" kernel
   export kernel=${kernel:-"${Make_kernel}"}
@@ -541,7 +541,7 @@ function op_amlogic() {
   sed -i "s/${minsize}/${rootfssize}/g" ${GITHUB_WORKSPACE}/amlogic/make
   echo
   rm -rf ${GITHUB_WORKSPACE}/amlogic/out/*
-  cp -Rf ${Home}/bin/targets/*/*/*.tar.gz a${GITHUB_WORKSPACE}/mlogic/openwrt-armvirt/ && sync
+  cp -Rf ${Home}/bin/targets/*/*/*.tar.gz ${GITHUB_WORKSPACE}/mlogic/openwrt-armvirt/ && sync
   ECHOGG "请输入ubuntu密码进行固件打包程序"
   cd amlogic && sudo ./make -d -b ${model} -k ${kernel}
   if [[ `ls -a ${GITHUB_WORKSPACE}/amlogic/out | grep -c "openwrt"` -ge '1' ]]; then

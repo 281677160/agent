@@ -144,62 +144,66 @@ function op_kongjian() {
 function bianyi_xuanxiang() {
   cd ${GITHUB_WORKSPACE}
   [[ -z ${ipdz} ]] && export ipdz="192.168.1.1"
-  ECHOG "设置openwrt的后台IP地址[ 直接回车则默认 $ipdz ]"
+  ECHOGG "设置openwrt的后台IP地址[ 直接回车则默认 $ipdz ]"
   read -p " 请输入后台IP地址：" ip
   export ip=${ip:-"$ipdz"}
-  ECHOY "您的后台地址为：$ip"
+  ECHOYY "您的后台地址为：$ip"
   echo
   echo
-  ECHOG "是否需要选择机型和增删插件?"
+  ECHOGG "是否需要选择机型和增删插件?"
   read -p " [输入[ Y/y ]回车确认，直接回车则跳过选择]： " MENU
   case $MENU in
     [Yy])
       export Menuconfig="true"
-      ECHOY "您执行机型和增删插件命令,请耐心等待程序运行至窗口弹出进行机型和插件配置!"
+      ECHOYY "您执行机型和增删插件命令,请耐心等待程序运行至窗口弹出进行机型和插件配置!"
     ;;
     *)
       export Menuconfig="false"
-      ECHOR "您已关闭选择机型和增删插件设置！"
+      ECHORR "您已关闭选择机型和增删插件设置！"
     ;;
   esac
   echo
-  ECHOG "是否把固件上传到<奶牛快传>?"
+  echo
+  ECHOGG "是否把固件上传到<奶牛快传>?"
   read -p " [输入[ Y/y ]回车确认，直接回车则跳过选择]： " NNKC
   case $NNKC in
     [Yy])
       export UPCOWTRANSFER="true"
-      ECHOY "您执行了上传固件到<奶牛快传>!"
+      ECHOYY "您执行了上传固件到<奶牛快传>!"
     ;;
     *)
       export UPCOWTRANSFER="false"
-      ECHOR "您已关闭上传固件到<奶牛快传>！"
+      ECHORR "您已关闭上传固件到<奶牛快传>！"
     ;;
   esac
+  echo
+  echo
   if [[ ! $firmware == "openwrt_amlogic" ]]; then
-    ECHOG "是否把定时更新插件编译进固件?"
+    ECHOGG "是否把定时更新插件编译进固件?"
     read -p " [输入[ Y/y ]回车确认，直接回车则跳过选择]： " RELE
     case $RELE in
       [Yy])
-        export REG_UPDATE="true"
+        export REGULAR_UPDATE="true"
       ;;
       *)
-        ECHOR "您已关闭‘把定时更新插件’编译进固件！"
-        export REG_UPDATE="false"
+        ECHORR "您已关闭‘把定时更新插件’编译进固件！"
+        export REGULAR_UPDATE="false"
 	export Git="https://github.com/281677160/build-actions"
       ;;
     esac
   fi
-  if [[ "${REG_UPDATE}" == "true" ]]; then
+  if [[ "${REGULAR_UPDATE}" == "true" ]]; then
     [[ -z ${Git} ]] && export Git="https://github.com/281677160/build-actions"
-    ECHOG "设置Github地址,定时更新固件需要把固件传至对应地址的Releases"
-    ECHOY "回车则默认为：$Git"
+    ECHOYY "设置Github地址,定时更新固件需要把固件传至对应地址的Releases"
+    ECHOGG "回车则默认为：$Git"
     read -p " 请输入Github地址：" Github
     export Github=${Github:-"$Git"}
-    ECHOG "您的Github地址为：$Github"
+    ECHOYY "您的Github地址为：$Github"
     export Apidz="${Github##*com/}"
     export Author="${Apidz%/*}"
     export CangKu="${Apidz##*/}"
   fi
+  sleep 2
 }
 
 function op_ip() {
@@ -213,7 +217,6 @@ function op_ip() {
 function op_repo_branch() {
   cd ${GITHUB_WORKSPACE}
   ECHOG "正在下载源码中,请耐心等候~~~"
-  sleep 2
   rm -rf openwrt && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrt
   judgeopen "${firmware}源码下载"
 }
@@ -221,7 +224,6 @@ function op_repo_branch() {
 function ec_repo_branch() {
   cd ${GITHUB_WORKSPACE}
   ECHOG "正在下载源码中,请耐心等候~~~"
-  sleep 2
   rm -rf openwrte && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrte
   judgeopen "${firmware}源码下载"
   ECHOG "正在处理数据,请耐心等候~~~"
@@ -232,7 +234,6 @@ function ec_repo_branch() {
 function qx_repo_branch() {
   cd ${GITHUB_WORKSPACE}
   ECHOG "正在下载源码中,请耐心等候~~~"
-  sleep 2
   rm -rf openwrte && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrte
   judgeopen "${firmware}源码下载"
   ECHOG "正在处理数据,请耐心等候~~~"
@@ -324,7 +325,7 @@ function op_feeds_update() {
 function op_upgrade1() {
   cd $Home
   echo "Compile_Date=$(date +%Y%m%d%H%M)" > Openwrt.info && source Openwrt.info
-  if [[ "${REG_UPDATE}" == "true" ]]; then
+  if [[ "${REGULAR_UPDATE}" == "true" ]]; then
     source build/$firmware/upgrade.sh && Diy_Part1
   fi
 }
@@ -371,7 +372,7 @@ function op_config() {
 
 function op_upgrade2() {
   cd $Home
-  if [ "${REG_UPDATE}" == "true" ]; then
+  if [ "${REGULAR_UPDATE}" == "true" ]; then
     source build/$firmware/upgrade.sh && Diy_Part2
   fi
 }
@@ -478,7 +479,7 @@ function op_make() {
 
 function op_upgrade3() {
   cd $Home
-  if [[ "${REG_UPDATE}" == "true" ]]; then
+  if [[ "${REGULAR_UPDATE}" == "true" ]]; then
     cp -Rf ${Home}/bin/targets/*/* ${Home}/upgrade
     source ${Home}/build/${firmware}/upgrade.sh && Diy_Part3
   fi

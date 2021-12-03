@@ -546,7 +546,7 @@ function op_amlogic() {
   echo
   rm -rf ${GITHUB_WORKSPACE}/amlogic/out/*
   rm -rf ${GITHUB_WORKSPACE}/amlogic/openwrt-armvirt/*
-  cp -Rf ${Home}/bin/targets/armvirt/*/*.tar.gz ${GITHUB_WORKSPACE}/mlogic/openwrt-armvirt/ && sync
+  cp -Rf ${Home}/bin/targets/armvirt/*/.*.tar.gz ${GITHUB_WORKSPACE}/mlogic/openwrt-armvirt/
   ECHOGG "请输入ubuntu密码进行固件打包程序"
   cd amlogic && sudo ./make -d -b ${model} -k ${kernel}
   if [[ `ls -a ${GITHUB_WORKSPACE}/amlogic/out | grep -c "openwrt"` -ge '1' ]]; then

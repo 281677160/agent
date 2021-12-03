@@ -678,9 +678,9 @@ menu() {
   ECHOY " 4. N1和晶晨系列CPU盒子专用(openwrt_amlogic)"
   ECHOY " 5. 退出编译程序"
   echo
+  XUANZHEOP="请输入数字"
   while :; do
-  ECHOY "请选择编译源码,输入[ 1、2、3、4、5 ]然后回车确认您的选择！"
-  read -p " 输入您的选择： " CHOOSE
+  read -p " ${XUANZHEOP}： " CHOOSE
   case $CHOOSE in
     1)
       export firmware="Lede_source"
@@ -732,7 +732,7 @@ menu() {
     break
     ;;
     *)
-      ECHOR "警告：输入错误,请输入正确的编号!"
+      XUANZHEOP="请输入正确的数字编号!"
     ;;
     esac
     done
@@ -838,7 +838,7 @@ menuop() {
     break
   ;;
   *)
-    XUANZHE="请输入正确的选择"
+    XUANZHE="请输入正确的数字编号!"
   ;;
   esac
   done

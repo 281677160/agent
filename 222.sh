@@ -259,7 +259,6 @@ function amlogic_s9xxx() {
 
 function op_jiaoben() {
   cd ${GITHUB_WORKSPACE}
-  echo "Compile_Date=$(date +%Y%m%d%H%M)" > ${Home}/Openwrt.info && source ${Home}/Openwrt.info
   git clone https://github.com/281677160/build-actions
   judgeopen "编译脚本下载"
   chmod -R +x build-actions/build && cp -Rf build-actions/build ${Home}
@@ -312,6 +311,7 @@ function op_feeds_update() {
 
 function op_upgrade1() {
   cd $Home
+  echo "Compile_Date=$(date +%Y%m%d%H%M)" > Openwrt.info && source Openwrt.info
   if [[ "${REG_UPDATE}" == "true" ]]; then
     source build/$firmware/upgrade.sh && Diy_Part1
   fi
@@ -463,10 +463,14 @@ function op_make() {
 function op_upgrade3() {
   cd $Home
   if [[ "${REG_UPDATE}" == "true" ]]; then
-    [[ -f ${Home}/Openwrt.info ]] && source ${Home}/Openwrt.info
     cp -Rf ${Home}/bin/targets/*/* ${Home}/upgrade
     source ${Home}/build/${firmware}/upgrade.sh && Diy_Part3
+  fi
+  if [[ `ls -a ${Home}/bin/Firmware | grep -c "${Compile_Date}"` -ge '1' ]]; then
     ECHOY "加入‘定时升级固件插件’的固件已经放入[bin/Firmware]文件夹中"
+    dsgx="加入‘定时升级固件插件’的固件已经放入[bin/Firmware]文件夹中"
+  else
+    print_error "加入‘定时升级固件插件’的固件失败，您的机型或者不支持定时更新!"
   fi
   cd ${COMFIRMWARE}
   if [[ ${firmware} == "Mortal_source" ]]; then
@@ -480,6 +484,7 @@ function op_upgrade3() {
 function op_cowtransfer() {
   if [[ "${UPCOWTRANSFER}" == "true" ]]; then
     ECHOY "正在上传固件至奶牛快传中，请稍后..."
+    cd ${GITHUB_WORKSPACE}
     curl -fsSL git.io/file-transfer | sh
     mv ${COMFIRMWARE}/packages ${Home}/bin/targets/${TARGET_BOARD}/packages
     ./transfer cow --block 2621440 -s -p 64 --no-progress ${COMFIRMWARE} 2>&1 | tee cowtransfer.log > /dev/null 2>&1
@@ -491,8 +496,13 @@ function op_cowtransfer() {
 }
 
 function op_amlogic() {
+  cd ${GITHUB_WORKSPACE}
   if [[ `ls -a ${Home}/bin/targets/armvirt/64 | grep -c "tar.gz"` == '0' ]]; then
     print_error "没发现tar.gz格式固件存在"
+    exit 1
+  fi
+  if [[ ! -f amlogic/make ]]; then
+    print_error "没发现打包运行文件存在"
     exit 1
   fi
   
@@ -547,6 +557,9 @@ function op_end() {
   fi
   if [[ "${UPCOWTRANSFER}" == "true" ]]; then
     ECHOY "奶牛快传：${cow}"
+  fi
+  if [[ "${REG_UPDATE}" == "true" ]]; then
+    ECHOG "${dsgx}"
   fi
   explorer.exe .
 }

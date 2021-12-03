@@ -722,8 +722,8 @@ menp() {
   ECHOY "1、保留配置全新编译"
   ECHOY "2、保留缓存和配置二次编译"
   ECHOY "3、不更新插件和源码二次编译"
-  ECHOY "4、更换源码"
-  ECHOY "5、打包晶晨系列CPU固件"
+  ECHOY "4、更换源码编译"
+  ECHOY "5、打包N1和晶晨系列CPU固件"
   ECHOY "6、退出"
   echo
   XUANZHE="请输入数字"

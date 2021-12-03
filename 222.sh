@@ -599,6 +599,7 @@ function op_firmware() {
     export Diy_zdy="Diy_lede"
     export CONFIG_FILE=".config"
     export DIY_PART_SH="diy-part.sh"
+    export OpenWrt_name="18.06"
     [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
   fi
   if [[ "${firmware}" == "Lienol_source" ]] || [[ -n "$(ls -A "${Home}/.Lienol_core" 2>/dev/null)" ]]; then
@@ -613,6 +614,7 @@ function op_firmware() {
     export Diy_zdy="Diy_lienol"
     export CONFIG_FILE=".config"
     export DIY_PART_SH="diy-part.sh"
+    export OpenWrt_name="19.07"
     [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
   fi
   if [[ "${firmware}" == "Mortal_source" ]] || [[ -n "$(ls -A "${Home}/.Mortal_core" 2>/dev/null)" ]]; then
@@ -627,6 +629,7 @@ function op_firmware() {
     export Diy_zdy="Diy_mortal"
     export CONFIG_FILE=".config"
     export DIY_PART_SH="diy-part.sh"
+    export OpenWrt_name="21.02"
     [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
   fi
   if [[ "${firmware}" == "Tianling_source" ]] || [[ -n "$(ls -A "${Home}/.Tianling_core" 2>/dev/null)" ]]; then
@@ -641,6 +644,7 @@ function op_firmware() {
     export Diy_zdy="Diy_Tianling"
     export CONFIG_FILE=".config"
     export DIY_PART_SH="diy-part.sh"
+    export OpenWrt_name="tl-18.06"
     [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
   fi
   if [[ "${firmware}" == "openwrt_amlogic" ]] || [[ -n "$(ls -A "${Home}/.amlogic_core" 2>/dev/null)" ]]; then
@@ -655,6 +659,7 @@ function op_firmware() {
     export Diy_zdy="Diy_lede"
     export CONFIG_FILE=".config"
     export DIY_PART_SH="diy-part.sh"
+    export OpenWrt_name="18.06"
     [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
   fi
 }

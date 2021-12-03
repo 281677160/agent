@@ -629,6 +629,20 @@ function op_firmware() {
     export DIY_PART_SH="diy-part.sh"
     [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
   fi
+  if [[ "${firmware}" == "Tianling_source" ]] || [[ -n "$(ls -A "${Home}/.Tianling_core" 2>/dev/null)" ]]; then
+    export firmware="Tianling_source"
+    export CODE="tianling"
+    export Modelfile="Tianling_source"
+    export Core=".Tianling_core"
+    export PATH1="${Home}/build/${firmware}"
+    export REPO_URL="https://github.com/immortalwrt/immortalwrt"
+    export REPO_BRANCH="openwrt-18.06"
+    export ZZZ="${Home}/package/emortal/default-settings/files/zzz-default-settings"
+    export Diy_zdy="Diy_Tianling"
+    export CONFIG_FILE=".config"
+    export DIY_PART_SH="diy-part.sh"
+    [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
+  fi
   if [[ "${firmware}" == "openwrt_amlogic" ]] || [[ -n "$(ls -A "${Home}/.amlogic_core" 2>/dev/null)" ]]; then
     export firmware="openwrt_amlogic"
     export CODE="lede"
@@ -675,10 +689,11 @@ menu() {
   echo
   cd ${GITHUB_WORKSPACE}
   ECHOY " 1. Lede_5.4内核,LUCI 18.06版本(Lede_source)"
-  ECHOY " 2. Lienol_4.14内核,LUCI 19.07版本(Lienol_source)"
+  ECHOY " 2. Lienol_4.14内核,LUCI 17.01版本(Lienol_source)"
   ECHOY " 3. Immortalwrt_5.4内核,LUCI 21.02版本(Mortal_source)"
-  ECHOY " 4. N1和晶晨系列CPU盒子专用(openwrt_amlogic)"
-  ECHOY " 5. 退出编译程序"
+  ECHOY " 4. Immortalwrt_4.14内核,LUCI 18.06版本(Tianling_source)"
+  ECHOY " 5. N1和晶晨系列CPU盒子专用(openwrt_amlogic)"
+  ECHOY " 6. 退出编译程序"
   echo
   XUANZHEOP="请输入数字"
   while :; do
@@ -718,6 +733,17 @@ menu() {
     break
     ;;
     4)
+      export firmware="Tianling_source"
+      ECHOG "您选择了：Immortalwrt_4.14内核,LUCI 18.06版本"
+      rm -rf ${GITHUB_WORKSPACE}/openwrt
+      if [[ -d amlogic/amlogic-s9xxx ]]; then
+        ECHOGG "发现老旧晶晨内核文件存在，请输入ubuntu密码删除老旧内核"
+        sudo rm -rf amlogic
+      fi
+      openwrt_by
+    break
+    ;;
+    5)
       export firmware="openwrt_amlogic"
       ECHOG "您选择了：N1和晶晨系列CPU盒子专用"
       rm -rf ${GITHUB_WORKSPACE}/openwrt
@@ -728,7 +754,7 @@ menu() {
       openwrt_by
     break
     ;;
-    5)
+    6)
       ECHOR "您选择了退出编译程序"
       exit 0
     break

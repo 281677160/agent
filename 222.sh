@@ -21,8 +21,9 @@ ERROR="${Red}[ERROR]${Font}"
 # 变量
 export GITHUB_WORKSPACE="$PWD"
 export Home="$PWD/openwrt"
-export NETIP="package/base-files/files/etc/networkip"
+export NETIP="${Home}/package/base-files/files/etc/networkip"
 export date1="$(date +'%m-%d')"
+export Ubuntu_mz="$(cat /etc/group | grep adm | cut -f2 -d,)"
 
 function print_ok() {
   echo
@@ -122,7 +123,6 @@ function op_kongjian() {
     sleep 1
     exit 1
   fi
-  export Ubuntu_mz="$(cat /etc/group | grep adm | cut -f2 -d,)"
   export Ubuntu_kj="$(df -h|grep -v tmpfs |grep "/dev/.*" |awk '{print $4}' |awk 'NR==1' |sed 's/.$//g')"
   if [[ "${Ubuntu_kj}" -lt "20" ]];then
     ECHOY "您当前系统可用空间为${Ubuntu_kj}G"
@@ -300,6 +300,7 @@ function op_diy_part() {
   uci commit network
   " > $NETIP
   [[ `grep -c "CYXluq4wUaz" $ZZZ` == '1' ]] && sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ
+  sed -i "s/OpenWrt /${Ubuntu_mz} compiled in $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZZ > /dev/null 2>&1
   sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ${Home}/feeds/luci/applications` > /dev/null 2>&1
   sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ${Home}/package` > /dev/null 2>&1
   sed -i 's/"带宽监控"/"监控"/g' `grep "带宽监控" -rl ${Home}/feeds/luci/applications` > /dev/null 2>&1
@@ -594,7 +595,7 @@ function op_firmware() {
     export PATH1="${Home}/build/${firmware}"
     export REPO_URL="https://github.com/coolsnowwolf/lede"
     export REPO_BRANCH="master"
-    export ZZZ="package/lean/default-settings/files/zzz-default-settings"
+    export ZZZ="${Home}/package/lean/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_lede"
     export CONFIG_FILE=".config"
     export DIY_PART_SH="diy-part.sh"
@@ -608,7 +609,7 @@ function op_firmware() {
     export PATH1="${Home}/build/${firmware}"
     export REPO_URL="https://github.com/Lienol/openwrt"
     export REPO_BRANCH="19.07"
-    export ZZZ="package/default-settings/files/zzz-default-settings"
+    export ZZZ="${Home}/package/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_lienol"
     export CONFIG_FILE=".config"
     export DIY_PART_SH="diy-part.sh"
@@ -622,7 +623,7 @@ function op_firmware() {
     export PATH1="${Home}/build/${firmware}"
     export REPO_URL="https://github.com/immortalwrt/immortalwrt"
     export REPO_BRANCH="openwrt-21.02"
-    export ZZZ="package/emortal/default-settings/files/zzz-default-settings"
+    export ZZZ="${Home}/package/emortal/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_mortal"
     export CONFIG_FILE=".config"
     export DIY_PART_SH="diy-part.sh"
@@ -636,7 +637,7 @@ function op_firmware() {
     export PATH1="${Home}/build/${firmware}"
     export REPO_URL="https://github.com/coolsnowwolf/lede"
     export REPO_BRANCH="master"
-    export ZZZ="package/lean/default-settings/files/zzz-default-settings"
+    export ZZZ="${Home}/package/lean/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_lede"
     export CONFIG_FILE=".config"
     export DIY_PART_SH="diy-part.sh"

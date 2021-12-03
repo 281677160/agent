@@ -515,7 +515,7 @@ function op_amlogic() {
     print_error "没发现tar.gz格式固件存在"
     exit 1
   fi
-  if [[ ! -f amlogic/make ]]; then
+  if [[ ! -f ${GITHUB_WORKSPACE}/amlogic/make ]]; then
     print_error "没发现打包运行文件存在"
     exit 1
   fi
@@ -526,7 +526,7 @@ function op_amlogic() {
   export model=${model:-"s905d"}
   ECHOYY "您设置的机型为：${model}"
   echo
-  Make_kernel="$(cat amlogic/open.yml |grep ./make |cut -d "k" -f3 |sed s/[[:space:]]//g)"
+  Make_kernel="$(cat ${GITHUB_WORKSPACE}/amlogic/open.yml |grep ./make |cut -d "k" -f3 |sed s/[[:space:]]//g)"
   ECHOGG "设置打包的内核版本[ 直接回车则默认 ${Make_kernel} ]"
   read -p " 请输入您要设置的内核：" kernel
   export kernel=${kernel:-"${Make_kernel}"}

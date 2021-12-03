@@ -368,6 +368,7 @@ function op_config() {
     export TARGET_PROFILE="armvirt"
   fi
   export COMFIRMWARE="${Home}/bin/targets/${TARGET_BOARD}/${TARGET_SUBTARGET}"
+  export OPENGUJIAN="openwrt/bin/targets/${TARGET_BOARD}/${TARGET_SUBTARGET}"
 }
 
 function op_upgrade2() {
@@ -574,7 +575,7 @@ function op_end() {
   ECHOY "密 码: 无"
   ECHOG "开始时间：${Begin}"
   ECHOG "结束时间：${End}"
-  ECHOY "固件已经存入${COMFIRMWARE}文件夹中"
+  ECHOY "固件已经存入${OPENGUJIAN}文件夹中"
   if [[ "${firmware}" == "openwrt_amlogic" ]]; then
     ECHOR "提示：再次输入编译命令可选择打包N1和晶晨系列盒子专用固件"
   fi

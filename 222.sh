@@ -249,7 +249,7 @@ function amlogic_s9xxx() {
   if [[ "${firmware}" == "openwrt_amlogic" ]]; then
     ECHOY "正在下载打包所需的内核,请耐心等候~~~"
     if [[ -d amlogic/amlogic-s9xxx ]]; then
-      ECHOG "发现老旧内核存在，请输入ubuntu密码删除老旧内核"
+      ECHOGG "发现老旧内核存在，请输入ubuntu密码删除老旧内核"
       sudo rm -rf amlogic
     fi
     mkdir -p amlogic

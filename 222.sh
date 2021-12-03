@@ -188,7 +188,7 @@ function bianyi_xuanxiang() {
       *)
         ECHORR "您已关闭‘把定时更新插件’编译进固件！"
         export REGULAR_UPDATE="false"
-	export Git="https://github.com/281677160/build-actions"
+	[[ -z ${Git} ]] && export Git="https://github.com/281677160/build-actions"
       ;;
     esac
   fi

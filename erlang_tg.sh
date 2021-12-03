@@ -1,5 +1,5 @@
 #!/bin/bash
-# Automatic interactive installer for mtproto proxy https://github.com/seriyps/mtproto_proxy
+# https://github.com/281677160/danshui
 # Supported OS:
 # - Ubuntu 18.xx
 # - Ubuntu 19.xx

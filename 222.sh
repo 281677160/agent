@@ -738,7 +738,7 @@ menu() {
     done
 }
 
-menp() {
+menuop() {
   op_firmware
   op_config
   cd ${GITHUB_WORKSPACE}
@@ -844,7 +844,7 @@ menp() {
   done
 }
 if [[ -d ${Home}/build_dir ]] && [[ -d ${Home}/toolchain ]] && [[ -d ${Home}/tools ]] && [[ -d ${Home}/staging_dir ]] && [[ -f ${Home}/build/chenggong ]] && [[ -f ${Home}/.config ]]; then
-	menp "$@"
+	menuop "$@"
 else
 	menu "$@"
 fi

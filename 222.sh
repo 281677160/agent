@@ -630,6 +630,7 @@ function openwrt_by() {
     bianyi_xuanxiang
     op_ip
     op_repo_branch
+    amlogic_s9xxx
     op_jiaoben
     op_diy_zdy
     op_diy_part
@@ -728,6 +729,7 @@ menp() {
     bianyi_xuanxiang
     op_ip
     qx_repo_branch
+    amlogic_s9xxx
     op_jiaoben
     op_diy_zdy
     op_diy_part
@@ -752,6 +754,7 @@ menp() {
     bianyi_xuanxiang
     op_ip
     ec_repo_branch
+    amlogic_s9xxx
     op_jiaoben
     op_diy_zdy
     op_diy_part

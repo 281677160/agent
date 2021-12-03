@@ -552,8 +552,8 @@ function op_amlogic() {
   ECHOGG "请输入ubuntu密码进行固件打包程序"
   cd amlogic && sudo ./make -d -b ${model} -k ${kernel}
   if [[ `ls -a ${GITHUB_WORKSPACE}/amlogic/out | grep -c "openwrt"` -ge '1' ]]; then
-    explorer.exe .
     ECHOY "打包完成，固件存放在[amlogic/out]文件夹"
+    explorer.exe .
   else
     print_error "打包失败，请再次尝试!"
   fi

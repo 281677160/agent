@@ -2,9 +2,9 @@
 
 #====================================================
 #	System Request:Debian 9+/Ubuntu 18.04+/Centos 7+
-#	Author:	wulabing
-#	Dscription: Xray onekey Management
-#	email: admin@wulabing.com
+#	Author:	281677160
+#	Dscription: xary onekey Management
+#	github: https://github.com/281677160/danshui
 #====================================================
 
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin

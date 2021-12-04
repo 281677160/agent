@@ -226,7 +226,7 @@ function ec_repo_branch() {
   rm -rf openwrte && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrte
   judgeopen "${firmware}源码下载"
   ECHOG "正在处理数据,请耐心等候~~~"
-  cp -rf openwrt/{build_dir,staging_dir,toolchain,tools,config_bf} ${GITHUB_WORKSPACE}/openwrte
+  cp -rf openwrt/{build_dir,staging_dir,config_bf} ${GITHUB_WORKSPACE}/openwrte
   rm -fr openwrt && mv -f openwrte openwrt
 }
 

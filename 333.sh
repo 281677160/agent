@@ -252,6 +252,7 @@ function feeds_clean() {
   cp -Rf "${PATH1}"/diy/* "${Home}"
   cp -Rf "${PATH1}/files" "${Home}" && chmod -R +x ${Home}/files
   rm -rf ${Home}/files/{README,README.md} > /dev/null 2>&1
+  rm -rf ${Home}/dl
 }
 
 function amlogic_s9xxx() {
@@ -477,7 +478,7 @@ function op_make() {
       fi
       print_error "编译失败~~!"
       explorer.exe .
-      ECHOG "请查看openwrt文件夹里面的[build.log]日志文件查找失败原因"
+      print_error "请查看openwrt文件夹里面的[build.log]日志文件查找失败原因"
       sleep 1
       exit 1
     fi
@@ -488,7 +489,7 @@ function op_make() {
       fi
       print_error "编译失败~~!"
       explorer.exe .
-      ECHOG "请查看openwrt文件夹里面的[build.log]日志文件查找失败原因"
+      print_error "请查看openwrt文件夹里面的[build.log]日志文件查找失败原因"
       sleep 1
       exit 1
     fi
@@ -594,7 +595,7 @@ function op_end() {
   ECHOY "后台地址: ${IP}"
   ECHOY "用户名: root"
   ECHOY "固件已经存入${OPENGUJIAN}文件夹中"
-  ECHOY "友情提示：如若配置有更改，请把${config_bf}内容复制,然后覆盖到OP_DIY/${firmware}/${CONFIG_FILE}更新保存配置"
+  ECHOY "友情提示：如若配置有更改，请把${GITHUB_WORKSPACE}/${config_bf}内容复制,然后覆盖到OP_DIY/${firmware}/${CONFIG_FILE}更新保存配置"
   if [[ "${firmware}" == "openwrt_amlogic" ]]; then
     ECHOR "提示：再次输入编译命令可选择打包N1和晶晨系列盒子专用固件"
   fi

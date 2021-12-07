@@ -21,6 +21,7 @@ ERROR="${Red}[ERROR]${Font}"
 # 变量
 export GITHUB_WORKSPACE="$PWD"
 export Home="${GITHUB_WORKSPACE}/openwrt"
+export Builb="${GITHUB_WORKSPACE}/openwrt/build"
 export NETIP="${Home}/package/base-files/files/etc/networkip"
 export DELETE="${Home}/package/base-files/files/etc/deletefile"
 export date1="$(date +'%m-%d')"
@@ -148,6 +149,7 @@ function op_diywenjian() {
     rm -rf bendi && git clone https://github.com/281677160/bendi
     judgeopen "OP_DIY文件下载"
     cp -Rf ${GITHUB_WORKSPACE}/bendi/OP_DIY ${GITHUB_WORKSPACE}/OP_DIY
+    [[ -f ${Builb} ]] && cp -Rf ${GITHUB_WORKSPACE}/OP_DIY/* ${Builb}
     rm -rf bendi
   fi
 }
@@ -253,9 +255,9 @@ function op_jiaoben() {
   rm -rf build-actions
   git clone https://github.com/281677160/common
   judgeopen "额外扩展脚本下载"
-  chmod -R +x common && cp -Rf common ${Home}/build
+  chmod -R +x common && cp -Rf common ${Builb}
   rm -rf common
-  cp -Rf ${Home}/build/common/*.sh ${Home}/build/${firmware}
+  cp -Rf ${Builb}/common/*.sh ${Builb}/${firmware}
 }
 
 function op_diy_zdy() {
@@ -269,6 +271,9 @@ function op_diy_zdy() {
 }
 
 function op_diy_part() {
+  if [[ ! -d ${GITHUB_WORKSPACE}/OP_DIY ]]; then
+    op_diywenjian
+  fi
   cd $Home
   ECHOG "加载自定义设置"
   source "${PATH1}/settings.ini"
@@ -301,7 +306,7 @@ function op_upgrade1() {
   cd $Home
   echo "Compile_Date=$(date +%Y%m%d%H%M)" > Openwrt.info && source Openwrt.info
   if [[ "${REGULAR_UPDATE}" == "true" ]]; then
-    source build/$firmware/upgrade.sh && Diy_Part1
+    source ${Builb}/$firmware/upgrade.sh && Diy_Part1
   fi
 }
 
@@ -315,7 +320,7 @@ function op_menuconfig() {
 function make_defconfig() {
   ECHOG "正在生成配置文件，请稍后..."
   cd $Home
-  source ${Home}/build/${firmware}/common.sh && Diy_chajian
+  source ${Builb}/${firmware}/common.sh && Diy_chajian
   make defconfig
   ./scripts/diffconfig.sh > ${Home}/config_bf
   if [ -n "$(ls -A "${Home}/Chajianlibiao" 2>/dev/null)" ]; then
@@ -349,14 +354,14 @@ function op_config() {
 function op_upgrade2() {
   cd $Home
   if [ "${REGULAR_UPDATE}" == "true" ]; then
-    source build/$firmware/upgrade.sh && Diy_Part2
+    source ${Builb}/$firmware/upgrade.sh && Diy_Part2
   fi
 }
 
 function openwrt_zuihouchuli() {
   # 为编译做最后处理
   cd $Home
-  source build/${firmware}/common.sh && Diy_chuli
+  source ${Builb}/${firmware}/common.sh && Diy_chuli
 }
 
 function op_download() {
@@ -435,7 +440,7 @@ function op_make() {
   if [[ ${firmware} == "Mortal_source" ]] || [[ "${firmware}" == "Tianling_source" ]]; then
     if [[ `ls -a ${COMFIRMWARE} | grep -c "immortalwrt"` == '0' ]]; then
       if [[ ${byop} == "1" ]]; then
-        echo "shibai" >${Home}/build/shibai
+        echo "shibai" >${Builb}/shibai
       fi
       print_error "编译失败~~!"
       explorer.exe .
@@ -446,7 +451,7 @@ function op_make() {
   else
     if [[ `ls -a ${COMFIRMWARE} | grep -c "openwrt"` == '0' ]]; then
       if [[ ${byop} == "1" ]]; then
-        echo "shibai" >${Home}/build/shibai
+        echo "shibai" >${Builb}/shibai
       fi
       print_error "编译失败~~!"
       explorer.exe .
@@ -455,7 +460,7 @@ function op_make() {
       exit 1
     fi
   fi
-  echo "chenggong" >${Home}/build/chenggong
+  echo "chenggong" >${Builb}/chenggong
   rm -rf ${Home}/build.log
 }
 
@@ -463,7 +468,7 @@ function op_upgrade3() {
   cd $Home
   if [[ "${REGULAR_UPDATE}" == "true" ]]; then
     cp -Rf ${Home}/bin/targets/*/* ${Home}/upgrade
-    source ${Home}/build/${firmware}/upgrade.sh && Diy_Part3
+    source ${Builb}/${firmware}/upgrade.sh && Diy_Part3
   fi
   if [[ `ls -a ${Home}/bin/Firmware | grep -c "${Compile_Date}"` -ge '1' ]]; then
     ECHOY "加入‘定时升级固件插件’的固件已经放入[bin/Firmware]文件夹中"
@@ -574,7 +579,7 @@ function op_firmware() {
     export CODE="lede"
     export Modelfile="Lede_source"
     export Core=".Lede_core"
-    export PATH1="${Home}/build/${firmware}"
+    export PATH1="${Builb}/${firmware}"
     export ZZZ="${Home}/package/lean/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_lede"
     export OpenWrt_name="18.06"
@@ -584,7 +589,7 @@ function op_firmware() {
     export CODE="lienol"
     export Modelfile="Lienol_source"
     export Core=".Lienol_core"
-    export PATH1="${Home}/build/${firmware}"
+    export PATH1="${Builb}/${firmware}"
     export ZZZ="${Home}/package/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_lienol"
     export OpenWrt_name="19.07"
@@ -594,7 +599,7 @@ function op_firmware() {
     export CODE="mortal"
     export Modelfile="Mortal_source"
     export Core=".Mortal_core"
-    export PATH1="${Home}/build/${firmware}"
+    export PATH1="${Builb}/${firmware}"
     export ZZZ="${Home}/package/emortal/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_mortal"
     export OpenWrt_name="21.02"
@@ -604,7 +609,7 @@ function op_firmware() {
     export CODE="tianling"
     export Modelfile="Tianling_source"
     export Core=".Tianling_core"
-    export PATH1="${Home}/build/${firmware}"
+    export PATH1="${Builb}/${firmware}"
     export ZZZ="${Home}/package/emortal/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_Tianling"
     export OpenWrt_name="tl-18.06"
@@ -614,7 +619,7 @@ function op_firmware() {
     export CODE="lede"
     export Modelfile="openwrt_amlogic"
     export Core=".amlogic_core"
-    export PATH1="${Home}/build/${firmware}"
+    export PATH1="${Builb}/${firmware}"
     export ZZZ="${Home}/package/lean/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_lede"
     export OpenWrt_name="18.06"
@@ -625,11 +630,11 @@ function openwrt_qx() {
       cd ${GITHUB_WORKSPACE}
       if [[ -d amlogic/amlogic-s9xxx ]]; then
         ECHOGG "发现老旧晶晨内核文件存在，请输入ubuntu密码删除老旧内核"
-        sudo rm -rf amlogic
+        sudo rm -rf ${GITHUB_WORKSPACE}/amlogic
       fi
       if [[ -d ${GITHUB_WORKSPACE}/openwrt ]]; then
         ECHOGG "发现老源码存在，正在删除老源码"
-        rm -rf ${GITHUB_WORKSPACE}/openwrt
+        rm -rf ${Home}
       fi
       openwrt_by
 }

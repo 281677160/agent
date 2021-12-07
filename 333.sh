@@ -276,10 +276,10 @@ function op_feeds_update() {
   ./scripts/feeds update -a
   ./scripts/feeds install -a > /dev/null 2>&1
   ./scripts/feeds install -a
-  if [[ -f ${Home}/config_bf ]]; then
-    cp -rf ${Home}/config_bf ${Home}/.config
+  if [[ -f ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/config ]]; then
+    cp -rf ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/config ${Home}/.config
   else
-    cp -rf ${Home}/build/${firmware}/.config ${Home}/.config
+    cp -rf ${Home}/build/${firmware}/config ${Home}/.config
   fi
   if [[ `grep -c "CONFIG_PACKAGE_luci-theme-argon=y" ${Home}/.config` == '0' ]]; then
     echo -e "\nCONFIG_PACKAGE_luci-theme-argon=y" >> ${Home}/.config

@@ -473,7 +473,7 @@ function op_upgrade3() {
 }
 
 function op_cowtransfer() {
-  if [[ "${UPCOWTRANSFER}" == "true" ]]; then
+  if [[ "${UPLOAD_COWTRANSFER}" == "true" ]]; then
     ECHOY "正在上传固件至奶牛快传中，请稍后..."
     cd ${GITHUB_WORKSPACE}
     curl -fsSL git.io/file-transfer | sh

@@ -670,6 +670,7 @@ function openwrt_sb() {
 }
 
 function openwrt_by() {
+    byop="1"
     op_busuhuanjing
     op_firmware
     op_kongjian

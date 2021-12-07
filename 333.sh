@@ -235,6 +235,10 @@ function qx_repo_branch() {
 
 function feeds_clean() {
   ECHOG "正在更新源码和插件,请耐心等候~~~"
+  cd ${GITHUB_WORKSPACE}
+  if [[ "${firmware}" == "openwrt_amlogic" ]]; then
+    amlogic_s9xxx
+  fi
   cd $Home
   git pull
   ./scripts/feeds clean
@@ -253,6 +257,9 @@ function feeds_clean() {
   cp -Rf "${PATH1}/files" "${Home}" && chmod -R +x ${Home}/files
   rm -rf ${Home}/files/{README,README.md} > /dev/null 2>&1
   rm -rf ${Home}/dl
+  if [[ "${firmware}" == "openwrt_amlogic" ]]; then
+    amlogic_s9xxx
+  fi
 }
 
 function amlogic_s9xxx() {

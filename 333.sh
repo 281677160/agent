@@ -286,7 +286,7 @@ function op_diy_part() {
   if [[ "${REGULAR_UPDATE}" == "true" ]]; then
     ECHOYY "您的Github地址为：$Github"
   fi
-  sleep 5
+  sleep 3
 }
 
 function op_feeds_update() {

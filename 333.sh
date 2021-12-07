@@ -282,6 +282,7 @@ function op_diy_zdy() {
   ECHOG "正在下载插件包,请耐心等候~~~"
   cd $Home
   ./scripts/feeds update -a > /dev/null 2>&1
+  cp -rf ${Home}/zdefault-settings ${ZZZ}
   source "${PATH1}/common.sh" && ${Diy_zdy}
   source "${PATH1}/common.sh" && Diy_all
   judge "插件包下载"
@@ -292,7 +293,6 @@ function op_diy_part() {
   [[ ! -d ${GITHUB_WORKSPACE}/OP_DIY ]] && op_diywenjian
   cd $Home
   ECHOG "加载自定义设置"
-  cp -rf ${Home}/zdefault-settings ${ZZZ}
   [[ "${byop}" == "0" ]] && sed -i '/-rl/d' "${PATH1}/${DIY_PART_SH}"
   source "${PATH1}/settings.ini"
   source "${PATH1}/$DIY_PART_SH"

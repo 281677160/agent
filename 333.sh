@@ -562,8 +562,8 @@ function op_end() {
   fi
   ECHOY "后台地址: ${IP}"
   ECHOY "用户名: root"
-  ECHOY "友情提示：如若配置有更改，请把openwrt里面的config_bf内容复制到OP_DIY/${firmware}/${CONFIG_FILE}里面，更新保存配置"
   ECHOY "固件已经存入${OPENGUJIAN}文件夹中"
+  ECHOY "友情提示：如若配置有更改，请把openwrt里面的config_bf内容复制到OP_DIY/${firmware}/${CONFIG_FILE}里面，更新保存配置"
   if [[ "${firmware}" == "openwrt_amlogic" ]]; then
     ECHOR "提示：再次输入编译命令可选择打包N1和晶晨系列盒子专用固件"
   fi

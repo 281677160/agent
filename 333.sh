@@ -789,15 +789,17 @@ menuop() {
   cd ${GITHUB_WORKSPACE}
   clear
   echo
+  echo
   echo -e " ${Blue}当前源码${Font}：${Green}${firmware}${Font}"
   echo -e " ${Blue}编译机型${Font}：${Green}${TARGET_PROFILE}${Font}"
   echo
+  echo
   echo -e " ${Green}1${Font}.${Yellow}删除旧源码全新编译${Font}"
-  echo -e " ${Green}2${Font}.${Yellow}保留缓存和配置二次编译${Font}"
-  echo -e " ${Green}3${Font}.${Yellow}不更新插件和源码二次编译${Font}"
-  echo -e " ${Green}4${Font}.${Yellow}更换源码编译${Font}"
-  echo -e " ${Green}5${Font}.${Yellow}打包N1和晶晨系列CPU固件${Font}"
-  echo -e " ${Green}6${Font}.${Yellow}退出${Font}"
+  echo -e " ${Green}2${Font}.${Yellow}保留缓存二次编译${Font}"
+  echo -e " ${Green}3${Font}.${Yellow}更换源码编译${Font}"
+  echo -e " ${Green}4${Font}.${Yellow}打包N1和晶晨系列CPU固件${Font}"
+  echo -e " ${Green}5${Font}.${Yellow}退出${Font}"
+  echo
   echo
   XUANZHE="请输入数字"
   while :; do
@@ -830,32 +832,6 @@ menuop() {
   break
   ;;
   2)
-    byop="1"
-    op_firmware
-    op_kongjian
-    op_diywenjian
-    bianyi_xuanxiang
-    ec_repo_branch
-    amlogic_s9xxx
-    op_jiaoben
-    op_diy_zdy
-    op_diy_part
-    op_feeds_update
-    op_upgrade1
-    op_menuconfig
-    make_defconfig
-    op_config
-    op_upgrade2
-    openwrt_zuihouchuli
-    op_download
-    op_cpuxinghao
-    op_make
-    op_upgrade3
-    op_end
-    op_cowtransfer
-  break
-  ;;
-  3)
     byop="0"
     op_firmware
     bianyi_xuanxiang
@@ -875,15 +851,15 @@ menuop() {
     op_cowtransfer
   break
   ;;
-  4)
+  3)
     menu
   break
   ;;
-  5)
+  4)
     op_amlogic
   break
   ;;   
-  6)
+  5)
     exit 0
     break
   ;;

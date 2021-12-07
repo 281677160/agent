@@ -155,6 +155,7 @@ function bianyi_xuanxiang() {
   bash ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/settings.ini
   if [[ "${EVERY_INQUIRY}" == "true" ]]; then
     ECHOY "请在${GITHUB_WORKSPACE}/OP_DIY/${firmware}里面设置好自定义"
+    sleep 3
     echo -e "\\n\\n"
     ECHOY "设置完毕后，按两次回车键以继续..."
     read -s

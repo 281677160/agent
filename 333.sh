@@ -83,7 +83,6 @@ judgeopen() {
   else
     echo
     print_error "$1 失败"
-    rm -rf openwrte
     rm -rf openwrt
     rm -rf amlogic-s9xxx
     rm -rf build-actions
@@ -201,27 +200,12 @@ function op_repo_branch() {
   rm -rf {README,README.md,README_EN.md} > /dev/null 2>&1
 }
 
-function ec_repo_branch() {
-  cd ${GITHUB_WORKSPACE}
-  ECHOG "正在下载源码中,请耐心等候~~~"
-  rm -rf openwrte && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrte
-  judgeopen "${firmware}源码下载"
-  ECHOG "正在处理数据,请耐心等候~~~"
-  cp -rf openwrt/{build_dir,staging_dir,config_bf} ${GITHUB_WORKSPACE}/openwrte
-  rm -fr openwrt && mv -f openwrte openwrt
-}
-
 function qx_repo_branch() {
   cd ${GITHUB_WORKSPACE}
   ECHOG "正在下载源码中,请耐心等候~~~"
   rm -rf openwrte && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrte
-  judgeopen "${firmware}源码下载"
+  judge "${firmware}源码下载"
   ECHOG "正在处理数据,请耐心等候~~~"
-  if [[ -f ${Home}/config_bf ]]; then
-    cp -rf ${Home}/config_bf ${GITHUB_WORKSPACE}/openwrte
-  else
-    cp -rf ${Home}/.config ${GITHUB_WORKSPACE}/openwrte/config_bf
-  fi
   rm -fr openwrt && mv -f openwrte openwrt
 }
 

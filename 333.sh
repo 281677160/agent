@@ -658,7 +658,7 @@ function openwrt_qx() {
 
 function openwrt_sb() {
     ECHOY "因上回编译失败，删除旧源码全新编译"
-    sleep 3
+    sleep 300
     byop="1"
     op_firmware
     op_kongjian

@@ -854,9 +854,9 @@ menuop() {
   3)
     byop="0"
     op_firmware
+    bianyi_xuanxiang
     feeds_clean
     op_diywenjian
-    bianyi_xuanxiang
     op_diy_part
     op_feeds_update
     op_upgrade1

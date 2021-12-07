@@ -22,6 +22,7 @@ ERROR="${Red}[ERROR]${Font}"
 export GITHUB_WORKSPACE="$PWD"
 export Home="${GITHUB_WORKSPACE}/openwrt"
 export NETIP="${Home}/package/base-files/files/etc/networkip"
+export DELETE="${Home}/package/base-files/files/etc/deletefile"
 export date1="$(date +'%m-%d')"
 
 function print_ok() {
@@ -279,10 +280,13 @@ function op_diy_part() {
   source "${PATH1}/$DIY_PART_SH"
   IP="$(grep 'network.lan.ipaddr=' ${PATH1}/$DIY_PART_SH |cut -f1 -d# |egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+")"
   [[ -z "${IP}" ]] && IP="$(grep 'ipaddr:' $Home/package/base-files/files/bin/config_generate |egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+")"
+  echo
+  echo
   ECHOYY "您的后台IP地址为：$IP"
   if [[ "${REGULAR_UPDATE}" == "true" ]]; then
     ECHOYY "您的Github地址为：$Github"
   fi
+  sleep 5
 }
 
 function op_feeds_update() {
@@ -557,9 +561,8 @@ function op_end() {
   else
     ECHOY "使用[ ${firmware} ]文件夹，编译[ ${TARGET_PROFILE} ]顺利编译完成~~~"
   fi
-  ECHOY "后台地址: $ip"
+  ECHOY "后台地址: ${IP}"
   ECHOY "用户名: root"
-  ECHOY "密 码: 无"
   ECHOG "开始时间：${Begin}"
   ECHOG "结束时间：${End}"
   ECHOY "固件已经存入${OPENGUJIAN}文件夹中"

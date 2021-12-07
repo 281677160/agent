@@ -161,6 +161,7 @@ function bianyi_xuanxiang() {
     case $ZDYSZU in
       [Yy])
         echo
+      break
       ;;
       *)
         ZDYSZ="确认设置完毕后，请按[Y/y]回车继续编译"

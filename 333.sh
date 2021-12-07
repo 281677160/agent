@@ -307,6 +307,7 @@ function op_feeds_update() {
 function op_upgrade1() {
   cd $Home
   echo "Compile_Date=$(date +%Y%m%d%H%M)" > Openwrt.info && source Openwrt.info
+  rm -rf Openwrt.info
   if [[ "${REGULAR_UPDATE}" == "true" ]]; then
     source ${Builb}/$firmware/upgrade.sh && Diy_Part1
   fi

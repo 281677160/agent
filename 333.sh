@@ -154,11 +154,16 @@ function op_diywenjian() {
 function bianyi_xuanxiang() {
   cd ${GITHUB_WORKSPACE}
   bash ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/settings.ini
-  ECHOY "请在${GITHUB_WORKSPACE}/OP_DIY/${firmware}里面设置好自定义"
-  echo -e "\\n\\n"
-  ECHOY "设置完毕后，按两次回车键以继续..."
-  read -s
-  read -s
+  if [[ "${EVERY_INQUIRY}" == "true" ]]; then
+    ECHOY "请在${GITHUB_WORKSPACE}/OP_DIY/${firmware}里面设置好自定义"
+    echo -e "\\n\\n"
+    ECHOY "设置完毕后，按两次回车键以继续..."
+    read -s
+    read -s
+  else
+    echo
+  fi
+  bash ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/settings.ini
   echo
   ECHOGG "是否需要选择机型和增删插件?"
   read -p " [输入[ Y/y ]回车确认，直接回车则为否]： " MENU
@@ -239,6 +244,7 @@ function op_jiaoben() {
   cd ${GITHUB_WORKSPACE}
   git clone https://github.com/281677160/build-actions
   judgeopen "编译脚本下载"
+  cp -Rf ${GITHUB_WORKSPACE}/OP_DIY/* build-actions/build
   chmod -R +x build-actions/build && cp -Rf build-actions/build ${Home}
   rm -rf build-actions
   git clone https://github.com/281677160/common
@@ -261,15 +267,7 @@ function op_diy_zdy() {
 function op_diy_part() {
   cd $Home
   echo "
-  uci set network.lan.ipaddr='$ip'
-  uci commit network
-  " > $NETIP
-  sed -i '/CYXluq4wUazHjmCDBCqXF/d' ${ZZZ} > /dev/null 2>&1
-  sed -i "s/OpenWrt /compiled in $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" ${ZZZ}
-  sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ${Home}/feeds/luci/applications` > /dev/null 2>&1
-  sed -i 's/"网络存储"/"NAS"/g' `grep "网络存储" -rl ${Home}/package` > /dev/null 2>&1
-  sed -i 's/"带宽监控"/"监控"/g' `grep "带宽监控" -rl ${Home}/feeds/luci/applications` > /dev/null 2>&1
-  sed -i 's/"Argon 主题设置"/"Argon设置"/g' `grep "Argon 主题设置" -rl ${Home}/feeds/luci` > /dev/null 2>&1
+  bash "${PATH1}/$DIY_PART_SH"
 }
 
 function op_feeds_update() {

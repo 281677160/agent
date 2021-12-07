@@ -198,6 +198,8 @@ function op_repo_branch() {
   ECHOG "正在下载源码中,请耐心等候~~~"
   rm -rf openwrt && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrt
   judgeopen "${firmware}源码下载"
+  rm -rf {README,README.md,README_EN.md} > /dev/null 2>&1
+  cp -rf ${ZZZ} ${Home}/zdefault-settings
 }
 
 function ec_repo_branch() {
@@ -276,6 +278,7 @@ function op_diy_part() {
   fi
   cd $Home
   ECHOG "加载自定义设置"
+  cp -rf ${Home}/zdefault-settings ${ZZZ}
   source "${PATH1}/settings.ini"
   source "${PATH1}/$DIY_PART_SH"
   IP="$(grep 'network.lan.ipaddr=' ${PATH1}/$DIY_PART_SH |cut -f1 -d# |egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+")"

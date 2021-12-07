@@ -153,11 +153,26 @@ function op_diywenjian() {
 function bianyi_xuanxiang() {
   cd ${GITHUB_WORKSPACE}
   source ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/settings.ini
+  if [[ "${EVERY_INQUIRY}" == "true" ]]; then
+    ECHOY "请在${GITHUB_WORKSPACE}/OP_DIY/${firmware}里面设置好自定义文件"
+    ZDYSZ="设置完毕后，按[Y/y]回车继续编译"
+    while :; do
+    read -p " ${ZDYSZ}： " ZDYSZU
+    case $ZDYSZU in
+      [Yy])
+        echo
+      ;;
+      *)
+        ZDYSZ="确认设置完毕后，请按[Y/y]回车继续编译"
+      ;;
+    esac
+    done
+  fi
   echo
   echo
   ECHOGG "是否需要选择机型和增删插件?"
-  read -p " [输入[ Y/y ]回车确认，直接回车则为否]： " MENU
-  case $MENU in
+  read -p " [输入[ Y/y ]回车确认，直接回车则为否]： " MENUu
+  case $MENUu in
     [Yy])
       export Menuconfig="true"
       ECHOYY "您执行机型和增删插件命令,请耐心等待程序运行至窗口弹出进行机型和插件配置!"
@@ -167,13 +182,6 @@ function bianyi_xuanxiang() {
       ECHORR "您已关闭选择机型和增删插件设置！"
     ;;
   esac
-  if [[ "${EVERY_INQUIRY}" == "true" ]]; then
-    ECHOY "请在${GITHUB_WORKSPACE}/OP_DIY/${firmware}里面设置好自定义文件"
-    ECHOG "设置完毕后，按两次回车键以继续..."
-    echo -e "\\n\\n"
-    read -s
-    read -s
-  fi
   source ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/settings.ini
   if [[ "${REGULAR_UPDATE}" == "true" ]]; then
     export Github=${Github}

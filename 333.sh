@@ -152,7 +152,7 @@ function op_diywenjian() {
 
 function bianyi_xuanxiang() {
   cd ${GITHUB_WORKSPACE}
-  bash ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/settings.ini
+  source ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/settings.ini
   if [[ "${EVERY_INQUIRY}" == "true" ]]; then
     ECHOY "请在${GITHUB_WORKSPACE}/OP_DIY/${firmware}里面设置好自定义"
     sleep 3
@@ -163,7 +163,7 @@ function bianyi_xuanxiang() {
   else
     echo
   fi
-  bash ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/settings.ini
+  source ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/settings.ini
   echo
   ECHOGG "是否需要选择机型和增删插件?"
   read -p " [输入[ Y/y ]回车确认，直接回车则为否]： " MENU
@@ -266,8 +266,8 @@ function op_diy_zdy() {
 function op_diy_part() {
   cd $Home
   ECHOG "加载自定义设置"
-  bash ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/settings.ini
-  bash "${PATH1}/$DIY_PART_SH"
+  source ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/settings.ini
+  source "${PATH1}/$DIY_PART_SH"
   IP="$(grep 'network.lan.ipaddr=' ${PATH1}/$DIY_PART_SH |cut -f1 -d# |egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+")"
   [[ -z "${IP}" ]] && IP="$(grep 'ipaddr:' $Home/package/base-files/files/bin/config_generate |egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+")"
   ECHOYY "您的后台IP地址为：$IP"

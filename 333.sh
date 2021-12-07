@@ -275,7 +275,6 @@ function op_diy_part() {
   IP="$(grep 'network.lan.ipaddr=' ${PATH1}/$DIY_PART_SH |cut -f1 -d# |egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+")"
   [[ -z "${IP}" ]] && IP="$(grep 'ipaddr:' $Home/package/base-files/files/bin/config_generate |egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+")"
   echo
-  echo
   ECHOYY "您的后台IP地址为：$IP"
   if [[ "${REGULAR_UPDATE}" == "true" ]]; then
     export Github=${Github}
@@ -284,6 +283,7 @@ function op_diy_part() {
     export Author="${Apidz%/*}"
     export CangKu="${Apidz##*/}"
   fi
+  echo
   sleep 3
 }
 

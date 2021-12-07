@@ -147,7 +147,6 @@ function op_diywenjian() {
     git clone https://github.com/281677160/bendi
     judgeopen "OP_DIY文件下载"
     cp -Rf bendi/OP_DIY ${GITHUB_WORKSPACE}/OP_DIY
-    rm -rf bendi
   fi
 }
 

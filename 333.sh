@@ -248,6 +248,10 @@ function feeds_clean() {
     git clone https://github.com/281677160/luci-app-autoupdate feeds/luci/applications/luci-app-autoupdate
     cp -Rf "${PATH1}"/{AutoUpdate.sh,replace.sh} package/base-files/files/bin
   fi
+  cp -Rf ${GITHUB_WORKSPACE}/OP_DIY/* "${Builb}"
+  cp -Rf "${PATH1}"/diy/* "${Home}"
+  cp -Rf "${PATH1}/files" "${Home}" && chmod -R +x ${Home}/files
+  rm -rf ${Home}/files/{README,README.md} > /dev/null 2>&1
 }
 
 function amlogic_s9xxx() {

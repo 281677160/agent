@@ -275,6 +275,7 @@ function op_jiaoben() {
   chmod -R +x common && cp -Rf common ${Builb}
   rm -rf common
   cp -Rf ${Builb}/common/*.sh ${Builb}/${firmware}
+  cp -rf ${ZZZ} ${Home}/zdefault-settings
 }
 
 function op_diy_zdy() {
@@ -284,13 +285,11 @@ function op_diy_zdy() {
   source "${PATH1}/common.sh" && ${Diy_zdy}
   source "${PATH1}/common.sh" && Diy_all
   judge "插件包下载"
-  cp -rf ${ZZZ} ${Home}/zdefault-settings
 }
 
 function op_diy_part() {
-  if [[ ! -d ${GITHUB_WORKSPACE}/OP_DIY ]]; then
-    op_diywenjian
-  fi
+  cd ${GITHUB_WORKSPACE}
+  [[ ! -d ${GITHUB_WORKSPACE}/OP_DIY ]] && op_diywenjian
   cd $Home
   ECHOG "加载自定义设置"
   cp -rf ${Home}/zdefault-settings ${ZZZ}

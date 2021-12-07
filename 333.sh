@@ -234,11 +234,20 @@ function qx_repo_branch() {
 }
 
 function feeds_clean() {
-  ECHOG "正在下载插件包,请耐心等候~~~"
+  ECHOG "正在更新源码和插件,请耐心等候~~~"
   cd $Home
   git pull
   ./scripts/feeds clean
   rm -rf ${Home}/package/{luci-app-passwall,luci-app-ssr-plus}
+  ./scripts/feeds update -a > /dev/null 2>&1
+  cp -rf ${Home}/zdefault-settings ${ZZZ}
+  source "${PATH1}/common.sh" && ${Diy_zdy}
+  git clone --depth 1 -b "${REPO_BRANCH}" https://github.com/281677160/openwrt-package "${Home}"/openwrt-package
+  cp -Rf "${Home}"/openwrt-package/* "${Home}" && rm -rf "${Home}"/openwrt-package
+  if [[ ${REGULAR_UPDATE} == "true" ]]; then
+    git clone https://github.com/281677160/luci-app-autoupdate feeds/luci/applications/luci-app-autoupdate
+    cp -Rf "${PATH1}"/{AutoUpdate.sh,replace.sh} package/base-files/files/bin
+  fi
 }
 
 function amlogic_s9xxx() {
@@ -846,7 +855,6 @@ menuop() {
     byop="0"
     op_firmware
     feeds_clean
-    op_diy_zdy
     op_diywenjian
     bianyi_xuanxiang
     op_diy_part

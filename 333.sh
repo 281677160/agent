@@ -828,7 +828,9 @@ menuop() {
   ;;
   3)
     byop="0"
+    g' `grep
     op_firmware
+    sed -i '/g' `grep/d' $ZZZ
     op_diywenjian
     bianyi_xuanxiang
     op_diy_part

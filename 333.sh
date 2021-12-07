@@ -829,7 +829,6 @@ menuop() {
   ;;
   3)
     byop="0"
-    g' `grep
     op_firmware
     op_diywenjian
     bianyi_xuanxiang

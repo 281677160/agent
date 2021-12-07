@@ -158,6 +158,7 @@ function bianyi_xuanxiang() {
   if [[ "${EVERY_INQUIRY}" == "true" ]]; then
     ECHOY "请在${GITHUB_WORKSPACE}/OP_DIY/${firmware}里面设置好自定义文件"
     ZDYSZ="设置完毕后，按[Y/y]回车继续编译"
+    explorer.exe .
     while :; do
     read -p " ${ZDYSZ}： " ZDYSZU
     case $ZDYSZU in

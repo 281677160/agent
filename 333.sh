@@ -294,14 +294,7 @@ function op_feeds_update() {
   ./scripts/feeds update -a
   ./scripts/feeds install -a > /dev/null 2>&1
   ./scripts/feeds install -a
-  if [[ -f ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/${CONFIG_FILE} ]]; then
-    cp -rf ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/${CONFIG_FILE} ${Home}/.config
-  else
-    cp -rf ${Home}/build/${firmware}/.config ${Home}/.config
-  fi
-  if [[ `grep -c "CONFIG_PACKAGE_luci-theme-argon=y" ${Home}/.config` == '0' ]]; then
-    echo -e "\nCONFIG_PACKAGE_luci-theme-argon=y" >> ${Home}/.config
-  fi
+  cp -rf ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/${CONFIG_FILE} ${Home}/.config
 }
 
 function op_upgrade1() {
@@ -829,6 +822,8 @@ menuop() {
     op_firmware
     op_diywenjian
     bianyi_xuanxiang
+    op_diy_part
+    op_feeds_update
     op_upgrade1
     op_menuconfig
     make_defconfig

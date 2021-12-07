@@ -640,7 +640,7 @@ function openwrt_qx() {
 }
 
 function openwrt_sb() {
-    ECHOY "因上回编译失败，正在使用保留配置全新编译"
+    ECHOY "因上回编译失败，删除旧源码全新编译"
     sleep 3
     byop="1"
     op_firmware
@@ -758,7 +758,7 @@ menuop() {
   echo -e " ${Blue}当前源码${Font}：${Green}${firmware}${Font}"
   echo -e " ${Blue}编译机型${Font}：${Green}${TARGET_PROFILE}${Font}"
   echo
-  echo -e " ${Green}1${Font}.${Yellow}保留配置全新编译${Font}"
+  echo -e " ${Green}1${Font}.${Yellow}删除旧源码全新编译${Font}"
   echo -e " ${Green}2${Font}.${Yellow}保留缓存和配置二次编译${Font}"
   echo -e " ${Green}3${Font}.${Yellow}不更新插件和源码二次编译${Font}"
   echo -e " ${Green}4${Font}.${Yellow}更换源码编译${Font}"

@@ -154,7 +154,11 @@ function op_diywenjian() {
 function bianyi_xuanxiang() {
   cd ${GITHUB_WORKSPACE}
   bash ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/settings.ini
-  echo
+  ECHOY "请在${GITHUB_WORKSPACE}/OP_DIY/${firmware}里面设置好自定义"
+  echo -e "\\n\\n"
+  ECHOY "设置完毕后，按两次回车键以继续..."
+  read -s
+  read -s
   echo
   ECHOGG "是否需要选择机型和增删插件?"
   read -p " [输入[ Y/y ]回车确认，直接回车则为否]： " MENU
@@ -168,7 +172,6 @@ function bianyi_xuanxiang() {
       ECHORR "您已关闭选择机型和增删插件设置！"
     ;;
   esac
-
   if [[ "${REGULAR_UPDATE}" == "true" ]]; then
     export Github=${Github}
     ECHOYY "您的Github地址为：$Github"
@@ -566,7 +569,6 @@ function op_firmware() {
     export ZZZ="${Home}/package/lean/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_lede"
     export OpenWrt_name="18.06"
-    [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
   fi
   if [[ "${firmware}" == "Lienol_source" ]] || [[ -n "$(ls -A "${Home}/.Lienol_core" 2>/dev/null)" ]]; then
     export firmware="Lienol_source"
@@ -577,7 +579,6 @@ function op_firmware() {
     export ZZZ="${Home}/package/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_lienol"
     export OpenWrt_name="19.07"
-    [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
   fi
   if [[ "${firmware}" == "Mortal_source" ]] || [[ -n "$(ls -A "${Home}/.Mortal_core" 2>/dev/null)" ]]; then
     export firmware="Mortal_source"
@@ -588,7 +589,6 @@ function op_firmware() {
     export ZZZ="${Home}/package/emortal/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_mortal"
     export OpenWrt_name="21.02"
-    [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
   fi
   if [[ "${firmware}" == "Tianling_source" ]] || [[ -n "$(ls -A "${Home}/.Tianling_core" 2>/dev/null)" ]]; then
     export firmware="Tianling_source"
@@ -599,7 +599,6 @@ function op_firmware() {
     export ZZZ="${Home}/package/emortal/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_Tianling"
     export OpenWrt_name="tl-18.06"
-    [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
   fi
   if [[ "${firmware}" == "openwrt_amlogic" ]] || [[ -n "$(ls -A "${Home}/.amlogic_core" 2>/dev/null)" ]]; then
     export firmware="openwrt_amlogic"
@@ -610,7 +609,6 @@ function op_firmware() {
     export ZZZ="${Home}/package/lean/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_lede"
     export OpenWrt_name="18.06"
-    [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
   fi
 }
 

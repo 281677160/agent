@@ -86,6 +86,7 @@ judgeopen() {
     rm -rf amlogic-s9xxx
     rm -rf build-actions
     rm -rf common
+    rm -rf ${GITHUB_WORKSPACE}/OP_DIY
     echo
     exit 1
   fi
@@ -140,13 +141,19 @@ function op_kongjian() {
   fi
 }
 
+function op_diywenjian() {
+  cd ${GITHUB_WORKSPACE}
+  if [[ ! -d ${GITHUB_WORKSPACE}/OP_DIY ]]; then
+    git clone https://github.com/281677160/bendi
+    judgeopen "OP_DIY文件下载"
+    cp -Rf bendi/OP_DIY ${GITHUB_WORKSPACE}/OP_DIY
+    rm -rf bendi
+  fi
+}
+
 function bianyi_xuanxiang() {
   cd ${GITHUB_WORKSPACE}
-  [[ -z ${ipdz} ]] && export ipdz="192.168.1.1"
-  ECHOGG "设置openwrt的后台IP地址[ 直接回车则默认 $ipdz ]"
-  read -p " 请输入后台IP地址：" ip
-  export ip=${ip:-"$ipdz"}
-  ECHOYY "您的后台地址为：$ip"
+  bash ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/settings.ini
   echo
   echo
   ECHOGG "是否需要选择机型和增删插件?"
@@ -161,56 +168,15 @@ function bianyi_xuanxiang() {
       ECHORR "您已关闭选择机型和增删插件设置！"
     ;;
   esac
-  echo
-  echo
-  ECHOGG "是否把固件上传到<奶牛快传>?"
-  read -p " [输入[ Y/y ]回车确认，直接回车则为否]： " NNKC
-  case $NNKC in
-    [Yy])
-      export UPCOWTRANSFER="true"
-      ECHOYY "您执行了上传固件到<奶牛快传>!"
-    ;;
-    *)
-      export UPCOWTRANSFER="false"
-      ECHORR "您已关闭上传固件到<奶牛快传>！"
-    ;;
-  esac
-  echo
-  echo
-  if [[ ! $firmware == "openwrt_amlogic" ]]; then
-    ECHOGG "是否把定时更新插件编译进固件?"
-    read -p " [输入[ Y/y ]回车确认，直接回车则为否]： " RELE
-    case $RELE in
-      [Yy])
-        export REGULAR_UPDATE="true"
-      ;;
-      *)
-        ECHORR "您已关闭‘把定时更新插件’编译进固件！"
-        export REGULAR_UPDATE="false"
-	[[ -z ${Git} ]] && export Git="https://github.com/281677160/build-actions"
-      ;;
-    esac
-  fi
+
   if [[ "${REGULAR_UPDATE}" == "true" ]]; then
-    [[ -z ${Git} ]] && export Git="https://github.com/281677160/build-actions"
-    ECHOYY "设置Github地址,定时更新固件需要把固件传至对应地址的Releases"
-    ECHOGG "回车则默认为：$Git"
-    read -p " 请输入Github地址：" Github
-    export Github=${Github:-"$Git"}
+    export Github=${Github}
     ECHOYY "您的Github地址为：$Github"
     export Apidz="${Github##*com/}"
     export Author="${Apidz%/*}"
     export CangKu="${Apidz##*/}"
   fi
   sleep 2
-}
-
-function op_ip() {
-  cd ${GITHUB_WORKSPACE}
-  echo "
-  ipdz=$ip
-  Git=$Github
-  " > ${GITHUB_WORKSPACE}/ip
 }
 
 function op_repo_branch() {
@@ -263,10 +229,7 @@ function amlogic_s9xxx() {
     judge "内核运行文件下载"
     chmod 777 amlogic/make
   fi
-  echo "
-  ipdz=$ip
-  Git=$Github
-  " > ${Home}/${Core}
+  echo "${Core}" > ${Home}/${Core}
 }
 
 function op_jiaoben() {
@@ -818,6 +781,7 @@ menuop() {
     byop="1"
     op_firmware
     op_kongjian
+    op_diywenjian
     bianyi_xuanxiang
     op_ip
     qx_repo_branch
@@ -844,6 +808,7 @@ menuop() {
     byop="1"
     op_firmware
     op_kongjian
+    op_diywenjian
     bianyi_xuanxiang
     op_ip
     ec_repo_branch

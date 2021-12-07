@@ -389,7 +389,7 @@ function op_download() {
   cd $Home
   ECHOG "下载DL文件，请耐心等候..."
   rm -fr ${Home}/build.log
-  make -j8 download 2>&1 |tee ${Home}/build.log
+  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin make -j8 download 2>&1 |tee ${Home}/build.log
   find dl -size -1024c -exec ls -l {} \;
   find dl -size -1024c -exec rm -f {} \;
   if [[ `grep -c "make with -j1 V=s or V=sc" ${Home}/build.log` == '0' ]] || [[ `grep -c "ERROR" ${Home}/build.log` == '0' ]]; then
@@ -457,7 +457,7 @@ function op_make() {
   fi
   rm -fr ${COMFIRMWARE}/*
   rm -fr ${Home}/bin/Firmware/*
-  make -j${npro} V=s 2>&1 |tee build.log
+  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin make -j${npro} V=s 2>&1 |tee ${Home}/build.log
   if [[ ${firmware} == "Mortal_source" ]] || [[ "${firmware}" == "Tianling_source" ]]; then
     if [[ `ls -a ${COMFIRMWARE} | grep -c "immortalwrt"` == '0' ]]; then
       if [[ ${byop} == "1" ]]; then

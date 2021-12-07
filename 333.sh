@@ -635,8 +635,8 @@ function openwrt_sb() {
     byop="1"
     op_firmware
     op_kongjian
+    op_diywenjian
     bianyi_xuanxiang
-    op_ip
     qx_repo_branch
     amlogic_s9xxx
     op_jiaoben
@@ -661,8 +661,8 @@ function openwrt_by() {
     op_busuhuanjing
     op_firmware
     op_kongjian
+    op_diywenjian
     bianyi_xuanxiang
-    op_ip
     op_repo_branch
     amlogic_s9xxx
     op_jiaoben
@@ -765,7 +765,6 @@ menuop() {
     op_kongjian
     op_diywenjian
     bianyi_xuanxiang
-    op_ip
     qx_repo_branch
     amlogic_s9xxx
     op_jiaoben
@@ -792,7 +791,6 @@ menuop() {
     op_kongjian
     op_diywenjian
     bianyi_xuanxiang
-    op_ip
     ec_repo_branch
     amlogic_s9xxx
     op_jiaoben
@@ -816,8 +814,8 @@ menuop() {
   3)
     byop="0"
     op_firmware
+    op_diywenjian
     bianyi_xuanxiang
-    op_ip
     op_upgrade1
     op_menuconfig
     make_defconfig

@@ -562,8 +562,7 @@ function op_end() {
   fi
   ECHOY "后台地址: ${IP}"
   ECHOY "用户名: root"
-  ECHOG "开始时间：${Begin}"
-  ECHOG "结束时间：${End}"
+  ECHOY "友情提示：如若配置有更改，请把openwrt里面的config_bf内容复制到OP_DIY/${firmware}/${CONFIG_FILE}里面，更新保存配置"
   ECHOY "固件已经存入${OPENGUJIAN}文件夹中"
   if [[ "${firmware}" == "openwrt_amlogic" ]]; then
     ECHOR "提示：再次输入编译命令可选择打包N1和晶晨系列盒子专用固件"
@@ -571,6 +570,8 @@ function op_end() {
   if [[ "${upgra}" == "1" ]]; then
     ECHOG "${dsgx}"
   fi
+  ECHOG "开始时间：${Begin}"
+  ECHOG "结束时间：${End}"
   explorer.exe .
 }
 

@@ -468,8 +468,7 @@ function op_make() {
   if [[ "${npro}" -gt "16" ]];then
     npro="16"
   fi
-  rm -fr ${COMFIRMWARE}/*
-  rm -fr ${Home}/bin/Firmware/*
+  rm -fr ${COMFIRMWARE}/* > /dev/null 2>&1
   PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin make -j${npro} V=s 2>&1 |tee ${Home}/build.log
   if [[ ${firmware} == "Mortal_source" ]] || [[ "${firmware}" == "Tianling_source" ]]; then
     if [[ `ls -a ${COMFIRMWARE} | grep -c "immortalwrt"` == '0' ]]; then
@@ -501,6 +500,7 @@ function op_make() {
 function op_upgrade3() {
   cd $Home
   if [[ "${REGULAR_UPDATE}" == "true" ]]; then
+    rm -fr ${Home}/bin/Firmware/* > /dev/null 2>&1
     cp -Rf ${Home}/bin/targets/*/* ${Home}/upgrade
     source ${PATH1}/upgrade.sh && Diy_Part3
   fi

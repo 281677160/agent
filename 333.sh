@@ -173,6 +173,7 @@ function bianyi_xuanxiang() {
   fi
   echo
   echo
+  source ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/settings.ini
   ECHOGG "是否需要选择机型和增删插件?"
   read -p " [输入[ Y/y ]回车确认，直接回车则为否]： " MENUu
   case $MENUu in
@@ -185,13 +186,6 @@ function bianyi_xuanxiang() {
       ECHORR "您已关闭选择机型和增删插件设置！"
     ;;
   esac
-  source ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/settings.ini
-  if [[ "${REGULAR_UPDATE}" == "true" ]]; then
-    export Github=${Github}
-    export Apidz="${Github##*com/}"
-    export Author="${Apidz%/*}"
-    export CangKu="${Apidz##*/}"
-  fi
   sleep 2
 }
 
@@ -276,7 +270,7 @@ function op_diy_zdy() {
 function op_diy_part() {
   cd $Home
   ECHOG "加载自定义设置"
-  source ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/settings.ini
+  source "${PATH1}/settings.ini"
   source "${PATH1}/$DIY_PART_SH"
   IP="$(grep 'network.lan.ipaddr=' ${PATH1}/$DIY_PART_SH |cut -f1 -d# |egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+")"
   [[ -z "${IP}" ]] && IP="$(grep 'ipaddr:' $Home/package/base-files/files/bin/config_generate |egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+")"
@@ -284,7 +278,11 @@ function op_diy_part() {
   echo
   ECHOYY "您的后台IP地址为：$IP"
   if [[ "${REGULAR_UPDATE}" == "true" ]]; then
+    export Github=${Github}
     ECHOYY "您的Github地址为：$Github"
+    export Apidz="${Github##*com/}"
+    export Author="${Apidz%/*}"
+    export CangKu="${Apidz##*/}"
   fi
   sleep 3
 }

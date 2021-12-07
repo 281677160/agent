@@ -457,10 +457,12 @@ function op_make() {
   rm -fr ${COMFIRMWARE}/*
   rm -fr ${Home}/bin/Firmware/*
   PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin make -j${npro} V=s 2>&1 |tee build.log
-  judge "编译"
   if [[ ${firmware} == "Mortal_source" ]] || [[ "${firmware}" == "Tianling_source" ]]; then
     if [[ `ls -a ${COMFIRMWARE} | grep -c "immortalwrt"` == '0' ]]; then
-      print_error "没发现固件存在，编译失败~~!"
+      if [[ ${byop} == "1" ]]; then
+        echo "shibai" >${Home}/build/shibai
+      fi
+      print_error "编译失败~~!"
       explorer.exe .
       ECHOG "请查看openwrt文件夹里面的[build.log]日志文件查找失败原因"
       sleep 1
@@ -468,7 +470,10 @@ function op_make() {
     fi
   else
     if [[ `ls -a ${COMFIRMWARE} | grep -c "openwrt"` == '0' ]]; then
-      print_error "没发现固件存在，编译失败~~!"
+      if [[ ${byop} == "1" ]]; then
+        echo "shibai" >${Home}/build/shibai
+      fi
+      print_error "编译失败~~!"
       explorer.exe .
       ECHOG "请查看openwrt文件夹里面的[build.log]日志文件查找失败原因"
       sleep 1
@@ -494,11 +499,13 @@ function op_upgrade3() {
     export upgra="0"
   fi
   cd ${COMFIRMWARE}
-  if [[ ${firmware} == "Mortal_source" ]] || [[ "${firmware}" == "Tianling_source" ]]; then
-    rename -v "s/^immortalwrt/${date1}-${CODE}/" * > /dev/null 2>&1
-  else
-    rename -v "s/^openwrt/${date1}-${CODE}/" * > /dev/null 2>&1
+  rename -v "s/^immortalwrt/openwrt/" * > /dev/null 2>&1
+  if [[ -f ${GITHUB_WORKSPACE}/Clear ]]; then
+    mv -f ${GITHUB_WORKSPACE}/Clear ./
+    chmod +x Clear && source Clear
+    rm -fr Clear
   fi
+  rename -v "s/^openwrt/${date1}-${CODE}/" * > /dev/null 2>&1
   cd ${Home}
 }
 
@@ -664,6 +671,47 @@ function op_firmware() {
   fi
 }
 
+function openwrt_qx() {
+      cd ${GITHUB_WORKSPACE}
+      if [[ -d amlogic/amlogic-s9xxx ]]; then
+        ECHOGG "发现老旧晶晨内核文件存在，请输入ubuntu密码删除老旧内核"
+        sudo rm -rf amlogic
+      fi
+      if [[ -d ${GITHUB_WORKSPACE}/openwrt ]]; then
+        ECHOGG "发现老源码存在，正在删除老源码"
+        rm -rf ${GITHUB_WORKSPACE}/openwrt
+      fi
+      openwrt_by
+}
+
+function openwrt_sb() {
+    ECHOY "因上回编译失败，正在使用保留配置全新编译"
+    sleep 3
+    byop="1"
+    op_firmware
+    op_kongjian
+    bianyi_xuanxiang
+    op_ip
+    qx_repo_branch
+    amlogic_s9xxx
+    op_jiaoben
+    op_diy_zdy
+    op_diy_part
+    op_feeds_update
+    op_upgrade1
+    op_menuconfig
+    make_defconfig
+    op_config
+    op_upgrade2
+    openwrt_zuihouchuli
+    op_download
+    op_cpuxinghao
+    op_make
+    op_upgrade3
+    op_end
+    op_cowtransfer
+}
+
 function openwrt_by() {
     op_busuhuanjing
     op_firmware
@@ -707,56 +755,31 @@ menu() {
     1)
       export firmware="Lede_source"
       ECHOG "您选择了：Lede_5.4内核,LUCI 18.06版本"
-      rm -rf ${GITHUB_WORKSPACE}/openwrt
-      if [[ -d amlogic/amlogic-s9xxx ]]; then
-        ECHOGG "发现老旧晶晨内核文件存在，请输入ubuntu密码删除老旧内核"
-        sudo rm -rf amlogic
-      fi
-      openwrt_by
+      openwrt_qx
     break
     ;;
     2)
       export firmware="Lienol_source"
       ECHOG "您选择了：Lienol_4.14内核,LUCI 17.01版本"
-      rm -rf ${GITHUB_WORKSPACE}/openwrt
-      if [[ -d amlogic/amlogic-s9xxx ]]; then
-        ECHOGG "发现老旧晶晨内核文件存在，请输入ubuntu密码删除老旧内核"
-        sudo rm -rf amlogic
-      fi
-      openwrt_by
+      openwrt_qx
     break
     ;;
     3)
       export firmware="Mortal_source"
       ECHOG "您选择了：Immortalwrt_5.4内核,LUCI 21.02版本"
-      rm -rf ${GITHUB_WORKSPACE}/openwrt
-      if [[ -d amlogic/amlogic-s9xxx ]]; then
-        ECHOGG "发现老旧晶晨内核文件存在，请输入ubuntu密码删除老旧内核"
-        sudo rm -rf amlogic
-      fi
-      openwrt_by
+      openwrt_qx
     break
     ;;
     4)
       export firmware="Tianling_source"
       ECHOG "您选择了：Immortalwrt_4.14内核,LUCI 18.06版本"
-      rm -rf ${GITHUB_WORKSPACE}/openwrt
-      if [[ -d amlogic/amlogic-s9xxx ]]; then
-        ECHOGG "发现老旧晶晨内核文件存在，请输入ubuntu密码删除老旧内核"
-        sudo rm -rf amlogic
-      fi
-      openwrt_by
+      openwrt_qx
     break
     ;;
     5)
       export firmware="openwrt_amlogic"
       ECHOG "您选择了：N1和晶晨系列CPU盒子专用"
-      rm -rf ${GITHUB_WORKSPACE}/openwrt
-      if [[ -d amlogic/amlogic-s9xxx ]]; then
-        ECHOGG "发现老旧晶晨内核文件存在，请输入ubuntu密码删除老旧内核"
-        sudo rm -rf amlogic
-      fi
-      openwrt_by
+      openwrt_qx
     break
     ;;
     6)
@@ -792,6 +815,7 @@ menuop() {
   read -p " ${XUANZHE}：" menu_num
   case $menu_num in
   1)
+    byop="1"
     op_firmware
     op_kongjian
     bianyi_xuanxiang
@@ -817,6 +841,7 @@ menuop() {
   break
   ;;
   2)
+    byop="1"
     op_firmware
     op_kongjian
     bianyi_xuanxiang
@@ -842,6 +867,7 @@ menuop() {
   break
   ;;
   3)
+    byop="0"
     op_firmware
     bianyi_xuanxiang
     op_ip
@@ -876,7 +902,9 @@ menuop() {
   esac
   done
 }
-if [[ -d ${Home}/build_dir ]] && [[ -d ${Home}/toolchain ]] && [[ -d ${Home}/tools ]] && [[ -d ${Home}/staging_dir ]] && [[ -f ${Home}/build/chenggong ]] && [[ -f ${Home}/.config ]]; then
+if [[ -f ${Home}/build/shibai ]]; then
+	openwrt_sb
+elif [[ -d ${Home}/build_dir ]] && [[ -d ${Home}/toolchain ]] && [[ -d ${Home}/tools ]] && [[ -d ${Home}/staging_dir ]] && [[ -f ${Home}/build/chenggong ]] && [[ -f ${Home}/.config ]]; then
 	menuop "$@"
 else
 	menu "$@"

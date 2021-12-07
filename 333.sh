@@ -7,6 +7,14 @@
 #	github: https://github.com/281677160/danshui
 #====================================================
 
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+stty erase ^?
+
+cd "$(
+  cd "$(dirname "$0")" || exit
+  pwd
+)" || exit
+
 # 字体颜色配置
 Green="\033[32m"
 Red="\033[31m"
@@ -441,7 +449,7 @@ function op_make() {
   fi
   rm -fr ${COMFIRMWARE}/*
   rm -fr ${Home}/bin/Firmware/*
-  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin make -j${npro} V=s 2>&1 |tee build.log
+  make -j${npro} V=s 2>&1 |tee build.log
   if [[ ${firmware} == "Mortal_source" ]] || [[ "${firmware}" == "Tianling_source" ]]; then
     if [[ `ls -a ${COMFIRMWARE} | grep -c "immortalwrt"` == '0' ]]; then
       if [[ ${byop} == "1" ]]; then

@@ -199,7 +199,6 @@ function op_repo_branch() {
   rm -rf openwrt && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrt
   judgeopen "${firmware}源码下载"
   rm -rf {README,README.md,README_EN.md} > /dev/null 2>&1
-  cp -rf ${ZZZ} ${Home}/zdefault-settings
 }
 
 function ec_repo_branch() {
@@ -267,9 +266,9 @@ function op_diy_zdy() {
   cd $Home
   ./scripts/feeds update -a > /dev/null 2>&1
   source "${PATH1}/common.sh" && ${Diy_zdy}
-  judge "passwall和ssr plus下载"
   source build/${firmware}/common.sh && Diy_all
   judge "插件包下载"
+  cp -rf ${ZZZ} ${Home}/zdefault-settings
 }
 
 function op_diy_part() {

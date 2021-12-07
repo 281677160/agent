@@ -563,12 +563,8 @@ function op_firmware() {
     export Modelfile="Lede_source"
     export Core=".Lede_core"
     export PATH1="${Home}/build/${firmware}"
-    export REPO_URL="https://github.com/coolsnowwolf/lede"
-    export REPO_BRANCH="master"
     export ZZZ="${Home}/package/lean/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_lede"
-    export CONFIG_FILE=".config"
-    export DIY_PART_SH="diy-part.sh"
     export OpenWrt_name="18.06"
     [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
   fi
@@ -578,12 +574,8 @@ function op_firmware() {
     export Modelfile="Lienol_source"
     export Core=".Lienol_core"
     export PATH1="${Home}/build/${firmware}"
-    export REPO_URL="https://github.com/Lienol/openwrt"
-    export REPO_BRANCH="19.07"
     export ZZZ="${Home}/package/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_lienol"
-    export CONFIG_FILE=".config"
-    export DIY_PART_SH="diy-part.sh"
     export OpenWrt_name="19.07"
     [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
   fi
@@ -593,12 +585,8 @@ function op_firmware() {
     export Modelfile="Mortal_source"
     export Core=".Mortal_core"
     export PATH1="${Home}/build/${firmware}"
-    export REPO_URL="https://github.com/immortalwrt/immortalwrt"
-    export REPO_BRANCH="openwrt-21.02"
     export ZZZ="${Home}/package/emortal/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_mortal"
-    export CONFIG_FILE=".config"
-    export DIY_PART_SH="diy-part.sh"
     export OpenWrt_name="21.02"
     [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
   fi
@@ -608,12 +596,8 @@ function op_firmware() {
     export Modelfile="Tianling_source"
     export Core=".Tianling_core"
     export PATH1="${Home}/build/${firmware}"
-    export REPO_URL="https://github.com/immortalwrt/immortalwrt"
-    export REPO_BRANCH="openwrt-18.06"
     export ZZZ="${Home}/package/emortal/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_Tianling"
-    export CONFIG_FILE=".config"
-    export DIY_PART_SH="diy-part.sh"
     export OpenWrt_name="tl-18.06"
     [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
   fi
@@ -623,12 +607,8 @@ function op_firmware() {
     export Modelfile="openwrt_amlogic"
     export Core=".amlogic_core"
     export PATH1="${Home}/build/${firmware}"
-    export REPO_URL="https://github.com/coolsnowwolf/lede"
-    export REPO_BRANCH="master"
     export ZZZ="${Home}/package/lean/default-settings/files/zzz-default-settings"
     export Diy_zdy="Diy_lede"
-    export CONFIG_FILE=".config"
-    export DIY_PART_SH="diy-part.sh"
     export OpenWrt_name="18.06"
     [[ -f ${GITHUB_WORKSPACE}/ip ]] && source ${GITHUB_WORKSPACE}/ip
   fi

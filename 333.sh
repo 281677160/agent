@@ -266,7 +266,7 @@ function op_diy_zdy() {
   cd $Home
   ./scripts/feeds update -a > /dev/null 2>&1
   source "${PATH1}/common.sh" && ${Diy_zdy}
-  source build/${firmware}/common.sh && Diy_all
+  source "${PATH1}/common.sh" && Diy_all
   judge "插件包下载"
   cp -rf ${ZZZ} ${Home}/zdefault-settings
 }
@@ -278,6 +278,7 @@ function op_diy_part() {
   cd $Home
   ECHOG "加载自定义设置"
   cp -rf ${Home}/zdefault-settings ${ZZZ}
+  [[ "${byop}" == "0" ]] && sed -i '/-rl/d' "${PATH1}/${DIY_PART_SH}"
   source "${PATH1}/settings.ini"
   source "${PATH1}/$DIY_PART_SH"
   IP="$(grep 'network.lan.ipaddr=' ${PATH1}/$DIY_PART_SH |cut -f1 -d# |egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+")"
@@ -309,7 +310,7 @@ function op_upgrade1() {
   echo "Compile_Date=$(date +%Y%m%d%H%M)" > Openwrt.info && source Openwrt.info
   rm -rf Openwrt.info
   if [[ "${REGULAR_UPDATE}" == "true" ]]; then
-    source ${Builb}/$firmware/upgrade.sh && Diy_Part1
+    source ${PATH1}/upgrade.sh && Diy_Part1
   fi
 }
 
@@ -324,7 +325,7 @@ function make_defconfig() {
   ECHOG "正在生成配置文件，请稍后..."
   config_bf="${CODE}.config"
   cd $Home
-  source ${Builb}/${firmware}/common.sh && Diy_chajian
+  source ${PATH1}/common.sh && Diy_chajian
   make defconfig
   ./scripts/diffconfig.sh > ${GITHUB_WORKSPACE}/${config_bf}
   if [ -n "$(ls -A "${Home}/Chajianlibiao" 2>/dev/null)" ]; then
@@ -358,14 +359,14 @@ function op_config() {
 function op_upgrade2() {
   cd $Home
   if [ "${REGULAR_UPDATE}" == "true" ]; then
-    source ${Builb}/$firmware/upgrade.sh && Diy_Part2
+    source ${PATH1}/upgrade.sh && Diy_Part2
   fi
 }
 
 function openwrt_zuihouchuli() {
   # 为编译做最后处理
   cd $Home
-  source ${Builb}/${firmware}/common.sh && Diy_chuli
+  source ${PATH1}/common.sh && Diy_chuli
 }
 
 function op_download() {
@@ -472,7 +473,7 @@ function op_upgrade3() {
   cd $Home
   if [[ "${REGULAR_UPDATE}" == "true" ]]; then
     cp -Rf ${Home}/bin/targets/*/* ${Home}/upgrade
-    source ${Builb}/${firmware}/upgrade.sh && Diy_Part3
+    source ${PATH1}/upgrade.sh && Diy_Part3
   fi
   if [[ `ls -a ${Home}/bin/Firmware | grep -c "${Compile_Date}"` -ge '1' ]]; then
     ECHOY "加入‘定时升级固件插件’的固件已经放入[bin/Firmware]文件夹中"
@@ -830,7 +831,6 @@ menuop() {
     byop="0"
     g' `grep
     op_firmware
-    sed -i '/g' `grep/d' $ZZZ
     op_diywenjian
     bianyi_xuanxiang
     op_diy_part

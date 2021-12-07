@@ -268,7 +268,8 @@ function op_diy_part() {
   ECHOG "加载自定义设置"
   bash ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/settings.ini
   bash "${PATH1}/$DIY_PART_SH"
-  IP="$(grep 'network.lan.ipaddr=' ${PATH1}/$DIY_PART_SH | cut -f1 -d# | egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+")"
+  IP="$(grep 'network.lan.ipaddr=' ${PATH1}/$DIY_PART_SH |cut -f1 -d# |egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+")"
+  [[ -z "${IP}" ]] && IP="$(grep 'ipaddr:' $Home/package/base-files/files/bin/config_generate |egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+")"
   ECHOYY "您的后台IP地址为：$IP"
   if [[ "${REGULAR_UPDATE}" == "true" ]]; then
     ECHOYY "您的Github地址为：$Github"

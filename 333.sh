@@ -233,6 +233,14 @@ function qx_repo_branch() {
   rm -fr openwrt && mv -f openwrte openwrt
 }
 
+function feeds_clean() {
+  ECHOG "正在下载插件包,请耐心等候~~~"
+  cd $Home
+  git pull
+  ./scripts/feeds clean
+  rm -rf ${Home}/package/{luci-app-passwall,luci-app-ssr-plus}
+}
+
 function amlogic_s9xxx() {
   cd ${GITHUB_WORKSPACE}
   if [[ "${firmware}" == "openwrt_amlogic" ]]; then
@@ -838,6 +846,8 @@ menuop() {
   3)
     byop="0"
     op_firmware
+    feeds_clean
+    op_diy_zdy
     op_diywenjian
     bianyi_xuanxiang
     op_diy_part
@@ -847,7 +857,6 @@ menuop() {
     make_defconfig
     op_config
     op_upgrade2
-    rm -rf ${Home}/dl
     op_download
     op_make
     op_upgrade3

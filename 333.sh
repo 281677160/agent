@@ -266,7 +266,7 @@ function op_diy_zdy() {
 
 function op_diy_part() {
   cd $Home
-  echo "
+  ECHOG "加载自定义设置"
   bash "${PATH1}/$DIY_PART_SH"
 }
 

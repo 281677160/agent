@@ -74,25 +74,6 @@ judge() {
   fi
 }
 
-judgeopen() {
-  if [[ 0 -eq $? ]]; then
-    echo
-    print_ok "$1 完成"
-    echo
-    sleep 1
-  else
-    echo
-    print_error "$1 失败"
-    rm -rf openwrt
-    rm -rf amlogic-s9xxx
-    rm -rf build-actions
-    rm -rf common
-    rm -rf ${GITHUB_WORKSPACE}/OP_DIY
-    echo
-    exit 1
-  fi
-}
-
 if [[ "$USER" == "root" ]]; then
   print_error "警告：请勿使用root用户编译，换一个普通用户吧~~"
   exit 1
@@ -146,7 +127,7 @@ function op_diywenjian() {
   cd ${GITHUB_WORKSPACE}
   if [[ ! -d ${GITHUB_WORKSPACE}/OP_DIY ]]; then
     rm -rf bendi && git clone https://github.com/281677160/bendi
-    judgeopen "OP_DIY文件下载"
+    judge "OP_DIY文件下载"
     cp -Rf ${GITHUB_WORKSPACE}/bendi/OP_DIY ${GITHUB_WORKSPACE}/OP_DIY
     [[ -f ${Builb} ]] && cp -Rf ${GITHUB_WORKSPACE}/OP_DIY/* ${Builb}
     rm -rf bendi
@@ -196,8 +177,8 @@ function op_repo_branch() {
   echo
   ECHOG "正在下载源码中,请耐心等候~~~"
   rm -rf openwrt && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrt
-  judgeopen "${firmware}源码下载"
-  rm -rf {README,README.md,README_EN.md} > /dev/null 2>&1
+  judge "${firmware}源码下载"
+  rm -rf ${Home}/{README,README.md,README_EN.md} > /dev/null 2>&1
 }
 
 function qx_repo_branch() {
@@ -205,6 +186,7 @@ function qx_repo_branch() {
   ECHOG "正在下载源码中,请耐心等候~~~"
   rm -rf openwrte && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrte
   judge "${firmware}源码下载"
+  rm -rf ${Home}/{README,README.md,README_EN.md} > /dev/null 2>&1
   ECHOG "正在处理数据,请耐心等候~~~"
   rm -fr openwrt && mv -f openwrte openwrt
 }
@@ -222,10 +204,12 @@ function feeds_clean() {
   ./scripts/feeds update -a > /dev/null 2>&1
   cp -rf ${Home}/zdefault-settings ${ZZZ}
   source "${PATH1}/common.sh" && ${Diy_zdy}
-  git clone --depth 1 -b "${REPO_BRANCH}" https://github.com/281677160/openwrt-package "${Home}"/openwrt-package
+  rm -rf "${Home}"/openwrt-package && git clone --depth 1 -b "${REPO_BRANCH}" https://github.com/281677160/openwrt-package "${Home}"/openwrt-package
+  judge "插件包下载"
   cp -Rf "${Home}"/openwrt-package/* "${Home}" && rm -rf "${Home}"/openwrt-package
   if [[ ${REGULAR_UPDATE} == "true" ]]; then
     git clone https://github.com/281677160/luci-app-autoupdate feeds/luci/applications/luci-app-autoupdate
+    judge "luci-app-autoupdate插件下载"
     cp -Rf "${PATH1}"/{AutoUpdate.sh,replace.sh} package/base-files/files/bin
   fi
   cp -Rf ${GITHUB_WORKSPACE}/OP_DIY/* "${Builb}"
@@ -249,7 +233,7 @@ function amlogic_s9xxx() {
     mkdir -p amlogic
     mkdir -p amlogic/openwrt-armvirt
     rm -rf amlogic-s9xxx && svn co https://github.com/ophub/amlogic-s9xxx-openwrt/trunk/amlogic-s9xxx amlogic-s9xxx
-    judgeopen "amlogic内核下载"
+    judge "amlogic内核下载"
     rm -rf amlogic-s9xxx/{.svn,README.cn.md,README.md} > /dev/null 2>&1
     mv amlogic-s9xxx amlogic
     curl -fsSL https://raw.githubusercontent.com/ophub/amlogic-s9xxx-openwrt/main/make > amlogic/make
@@ -262,13 +246,13 @@ function amlogic_s9xxx() {
 
 function op_jiaoben() {
   cd ${GITHUB_WORKSPACE}
-  git clone https://github.com/281677160/build-actions
-  judgeopen "编译脚本下载"
+  rm -rf build-actions && git clone https://github.com/281677160/build-actions
+  judge "编译脚本下载"
   cp -Rf ${GITHUB_WORKSPACE}/OP_DIY/* build-actions/build
   chmod -R +x build-actions/build && cp -Rf build-actions/build ${Home}
   rm -rf build-actions
-  git clone https://github.com/281677160/common
-  judgeopen "额外扩展脚本下载"
+  rm -rf common && clone https://github.com/281677160/common
+  judge "额外扩展脚本下载"
   chmod -R +x common && cp -Rf common ${Builb}
   rm -rf common
   cp -Rf ${Builb}/common/*.sh ${Builb}/${firmware}

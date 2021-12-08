@@ -521,7 +521,7 @@ function op_cowtransfer() {
 
 function op_amlogic() {
   cd ${GITHUB_WORKSPACE}
-  if [[ `ls -a ${Home}/bin/targets/armvirt/64 | grep -c "tar.gz"` == '0' ]]; then
+  if [[ `ls -a ${Home}/bin/targets/*/* | grep -c "tar.gz"` == '0' ]]; then
     print_error "没发现tar.gz格式固件存在"
     exit 1
   fi
@@ -530,7 +530,7 @@ function op_amlogic() {
   fi
   
   ECHOY "全部可打包机型：s905x3_s905x2_s905x_s905d_s922x_s912"
-  ECHOGG "设置要打包固件的机型[ 直接回车则默认 Phicomm-N1（s905d） ]"
+  ECHOGG "设置要打包固件的机型[ 直接回车则默认 Phicomm-N1（s905d）]"
   read -p " 请输入您要设置的机型：" model
   export model=${model:-"s905d"}
   ECHOYY "您设置的机型为：${model}"

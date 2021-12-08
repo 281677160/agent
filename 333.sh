@@ -94,6 +94,16 @@ cd ${GITHUB_WORKSPACE}
   sudo apt-get update -y
   sudo apt-get install -y systemd build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python2.7 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 lib32stdc++6 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler g++-multilib antlr3 gperf wget curl rename libpcap0.8-dev swig rsync
   judge "部署编译环境"
+  sudo timedatectl set-timezone "Asia/Shanghai"
+  if [[ `grep -c "ClientAliveInterval 30" /etc/ssh/sshd_config` == '0' ]]; then
+    sudo sed -i '/ClientAliveInterval/d' /etc/ssh/sshd_config
+    sudo sed -i '/ClientAliveCountMax/d' /etc/ssh/sshd_config
+    sudo sed -i '/PermitRootLogin/d' /etc/ssh/sshd_config
+    sudo sh -c 'echo ClientAliveInterval 30 >> /etc/ssh/sshd_config'
+    sudo sh -c 'echo ClientAliveCountMax 6 >> /etc/ssh/sshd_config'
+    sudo sh -c 'echo PermitRootLogin yes >> /etc/ssh/sshd_config'
+    sudo service ssh restart
+  fi
 }
 
 function op_kongjian() {
@@ -138,9 +148,8 @@ function bianyi_xuanxiang() {
   cd ${GITHUB_WORKSPACE}
   source ${GITHUB_WORKSPACE}/OP_DIY/${firmware}/settings.ini
   if [[ "${EVERY_INQUIRY}" == "true" ]]; then
-    ECHOY "请在${GITHUB_WORKSPACE}/OP_DIY/${firmware}里面设置好自定义文件"
+    ECHOY "请用工具连接ubuntu，然后在 OP_DIY/${firmware} 里面设置好自定义文件"
     ZDYSZ="设置完毕后，按[Y/y]回车继续编译"
-    explorer.exe .
     while :; do
     read -p " ${ZDYSZ}： " ZDYSZU
     case $ZDYSZU in
@@ -366,10 +375,11 @@ function openwrt_zuihouchuli() {
 }
 
 function op_download() {
+  export Begin="$(date "+%Y/%m/%d-%H.%M")"
   cd $Home
   ECHOG "下载DL文件，请耐心等候..."
   rm -fr ${Home}/build.log
-  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin make -j8 download 2>&1 |tee ${Home}/build.log
+  make -j8 download 2>&1 |tee ${Home}/build.log
   find dl -size -1024c -exec ls -l {} \;
   find dl -size -1024c -exec rm -f {} \;
   if [[ `grep -c "make with -j1 V=s or V=sc" ${Home}/build.log` == '0' ]] || [[ `grep -c "ERROR" ${Home}/build.log` == '0' ]]; then
@@ -398,11 +408,11 @@ function op_download() {
         esac
     done
   fi
+  rm -fr ${Home}/build.log
 }
 
 function op_cpuxinghao() {
   cd $Home
-  rm -rf build.log
   cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c > CPU
   cat /proc/cpuinfo | grep "cpu cores" | uniq >> CPU
   sed -i 's|[[:space:]]||g; s|^.||' CPU && sed -i 's|CPU||g; s|pucores:||' CPU
@@ -429,7 +439,7 @@ function op_cpuxinghao() {
 
 function op_make() {
   cd $Home
-  export Begin="$(date "+%Y/%m/%d-%H.%M")"
+  rm -rf build.log
   ECHOG "正在编译固件，请耐心等待..."
   npro="$(nproc)"
   if [[ "${npro}" -gt "16" ]];then
@@ -444,8 +454,7 @@ function op_make() {
         echo "shibai" >${Builb}/shibai
       fi
       print_error "编译失败~~!"
-      explorer.exe .
-      print_error "请查看openwrt文件夹里面的[build.log]日志文件查找失败原因"
+      print_error "请用工具把openwrt文件夹里面的[build.log]日志文件拖至电脑，然后查找失败原因"
       sleep 1
       exit 1
     fi
@@ -455,8 +464,7 @@ function op_make() {
         echo "shibai" >${Builb}/shibai
       fi
       print_error "编译失败~~!"
-      explorer.exe .
-      print_error "请查看openwrt文件夹里面的[build.log]日志文件查找失败原因"
+      print_error "请用工具把openwrt文件夹里面的[build.log]日志文件拖至电脑，然后查找失败原因"
       sleep 1
       exit 1
     fi
@@ -543,7 +551,6 @@ function op_amlogic() {
   cd amlogic && sudo ./make -d -b ${model} -k ${kernel}
   if [[ `ls -a ${GITHUB_WORKSPACE}/amlogic/out | grep -c "openwrt"` -ge '1' ]]; then
     print_ok "打包完成，固件存放在[amlogic/out]文件夹"
-    explorer.exe .
   else
     print_error "打包失败，请再次尝试!"
   fi
@@ -573,7 +580,6 @@ function op_end() {
   fi
   ECHOG "开始时间：${Begin}"
   ECHOG "结束时间：${End}"
-  explorer.exe .
 }
 
 function op_firmware() {

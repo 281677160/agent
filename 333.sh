@@ -178,7 +178,6 @@ function op_repo_branch() {
   ECHOG "正在下载源码中,请耐心等候~~~"
   rm -rf openwrt && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrt
   judge "${firmware}源码下载"
-  rm -rf ${Home}/{README,README.md,README_EN.md} > /dev/null 2>&1
 }
 
 function qx_repo_branch() {
@@ -186,7 +185,6 @@ function qx_repo_branch() {
   ECHOG "正在下载源码中,请耐心等候~~~"
   rm -rf openwrte && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrte
   judge "${firmware}源码下载"
-  rm -rf ${Home}/{README,README.md,README_EN.md} > /dev/null 2>&1
   ECHOG "正在处理数据,请耐心等候~~~"
   rm -fr openwrt && mv -f openwrte openwrt
 }
@@ -436,6 +434,7 @@ function op_make() {
     npro="16"
   fi
   rm -fr ${COMFIRMWARE}/* > /dev/null 2>&1
+  rm -rf ${Home}/{README,README.md,README_EN.md} > /dev/null 2>&1
   PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin make -j${npro} V=s 2>&1 |tee ${Home}/build.log
   if [[ ${firmware} == "Mortal_source" ]] || [[ "${firmware}" == "Tianling_source" ]]; then
     if [[ `ls -a ${COMFIRMWARE} | grep -c "immortalwrt"` == '0' ]]; then

@@ -75,7 +75,7 @@ judge() {
 }
 export Ubname="$(. /etc/os-release && echo "$ID")"
 export xtbit=`getconf LONG_BIT`
-if [[ ! "${Ubname}" == ubuntu ]] && [[ ! "${xtbit}" == 64 ) ]]; then
+if [[ ! "${Ubname}" == "ubuntu" ]] && [[ ! "${xtbit}" == "64" ) ]]; then
   print_error "请使用Ubuntu 64位系统，推荐 Ubuntu 18 LTS 或 Ubuntu 20 LTS"
   exit 1
 fi

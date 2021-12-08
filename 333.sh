@@ -712,7 +712,6 @@ menu() {
   ECHOYY " 3. Immortalwrt_5.4内核,LUCI 21.02版本(Mortal_source)"
   ECHOY " 4. Immortalwrt_4.14内核,LUCI 18.06版本(Tianling_source)"
   ECHOYY " 5. N1和晶晨系列CPU盒子专用(openwrt_amlogic)"
-  echo
   ECHOY " 6. 退出编译程序"
   echo
   XUANZHEOP="请输入数字"

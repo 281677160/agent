@@ -772,9 +772,9 @@ menuop() {
   echo
   echo -e " 1${Green}.${Font}${Yellow}删除旧源码,使用[${firmware}]源码全新编译${Font}"
   echo
-  echo -e " 2${Green}.${Font}${Yellow}保留缓存,使用[${firmware}]二次编译${Font}"
+  echo -e " 2${Green}.${Font}${Yellow}保留缓存,使用[${firmware}]二次编译${Font}(编译[${TARGET_PROFILE}]缓存才有效)"
   echo
-  echo -e " 3${Green}.${Font}${Yellow}更换源码编译${Font}"
+  echo -e " 3${Green}.${Font}${Yellow}更换其他作者源码编译${Font}"
   echo
   echo -e " 4${Green}.${Font}${Yellow}打包N1和晶晨系列CPU固件${Font}"
   echo

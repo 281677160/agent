@@ -162,7 +162,7 @@ function bianyi_xuanxiang() {
   case $MENUu in
     [Yy])
       export Menuconfig="true"
-      ECHOYY "您执行机型和增删插件命令,请耐心等待程序运行至窗口弹出进行机型和插件配置!"
+      print_ok "您执行机型和增删插件命令,请耐心等待程序运行至窗口弹出进行机型和插件配置!"
     ;;
     *)
       export Menuconfig="false"
@@ -373,7 +373,7 @@ function op_download() {
   find dl -size -1024c -exec ls -l {} \;
   find dl -size -1024c -exec rm -f {} \;
   if [[ `grep -c "make with -j1 V=s or V=sc" ${Home}/build.log` == '0' ]] || [[ `grep -c "ERROR" ${Home}/build.log` == '0' ]]; then
-    ECHOG "DL文件下载成功"
+    print_ok "DL文件下载成功"
   else
     clear
     echo
@@ -473,8 +473,8 @@ function op_upgrade3() {
     source ${PATH1}/upgrade.sh && Diy_Part3
   fi
   if [[ `ls -a ${Home}/bin/Firmware | grep -c "${Compile_Date}"` -ge '1' ]]; then
-    ECHOY "加入‘定时升级固件插件’的固件已经放入[bin/Firmware]文件夹中"
-    export dsgx="加入‘定时升级固件插件’的固件已经放入[bin/Firmware]文件夹中"
+    print_ok "加入‘定时升级插件的固件’操作完成"
+    export dsgx="加入‘定时升级插件的固件’已经放入[bin/Firmware]文件夹中"
     export upgra="1"
   else
     print_error "加入‘定时升级固件插件’的固件失败，您的机型或者不支持定时更新!"
@@ -543,7 +543,7 @@ function op_amlogic() {
   ECHOGG "请输入ubuntu密码进行固件打包程序"
   cd amlogic && sudo ./make -d -b ${model} -k ${kernel}
   if [[ `ls -a ${GITHUB_WORKSPACE}/amlogic/out | grep -c "openwrt"` -ge '1' ]]; then
-    ECHOY "打包完成，固件存放在[amlogic/out]文件夹"
+    print_ok "打包完成，固件存放在[amlogic/out]文件夹"
     explorer.exe .
   else
     print_error "打包失败，请再次尝试!"
@@ -556,9 +556,9 @@ function op_end() {
   echo
   export End="$(date "+%Y/%m/%d-%H.%M")"
   if [[ ${firmware} == "openwrt_amlogic" ]]; then
-    ECHOY "使用[ ${firmware} ]文件夹，编译[ N1和晶晨系列盒子专用固件 ]顺利编译完成~~~"
+    print_ok "使用[ ${firmware} ]文件夹，编译[ N1和晶晨系列盒子专用固件 ]顺利编译完成~~~"
   else
-    ECHOY "使用[ ${firmware} ]文件夹，编译[ ${TARGET_PROFILE} ]顺利编译完成~~~"
+    print_ok "使用[ ${firmware} ]文件夹，编译[ ${TARGET_PROFILE} ]顺利编译完成~~~"
   fi
   ECHOY "后台地址: ${IP}"
   ECHOY "用户名: root"
@@ -568,7 +568,7 @@ function op_end() {
     ECHOR "提示：再次输入编译命令可选择打包N1和晶晨系列盒子专用固件"
   fi
   if [[ "${upgra}" == "1" ]]; then
-    ECHOG "${dsgx}"
+    ECHOY "${dsgx}"
   fi
   ECHOG "开始时间：${Begin}"
   ECHOG "结束时间：${End}"

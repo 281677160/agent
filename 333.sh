@@ -516,6 +516,9 @@ function op_amlogic() {
     print_error "没发现打包运行文件存在"
     exit 1
   fi
+  if [[ ! -d ${GITHUB_WORKSPACE}/amlogic ]]; then
+    amlogic_s9xxx
+  fi
   
   ECHOY "全部可打包机型：s905x3_s905x2_s905x_s905d_s922x_s912"
   ECHOGG "设置要打包固件的机型[ 直接回车则默认 N1/s905d ]"
@@ -767,9 +770,9 @@ menuop() {
   echo -e " ${Blue}编译机型${Font}：${Green}${TARGET_PROFILE}${Font}"
   echo
   echo
-  echo -e " ${Green}1${Font}.${Yellow}删除旧源码全新编译${Font}"
+  echo -e " ${Green}1${Font}.${Yellow}删除旧源码,使用${firmware}源码全新编译${Font}"
   echo
-  echo -e " ${Green}2${Font}.${Yellow}保留缓存二次编译${Font}"
+  echo -e " ${Green}2${Font}.${Yellow}保留缓存,使用${firmware}二次编译${Font}"
   echo
   echo -e " ${Green}3${Font}.${Yellow}更换源码编译${Font}"
   echo

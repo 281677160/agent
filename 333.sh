@@ -768,9 +768,13 @@ menuop() {
   echo
   echo
   echo -e " ${Green}1${Font}.${Yellow}删除旧源码全新编译${Font}"
+  echo
   echo -e " ${Green}2${Font}.${Yellow}保留缓存二次编译${Font}"
+  echo
   echo -e " ${Green}3${Font}.${Yellow}更换源码编译${Font}"
+  echo
   echo -e " ${Green}4${Font}.${Yellow}打包N1和晶晨系列CPU固件${Font}"
+  echo
   echo -e " ${Green}5${Font}.${Yellow}退出${Font}"
   echo
   echo

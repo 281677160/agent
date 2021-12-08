@@ -564,7 +564,9 @@ function op_end() {
   ECHOY "固件已经存入${OPENGUJIAN}文件夹中"
   ECHOY "友情提示：如若配置有更改，请把OP_DIY/${config_bf}内容复制,然后覆盖到OP_DIY/${firmware}/${CONFIG_FILE}更新保存配置"
   if [[ "${firmware}" == "openwrt_amlogic" ]]; then
-    ECHOR "提示：再次输入编译命令可选择打包N1和晶晨系列盒子专用固件"
+    ECHOR "提示：再次输入编译命令可选择二次编译或者打包N1和晶晨系列盒子专用固件"
+  else
+    ECHOR "提示：再次输入编译命令可进行二次编译"
   fi
   if [[ "${upgra}" == "1" ]]; then
     ECHOY "${dsgx}"

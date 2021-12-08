@@ -512,10 +512,6 @@ function op_amlogic() {
     print_error "没发现tar.gz格式固件存在"
     exit 1
   fi
-  if [[ ! -f ${GITHUB_WORKSPACE}/amlogic/make ]]; then
-    print_error "没发现打包运行文件存在"
-    exit 1
-  fi
   if [[ ! -d ${GITHUB_WORKSPACE}/amlogic ]]; then
     amlogic_s9xxx
   fi

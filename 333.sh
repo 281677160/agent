@@ -182,6 +182,7 @@ function op_repo_branch() {
 
 function qx_repo_branch() {
   cd ${GITHUB_WORKSPACE}
+  echo
   ECHOG "正在下载源码中,请耐心等候~~~"
   rm -rf openwrte && git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" openwrte
   judge "${firmware}源码下载"
@@ -190,6 +191,7 @@ function qx_repo_branch() {
 }
 
 function feeds_clean() {
+  echo
   ECHOG "正在更新源码和插件,请耐心等候~~~"
   cd ${GITHUB_WORKSPACE}
   if [[ "${firmware}" == "openwrt_amlogic" ]]; then
@@ -321,7 +323,7 @@ function make_defconfig() {
   cd $Home
   source ${PATH1}/common.sh && Diy_chajian
   make defconfig
-  ./scripts/diffconfig.sh > ${GITHUB_WORKSPACE}/${config_bf}
+  ./scripts/diffconfig.sh > ${GITHUB_WORKSPACE}/OP_DIY/${config_bf}
   if [ -n "$(ls -A "${Home}/Chajianlibiao" 2>/dev/null)" ]; then
     clear
     echo
@@ -561,7 +563,7 @@ function op_end() {
   ECHOY "后台地址: ${IP}"
   ECHOY "用户名: root"
   ECHOY "固件已经存入${OPENGUJIAN}文件夹中"
-  ECHOY "友情提示：如若配置有更改，请把${GITHUB_WORKSPACE}/${config_bf}内容复制,然后覆盖到OP_DIY/${firmware}/${CONFIG_FILE}更新保存配置"
+  ECHOY "友情提示：如若配置有更改，请把OP_DIY/${config_bf}内容复制,然后覆盖到OP_DIY/${firmware}/${CONFIG_FILE}更新保存配置"
   if [[ "${firmware}" == "openwrt_amlogic" ]]; then
     ECHOR "提示：再次输入编译命令可选择打包N1和晶晨系列盒子专用固件"
   fi

@@ -241,7 +241,6 @@ function amlogic_s9xxx() {
     judge "内核运行文件下载"
     chmod 777 amlogic/make
   fi
-  echo "${Core}" > ${Home}/${Core}
 }
 
 function op_jiaoben() {
@@ -279,11 +278,12 @@ function op_diy_part() {
   source "${PATH1}/$DIY_PART_SH"
   IP="$(grep 'network.lan.ipaddr=' ${PATH1}/$DIY_PART_SH |cut -f1 -d# |egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+")"
   [[ -z "${IP}" ]] && IP="$(grep 'ipaddr:' $Home/package/base-files/files/bin/config_generate |egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+")"
+  echo "${Core}" > ${Home}/${Core}
   echo
   ECHOYY "您的后台IP地址为：$IP"
   if [[ "${REGULAR_UPDATE}" == "true" ]]; then
     export Github=${Github}
-    ECHOYY "您的Github地址为：$Github"
+    ECHOY "您的Github地址为：$Github"
     export Apidz="${Github##*com/}"
     export Author="${Apidz%/*}"
     export CangKu="${Apidz##*/}"

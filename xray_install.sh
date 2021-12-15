@@ -173,9 +173,10 @@ function kaishi_install() {
   export YUMING="请输入您的域名"
   ECHOY "${YUMING}[比如：v2.xray.com]"
   while :; do
+  domainy=""
   read -p " ${YUMING}：" domain
   if [[ -n "${domain}" ]] && [[ "$(echo ${domain} |grep -c '\.')" -ge '1' ]]; then
-    export domainy="Y"
+    domainy="Y"
   fi
   case $domainy in
   Y)

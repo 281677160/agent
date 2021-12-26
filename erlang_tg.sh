@@ -1,15 +1,10 @@
 #!/bin/bash
-# https://github.com/281677160/danshui
-# Supported OS:
-# - Ubuntu 18.xx
-# - Ubuntu 19.xx
-# - Ubuntu 20.xx
-# - Ubuntu 21.xx
-# - Debian 10 buster
-# - Debian 9 stretch
-# - Debinn 8 jessie (not well-tested)
-# - CentOS 7
-# - CentOS 8
+
+#====================================================
+# Author：281677160
+# Dscription：MTProto proxy onekey Management
+# github：https://github.com/281677160/danshui
+#====================================================
 
 RED="\033[0;31m"
 GR="\033[0;32m"

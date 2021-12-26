@@ -226,19 +226,6 @@ do_configure_os() {
     info "Current time: `date`"
 }
 
-do_disable_firewalld() {
-    if [[ $(grep "nogroup" /etc/group) ]]; then
-      cert_group="nogroup"
-    fi
-    # 关闭各类防火墙
-    systemctl stop firewalld
-    systemctl disable firewalld
-    systemctl stop nftables
-    systemctl disable nftables
-    systemctl stop ufw
-    systemctl disable ufw
-}
-
 do_systemd_system() {
 sys_proxy="/etc/systemd/system/mtproto-proxy.service"
 cat >$sys_proxy <<-EOF
@@ -474,7 +461,6 @@ EOF
 install_mtproto_proxy() {
     do_kaishi_install
     do_configure_os
-    do_disable_firewalld
     do_get_source
     cd $SRC_DIR/
     do_build_config

@@ -150,13 +150,6 @@ do_kaishi_install() {
     echo -e "\033[32m 您设置端口为：${PORT} \033[0m"
     echo
     echo -e "\033[33m 正在为您安装TG代理，请稍后... \033[0m"
-    # 关闭各类防火墙
-    systemctl stop firewalld
-    systemctl disable firewalld
-    systemctl stop nftables
-    systemctl disable nftables
-    systemctl stop ufw
-    systemctl disable ufw
     sys_pro="/etc/systemd/system"
     if [[ `systemctl status mtproto-proxy |grep -c "active (running) "` == '1' ]]; then
         Uninstall_mtproto_proxy
@@ -231,6 +224,16 @@ do_configure_os() {
     fi
     sudo timedatectl set-ntp on
     info "Current time: `date`"
+}
+
+do_disable_firewalld() {
+    # 关闭各类防火墙
+    systemctl stop firewalld
+    systemctl disable firewalld
+    systemctl stop nftables
+    systemctl disable nftables
+    systemctl stop ufw
+    systemctl disable ufw
 }
 
 do_systemd_system() {
@@ -468,6 +471,7 @@ EOF
 install_mtproto_proxy() {
     do_kaishi_install
     do_configure_os
+    do_disable_firewalld
     do_get_source
     cd $SRC_DIR/
     do_build_config

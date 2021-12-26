@@ -478,7 +478,7 @@ install_mtproto_proxy() {
     do_build
     do_install
     do_print_links
-    info "Proxy is ready"
+    info "MTProto proxy 安装完毕!"
 }
 
 Uninstall_mtproto_proxy() {

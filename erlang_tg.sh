@@ -168,7 +168,7 @@ do_configure_os() {
         ubuntu)
             info "Installing required APT packages"
             sudo apt-get -y update
-            sudo apt-get -y install wget
+            sudo apt-get -y install wget dbus
             sudo apt-get -y install make sed diffutils tar systemd
             if [[ `timeout -k 1s 3s erl |grep -c "Eshell V"` == '0' ]]; then
                 wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb
@@ -180,7 +180,7 @@ do_configure_os() {
         debian)
             info "Installing extra repositories"
             sudo apt -y update
-            sudo apt-get -y install wget
+            sudo apt-get -y install wget dbus
             info "Installing required APT packages"
             sudo apt-get -y install make sed diffutils tar systemd
             if [[ `timeout -k 1s 3s erl |grep -c "Eshell V"` == '0' ]]; then
@@ -192,7 +192,7 @@ do_configure_os() {
             ;;
         centos)
             info "Installing extra repositories"
-            sudo yum -y install wget make sed diffutils tar systemd
+            sudo yum -y install wget make sed diffutils tar systemd dbus
             if [[ `timeout -k 1s 3s erl |grep -c "Eshell V"` == '0' ]]; then
                 wget https://packages.erlang-solutions.com/erlang-solutions-2.0-1.noarch.rpm
                 rpm -Uvh erlang-solutions-2.0-1.noarch.rpm
@@ -202,7 +202,7 @@ do_configure_os() {
             ;;
         centos8)
             info "Installing extra repositories"
-            sudo yum -y install wget make sed diffutils tar systemd
+            sudo yum -y install wget make sed diffutils tar systemd dbus
             if [[ `timeout -k 1s 3s erl |grep -c "Eshell V"` == '0' ]]; then
                 curl -s https://packagecloud.io/install/repositories/rabbitmq/erlang/script.rpm.sh | sudo bash
                 sudo yum -y clean all
@@ -227,6 +227,9 @@ do_configure_os() {
 }
 
 do_disable_firewalld() {
+    if [[ $(grep "nogroup" /etc/group) ]]; then
+      cert_group="nogroup"
+    fi
     # 关闭各类防火墙
     systemctl stop firewalld
     systemctl disable firewalld

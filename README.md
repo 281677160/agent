@@ -112,27 +112,6 @@ Caddy 配置文件路径：/etc/caddy/Caddyfile
 ---
 #
 ---
-- clash节点转换安装三部曲
-
-- 首先您要有域名跟解析好两个子域名，分别为一个前端（登录网页用），一个后端（服务器IP用）
-- 需要安装宝塔、Nginx和占用443端口，要看清楚跟你现在服务器的有没有冲突
-#
-- 运行第一个命令，顺利运行后《[看这里](https://github.com/281677160/agent/blob/main/doc/taota01.png)》
-```yaml
-bash <(curl -fsSL git.io/clashzh1.sh)
-```
----
-- 运行第二个命令，顺利运行后《[看这里](https://github.com/281677160/agent/blob/main/doc/clash.md)》
-```yaml
-bash <(curl -fsSL git.io/clashzh2.sh)
-```
----
-- 运行第三个命令，顺利运行后《[看这里](https://github.com/281677160/agent/blob/main/doc/taota13.png)》
-```yaml
-bash <(curl -fsSL git.io/clashzh3.sh)
-```
-#
----
 #
 ---
 - [一键安装BBR](https://github.com/ylx2016/Linux-NetSpeed)，使用BBR+CAKE加速方案，后期管理再次输入命令

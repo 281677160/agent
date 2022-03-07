@@ -6,7 +6,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xra
 ```yaml
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/x-ui.sh)"
 ```
-
+---
 - TG代理安装
 #
 ```yaml

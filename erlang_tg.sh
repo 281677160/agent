@@ -168,7 +168,7 @@ do_configure_os() {
         ubuntu)
             info "Installing required APT packages"
             sudo apt-get -y update
-            sudo apt-get -y install wget dbus make sed diffutils tar systemd ca-certificates
+            sudo apt-get -y install wget dbus make sed diffutils tar systemd ca-certificates git socat
             sudo update-ca-certificates
             if [[ `timeout -k 1s 3s erl |grep -c "Eshell V"` == '0' ]]; then
                 wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb
@@ -180,7 +180,7 @@ do_configure_os() {
         debian)
             info "Installing extra repositories"
             sudo apt -y update
-            sudo apt-get -y install wget dbus make sed diffutils tar systemd ca-certificates
+            sudo apt-get -y install wget dbus make sed diffutils tar systemd ca-certificates git socat
             sudo update-ca-certificates
             if [[ `timeout -k 1s 3s erl |grep -c "Eshell V"` == '0' ]]; then
                 wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb
@@ -191,7 +191,8 @@ do_configure_os() {
             ;;
         centos)
             info "Installing extra repositories"
-            sudo yum -y install wget make sed diffutils tar systemd dbus
+            sudo yum -y install wget make sed diffutils tar systemd dbus git socat ca-certificates
+            sudo update-ca-trust force-enable
             if [[ `timeout -k 1s 3s erl |grep -c "Eshell V"` == '0' ]]; then
                 wget https://packages.erlang-solutions.com/erlang-solutions-2.0-1.noarch.rpm
                 rpm -Uvh erlang-solutions-2.0-1.noarch.rpm
@@ -201,7 +202,8 @@ do_configure_os() {
             ;;
         centos8)
             info "Installing extra repositories"
-            sudo yum -y install wget make sed diffutils tar systemd dbus
+            sudo yum -y install wget make sed diffutils tar systemd dbus git socat ca-certificates
+            sudo update-ca-trust force-enable
             if [[ `timeout -k 1s 3s erl |grep -c "Eshell V"` == '0' ]]; then
                 curl -s https://packagecloud.io/install/repositories/rabbitmq/erlang/script.rpm.sh | sudo bash
                 sudo yum -y clean all

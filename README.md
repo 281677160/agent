@@ -4,6 +4,7 @@
 ```yaml
 yum install -y curl || apt install -y curl
 ```
+---
 - xray代理安装,二选一即可
 #
 ```yaml

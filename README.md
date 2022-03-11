@@ -2,7 +2,7 @@
 
 支持ubunt18、debian10以下、CentOS7-8系统，(用root用户登录，然后首先对你的系统使用以下命令)
 ```yaml
-yum install -y curl || apt-get update && apt install -y curl
+yum install -y curl || apt-get update && apt-get install -y curl
 ```
 ---
 - xray代理安装,二选一即可

@@ -168,8 +168,8 @@ do_configure_os() {
         ubuntu)
             info "Installing required APT packages"
             sudo apt-get -y update
-            sudo apt-get -y install wget dbus
-            sudo apt-get -y install make sed diffutils tar systemd
+            sudo apt-get -y install wget dbus make sed diffutils tar systemd ca-certificates
+            sudo update-ca-certificates
             if [[ `timeout -k 1s 3s erl |grep -c "Eshell V"` == '0' ]]; then
                 wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb
                 sudo dpkg -i erlang-solutions_2.0_all.deb
@@ -180,9 +180,8 @@ do_configure_os() {
         debian)
             info "Installing extra repositories"
             sudo apt -y update
-            sudo apt-get -y install wget dbus
-            info "Installing required APT packages"
-            sudo apt-get -y install make sed diffutils tar systemd
+            sudo apt-get -y install wget dbus make sed diffutils tar systemd ca-certificates
+            sudo update-ca-certificates
             if [[ `timeout -k 1s 3s erl |grep -c "Eshell V"` == '0' ]]; then
                 wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb
                 sudo dpkg -i erlang-solutions_2.0_all.deb

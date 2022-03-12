@@ -535,6 +535,7 @@ function restart_all() {
 }
 
 function cloudreve_xinxi() {
+  curl -fsSL https://raw.githubusercontent.com/agent/main/xray_install.sh > /sbin/xray
   echo -e "\033[41;33m 请注意：以下[cloudreve云盘]操作必须处理  \033[0m"
   echo
   ECHOY "1、用浏览器打开此链接： https://${domain}"
@@ -544,6 +545,8 @@ function cloudreve_xinxi() {
   ECHOY "5、点击[管理面板]会弹出对话框 \"确定站点URL设置\" 必须选择 \"更改\""
   ECHOY "6、左侧 -> 参数设置 -> 注册与登陆 -> 不允许新用户注册 -> 往下拉点击保存"
   ECHOY "7、左侧 -> 用户 -> 新建用户 -> 添加一个新的管理员，用于自己登录所用"
+  echo
+  ECHOG "友情提示：再次输入安装命令或者输入xray命令可以对程序进行管理"
 }
 
 

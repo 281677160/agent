@@ -535,7 +535,8 @@ function restart_all() {
 }
 
 function cloudreve_xinxi() {
-  curl -fsSL https://raw.githubusercontent.com/agent/main/xray_install.sh > /sbin/xray
+  curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray_install.sh > /sbin/xray
+  chmod 775 /sbin/xray
   echo -e "\033[41;33m 请注意：以下[cloudreve云盘]操作必须处理  \033[0m"
   echo
   ECHOY "1、用浏览器打开此链接： https://${domain}"

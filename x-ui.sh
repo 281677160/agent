@@ -404,8 +404,8 @@ function acme() {
 function restart_all() {
   x-ui enable
   restart_xui
-  curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/x-ui.sh > /sbin/xray
-  chmod 775 /sbin/xray
+  curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/x-ui.sh > /sbin/glxray
+  chmod 777 /sbin/glxray
   echo
   ECHOY "1、用浏览器打开此链接： http://${local_ip}:54321"
   ECHOY "2、初始管理员账号：admin"

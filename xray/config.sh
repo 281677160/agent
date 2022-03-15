@@ -100,6 +100,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                 "network": "ws",
                 "security": "none",
                 "wsSettings": {
+                    "acceptProxyProtocol": true,
                     "path": "/${WS_PATH}/"
                 }
             }

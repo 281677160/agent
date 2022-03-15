@@ -7,7 +7,7 @@
 
 # 1、请在脚本中修改你期望优选 IP 的带宽大小（默认5M）
 
-# 2、请更改 422 行 的 xxxxxxxxxx 字符串，为你自己 PassWall 的节点值（不会请看视频教程或是博客）
+# 2、请更改 415 行 的 xxxxxxxxxx 字符串，为你自己 PassWall 的节点值
 
 ######################################################################################################
 blue(){
@@ -21,15 +21,8 @@ red(){
 }
 clear
 green "=========================================================="
- blue "用途：用于自动筛选 CF IP，并自动替换优选 IP 为 PassWall 的节点地址"
- blue "网站： www.v2rayssr.com （已开启禁止国内访问）"
- blue "YouTube频道：波仔分享"
- blue "本脚本感谢 GitHub：Lbingyi 以及 Paniy"
- blue "本教程视频演示地址：https://youtu.be/WzRHi9f9QKg"
-green "=========================================================="
-green "=========================================================="
  red  "请在脚本中修改你期望优选 IP 的带宽大小（默认5M）脚本自动运行中....."
- red  "脚本第44行 bandwidth 后面的数值为期望优选带宽大小（ Mbps ）  "
+ red  "脚本第37行 bandwidth 后面的数值为期望优选带宽大小（ Mbps ）  "
 green "=================脚本正在运行中.....======================="
 sleep 8s
 /etc/init.d/haproxy stop
@@ -41,7 +34,7 @@ declare -i speed
 
 
 # 下面为期望优选带宽的大小 默认 5M
-bandwidth=5
+bandwidth=50
 
 
 speed=bandwidth*128*1024
@@ -419,8 +412,8 @@ done
 	echo 峰值速度 $max kB/s
 	echo 数据中心 $colo
 	echo 总计用时 $((end_seconds-start_seconds)) 秒
-	uci set passwall.f0fa463e2d2a45bdbd9b687831d5a64c.address=$anycast
-	uci commit passwall
+	uci set passwall2.xxxxxxxxxx.address=$anycast
+	uci commit passwall2
 	/etc/init.d/haproxy restart
-	/etc/init.d/passwall restart
+	/etc/init.d/passwall2 restart
 	exit

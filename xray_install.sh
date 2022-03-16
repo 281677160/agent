@@ -391,7 +391,7 @@ function ssl_judge_and_install() {
     sleep 2
     "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
     echo $domain >"$HOME"/.acme.sh/domainjilu
-    echo $domain >"echo $domain >$domain_tmp_dir/domain
+    echo $domain >$xray_conf_dir/domain
     judge "域名记录"
   else
     rm -rf /ssl/* > /dev/null 2>&1
@@ -562,7 +562,7 @@ function configure_gaipeizhi() {
   [[ ! "${saocaozhuo}" == "1" ]] && clear
   echo
   source $domain_tmp_dir/pzconcon
-  domain=$(cat ${domain_tmp_dir}/domain)
+  export domain=$(cat ${xray_conf_dir}/domain)
   echo -e "${Green} 1.${Font}  修改Xray节点UUID"
   echo -e "${Green} 2.${Font}  修改Xray节点端口"
   echo -e "${Green} 3.${Font}  修改Xray-ws节点路径"

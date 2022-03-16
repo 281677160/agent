@@ -517,6 +517,8 @@ function restart_all() {
   systemctl restart nginx
   systemctl restart cloudreve
   systemctl restart xray
+  curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray_install.sh > /sbin/glxray
+  chmod 777 /sbin/glxray
   sleep 3
   clear
   echo

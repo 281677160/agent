@@ -486,7 +486,6 @@ nginx_conf="/etc/nginx/conf.d/${domain}.conf"
 cat >"$nginx_conf" <<-EOF
 server {
     listen  80;
-    listen [::]:80;
     server_name  ${domain};
     location / { 
         root   /usr/share/nginx/html;

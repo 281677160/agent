@@ -445,6 +445,7 @@ export PORT="${PORT}"
 export UUID="${UUID}"
 export QJPASS="${QJPASS}"
 " > $domain_tmp_dir/pzconcon
+chmod 775 $domain_tmp_dir/pzconcon
 }
 
 function configure_cloudreve() {
@@ -507,7 +508,7 @@ function configure_pzcon() {
   sleep 2
   echo
   echo
-  source $domain_tmp_dir/pzcon
+  chmod 775 $domain_tmp_dir/pzcon && source $domain_tmp_dir/pzcon
 }
 
 function restart_all() {
@@ -560,7 +561,7 @@ function cloudreve_xinxi() {
 function configure_gaipeizhi() {
   [[ ! "${saocaozhuo}" == "1" ]] && clear
   echo
-  source $domain_tmp_dir/pzconcon
+  $domain_tmp_dir/pzconcon && source $domain_tmp_dir/pzconcon
   export domain=$(cat ${xray_conf_dir}/domain)
   echo -e "${Green} 1.${Font}  修改Xray节点UUID"
   echo -e "${Green} 2.${Font}  修改Xray节点端口"

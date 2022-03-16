@@ -435,7 +435,7 @@ function acme() {
 }
 
 function xrayliugen_conf() {
-cat >$domain_tmp_dir/pzconcon <<-EOF
+echo "
 #此文件请勿删除，如果要修改，请保持此处变量跟config.json文件一致
 export WS_PATH="${WS_PATH}"
 export VMTCP="${VMTCP}"
@@ -443,7 +443,7 @@ export VMWS="${VMWS}"
 export PORT="${PORT}"
 export UUID="${UUID}"
 export QJPASS="${QJPASS}"
-EOF
+" > $domain_tmp_dir/pzconcon
 }
 
 function configure_cloudreve() {

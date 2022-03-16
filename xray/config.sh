@@ -51,11 +51,11 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                         {
               		    "certificateFile": "/usr/local/etc/xray/self_signed_cert.pem",
               		    "keyFile": "/usr/local/etc/xray/self_signed_key.pem"
-            		    },
-            		    {
+            		   },
+            		   {
               		    "certificateFile": "/ssl/xray.crt",
               		    "keyFile": "/ssl/xray.key"
-                        }
+                       }
                     ]
                 }
             }

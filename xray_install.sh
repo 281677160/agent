@@ -391,6 +391,7 @@ function ssl_judge_and_install() {
     sleep 2
     "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
     echo $domain >"$HOME"/.acme.sh/domainjilu
+    echo $domain >"echo $domain >$domain_tmp_dir/domain
     judge "域名记录"
   else
     rm -rf /ssl/* > /dev/null 2>&1
@@ -510,11 +511,15 @@ function configure_pzcon() {
 }
 
 function restart_all() {
+  ECHOY "正在重启应用中，请稍后..."
   xrayliugen_conf
   systemctl restart nginx
   systemctl restart cloudreve
   systemctl restart xray
   sleep 3
+  clear
+  echo
+  echo
   if [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then
     print_ok "nginx运行 正常"
   else
@@ -556,6 +561,7 @@ function configure_gaipeizhi() {
   [[ ! "${saocaozhuo}" == "1" ]] && clear
   echo
   source $domain_tmp_dir/pzconcon
+  domain=$(cat ${domain_tmp_dir}/domain)
   echo -e "${Green} 1.${Font}  修改Xray节点UUID"
   echo -e "${Green} 2.${Font}  修改Xray节点端口"
   echo -e "${Green} 3.${Font}  修改Xray-ws节点路径"

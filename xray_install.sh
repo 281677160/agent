@@ -554,6 +554,8 @@ function cloudreve_xinxi() {
   ECHOY "7、左侧 -> 用户 -> 新建用户 -> 添加一个新的管理员，用于自己登录所用"
   echo
   ECHOG "友情提示：再次输入安装命令或者输入[glxray]命令可以对程序进行管理"
+  echo
+  echo
 }
 
 

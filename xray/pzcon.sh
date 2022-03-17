@@ -74,9 +74,9 @@ echo
 echo
 echo -e "\033[31m （4）VLESS+WS+TLS \033[0m"
 echo
-echo "vless://${UUID}@${domain}:${PORT}?host=&path=%2F${WS_PATH}%2F&type=ws&encryption=none&security=tls&sni=${domain}#VLESS+WS+TLS+${PORT}"
+echo "vless://${UUID}@${domain}:${PORT}?host=${domain}&path=%2F${WS_PATH}%2F&type=ws&encryption=none&security=tls&sni=${domain}#VLESS_WS_TLS_${domain}"
 echo
-echo -e "\033[32m 二维码链接(浏览器打开):https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=vless://${UUID}@${domain}:${PORT}?host=&path=%2F${WS_PATH}%2F&type=ws&encryption=none&security=tls&sni=${domain}#VLESS+WS+TLS+${PORT} \033[0m"
+echo -e "\033[32m 二维码链接(浏览器打开):https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=vless://${UUID}@${domain}:${PORT}?host=${domain}&path=%2F${WS_PATH}%2F&type=ws&encryption=none&security=tls&sni=${domain}#VLESS_WS_TLS_${domain} \033[0m"
 echo
 echo -e "\033[33m 节点备注/别名：VLESS+WS+TLS${PORT}（可自行修改） \033[0m"
 echo -e "\033[33m 节点类型：XRay \033[0m"

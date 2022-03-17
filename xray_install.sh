@@ -226,7 +226,7 @@ function kaishi_install() {
   export VMTCP="$(date +VME%S%d%H)"
   export VMWS="$(date +VMEws%M%S%H)"
   export UUID="$(cat /proc/sys/kernel/random/uuid)"
-  export QJPASS="$(date +JQ%M%S%H%S)"
+  export QJPASS="$(cat /proc/sys/kernel/random/uuid)"
   echo
   ECHOY "开始执行安装程序,请耐心等候..."
   sleep 3

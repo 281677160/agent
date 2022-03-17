@@ -9,9 +9,9 @@ echo
 echo
 echo -e "\033[31m （1）Trojan \033[0m"
 echo
-echo "trojan://${QJPASS}@${domain}:${PORT}#trojan+${PORT}"
+echo "trojan://${QJPASS}@${domain}:${PORT}#trojan+${domain}"
 echo
-echo -e "\033[32m 二维码链接(浏览器打开):https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=trojan://${QJPASS}@${domain}:${PORT}#trojan+${PORT} \033[0m"
+echo -e "\033[32m 二维码链接(浏览器打开):https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=trojan://${QJPASS}@${domain}:${PORT}#trojan+${domain} \033[0m"
 echo
 echo -e "\033[33m 节点备注/别名：Trojan+${PORT}（可自行修改） \033[0m"
 echo -e "\033[33m 节点类型：XRay \033[0m"
@@ -29,9 +29,9 @@ echo
 echo
 echo -e "\033[31m （2）VLESS+TCP+XTLS \033[0m"
 echo
-echo "vless://${UUID}@${domain}:${PORT}?headerType=none&type=tcp&encryption=none&flow=xtls-rprx-direct&security=xtls&sni=${domain}#VLESS+TCP+XTLS+${PORT}"
+echo "vless://${UUID}@${domain}:${PORT}?headerType=none&type=tcp&encryption=none&flow=xtls-rprx-direct&security=xtls&sni=${domain}#VLESS+TCP+XTLS+${domain}"
 echo
-echo -e "\033[32m 二维码链接(浏览器打开):https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=vless://${UUID}@${domain_ip}:${PORT}?headerType=none&type=tcp&encryption=none&flow=xtls-rprx-direct&security=xtls&sni=${domain}#VLESS+TCP+XTLS+${PORT} \033[0m"
+echo -e "\033[32m 二维码链接(浏览器打开):https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=vless://${UUID}@${domain_ip}:${PORT}?headerType=none&type=tcp&encryption=none&flow=xtls-rprx-direct&security=xtls&sni=${domain}#VLESS+TCP+XTLS+${domain} \033[0m"
 echo
 echo -e "\033[33m 节点备注/别名：VLESS+TCP+XTLS${PORT}（可自行修改） \033[0m"
 echo -e "\033[33m 节点类型：XRay \033[0m"
@@ -90,7 +90,7 @@ echo -e "\033[33m XTLS：不选 \033[0m"
 echo -e "\033[33m alpn：默认 \033[0m"
 echo -e "\033[33m 域名：${domain} \033[0m"
 echo -e "\033[33m 传输协议：WebSocket \033[0m"
-echo -e "\033[33m WebSocket Host：空 \033[0m"
+echo -e "\033[33m WebSocket Host：${domain} \033[0m"
 echo -e "\033[33m WebSocket Path：/${WS_PATH}/ \033[0m"
 echo
 echo -e "\033[32m 总共4条信息查询完毕,往上翻查看  \033[0m"

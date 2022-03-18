@@ -70,7 +70,7 @@ echo -e "\033[33m 伪装协议：none/none \033[0m"
 echo
 echo
 echo
-echo -e "\033[31m （4）VLESS+WS+TLS \033[0m"
+echo -e "\033[31m （4）VLESS+WS+TLS（可套CF使用） \033[0m"
 echo
 echo "vless://${UUID}@${domain}:${PORT}?host=${domain}&path=%2F${WS_PATH}%2F&type=ws&encryption=none&security=tls&sni=${domain}#VLESS_WS_TLS_${domain}"
 echo

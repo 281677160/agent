@@ -423,6 +423,7 @@ function acme() {
       print_ok "SSL 证书配置成功"
       "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
       echo $domain >"$HOME"/.acme.sh/domainjilu
+      echo $domain >$xray_conf_dir/domain
       judge "域名记录"
     fi
   else
@@ -565,8 +566,9 @@ function cloudreve_xinxi() {
 function configure_gaipeizhi() {
   [[ ! "${saocaozhuo}" == "1" ]] && clear
   echo
-  $domain_tmp_dir/pzconcon && source $domain_tmp_dir/pzconcon
-  export domain=$(cat ${xray_conf_dir}/domain)
+  chmod +x $domain_tmp_dir/pzconcon && source $domain_tmp_dir/pzconcon
+  [[ -f "${xray_conf_dir}/domain" ]] && export domain=$(cat ${xray_conf_dir}/domain)
+  [[ -z "${domain}" ]] && export domain="$(cat $HOME/.acme.sh/domainjilu)"
   echo -e "${Green} 1.${Font}  修改Xray节点UUID"
   echo -e "${Green} 2.${Font}  修改Xray节点端口"
   echo -e "${Green} 3.${Font}  修改Xray-ws节点路径"

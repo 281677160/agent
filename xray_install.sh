@@ -299,6 +299,10 @@ function dependency_install() {
 
   # 防止部分系统xray的默认bin目录缺失
   mkdir /usr/local/bin >/dev/null 2>&1
+  # 开启ROOT用户SSH和防止SSH容易断连
+  if [[ `grep -c "ClientAliveInterval 30" /etc/ssh/sshd_config` == '0' ]]; then
+    bash -c  "$(curl -fsSL https://raw.githubusercontent.com/281677160/pve/main/ssh.sh)"
+  fi
 }
 
 function basic_optimization() {

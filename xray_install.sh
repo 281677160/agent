@@ -161,18 +161,12 @@ function system_check() {
 
   # 关闭各类防火墙
   if [[ "${XITONG_ID}" == "ubuntu" ]] || [[ "${XITONG_ID}" == "debian" ]]; then
-    #关闭iptables
     ufw disable
-    #御载iptables
     apt-get remove -y iptables
   else
-    #停止firewall
     systemctl stop firewalld.service
-    #禁止firewall开机启动
     systemctl disable firewalld.service
-    #关闭iptables
     service iptables stop
-    #去掉iptables开机启动
     systemctl disable firewalld</code>
   fi
 }

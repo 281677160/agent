@@ -125,6 +125,7 @@ function system_check() {
     wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
   elif [[ "${ID}" == "debian" && ${VERSION_ID} -ge 9 ]]; then
     print_ok "当前系统为 Debian ${VERSION_ID} ${VERSION}"
+    export XITONG_ID="debian"
     export INS="apt install -y"
     ${INS} socat wget git sudo ca-certificates && update-ca-certificates
     # 清除可能的遗留问题
@@ -137,6 +138,7 @@ function system_check() {
     apt update
   elif [[ "${ID}" == "ubuntu" && $(echo "${VERSION_ID}" | cut -d '.' -f1) -ge 18 ]]; then
     print_ok "当前系统为 Ubuntu ${VERSION_ID} ${UBUNTU_CODENAME}"
+    export XITONG_ID="ubuntu"
     export INS="apt install -y"
     ${INS} socat wget git sudo ca-certificates && update-ca-certificates
     # 清除可能的遗留问题
@@ -158,12 +160,21 @@ function system_check() {
   $INS dbus
 
   # 关闭各类防火墙
-  systemctl stop firewalld
-  systemctl disable firewalld
-  systemctl stop nftables
-  systemctl disable nftables
-  systemctl stop ufw
-  systemctl disable ufw
+  if [[ "${XITONG_ID}" =="ubuntu" ]] || [[ "${XITONG_ID}" =="debian" ]]; then
+    #关闭iptables
+    ufw disable
+    #御载iptables
+    apt-get remove -y iptables
+  else
+    #停止firewall
+    systemctl stop firewalld.service
+    #禁止firewall开机启动
+    systemctl disable firewalld.service
+    #关闭iptables
+    service iptables stop
+    #去掉iptables开机启动
+    systemctl disable firewalld</code>
+  fi
 }
 
 function kaishi_install() {

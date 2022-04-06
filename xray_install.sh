@@ -166,6 +166,10 @@ function system_check() {
   systemctl disable nftables
   systemctl stop ufw
   systemctl disable ufw
+  iptables -P INPUT ACCEPT
+  iptables -P FORWARD ACCEPT
+  iptables -P OUTPUT ACCEPT
+  iptables -F
   if [[ "${XITONG_ID}" == "ubuntu" ]] || [[ "${XITONG_ID}" == "debian" ]]; then
     ufw disable
     apt-get remove -y iptables

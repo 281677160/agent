@@ -194,7 +194,7 @@ function kaishi_install() {
   while :; do
   read -p " ${DUANKOU}：" PORT
   export PORT=${PORT:-"443"}
-  if [[ $PORT -ge 1 ]] && [[ $PORT -le 65535 ]]; then
+  if [[ "$PORT" -ge "1" ]] && [[ "$PORT" -le "65535" ]]; then
     export PORTY="y"
   fi
   case $PORTY in

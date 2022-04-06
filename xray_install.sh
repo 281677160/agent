@@ -160,9 +160,12 @@ function system_check() {
   $INS dbus
 
   # 关闭各类防火墙
-  systemctl stop firewalld.service
-  systemctl disable firewalld.service
-  systemctl stop iptables
+  systemctl stop firewalld
+  systemctl disable firewalld
+  systemctl stop nftables
+  systemctl disable nftables
+  systemctl stop ufw
+  systemctl disable ufw
   systemctl disable firewalld</code>
   if [[ "${XITONG_ID}" == "ubuntu" ]] || [[ "${XITONG_ID}" == "debian" ]]; then
     ufw disable

@@ -160,7 +160,7 @@ function system_check() {
   $INS dbus
 
   # 关闭各类防火墙
-  if [[ "${XITONG_ID}" =="ubuntu" ]] || [[ "${XITONG_ID}" =="debian" ]]; then
+  if [[ "${XITONG_ID}" == "ubuntu" ]] || [[ "${XITONG_ID}" == "debian" ]]; then
     #关闭iptables
     ufw disable
     #御载iptables

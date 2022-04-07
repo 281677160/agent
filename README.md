@@ -22,7 +22,8 @@ yum install -y curl || apt update && apt install -y curl
 ```sh
 bash -c  "$(curl -fsSL https://raw.githubusercontent.com/281677160/pve/main/ssh.sh)"
 ```
-
+---
+#
 ---
 - xray安装（支持的协议：vless、trojan）
 #

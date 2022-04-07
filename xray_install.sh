@@ -162,11 +162,11 @@ function system_check() {
   # 关闭各类防火墙
   systemctl stop firewalld
   systemctl disable firewalld
+  systemctl mask firewalld
   systemctl stop nftables
   systemctl disable nftables
   systemctl stop ufw
   systemctl disable ufw
-  if [[ "${XITONG_ID}" == "ubuntu" ]] || [[ "${XITONG_ID}" == "debian" ]]; then
 cat >/etc/init.d/acceptoff <<-EOF
 #! /bin/sh
 ### BEGIN INIT INFO
@@ -185,7 +185,6 @@ iptables -F
 EOF
   chmod 755 /etc/init.d/acceptoff
   update-rc.d acceptoff defaults 90
-  fi
 }
 
 function kaishi_install() {

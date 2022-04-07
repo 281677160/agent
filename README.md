@@ -8,7 +8,7 @@
 su - root || sudo -i
 ```
 
-- 第二步：请设置好服务器密码
+- 第二步：请用以下命令设置好服务器密码
 ```sh
 echo root:你想要设置的密码 |chpasswd root
 ```

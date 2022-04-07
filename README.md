@@ -19,7 +19,7 @@ yum install -y curl || apt update && apt install -y curl
 
 - 第四步：一键开启root用户SSH连接
 ```sh
-bash -c  "$(curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/281677160/pve/main/ssh.sh)"
+bash -c  "$(curl -fsSL https://raw.githubusercontent.com/281677160/pve/main/ssh.sh)"
 ```
 
 ---

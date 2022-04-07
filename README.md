@@ -31,11 +31,15 @@ bash -c  "$(curl -fsSL https://raw.githubusercontent.com/281677160/pve/main/ssh.
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray_install.sh)"
 ```
 ---
+#
+---
 - x-ui安装（支持的协议：vmess、vless、trojan、shadowsocks、dokodemo-door、socks、http）
 #
 ```yaml
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/x-ui.sh)"
 ```
+---
+#
 ---
 - TG代理安装,二选一即可
 #
@@ -46,6 +50,8 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/erl
 ```yaml
 bash <(wget -qO- https://git.io/mtg.sh)
 ```
+---
+#
 ---
 - BBR安装
 #

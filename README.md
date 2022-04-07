@@ -24,13 +24,13 @@ bash -c  "$(curl -fsSL https://raw.githubusercontent.com/281677160/pve/main/ssh.
 ```
 
 ---
-- xray安装
+- xray安装（支持的协议：vless、trojan）
 #
 ```yaml
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray_install.sh)"
 ```
 ---
-- xu-i安装
+- x-ui安装（支持的协议：vmess、vless、trojan、shadowsocks、dokodemo-door、socks、http）
 #
 ```yaml
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/x-ui.sh)"

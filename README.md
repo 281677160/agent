@@ -1,9 +1,27 @@
 
 
-支持ubunt18、debian10以下、CentOS7-8系统，(用root用户登录，然后首先对你的系统使用以下命令)
+- ### 谷歌云、甲骨云开启root用户SSH连接
+
+- 进入服务器后,切换到root用户,下面命令一般都切进入root用户,如果不行请自行百度
+```sh
+sudo -i || su - root
+```
+
+- 如果您服务器本身是没密码的,比如谷歌云，甲骨云这些，请设置密码
+```sh
+echo root:你想要设置的密码 |chpasswd root
+```
+
+- 防止服务器没curl，使用命令执行安装curl
 ```yaml
 yum install -y curl || apt update && apt install -y curl
 ```
+
+- ### 一键开启root用户SSH连接
+```sh
+bash -c  "$(curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/281677160/pve/main/ssh.sh)"
+```
+
 ---
 - xray代理安装,二选一即可
 #

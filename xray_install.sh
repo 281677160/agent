@@ -166,13 +166,25 @@ function system_check() {
   systemctl disable nftables
   systemctl stop ufw
   systemctl disable ufw
-  iptables -P INPUT ACCEPT
-  iptables -P FORWARD ACCEPT
-  iptables -P OUTPUT ACCEPT
-  iptables -F
   if [[ "${XITONG_ID}" == "ubuntu" ]] || [[ "${XITONG_ID}" == "debian" ]]; then
-    ufw disable
-    apt-get remove -y iptables
+cat >/etc/init.d/acceptoff <<-EOF
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:        acceptoff
+# Required-Start:  $local_fs $remote_fs
+# Required-Stop:   $local_fs $remote_fs
+# Default-Start:   2 3 4 5
+# Default-Stop:
+# Short-Description: automatic crash report generation
+### END INIT INFO
+
+iptables -P INPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
+iptables -F
+EOF
+  chmod 755 /etc/init.d/acceptoff
+  update-rc.d acceptoff defaults 90
   fi
 }
 

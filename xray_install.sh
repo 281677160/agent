@@ -188,10 +188,11 @@ function system_check() {
     iptables -P OUTPUT ACCEPT
     iptables -F
     ' >/etc/init.d/acceptoff
+    sed -i 's/^[ ]*//g' /etc/init.d/acceptoff
+    sed -i '/^$/d' /etc/init.d/acceptoff
     chmod 755 /etc/init.d/acceptoff
     update-rc.d acceptoff defaults 90
   fi
-  sed -i 's/^[ ]*//g' /etc/init.d/acceptoff && sed -i '/^$/d' /etc/init.d/acceptoff
 }
 
 function kaishi_install() {

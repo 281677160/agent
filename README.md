@@ -24,11 +24,14 @@ bash -c  "$(curl -fsSL https://raw.githubusercontent.com/281677160/pve/main/ssh.
 ```
 
 ---
-- xray代理安装,二选一即可
+- xray安装
 #
 ```yaml
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray_install.sh)"
 ```
+---
+- xu-i安装
+#
 ```yaml
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/x-ui.sh)"
 ```

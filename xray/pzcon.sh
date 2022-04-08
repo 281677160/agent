@@ -1,6 +1,6 @@
 #!/bin/bash
 
-qrCodeBase64Default=$(echo -n "{\"port\":${PORT},\"ps\":\"${domain}\",\"tls\":\"tls\",\"id\":\"${UUID}\",\"aid\":0,\"v\":2,\"host\":\"${domain}\",\"type\":\"none\",\"path\":\"/${VMWS}/\",\"net\":\"ws\",\"add\":\"0${domain}\",\"allowInsecure\":0,\"method\":\"none\",\"peer\":\"1${domain}\",\"sni\":\"2${domain}\"}" | base64 -w 0)
+qrCodeBase64Default=$(echo -n "{\"port\":${PORT},\"ps\":\"1${domain}\",\"tls\":\"tls\",\"id\":\"${UUID}\",\"aid\":0,\"v\":2,\"host\":\"2${domain}\",\"type\":\"none\",\"path\":\"/${VMWS}/\",\"net\":\"ws\",\"add\":\"${domain}\",\"allowInsecure\":0,\"method\":\"none\",\"peer\":\"${domain}\",\"sni\":\"${domain}\"}" | base64 -w 0)
 qrCodeBase64Default="${qrCodeBase64Default// /}"
 
 cat >/usr/local/etc/xray/pzcon <<-EOF

@@ -2,7 +2,8 @@
 
 qrCodeBase64Default=$(echo -n "{\"port\":${PORT},\"ps\":\"VMESS_WS_TLS_${domain}\",\"tls\":\"tls\",\"id\":\"${UUID}\",\"aid\":0,\"v\":2,\"host\":\"${domain}\",\"type\":\"none\",\"path\":\"/${VMWS}/\",\"net\":\"ws\",\"add\":\"${domain}\",\"allowInsecure\":0,\"method\":\"none\",\"peer\":\"${domain}\",\"sni\":\"${domain}\"}" | base64 -w 0)
 qrCodeBase64Default="${qrCodeBase64Default// /}"
-
+TCPqrCodeBase64Default=$(echo -n "{\"add\":\"${domain}\",\"aid\":0,\"host\":\"${domain}\",\"id\":\"${UUID}\",\"net\":\"tcp\",\"path\":\"/${VMTCP}/\",\"port\":${PORT},\"ps\":\"1${domain}\",\"scy\":\"none\",\"sni\":\"${domain}\",\"tls\":\"tls\",\"v\":2,\"type\":\"http\",\"allowInsecure\":0,\"peer\":\"${domain}\",\"obfs\":\"http\",\"obfsParam\":\"${domain}\"}" | base64)
+TCPqrCodeBase64Default="${TCPqrCodeBase64Default// /}"
 cat >/usr/local/etc/xray/pzcon <<-EOF
 #!/bin/bash
 # 此文件请勿删除和做任何修改
@@ -119,4 +120,6 @@ echo -e "\033[33m 指纹伪造：禁用 \033[0m"
 echo -e "\033[33m TLS Host：${domain} \033[0m"
 echo
 echo -e "\033[31m 总共5条信息查询完毕,往上翻查看  \033[0m"
+
+echo "vmess://${TCPqrCodeBase64Default}"
 EOF

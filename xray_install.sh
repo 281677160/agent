@@ -689,7 +689,7 @@ function xiugai_uuid_path() {
   read -p " ${DUuuid}：" IDPATH
   case $IDPATH in
   [Yy])
-    ECHOY "开始重置UUID/路径/Tronjian密码
+    ECHOY "开始重置UUID/路径/Tronjian密码"
   break
   ;;
   [Nn])

@@ -1,4 +1,8 @@
 #!/bin/bash
+
+qrCodeBase64Default=$(echo -n "{\"port\":${PORT},\"ps\":\"${domain}\",\"tls\":\"tls\",\"id\":\"${UUID}\",\"aid\":0,\"v\":2,\"host\":\"${domain}\",\"type\":\"none\",\"path\":\"${VMWS}\",\"net\":\"ws\",\"add\":\"${domain}\",\"allowInsecure\":0,\"method\":\"none\",\"peer\":\"${domain}\",\"sni\":\"${domain}\"}" | base64 -w 0)
+qrCodeBase64Default="${qrCodeBase64Default// /}"
+
 cat >/usr/local/etc/xray/pzcon <<-EOF
 #!/bin/bash
 # 此文件请勿删除和做任何修改
@@ -93,5 +97,5 @@ echo -e "\033[33m WebSocket Path：/${WS_PATH}/ \033[0m"
 echo
 echo -e "\033[32m 总共4条信息查询完毕,往上翻查看  \033[0m"
 echo
-echo "{\"port\":${PORT},\"ps\":\"${domain}\",\"tls\":\"tls\",\"id\":\"${UUID}\",\"aid\":0,\"v\":2,\"host\":\"${domain}\",\"type\":\"none\",\"path\":\"${VMWS}\",\"net\":\"ws\",\"add\":\"${domain}\",\"allowInsecure\":0,\"method\":\"none\",\"peer\":\"${domain}\",\"sni\":\"${domain}\"}\n""
+echo "vmess://${qrCodeBase64Default}"
 EOF

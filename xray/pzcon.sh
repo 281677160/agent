@@ -8,7 +8,6 @@ Vmess_ws="${wsBase64Default// /}"
 
 cat >/usr/local/etc/xray/pzcon <<-EOF
 #!/bin/bash
-# 此文件请勿删除和做任何修改
 echo
 echo
 echo -e "\033[41;33m 信息查询于：$(date +%Y年%m月%d号%H时%M分%S秒)  \033[0m"

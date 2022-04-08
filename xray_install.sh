@@ -689,6 +689,7 @@ function xiugai_uuid_path() {
   uuid_path
   configure_gengxinxinxi
   xrayliugen_conf
+  configure_pzcon
 }
 
 function install_xray_ws() {

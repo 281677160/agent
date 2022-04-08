@@ -251,15 +251,28 @@ function kaishi_install() {
     print_ok "您已确认无误!"
   ;;
   esac
-  export WS_PATH="$(date +VLEws%d%M%S)"
-  export VMTCP="$(date +VME%S%d%H)"
-  export VMWS="$(date +VMEws%M%S%H)"
-  export UUID="$(cat /proc/sys/kernel/random/uuid)"
-  export QJPASS="$(cat /proc/sys/kernel/random/uuid)"
   echo
   ECHOY "开始执行安装程序,请耐心等候..."
   sleep 3
   echo
+}
+
+function uuid_path() {
+  SHI="$(echo "$(date +%H)" | sed 's/^.//g')"
+  FEN="$(echo "$(date +%M)" | sed 's/^.//g')"
+  MIAO="$(echo "$(date +%S)" | sed 's/^.//g')"
+  STR1='ABCDEFGHI'
+  STR2='JKLMNOPQR'
+  STR3='STUVWXYDZ'
+  DIYIGE="$(echo ${STR3:0-$MIAO:1})" 
+  DIERGE="$(echo ${STR2:0-$FEN:1})"
+  DISANGE="$(echo ${STR1:0-$SHI:1})"
+
+  export VLESS_WS_PATH="${DIYIGE}${DIERGE}${DISANGE}${MIAO}${FEN}${SHI}"
+  export VMESS_TCP_PATH="${DIYIGE}${DISANGE}${DIERGE}${SHI}${FEN}${MIAO}"
+  export VMESS_WS_PATH="${DISANGE}${DIERGE}${DIYIGE}${MIAO}${SHI}${FEN}"
+  export UUID="$(cat /proc/sys/kernel/random/uuid)"
+  export QJPASS="$(cat /proc/sys/kernel/random/uuid)"
 }
 
 function nginx_install() {
@@ -590,104 +603,12 @@ function cloudreve_xinxi() {
   echo
 }
 
-
-#修改配置
-function configure_gaipeizhi() {
-  [[ ! "${saocaozhuo}" == "1" ]] && clear
-  echo
-  chmod +x $domain_tmp_dir/pzconcon && source $domain_tmp_dir/pzconcon
-  [[ -f "${xray_conf_dir}/domain" ]] && export domain=$(cat ${xray_conf_dir}/domain)
-  [[ -z "${domain}" ]] && export domain="$(cat $HOME/.acme.sh/domainjilu)"
-  echo -e "${Green} 1.${Font}  修改Xray节点UUID"
-  echo -e "${Green} 2.${Font}  修改Xray节点端口"
-  echo -e "${Green} 3.${Font}  修改Xray-ws节点路径"
-  echo -e "${Green} 4.${Font}  修改Trojan密码"
-  echo -e "${Green} 5.${Font}  返回主菜单"
-  echo -e "${Green} 6.${Font}  打印出 Xray 节点信息" 
-  echo -e "${Green} 7.${Font}  退出"
-  echo
-  XUANZHEXG="请输入数字"
-  while :; do
-  read -p " ${XUANZHEXG}：" menu_xrayxg
-  case $menu_xrayxg in
-  1)
-    ECHOG "修改Xray节点UUID"
-    XUUID="${UUID}"
-    ECHOY "直接回车,默认为继续使用旧的UUID：${XUUID}"
-    read -p " 请输入新的UUID：" UUID
-    export UUID=${UUID:-"$XUUID"}
-    ECHOG "您新的UUID为：${UUID}"
-    export Gengxinpeizhi="UUID"
-    configure_gengxinxinxi
-    break
-    ;;
-  2)
-    ECHOG "修改Xray节点端口"
-    XPORT="${PORT}"
-    ECHOY "直接回车,默认为继续使用旧的端口：${XPORT}"
-    read -p " 请输入新的端口：" PORT
-    export PORT=${PORT:-"$XPORT"}
-    ECHOG "您新的端口为：${PORT}"
-    export Gengxinpeizhi="端口"
-    configure_gengxinxinxi
-    break
-    ;;
-  3)
-    ECHOG "修改Xray-ws节点路径"
-    XWS_PATH="${WS_PATH}"
-    ECHOY "直接回车,默认为继续使用旧的节点路径：/${XWS_PATH}/"
-    ECHOY "修改路径只需要修改/ /之间内容即可,记住不需要前后增加 / "
-    read -p " 请输入新的端口：" WS_PATH
-    export WS_PATH=${WS_PATH:-"$XWS_PATH"}
-    ECHOG "您新的路径为：/${WS_PATH}/"
-    export Gengxinpeizhi="Xray-ws节点路径"
-    configure_gengxinxinxi
-    break
-    ;;
-  4)
-    ECHOG "修改Trojan密码"
-    XQJPASS="${QJPASS}"
-    ECHOY "直接回车,默认为继续使用旧的密码：${XQJPASS}"
-    read -p " 请输入新的密码：" QJPASS
-    export QJPASS=${QJPASS:-"XQJPASS"}
-    ECHOG "您Trojan新的密码为：${QJPASS}"
-    export Gengxinpeizhi="Trojan密码"
-    configure_gengxinxinxi
-    break
-    ;;
-  5)
-    menu
-    break
-    ;;
-  6)
-    clear
-    echo
-    echo
-    source $domain_tmp_dir/pzcon
-    break
-    ;;
-  7)
-    exit 0
-    break
-    ;;
-    *)
-    XUANZHEXG="请输入正确的选择"
-    ;;
-  esac
-  done
-}
-
 function configure_gengxinxinxi() {
   echo
   bash -c "$(curl -L https://raw.githubusercontent.com/281677160/agent/main/xray/config.sh)"
   judge "生成新配置"
-  bash -c "$(curl -L https://raw.githubusercontent.com/281677160/agent/main/xray/pzcon.sh)"
-  judge "更新节点信息"
-  print_ok "修改${Gengxinpeizhi} 完成"
+  print_ok "重新生成UUID/路径/Tronjian密码完成"
   restart_all
-  saocaozhuo="1"
-  print_Hi "请继续您的骚操作!"
-  configure_gaipeizhi
 }
 
 function xray_uninstall() {
@@ -760,6 +681,7 @@ function xray_uninstall() {
 function install_xray_ws() {
   is_root
   kaishi_install
+  uuid_path
   system_check
   dependency_install
   basic_optimization
@@ -789,7 +711,7 @@ menu() {
   ECHOY "2、打印 Xray 节点信息"
   ECHOY "3、安装 BBR、锐速加速"
   ECHOY "4、更新 Xray"
-  ECHOY "5、修改 UUID/端口/路径/Tronjian密码"
+  ECHOY "5、重新生成 UUID/路径/Tronjian密码"
   ECHOY "6、删除 阿里云盾或腾讯云盾"
   ECHOY "7、卸载 Xray、nginx和cloudreve"
   ECHOY "8、重启 Xray、nginx和cloudreve"
@@ -819,7 +741,8 @@ menu() {
     break
     ;;
   5)
-    configure_gaipeizhi
+    uuid_path
+    configure_gengxinxinxi
     break
     ;;
     

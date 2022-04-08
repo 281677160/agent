@@ -98,7 +98,7 @@ echo -e "\033[33m WebSocket Path：/${WS_PATH}/ \033[0m"
 echo
 echo
 echo
-echo -e "\033[31m （4）VMESS+TCP+TLS（可套CF使用） \033[0m"
+echo -e "\033[31m （5）VMESS+TCP+TLS \033[0m"
 echo
 echo "vmess://${TCPqrCodeBase64Default}"
 echo
@@ -121,7 +121,7 @@ echo -e "\033[33m TLS Host：${domain} \033[0m"
 echo
 echo
 echo
-echo -e "\033[31m （4）VMESS+WS+TLS（可套CF使用） \033[0m"
+echo -e "\033[31m （6）VMESS+WS+TLS（可套CF使用） \033[0m"
 echo
 echo "vmess://${qrCodeBase64Default}"
 echo

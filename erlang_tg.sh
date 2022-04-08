@@ -127,13 +127,18 @@ do_kaishi_install() {
     sed -i '/^\*\ *hard\ *nofile\ *[[:digit:]]*/d' /etc/security/limits.conf
     echo '* soft nofile 65536' >>/etc/security/limits.conf
     echo '* hard nofile 65536' >>/etc/security/limits.conf
+    FEN="$(echo "$(date +%M)" | sed 's/^.//g')"
+    FEN2="$(echo "$(date +%M)")"
+    MIAO2="$(echo "$(date +%S)")"
+    STR1='12345'
+    DISIGE="$(echo ${STR2:0-$FEN:1})"
+    export SJPORT="${DISIGE}${MIAO2}${FEN2}"
     echo
-    echo -e "\033[33m 请输入端口号 \033[0m"
-    echo -e "\033[32m 如果此服务器没其他占用443端口的，建议直接回车使用默认[443]端口 \033[0m"
+    echo -e "\033[33m 请输入端口,直接回车则使用随机分配端口 \033[0m"
     export DUANKOU="请输入[1-65535]之间的值"
     while :; do
     read -p " ${DUANKOU}：" PORT
-    export PORT=${PORT:-"443"}
+    export PORT=${PORT:-"$SJPORT"}
     if [[ $PORT -ge 1 ]] && [[ $PORT -le 65535 ]]; then
         export PORTY="y"
     fi

@@ -468,7 +468,6 @@ function acme() {
       print_ok "SSL 证书配置成功"
       "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
       echo $domain >"$HOME"/.acme.sh/domainjilu
-      echo $domain >$xray_conf_dir/domain
       judge "域名记录"
     fi
   else
@@ -550,7 +549,7 @@ EOF
 }
 
 function configure_pzcon() {
-  bash -c "$(curl -L https://raw.githubusercontent.com/281677160/agent/main/xray/pzcon.sh)"
+  bash -c "$(curl -L https://raw.githubusercontent.com/281677160/agent/main/xray/pzcon.sh)" > /dev/null 2>&1
   judge "节点链接信息"
   sleep 2
   echo
@@ -564,7 +563,7 @@ function restart_all() {
   systemctl restart nginx
   systemctl restart cloudreve
   systemctl restart xray
-  curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray_install.sh > /sbin/glxray
+  curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray_install.sh > /sbin/glxray > /dev/null 2>&1
   chmod 777 /sbin/glxray
   sleep 3
   clear
@@ -607,9 +606,9 @@ function cloudreve_xinxi() {
 
 function configure_gengxinxinxi() {
   echo
-  bash -c "$(curl -L https://raw.githubusercontent.com/281677160/agent/main/xray/config.sh)"
+  bash -c "$(curl -L https://raw.githubusercontent.com/281677160/agent/main/xray/config.sh)" > /dev/null 2>&1
   judge "生成新配置"
-  bash -c "$(curl -L https://raw.githubusercontent.com/281677160/agent/main/xray/pzcon.sh)"
+  bash -c "$(curl -L https://raw.githubusercontent.com/281677160/agent/main/xray/pzcon.sh)" > /dev/null 2>&1
   judge "生成新的节点链接信息"
   print_ok "重新生成UUID/路径/Tronjian密码完成"
   restart_all
@@ -655,13 +654,13 @@ function xray_uninstall() {
         sed -i '/acme.sh/d' /root/.cshrc > /dev/null 2>&1
         sed -i '/acme.sh/d' /root/.tcshrc > /dev/null 2>&1
       else
-        ECHOY "是否卸载 acme.sh [Y/N]?"
+        ECHOY "是否卸载acme.sh? 按[Y/y]进行御载,按任意键跳过御载程序"
         echo
         ECHOY "${TISHI}"
         echo
         read -p " 输入您的选择：" uninstall_acme
         case $uninstall_acme in
-        [yY])
+        [Yy])
            "$HOME"/.acme.sh/acme.sh --uninstall
            rm -rf "$HOME"/.acme.sh
            rm -rf /ssl/*

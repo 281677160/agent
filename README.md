@@ -25,7 +25,7 @@ bash -c  "$(curl -fsSL https://raw.githubusercontent.com/281677160/pve/main/ssh.
 ---
 #
 ---
-- xray安装（支持的协议：vless、trojan）
+- xray安装（支持的协议：vless、trojan、vmess）
 #
 ```yaml
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray_install.sh)"

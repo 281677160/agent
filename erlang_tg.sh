@@ -130,8 +130,8 @@ do_kaishi_install() {
     FEN="$(echo "$(date +%M)" | sed 's/^.//g')"
     FEN2="$(echo "$(date +%M)")"
     MIAO2="$(echo "$(date +%S)")"
-    STR1='12345'
-    DISIGE="$(echo ${STR2:0-$FEN:1})"
+    STR1='123454321'
+    DISIGE="$(echo ${STR1:0-$FEN:1})"
     export SJPORT="${DISIGE}${MIAO2}${FEN2}"
     echo
     echo -e "\033[33m 请输入端口,直接回车则使用随机分配端口 \033[0m"

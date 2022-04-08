@@ -683,6 +683,24 @@ function xray_uninstall() {
 }
 
 function xiugai_uuid_path() {
+  ECHOG "是否需要重新生成UUID/路径/Tronjian密码?重新生成后,之前所用节点链接将会全部失效."
+  export DUuuid="请输入[Y/y]确认或[N/n]退出"
+  while :; do
+  read -p " ${DUuuid}：" IDPATH
+  case $IDPATH in
+  [Yy])
+    ECHOY "开始重置UUID/路径/Tronjian密码
+  break
+  ;;
+  [Nn])
+   exit 1
+  break
+  ;;
+  *)
+    export DUuuid="请正确输入[Y/y]确认或[N/n]退出"
+  ;;
+  esac
+  done
   source $domain_tmp_dir/variable.sh
   uuid_path
   configure_gengxinxinxi

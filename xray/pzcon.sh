@@ -1,6 +1,6 @@
 #!/bin/bash
 
-qrCodeBase64Default=$(echo -n "{\"add\":\"${domain}\",\"aid\":\"0\",\"host\":\"${domain}\",\"peer\":\"${domain}\",\"id\":\"${UUID}\",\"net\":\"ws\",\"path\":\"/${VMESS_WS_PATH}/\",\"port\":\"${PORT}\",\"ps\":\"${domain}-WS\",\"tls\":\"tls\",\"type\":\"none\",\"v\":\"4\"}" | base64 -w 0)
+qrCodeBase64Default=$(echo -n "{\"add\":\"${domain}\",\"aid\":\"0\",\"host\":\"${domain}\",\"peer\":\"${domain}\",\"id\":\"${UUID}\",\"net\":\"ws\",\"path\":\"/${VMESS_WS_PATH}/\",\"port\":\"${PORT}\",\"ps\":\"${domain}-WS\",\"tls\":\"tls\",\"type\":\"none\"}" | base64 -w 0)
 qrCodeBase64Default="${qrCodeBase64Default// /}"
 TCPqrCodeBase64Default=$(echo -n "{\"add\":\"${domain}\",\"aid\":0,\"host\":\"${domain}\",\"id\":\"${UUID}\",\"net\":\"tcp\",\"path\":\"/${VMESS_TCP_PATH}/\",\"port\":${PORT},\"ps\":\"VMESS_TCP_TLS_${domain}\",\"scy\":\"none\",\"sni\":\"${domain}\",\"tls\":\"tls\",\"v\":2,\"type\":\"http\",\"allowInsecure\":0,\"peer\":\"${domain}\",\"obfs\":\"http\",\"obfsParam\":\"${domain}\"}" | base64)
 TCPqrCodeBase64Default="${TCPqrCodeBase64Default// /}"

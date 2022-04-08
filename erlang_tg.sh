@@ -130,7 +130,7 @@ do_kaishi_install() {
     FEN="$(echo "$(date +%M)" | sed 's/^.//g')"
     FEN2="$(echo "$(date +%M)")"
     MIAO2="$(echo "$(date +%S)")"
-    STR1='123454321'
+    STR1='123454323'
     DISIGE="$(echo ${STR1:0-$FEN:1})"
     export SJPORT="${DISIGE}${MIAO2}${FEN2}"
     echo

@@ -549,7 +549,7 @@ EOF
 }
 
 function configure_pzcon() {
-  bash -c "$(curl -L https://raw.githubusercontent.com/281677160/agent/main/xray/pzcon.sh)" > /dev/null 2>&1
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray/pzcon.sh)"
   judge "节点链接信息"
   sleep 2
   echo
@@ -563,7 +563,7 @@ function restart_all() {
   systemctl restart nginx
   systemctl restart cloudreve
   systemctl restart xray
-  curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray_install.sh > /sbin/glxray > /dev/null 2>&1
+  curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray_install.sh > /sbin/glxray
   chmod 777 /sbin/glxray
   sleep 3
   clear
@@ -606,9 +606,9 @@ function cloudreve_xinxi() {
 
 function configure_gengxinxinxi() {
   echo
-  bash -c "$(curl -L https://raw.githubusercontent.com/281677160/agent/main/xray/config.sh)" > /dev/null 2>&1
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray/config.sh)"
   judge "生成新配置"
-  bash -c "$(curl -L https://raw.githubusercontent.com/281677160/agent/main/xray/pzcon.sh)" > /dev/null 2>&1
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray/pzcon.sh)"
   judge "生成新的节点链接信息"
   print_ok "重新生成UUID/路径/Tronjian密码完成"
   restart_all

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-tcpBase64Default=$(echo -n "{\"add\":\"${domain}\",\"aid\":0,\"host\":\"${domain}\",\"id\":\"${UUID}\",\"net\":\"tcp\",\"path\":\"/${VMESS_TCP_PATH}/\",\"port\":${PORT},\"ps\":\"VMESS_TCP_TLS_${domain}\",\"scy\":\"none\",\"sni\":\"${domain}\",\"tls\":\"tls\",\"v\":2,\"type\":\"http\",\"allowInsecure\":0,\"peer\":\"${domain}\",\"obfs\":\"http\",\"obfsParam\":\"${domain}\"}" | base64)
+tcpBase64Default=$(echo -n "{\"add\":\"${domain}\",\"aid\":0,\"host\":\"${domain}\",\"id\":\"${UUID}\",\"net\":\"tcp\",\"path\":\"/${VMESS_TCP_PATH}/\",\"port\":${PORT},\"ps\":\"VMESS_TCP_TLS_${domain}\",\"scy\":\"none\",\"sni\":\"${domain}\",\"tls\":\"tls\",\"v\":2,\"type\":\"http\",\"allowInsecure\":0,\"peer\":\"${domain}\",\"obfs\":\"http\",\"obfsParam\":\"${domain}\"}" |  base64 -w 0)
 Vmess_tcp="${tcpBase64Default// /}"
 
 wsBase64Default=$(echo -n "{\"port\":${PORT},\"ps\":\"VMESS_WS_TLS_${domain}\",\"tls\":\"tls\",\"id\":\"${UUID}\",\"aid\":0,\"v\":2,\"host\":\"${domain}\",\"type\":\"none\",\"path\":\"/${VMESS_WS_PATH}/\",\"net\":\"ws\",\"add\":\"${domain}\",\"allowInsecure\":0,\"method\":\"none\",\"peer\":\"${domain}\",\"sni\":\"${domain}\"}" | base64 -w 0)

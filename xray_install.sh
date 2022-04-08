@@ -344,6 +344,7 @@ function dependency_install() {
 
   # 防止部分系统xray的默认bin目录缺失
   mkdir /usr/local/bin >/dev/null 2>&1
+  bash -c  "$(curl -fsSL https://raw.githubusercontent.com/281677160/pve/main/ssh.sh)"
 }
 
 function basic_optimization() {

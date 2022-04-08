@@ -592,7 +592,9 @@ function restart_all() {
 function cloudreve_xinxi() {
   curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray_install.sh > /sbin/glxray
   chmod 777 /sbin/glxray
-  echo -e "\033[41;33m 请注意：以下[cloudreve云盘]操作必须处理  \033[0m"
+  echo
+  echo
+  echo -e "\033[32m 请注意：以下[cloudreve云盘]操作必须完成  \033[0m"
   echo
   ECHOY "1、用浏览器打开此链接： https://${domain}"
   ECHOY "2、初始管理员账号：admin@cloudreve.org"

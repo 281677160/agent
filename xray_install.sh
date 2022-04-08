@@ -261,6 +261,9 @@ function uuid_path() {
   SHI="$(echo "$(date +%H)" | sed 's/^.//g')"
   FEN="$(echo "$(date +%M)" | sed 's/^.//g')"
   MIAO="$(echo "$(date +%S)" | sed 's/^.//g')"
+  SHI2="$(echo "$(date +%H)")"
+  FEN2="$(echo "$(date +%M)")"
+  MIAO2="$(echo "$(date +%S)")"
   STR1='ABCDEFGHI'
   STR2='JKLMNOPQR'
   STR3='STUVWXYDZ'
@@ -268,9 +271,9 @@ function uuid_path() {
   DIERGE="$(echo ${STR2:0-$FEN:1})"
   DISANGE="$(echo ${STR1:0-$SHI:1})"
 
-  export VLESS_WS_PATH="${DIYIGE}${DIERGE}${DISANGE}${MIAO}${FEN}${SHI}"
-  export VMESS_TCP_PATH="${DIYIGE}${DISANGE}${DIERGE}${SHI}${FEN}${MIAO}"
-  export VMESS_WS_PATH="${DISANGE}${DIERGE}${DIYIGE}${MIAO}${SHI}${FEN}"
+  export VLESS_WS_PATH="${DIYIGE}${DIERGE}${DISANGE}${MIAO2}${FEN2}${SHI2}"
+  export VMESS_TCP_PATH="${DIYIGE}${DISANGE}${DIERGE}${SHI2}${FEN2}${MIAO2}"
+  export VMESS_WS_PATH="${DISANGE}${DIERGE}${DIYIGE}${MIAO2}${SHI2}${FEN2}"
   export UUID="$(cat /proc/sys/kernel/random/uuid)"
   export QJPASS="$(cat /proc/sys/kernel/random/uuid)"
 }
@@ -480,15 +483,16 @@ function acme() {
 
 function xrayliugen_conf() {
 echo "
-#此文件请勿删除，如果要修改，请保持此处变量跟config.json文件一致
-export WS_PATH="${WS_PATH}"
-export VMTCP="${VMTCP}"
-export VMWS="${VMWS}"
+#!/usr/bin/env bash
+export VLESS_WS_PATH="${VLESS_WS_PATH}"
+export VMESS_TCP_PATH="${VMESS_TCP_PATH}"
+export VMESS_WS_PATH="${VMESS_WS_PATH}"
 export PORT="${PORT}"
 export UUID="${UUID}"
 export QJPASS="${QJPASS}"
-" > $domain_tmp_dir/pzconcon
-chmod 775 $domain_tmp_dir/pzconcon
+export domain="${domain}"
+" > $domain_tmp_dir/variable.sh
+chmod 775 $domain_tmp_dir/variable.sh
 }
 
 function configure_cloudreve() {
@@ -607,6 +611,8 @@ function configure_gengxinxinxi() {
   echo
   bash -c "$(curl -L https://raw.githubusercontent.com/281677160/agent/main/xray/config.sh)"
   judge "生成新配置"
+  bash -c "$(curl -L https://raw.githubusercontent.com/281677160/agent/main/xray/pzcon.sh)"
+  judge "生成新的节点链接信息"
   print_ok "重新生成UUID/路径/Tronjian密码完成"
   restart_all
 }
@@ -678,6 +684,13 @@ function xray_uninstall() {
   exit 0
 }
 
+function xiugai_uuid_path() {
+  source $domain_tmp_dir/variable.sh
+  uuid_path
+  configure_gengxinxinxi
+  xrayliugen_conf
+}
+
 function install_xray_ws() {
   is_root
   kaishi_install
@@ -712,9 +725,9 @@ menu() {
   ECHOY "3、安装 BBR、锐速加速"
   ECHOY "4、更新 Xray"
   ECHOY "5、重新生成 UUID/路径/Tronjian密码"
-  ECHOY "6、删除 阿里云盾或腾讯云盾"
-  ECHOY "7、卸载 Xray、nginx和cloudreve"
-  ECHOY "8、重启 Xray、nginx和cloudreve"
+  ECHOY "6、重启 Xray、nginx和cloudreve"
+  ECHOY "7、删除 阿里云盾或腾讯云盾"
+  ECHOY "8、卸载 Xray、nginx和cloudreve"
   ECHOY "9、退出"
   echo
   echo
@@ -741,21 +754,19 @@ menu() {
     break
     ;;
   5)
-    uuid_path
-    configure_gengxinxinxi
+    xiugai_uuid_path
     break
     ;;
-    
   6)
-    bash -c "$(curl -Ls https://raw.githubusercontent.com/281677160/agent/main/xray/uninstall_firewall.sh)"
+    restart_all
     break
     ;;
   7)
-    xray_uninstall
+    bash -c "$(curl -Ls https://raw.githubusercontent.com/281677160/agent/main/xray/uninstall_firewall.sh)"
     break
     ;;
   8)
-    restart_all
+    xray_uninstall
     break
     ;;
   9)

@@ -102,9 +102,11 @@ cd /root
 wget https://github.com/tindy2013/subconverter/releases/download/v0.7.2/subconverter_linux64.tar.gz
 tar -zxvf subconverter_linux64.tar.gz
 rm -fr tar -zxvf subconverter_linux64.tar.gz
-sed -i "s?listen = "0.0.0.0"?listen = "127.0.0.1"?g" "/root/subconverter/pref.toml"
-sed -i "s?listen = "0.0.0.0"?listen = "127.0.0.1"?g" "/root/subconverter/pref.example.ini"
-sed -i "s?http://127.0.0.1:25500?http://${wzym}:25500?g" "/root/subconverter/pref.example.ini"
+QJPASS="$(cat /proc/sys/kernel/random/uuid)"
+sed -i "s?listen = \"0.0.0.0\"?listen = \"127.0.0.1\"?g" "/root/subconverter/pref.toml"
+sed -i "s?listen=0.0.0.0?listen=127.0.0.1?g" "/root/subconverter/pref.example.ini"
+sed -i "s?http://127.0.0.1\:25500?http://${wzym}\:25500?g" "/root/subconverter/pref.example.ini"
+sed -i "s?api_access_token=password?api_access_token=${QJPASS}?g" "/root/subconverter/pref.example.ini"
 
 cat >/etc/systemd/system/sub.service <<-EOF
 [Unit]

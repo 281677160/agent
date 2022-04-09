@@ -1,6 +1,6 @@
 #!/bin/bash
 
-tcpBase64Default=$(echo -n '{"port":"'${PORT}'","ps":'VMESS_TCP_TLS_${domain}',"tls":"tls","id":'"${UUID}"',"aid":"1","v":"2","host":"'${domain}'","type":"http","path":"/'/${VMESS_TCP_PATH}/'","net":"tcp","add":"'${domain}'","allowInsecure":0,"method":"none","peer":"'${domain}'","obfs":"http","obfsParam":"'${domain}'"}' | sed 's#/#\\\/#g' | base64)
+tcpBase64Default=$(echo -n '{"port":"'${PORT}'","ps":'VMESS_TCP_TLS_${domain}',"tls":"tls","id":'"${UUID}"',"aid":"1","v":"2","host":"'${domain}'","type":"http","path":"/'/${VMESS_TCP_PATH}/'","net":"tcp","add":"'${domain}'","allowInsecure":0,"method":"none","peer":"'${domain}'","obfs":"http","obfsParam":"'${domain}'"}' | sed 's#/#\\\/#g' | base64 -w 0)
 Vmess_tcp=$(echo ${tcpBase64Default} | sed 's/ //g')
 
 wsBase64Default=$(echo -n "{\"port\":${PORT},\"ps\":\"VMESS_WS_TLS_${domain}\",\"tls\":\"tls\",\"id\":\"${UUID}\",\"aid\":0,\"v\":2,\"host\":\"${domain}\",\"type\":\"none\",\"path\":\"/${VMESS_WS_PATH}/\",\"net\":\"ws\",\"add\":\"${domain}\",\"allowInsecure\":0,\"method\":\"none\",\"peer\":\"${domain}\",\"sni\":\"${domain}\"}" | base64 -w 0)

@@ -147,6 +147,5 @@ echo
 echo
 echo -e "\033[32m 友情提示：再次输入安装命令或者输入[glxray]命令可以对程序进行管理  \033[0m"
 echo
-echo -e " VMess 新版格式：\n vmess://tcp+tls:${UUID}-0@${domain}:${PORT}/?tlsServerName=${domain}#$(urlEncode "${domain}-TCP")"
 echo
 EOF

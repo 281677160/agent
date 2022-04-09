@@ -72,5 +72,10 @@ if [[ $? -ne 0 ]];then
 	exit 1
 else
 	cd sub-web
+	sed -i "s?https://suo.yt?http://${wzym}:25500?g" "/root/sub-web/.env"
+	sed -i "s?http://127.0.0.1:25500/sub?http://${wzym}:25500?g" "/root/sub-web/src/views/Subconverter.vue"
 	yarn install
+	yarn build
+	rm -rf /var/www/html/*
+	cp -R /root/sub-web/dist/* /var/www/html/
 fi

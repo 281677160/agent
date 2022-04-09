@@ -92,7 +92,7 @@ if [[ $? -ne 0 ]];then
 else
 	cd sub-web
 	sed -i "s?https://suo.yt?http://${wzym}:25500?g" "/root/sub-web/.env"
-	sed -i "s?http://127.0.0.1:25500/sub?http://${wzym}:25500?g" "/root/sub-web/src/views/Subconverter.vue"
+	sed -i "s?http://127.0.0.1:25500/sub?http://${wzym}:25500/sub?g" "/root/sub-web/src/views/Subconverter.vue"
 	yarn install
 	yarn build
 	rm -rf /var/www/html/*
@@ -104,7 +104,7 @@ tar -zxvf subconverter_linux64.tar.gz
 rm -fr tar -zxvf subconverter_linux64.tar.gz
 sed -i "s?listen = "0.0.0.0"?listen = "127.0.0.1"?g" "/root/subconverter/pref.toml"
 sed -i "s?listen = "0.0.0.0"?listen = "127.0.0.1"?g" "/root/subconverter/pref.example.ini"
-sed -i "s?http://127.0.0.1:25500/sub?http://${wzym}:25500/sub?g" "/root/subconverter/pref.example.ini"
+sed -i "s?http://127.0.0.1:25500?http://${wzym}:25500?g" "/root/subconverter/pref.example.ini"
 
 cat >/etc/systemd/system/sub.service <<-EOF
 [Unit]

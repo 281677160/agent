@@ -2,10 +2,10 @@
 
 clear
 echo
-echo -e "\033[33m 请输入您的前端网页域名[比如：wy.v2ray.com] \033[0m"
-read -p " 请输入您的前端网页域名：" wzym
+echo -e "\033[33m 请输入您当前服务器IP[比如：192.168.2.1] \033[0m"
+read -p " 您当前服务器IP：" wzym
 export wzym="${wzym}"
-echo -e "\033[32m 您的前端网页域名为：${wzym} \033[0m"
+echo -e "\033[32m 您当前服务器IP为：${wzym} \033[0m"
 echo
 
 

@@ -94,6 +94,7 @@ else
 	sed -i "s?https://suo.yt?http://${wzym}:25500?g" "/root/sub-web/.env"
 	sed -i "s?http://127.0.0.1:25500/sub?http://${wzym}:25500/sub?g" "/root/sub-web/src/views/Subconverter.vue"
 	yarn install
+	timeout -k 1s 50s yarn serve
 	yarn build
 	rm -rf /var/www/html/*
 	cp -R /root/sub-web/dist/* /var/www/html/

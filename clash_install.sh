@@ -82,7 +82,7 @@ else
 	cp -R /root/sub-web/dist/* /var/www/html/
 fi
 cd /root
-wget https://github.com/tindy2013/subconverter/releases/download/v0.7.2/subconverter_linux64.tar.gz
+rm -rf subconverter && wget https://github.com/tindy2013/subconverter/releases/download/v0.7.2/subconverter_linux64.tar.gz
 tar -zxvf subconverter_linux64.tar.gz
 rm -fr subconverter_linux64.tar.gz
 QJPASS="$(cat /proc/sys/kernel/random/uuid)"

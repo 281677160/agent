@@ -32,7 +32,9 @@ elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
 	apt-get install -y nodejs
 	apt remove -y cmdtest
 	apt remove -y yarn
-	npm install -g yarn
+	curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+	echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+	apt-get update && apt-get install -y yarn
 elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
 	apt update
 	apt install -y curl wget sudo nginx git

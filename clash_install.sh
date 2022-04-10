@@ -110,4 +110,6 @@ chmod +x /etc/systemd/system/sub.service
 systemctl daemon-reload
 systemctl start sub
 systemctl enable sub
+systemctl restart nginx
+systemctl restart sub
 systemctl status sub

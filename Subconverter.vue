@@ -211,10 +211,10 @@ export default {
           Surge2: "surge&ver=2",
         },
         customBackend: {
-          "本地增强型后端": "http://h.danshui.life:25500/sub?",
+          "本地增强型后端": "http://127.0.0.1:25500/sub?",
         },
         backendOptions: [
-          { value: "http://h.danshui.life:25500/sub?" },
+          { value: "http://127.0.0.1:25500/sub?" },
         ],
         remoteConfig: [
           {
@@ -588,7 +588,7 @@ export default {
       form: {
         sourceSubUrl: "",
         clientType: "",
-        customBackend: "http://h.danshui.life:25500/sub?",
+        customBackend: "http://127.0.0.1:25500/sub?",
         remoteConfig: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_AdblockPlus.ini",
         excludeRemarks: "",
         includeRemarks: "",

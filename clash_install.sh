@@ -183,7 +183,7 @@ function install_subconverter() {
   if [[ `docker images | grep -c "subconverter"` -ge '1' ]] || [[ `docker ps -a | grep -c "subconverter"` -ge '1' ]]; then
     ECHOY "检测到subconverter服务存在，正在御载subconverter服务，请稍后..."
     dockerid="$(docker ps -a |grep 'subconverter' |awk '{print $1}')"
-    imagesid="$(docker images |grep ;subconverter' |awk '{print $3}')"
+    imagesid="$(docker images |grep 'subconverter' |awk '{print $3}')"
     docker stop -t=5 "${dockerid}" > /dev/null 2>&1
     docker rm "${dockerid}"
     docker rmi "${imagesid}"

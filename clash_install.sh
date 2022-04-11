@@ -120,6 +120,7 @@ function system_check() {
     yarn_version="$(yarn --version |egrep -o '[0-9]+\.[0-9]+\.[0-9]+')"
     print_ok "yarn安装成功!"
     echo "yarn版本号为：${yarn_version}"
+    echo
   fi
   
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then

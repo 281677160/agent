@@ -60,7 +60,7 @@ function system_check() {
   ECHOY "正在安装各种必须依赖"
   echo
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
-    yum install -y nodejs wget sudo git npm
+    yum install -y nodejs wget sudo git npm lsof
     wget -N -P /etc/yum.repos.d/ https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
     curl -sL https://rpm.nodesource.com/setup_12.x | bash -
     npm install -g yarn
@@ -71,7 +71,7 @@ function system_check() {
     apk add  --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.10/main/ nodejs
   elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
     apt-get update
-    apt install -y curl wget sudo nginx git
+    apt install -y curl wget sudo nginx git lsof
     apt-get remove -y --purge npm
     apt-get remove -y --purge nodejs
     apt-get remove -y --purge nodejs-legacy
@@ -89,7 +89,7 @@ function system_check() {
     curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
   elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
     apt update
-    apt install -y curl wget sudo nginx git
+    apt install -y curl wget sudo nginx git lsof
     apt remove -y --purge npm
     apt remove -y --purge nodejs
     apt remove -y --purge nodejs-legacy

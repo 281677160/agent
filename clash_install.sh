@@ -162,6 +162,7 @@ function systemctl_status() {
   echo
   ECHOG "检测docker是否在运行"
   if [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
+    service docker start
     if [[ `service docker start 2>&1 |tee build.log |grep -c "started" build.log` == '1' ]]; then
       print_ok "docker正在运行中!"
     else

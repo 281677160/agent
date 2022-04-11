@@ -12,18 +12,26 @@ OK="${Green}[OK]${Font}"
 ERROR="${Red}[ERROR]${Font}"
 
 function print_ok() {
+  echo
   echo -e " ${OK} ${Blue} $1 ${Font}"
+  echo
 }
 function print_error() {
+  echo
   echo -e "${ERROR} ${RedBG} $1 ${Font}"
+  echo
 }
 function ECHOY()
 {
+  echo
   echo -e "${Yellow} $1 ${Font}"
+  echo
 }
 function ECHOG()
 {
+  echo
   echo -e "${Green} $1 ${Font}"
+  echo
 }
 judge() {
   if [[ 0 -eq $? ]]; then
@@ -43,10 +51,10 @@ fi
 function system_check() {
   clear
   echo
-  echo -e "\033[33m 请输入您当前服务器IP[比如：192.168.2.1] \033[0m"
-  read -p " 您当前服务器IP：" wzym
+  echo -e "\033[33m 请输入您的域名或当前服务器IP \033[0m"
+  read -p " 您当前域名/服务器IP：" wzym
   export wzym="${wzym}"
-  echo -e "\033[32m 您当前服务器IP为：${wzym} \033[0m"
+  echo -e "\033[32m 您当前域名/服务器IP为：${wzym} \033[0m"
   echo
 
   ECHOY "正在安装各种必须依赖"
@@ -98,19 +106,19 @@ function system_check() {
   fi
 
   if [[ ! -x "$(command -v node)" ]]; then
-    echo -e "\033[31m node安装失败! \033[0m"
+    print_error "node安装失败!"
     exit 1
   else
     node_version="$(node --version |egrep -o 'v[0-9]+\.[0-9]+\.[0-9]+')"
-    echo -e "\033[32m node安装成功! \033[0m"
+    print_ok "node安装成功!"
     echo "node版本号为：${node_version}"
   fi
   if [[ ! -x "$(command -v yarn)" ]]; then
-    echo -e "\033[31m yarn安装失败! \033[0m"
+    print_error "yarn安装失败!"
     exit 1
   else
     yarn_version="$(yarn --version |egrep -o '[0-9]+\.[0-9]+\.[0-9]+')"
-    echo -e "\033[32m yarn安装成功! \033[0m"
+    print_ok "yarn安装成功!"
     echo "yarn版本号为：${yarn_version}"
   fi
   
@@ -137,39 +145,20 @@ function system_check() {
 
 function system_docker() {
   if [[ ! -x "$(command -v docker)" ]]; then
-    print_error "没检测到docker，正在安装docker"
+    ECHOY "没检测到docker，正在安装docker"
     bash -c "$(curl -fsSL https://cdn.jsdelivr.net/gh/281677160/ql@main/docker.sh)"
   fi
 }
 
 function systemctl_status() {
   echo
-  if [[ "${XTong}" == "openwrt" ]]; then
-    /etc/init.d/dockerman start > /dev/null 2>&1
-    /etc/init.d/dockerd start > /dev/null 2>&1
-    sleep 3
-  elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
-    service docker start > /dev/null 2>&1
-    sleep 1
-    if [[ `docker version |grep -c "runc"` == '1' ]]; then
-      print_ok "docker正在运行中!"
-    else
-      print_error "docker没有启动，请先启动docker，或者检查一下是否安装失败"
-      sleep 1
-      exit 1
-    fi
+  ECHOG "检测docker是否在运行"
+  if [[ `systemctl status docker |grep -c "active (running) "` == '1' ]]; then
+    print_ok "docker正在运行中!"
   else
-    systemctl start docker > /dev/null 2>&1
+    print_error "docker没有启动，请先启动docker，或者检查一下是否安装失败"
     sleep 1
-    echo
-    ECHOG "检测docker是否在运行"
-    if [[ `systemctl status docker |grep -c "active (running) "` == '1' ]]; then
-      print_ok "docker正在运行中!"
-    else
-      print_error "docker没有启动，请先启动docker，或者检查一下是否安装失败"
-      sleep 1
-      exit 1
-    fi
+    exit 1
   fi
 }
 
@@ -192,8 +181,8 @@ function install_subconverter() {
   find / -name 'subconverter' 2>&1 | xargs -i rm -rf {}
   if [[ `docker images | grep -c "subconverter"` -ge '1' ]] || [[ `docker ps -a | grep -c "subconverter"` -ge '1' ]]; then
     ECHOY "检测到subconverter服务存在，正在御载subconverter服务，请稍后..."
-    docker=$(docker ps -a|grep subconverter) && dockerid=$(awk '{print $(1)}' <<<${docker})
-    images=$(docker images|grep subconverter) && imagesid=$(awk '{print $(3)}' <<<${images})
+    dockerid="$(docker ps -a |grep myurls |awk '{print $1}')"
+    imagesid="$(docker images |grep myurls |awk '{print $3}')"
     docker stop -t=5 "${dockerid}" > /dev/null 2>&1
     docker rm "${dockerid}"
     docker rmi "${imagesid}"
@@ -215,7 +204,7 @@ function install_subconverter() {
 }
 
 function install_subweb() {
-ECHOY "正在安装sub-web服务"
+  ECHOY "正在安装sub-web服务"
   rm -fr sub-web && git clone https://ghproxy.com/https://github.com/CareyWang/sub-web.git sub-web
   if [[ $? -ne 0 ]];then
     echo -e "\033[31m sub-web下载失败! \033[0m"
@@ -267,6 +256,7 @@ server {
 EOF
   systemctl restart nginx
   print_ok "sub-web安装完成"
+  ECHOG "全部服务安装完毕,请登录 http://${wzym} 进行使用"
 }
 
 menu() {

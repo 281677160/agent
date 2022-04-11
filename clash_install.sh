@@ -107,7 +107,7 @@ function system_check() {
   
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
     yum remove -y nginx
-    find / -iname 'nginx' | xargs -i rm -rf {}
+    find / -iname 'nginx' 2>&1 | xargs -i rm -rf {}
     yum install -y nginx
     judge "Nginx 安装"
     nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
@@ -118,7 +118,7 @@ function system_check() {
     apt-get --purge remove -y nginx
     apt-get --purge remove -y nginx-common
     apt-get --purge remove -y nginx-core
-    find / -iname 'nginx' | xargs -i rm -rf {}
+    find / -iname 'nginx' 2>&1 | xargs -i rm -rf {}
     apt-get install -y nginx
     judge "Nginx 安装"
     nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
@@ -165,7 +165,7 @@ function systemctl_status() {
 }
 
 function install_subconverter() {
-  find / -iname 'subconverter' | xargs -i rm -rf {}
+  find / -name 'subconverter' 2>&1 | xargs -i rm -rf {}
   if [[ `docker images | grep -c "subconverter"` -ge '1' ]] || [[ `docker ps -a | grep -c "subconverter"` -ge '1' ]]; then
     ECHOY "检测到subconverter服务存在，正在御载subconverter服务，请稍后..."
     docker=$(docker ps -a|grep subconverter) && dockerid=$(awk '{print $(1)}' <<<${docker})

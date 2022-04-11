@@ -299,8 +299,14 @@ EOF
     exit 1
   fi
     
+  if [[ 1 -ge $(lsof -i:"25500" | grep -i -c "listen") ]]; then
+    print_ok "subconverter服务正在运行"
+  else
+    print_error "subconverter服务没有运行，安装失败"
+    exit 1
+  fi
     
-  ECHOG "全部服务安装完毕,请登录 http://${wzym} 进行使用"
+  ECHOY "全部服务安装完毕,请登录 http://${wzym} 进行使用"
 }
 
 menu() {

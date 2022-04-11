@@ -49,6 +49,8 @@ function system_check() {
   echo -e "\033[32m 您当前服务器IP为：${wzym} \033[0m"
   echo
 
+  ECHOY "正在安装各种必须依赖"
+  echo
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
     curl -sL https://rpm.nodesource.com/setup_12.x | bash -
     yum install -y nodejs wget sudo git npm
@@ -108,6 +110,8 @@ function system_check() {
     find / -iname 'nginx' | xargs -i rm -rf {}
     yum install -y nginx
     judge "Nginx 安装"
+    nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
+    echo "Nginx版本号为：${NGINX_VERSION}"
   else
     apt-get --purge remove -y nginx
     apt-get autoremove -y
@@ -117,6 +121,8 @@ function system_check() {
     find / -iname 'nginx' | xargs -i rm -rf {}
     apt-get install -y nginx
     judge "Nginx 安装"
+    nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
+    echo "Nginx版本号为：${NGINX_VERSION}"
   fi
 } 
 

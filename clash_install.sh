@@ -161,12 +161,22 @@ function system_docker() {
 function systemctl_status() {
   echo
   ECHOG "检测docker是否在运行"
-  if [[ `systemctl status docker |grep -c "active (running) "` == '1' ]]; then
-    print_ok "docker正在运行中!"
-  else
-    print_error "docker没有启动，请先启动docker，或者检查一下是否安装失败"
-    sleep 1
-    exit 1
+  if [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
+    if [[ `service docker start 2>&1 |tee build.log |grep -c "started" build.log` == '1' ]]; then
+      print_ok "docker正在运行中!"
+    else
+      print_error "docker没有启动，请先启动docker，或者检查一下是否安装失败"
+      sleep 1
+      exit 1
+    fi
+  else  
+    if [[ `systemctl status docker |grep -c "active (running) "` == '1' ]]; then
+      print_ok "docker正在运行中!"
+    else
+      print_error "docker没有启动，请先启动docker，或者检查一下是否安装失败"
+      sleep 1
+      exit 1
+    fi
   fi
 }
 

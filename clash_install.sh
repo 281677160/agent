@@ -234,7 +234,7 @@ function install_subweb() {
 cat >"${sub_path}" <<-EOF
 server {
     listen 80;
-    server_name localhost;
+    server_name ${wzym};
 
     root /www/dist;
     index index.html index.htm;

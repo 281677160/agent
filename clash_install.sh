@@ -64,6 +64,11 @@ function system_check() {
     wget -N -P /etc/yum.repos.d/ https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
     curl -sL https://rpm.nodesource.com/setup_12.x | bash -
     npm install -g yarn
+  elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
+    apk update
+    apk del yarn nginx nodejs
+    apk add git yarn sudo wget nginx
+    apk add  --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.10/main/ nodejs
   elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
     apt-get update
     apt install -y curl wget sudo nginx git
@@ -130,6 +135,8 @@ function system_check() {
     judge "Nginx 安装"
     nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
     echo "Nginx版本号为：${NGINX_VERSION}"
+  elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
+    echo
   else
     apt-get --purge remove -y nginx
     apt-get autoremove -y

@@ -67,7 +67,7 @@ function system_check() {
   elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
     apk update
     apk del yarn nginx nodejs
-    apk add git yarn sudo wget nginx
+    apk add git yarn sudo wget nginx lsof
     apk add  --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.10/main/ nodejs
   elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
     apt-get update
@@ -284,6 +284,22 @@ server {
 EOF
   service nginx restart
   print_ok "sub-web安装完成"
+  
+  if [[ `service docker status |grep -c "status"` == '1' ]]; then
+    print_ok "docker正在运行"
+  else
+    print_error "docker没有运行，安装失败"
+    exit 1
+  fi
+  
+  if [[ `service nginx status |grep -c "status"` == '1' ]]; then
+    print_ok "nginx正在运行"
+  else
+    print_error "nginx没有运行，安装失败"
+    exit 1
+  fi
+    
+    
   ECHOG "全部服务安装完毕,请登录 http://${wzym} 进行使用"
 }
 

@@ -205,7 +205,7 @@ ECHOY "正在安装sub-web服务"
       [[ ! -d /www/dist ]] && mkdir -p /www/dist || rm -rf /www/dist/*
       cp -R /root/sub-web/dist/* /www/dist/
     else
-      echo "生成页面文件失败"
+      print_error "生成页面文件失败"
       exit 1
     fi
   fi

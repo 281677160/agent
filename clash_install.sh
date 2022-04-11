@@ -253,6 +253,8 @@ function install_subweb() {
 
   if [[ -f /etc/nginx/sites-available/default ]]; then
     sub_path="/etc/nginx/sites-available/default"
+  elif [[ -f /etc/nginx/http.d/default.conf ]]; then  
+    sub_path="/etc/nginx/http.d/default.conf"
   else
     sub_path="/etc/nginx/conf.d/${wzym}.conf"
   fi
@@ -280,7 +282,7 @@ server {
     }
 }
 EOF
-  systemctl restart nginx
+  service nginx restart
   print_ok "sub-web安装完成"
   ECHOG "全部服务安装完毕,请登录 http://${wzym} 进行使用"
 }

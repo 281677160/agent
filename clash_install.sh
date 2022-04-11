@@ -216,7 +216,7 @@ ECHOY "正在安装sub-web服务"
   else
     sub_path="/etc/nginx/conf.d/${wzym}.conf"
   fi
-cat >${sub_path} <<-EOF
+cat >"${sub_path}" <<-EOF
 server {
     listen 80;
     server_name localhost;

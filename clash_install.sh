@@ -164,6 +164,21 @@ function systemctl_status() {
   fi
 }
 
+function port_exist_check() {
+  if [[ 0 -eq $(lsof -i:"25500" | grep -i -c "listen") ]]; then
+    print_ok "25500 端口未被占用"
+    sleep 1
+  else
+    print_error "检测到 25500 端口被占用，以下为 25500 端口占用信息"
+    lsof -i:"25500"
+    print_error "5s 后将尝试自动 kill 占用进程"
+    sleep 5
+    lsof -i:"25500" | awk '{print $2}' | grep -v "PID" | xargs kill -9
+    print_ok "kill 完成"
+    sleep 1
+  fi
+}
+
 function install_subconverter() {
   find / -name 'subconverter' 2>&1 | xargs -i rm -rf {}
   if [[ `docker images | grep -c "subconverter"` -ge '1' ]] || [[ `docker ps -a | grep -c "subconverter"` -ge '1' ]]; then
@@ -248,6 +263,7 @@ menu() {
   system_check
   system_docker
   systemctl_status
+  port_exist_check
   install_subconverter
   install_subweb
 }

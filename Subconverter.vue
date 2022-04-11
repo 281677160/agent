@@ -31,16 +31,7 @@
               </el-form-item>
 
               <div v-if="advanced === '2'">
-                <el-form-item label="后端地址:">
-                  <el-autocomplete
-                    style="width: 100%"
-                    v-model="form.customBackend"
-                    :fetch-suggestions="backendSearch"
-                    placeholder="动动小手，（建议）自行搭建后端服务。例：http://127.0.0.1/sub?"
-                  >
-                    <el-button slot="append" @click="gotoGayhub" icon="el-icon-link">前往项目仓库</el-button>
-                  </el-autocomplete>
-                </el-form-item>
+
                 <el-form-item label="远程配置:">
                   <el-select
                     v-model="form.remoteConfig"
@@ -83,7 +74,7 @@
                         <el-checkbox v-model="form.emoji" label="Emoji"></el-checkbox>
                       </el-row>
                       <el-row>
-                        <el-checkbox v-model="form.new_name" label="Clash New Field"></el-checkbox>
+                        <el-checkbox v-model="form.scv" label="跳过证书验证"></el-checkbox>
                       </el-row>
                       <el-row>
                         <el-checkbox v-model="form.udp" @change="needUdp = true" label="启用 UDP"></el-checkbox>
@@ -132,17 +123,6 @@
                   >复制</el-button>
                 </el-input>
               </el-form-item>
-              <el-form-item label="订阅短链:">
-                <el-input class="copy-content" disabled v-model="curtomShortSubUrl">
-                  <el-button
-                    slot="append"
-                    v-clipboard:copy="curtomShortSubUrl"
-                    v-clipboard:success="onCopy"
-                    ref="copy-btn"
-                    icon="el-icon-document-copy"
-                  >复制</el-button>
-                </el-input>
-              </el-form-item>
 
               <el-form-item label-width="0px" style="margin-top: 40px; text-align: center">
                 <el-button
@@ -151,31 +131,6 @@
                   @click="makeUrl"
                   :disabled="form.sourceSubUrl.length === 0"
                 >生成订阅链接</el-button>
-                <el-button
-                  style="width: 120px"
-                  type="danger"
-                  @click="makeShortUrl"
-                  :loading="loading"
-                  :disabled="customSubUrl.length === 0"
-                >生成短链接</el-button>
-                <!-- <el-button style="width: 120px" type="primary" @click="surgeInstall" icon="el-icon-connection">一键导入Surge</el-button> -->
-              </el-form-item>
-
-              <el-form-item label-width="0px" style="text-align: center">
-                <el-button
-                  style="width: 120px"
-                  type="primary"
-                  @click="dialogUploadConfigVisible = true"
-                  icon="el-icon-upload"
-                  :loading="loading"
-                >上传配置</el-button>
-                <el-button
-                  style="width: 120px"
-                  type="primary"
-                  @click="clashInstall"
-                  icon="el-icon-connection"
-                  :disabled="customSubUrl.length === 0"
-                >一键导入Clash</el-button>
               </el-form-item>
             </el-form>
           </el-container>
@@ -255,168 +210,197 @@ export default {
           ClashR: "clashr",
           Surge2: "surge&ver=2",
         },
-        backendOptions: [{ value: "https://192.168.1.1/sub?" }],
+        customBackend: {
+          "本地增强型后端": "http://h.danshui.life:25500/sub?",
+        },
+        backendOptions: [
+          { value: "http://h.danshui.life:25500/sub?" },
+        ],
         remoteConfig: [
-        {
-            label: "请选择规则",
+          {
+            label: "通用",
             options: [
               {
-                label: "无Urltest",
-                value:
-                  "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/no_urltest.ini"
+                label: "默认（自动测速）",
+                value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_AdblockPlus.ini"
               },
               {
-                label: "带Urltest",
-                value:
-                  "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/urltest.ini"
+                label: "默认",
+                value: "https://raw.githubusercontent.com/Meilieage/webcdn/main/rule/Area_Media_NoAuto.ini"
               },
               {
-                label: "ConnersHua 神机规则 Basic",
-                value:
-                  "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/connershua_basic.ini"
+                label: "默认（索尼电视专用）",
+                value: "https://raw.githubusercontent.com/youshandefeiyang/webcdn/main/SONY.ini"
               },
               {
-                label: "ConnersHua 神机规则 Pro",
-                value:
-                  "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/connershua_new.ini"
+                label: "默认（附带用于 Clash 的 AdGuard DNS）",
+                value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/default_with_clash_adg.yml"
+              }
+            ]
+          },
+          {
+            label: "ACL规则",
+            options: [
+              {
+                label: "ACL_默认版",
+                value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online.ini"
               },
               {
-                label: "ConnersHua 神机规则 BacktoCN 回国专用",
-                value:
-                  "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/connershua_backtocn.ini"
+                label: "ACL_无测速版",
+                value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_NoAuto.ini"
+              },
+              {
+                label: "ACL_去广告版",
+                value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_AdblockPlus.ini"
+              },
+              {
+                label: "ACL_多国家版",
+                value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_MultiCountry.ini"
+              },
+              {
+                label: "ACL_无Reject版",
+                value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_NoReject.ini"
+              },
+              {
+                label: "ACL_无测速精简版",
+                value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_NoAuto.ini"
+              },
+              {
+                label: "ACL_全分组版",
+                value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full.ini"
+              },
+              {
+                label: "ACL_全分组谷歌版",
+                value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_Google.ini"
+              },
+              {
+                label: "ACL_全分组多模式版",
+                value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_MultiMode.ini"
+              },
+              {
+                label: "ACL_全分组奈飞版",
+                value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_Netflix.ini"
+              },
+              {
+                label: "ACL_全分组无测速版",
+                value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_NoAuto.ini"
+              },
+              {
+                label: "ACL_精简版",
+                value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini.ini"
+              },
+              {
+                label: "ACL_去广告精简版",
+                value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_AdblockPlus.ini"
+              },
+              {
+                label: "ACL_Fallback精简版",
+                value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_Fallback.ini"
+              },
+              {
+                label: "ACL_多国家精简版",
+                value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_MultiCountry.ini"
+              },
+              {
+                label: "ACL_多模式精简版",
+                value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_MultiMode.ini"
+              }
+            ]
+          },
+          {
+            label: "全网搜集规则",
+            options: [
+              {
+                label: "常规规则",
+                value: "https://raw.githubusercontent.com/flyhigherpi/merlinclash_clash_related/master/Rule_config/ZHANG.ini"
+              },
+              {
+                label: "分区域故障转移",
+                value: "https://raw.githubusercontent.com/flyhigherpi/merlinclash_clash_related/master/Rule_config/ZHANG_Area_Fallback.ini"
+              },
+              {
+                label: "分区域自动测速",
+                value: "https://raw.githubusercontent.com/flyhigherpi/merlinclash_clash_related/master/Rule_config/ZHANG_Area_Urltest.ini"
+              },
+              {
+                label: "分区域无自动测速",
+                value: "https://raw.githubusercontent.com/flyhigherpi/merlinclash_clash_related/master/Rule_config/ZHANG_Area_NoAuto.ini"
+              }, 
+              {
+                label: "OoHHHHHHH",
+                value: "https://raw.githubusercontent.com/OoHHHHHHH/ini/master/config.ini"
+              },
+              {
+                label: "CFW-TAP",
+                value: "https://raw.githubusercontent.com/OoHHHHHHH/ini/master/cfw-tap.ini"
+              },
+              {
+                label: "lhl77全分组（定期更新）",
+                value: "https://raw.githubusercontent.com/lhl77/sub-ini/main/tsutsu-full.ini"
+              },
+              {
+                label: "lhl77简易版（定期更新）",
+                value: "https://raw.githubusercontent.com/lhl77/sub-ini/main/tsutsu-mini-gfw.ini"
+              },
+              {
+                label: "ConnersHua 神机规则 Outbound",
+                value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/connershua_new.ini"
+              },
+              {
+                label: "ConnersHua 神机规则 Inbound 回国专用",
+                value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/connershua_backtocn.ini"
               },
               {
                 label: "lhie1 洞主规则（使用 Clash 分组规则）",
-                value:
-                  "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/lhie1_clash.ini"
+                value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/lhie1_clash.ini"
               },
               {
                 label: "lhie1 洞主规则完整版",
-                value:
-                  "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/lhie1_dler.ini"
-              },
-              {
-                label: "ACL4SSR 规则标准版",
-                value:
-                  "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/acl4ssr_standard.ini"
-              },
-              {
-                label: "ACL4SSR 规则 GFWList",
-                value:
-                  "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/acl4ssr_gfwlist.ini"
-              },
-              {
-                label: "ACL4SSR 规则 AdblockPlus",
-                value:
-                  "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_AdblockPlus.ini"
-              },
-              {
-                label: "ACL4SSR 规则 BackCN",
-                value:
-                  "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_BackCN.ini"
-              },
-              {
-                label: "ACL4SSR 规则 Mini",
-                value:
-                  "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_Mini.ini"
-              },
-              {
-                label: "ACL4SSR 规则 Mini Fallback",
-                value:
-                  "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_Mini_Fallback.ini"
-              },
-              {
-                label: "ACL4SSR 规则 Mini MultiMode",
-                value:
-                  "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_Mini_MultiMode.ini"
-              },
-              {
-                label: "ACL4SSR 规则 Mini NoAuto",
-                value: "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_Mini_NoAuto.ini"
-              },
-              {
-                label: "ACL4SSR 规则 NoApple",
-                value: "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_NoApple.ini"
-              },
-              {
-                label: "ACL4SSR 规则 NoAuto",
-                value: "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_NoAuto.ini"
-              },
-              {
-                label: "ACL4SSR 规则 NoAuto NoApple",
-                value: "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_NoAuto_NoApple.ini"
-              },
-              {
-                label: "ACL4SSR 规则 NoAuto NoApple NoMicrosoft",
-                value: "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_NoAuto_NoApple_NoMicrosoft.ini"
-              },
-              {
-                label: "ACL4SSR 规则 NoMicrosoft",
-                value: "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_NoMicrosoft.ini"
-              },
-              {
-                label: "ACL4SSR 规则 Online",
-                value: "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_Online.ini"
-              },
-              {
-                label: "ACL4SSR 规则 Online AdblockPlus",
-                value: "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_Online_AdblockPlus.ini"
-              },
-              {
-                label: "ACL4SSR 规则 Online Full",
-                value: "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_Online_Full.ini"
-              },
-              {
-                label: "ACL4SSR 规则 Online Full AdblockPlus",
-                value: "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_Online_Full_AdblockPlus.ini"
-              },
-              {
-                label: "ACL4SSR 规则 Online Full Netflix",
-                value: "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_Online_Full_Netflix.ini"
-              },
-              {
-                label: "ACL4SSR 规则 Online Full NoAuto",
-                value: "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_Online_Full_NoAuto.ini"
-              },
-              {
-                label: "ACL4SSR 规则 Online Mini",
-                value: "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_Online_Mini.ini"
-              },
-              {
-                label: "ACL4SSR 规则 Online Mini AdblockPlus",
-                value: "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_Online_Mini_AdblockPlus.ini"
-              },
-              {
-                label: "ACL4SSR 规则 Online Mini Fallback",
-                value: "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_Online_Mini_Fallback.ini"
-              },
-              {
-                label: "ACL4SSR 规则 Online Mini MultiMode",
-                value: "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_Online_Mini_MultiMode.ini"
-              },
-              {
-                label: "ACL4SSR 规则 Online Mini NoAuto",
-                value: "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_Online_Mini_NoAuto.ini"
-              },
-              {
-                label: "ACL4SSR 规则 Online NoAuto",
-                value: "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_Online_NoAuto.ini"
-              },
-              {
-                label: "ACL4SSR 规则 Online NoReject",
-                value: "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_Online_NoReject.ini"
-              },
-              {
-                label: "ACL4SSR 规则 WithChinaIp",
-                value: "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_WithChinaIp.ini"
-              },
-              {
-                label: "ACL4SSR 规则 WithChinaIp WithGFW",
-                value: "https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/ACL4SSR_WithChinaIp_WithGFW.ini"
+                value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/lhie1_dler.ini"
               },
               {
                 label: "eHpo1 规则",
                 value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/ehpo1_main.ini"
+              },
+              {
+                label: "多策略组默认白名单模式",
+                value: "https://raw.nameless13.com/api/public/dl/ROzQqi2S/white.ini"
+              },
+              {
+                label: "多策略组可以有效减少审计触发",
+                value: "https://raw.nameless13.com/api/public/dl/ptLeiO3S/mayinggfw.ini"
+              },
+              {
+                label: "精简策略默认白名单",
+                value: "https://raw.nameless13.com/api/public/dl/FWSh3dXz/easy3.ini"
+              },
+              {
+                label: "多策略增加SMTP策略",
+                value: "https://raw.nameless13.com/api/public/dl/L_-vxO7I/youtube.ini"
+              },
+              {
+                label: "无策略入门推荐",
+                value: "https://raw.nameless13.com/api/public/dl/zKF9vFbb/easy.ini"
+              },
+              {
+                label: "无策略入门推荐国家分组",
+                value: "https://raw.nameless13.com/api/public/dl/E69bzCaE/easy2.ini"
+              },
+              {
+                label: "无策略仅IPIP CN + Final",
+                value: "https://raw.nameless13.com/api/public/dl/XHr0miMg/ipip.ini"
+              },
+              {
+                label: "无策略魅影vip分组",
+                value: "https://raw.nameless13.com/api/public/dl/BBnfb5lD/MAYINGVIP.ini"
+              },
+              {
+                label: "品云专属配置（仅香港区域分组）",
+                value: "https://raw.githubusercontent.com/Mazeorz/airports/master/Clash/Examine.ini"
+              },
+              {
+                label: "品云专属配置（全地域分组）",
+                value: "https://raw.githubusercontent.com/Mazeorz/airports/master/Clash/Examine_Full.ini"
               },
               {
                 label: "nzw9314 规则",
@@ -425,34 +409,6 @@ export default {
               {
                 label: "maicoo-l 规则",
                 value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/maicoo-l_custom.ini"
-              },
-              {
-                label: "rixCloud 官方规则",
-                value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/rixcloud_custom.ini"
-              },
-              {
-                label: "Maying",
-                value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/maying_optimized.ini"
-              },
-              {
-                label: "Nexitally",
-                value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/nexitally_optimized.ini"
-              },
-              {
-                label: "贼船",
-                value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/zeichuan_optimized.ini"
-              },
-              {
-                label: "N3RO",
-                value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/n3ro_optimized.ini"
-              },
-              {
-                label: "Scholar",
-                value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/scholar_optimized.ini"
-              },
-              {
-                label: "YToo",
-                value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/ytoo_optimized.ini"
               },
               {
                 label: "DlerCloud Platinum 李哥定制规则",
@@ -467,8 +423,163 @@ export default {
                 value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/dlercloud_lige_silver.ini"
               },
               {
-                label: "网易云解锁（仅规则分组）",
-                value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/netease.ini"
+                label: "ProxyStorage自用",
+                value: "https://raw.githubusercontent.com/ProxyStorage/For-Own-Use/master/Clash/clash.ini"
+              },
+              {
+                label: "ACL_全分组 Dream修改版",
+                value: "https://raw.githubusercontent.com/WC-Dream/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_Dream.ini"
+              }
+            ]
+          },
+          {
+            label: "各大机场规则",
+            options: [
+              {
+                label: "EXFLUX",
+                value:
+                  "https://gist.github.com/jklolixxs/16964c46bad1821c70fa97109fd6faa2/raw/EXFLUX.ini"
+              },
+              {
+                label: "NaNoport",
+                value:
+                  "https://gist.github.com/jklolixxs/32d4e9a1a5d18a92beccf3be434f7966/raw/NaNoport.ini"
+              },
+              {
+                label: "CordCloud",
+                value:
+                  "https://gist.github.com/jklolixxs/dfbe0cf71ffc547557395c772836d9a8/raw/CordCloud.ini"
+              },
+              {
+                label: "BigAirport",
+                value:
+                  "https://gist.github.com/jklolixxs/e2b0105c8be6023f3941816509a4c453/raw/BigAirport.ini"
+              },
+              {
+                label: "跑路云",
+                value:
+                  "https://gist.github.com/jklolixxs/9f6989137a2cfcc138c6da4bd4e4cbfc/raw/PaoLuCloud.ini"
+              },
+              {
+                label: "WaveCloud",
+                value:
+                  "https://gist.github.com/jklolixxs/fccb74b6c0018b3ad7b9ed6d327035b3/raw/WaveCloud.ini"
+              },
+              {
+                label: "几鸡",
+                value:
+                  "https://gist.github.com/jklolixxs/bfd5061dceeef85e84401482f5c92e42/raw/JiJi.ini"
+              },
+              {
+                label: "四季加速",
+                value:
+                  "https://gist.github.com/jklolixxs/6ff6e7658033e9b535e24ade072cf374/raw/SJ.ini"
+              },
+              {
+                label: "ImmTelecom",
+                value:
+                  "https://gist.github.com/jklolixxs/24f4f58bb646ee2c625803eb916fe36d/raw/ImmTelecom.ini"
+              },
+              {
+                label: "AmyTelecom",
+                value:
+                  "https://gist.github.com/jklolixxs/b53d315cd1cede23af83322c26ce34ec/raw/AmyTelecom.ini"
+              },
+              {
+                label: "Miaona",
+                value:
+                  "https://gist.github.com/jklolixxs/ff8ddbf2526cafa568d064006a7008e7/raw/Miaona.ini"
+              },
+              {
+                label: "Foo&Friends",
+                value:
+                  "https://gist.github.com/jklolixxs/df8fda1aa225db44e70c8ac0978a3da4/raw/Foo&Friends.ini"
+              },
+              {
+                label: "ABCloud",
+                value:
+                  "https://gist.github.com/jklolixxs/b1f91606165b1df82e5481b08fd02e00/raw/ABCloud.ini"
+              },
+              {
+                label: "咸鱼",
+                value: "https://raw.githubusercontent.com/SleepyHeeead/subconverter-config/master/remote-config/customized/xianyu.ini"
+              },    
+              {
+                label: "便利店",
+                value: "https://subweb.oss-cn-hongkong.aliyuncs.com/RemoteConfig/customized/convenience.ini"
+              },
+              {
+                label: "CNIX",
+                value: "https://raw.githubusercontent.com/Mazeorz/airports/master/Clash/SSRcloud.ini"
+              },    
+              {
+                label: "Nirvana",
+                value: "https://raw.githubusercontent.com/Mazetsz/ACL4SSR/master/Clash/config/V2rayPro.ini"
+              },
+              {
+                label: "V2Pro",
+                value: "https://raw.githubusercontent.com/Mazeorz/airports/master/Clash/V2Pro.ini"
+              },
+              {
+              label: "史迪仔-自动测速",
+              value: "https://raw.githubusercontent.com/Mazeorz/airports/master/Clash/Stitch.ini"
+              },
+              {
+                label: "史迪仔-负载均衡",
+                value: "https://raw.githubusercontent.com/Mazeorz/airports/master/Clash/Stitch-Balance.ini"
+              },    
+              {
+                label: "Maying",
+                value: "https://raw.githubusercontent.com/SleepyHeeead/subconverter-config/master/remote-config/customized/maying.ini"
+              },
+              {
+                label: "Ytoo",
+                value: "https://raw.githubusercontent.com/SleepyHeeead/subconverter-config/master/remote-config/customized/ytoo.ini"
+              },
+              {
+                label: "w8ves",
+                value: "https://raw.nameless13.com/api/public/dl/M-We_Fn7/w8ves.ini"
+              },
+              {
+                label: "NyanCAT",
+                value: "https://raw.githubusercontent.com/SleepyHeeead/subconverter-config/master/remote-config/customized/nyancat.ini"
+              },
+              {
+                label: "Nexitally",
+                value: "https://raw.githubusercontent.com/SleepyHeeead/subconverter-config/master/remote-config/customized/nexitally.ini"
+              },
+              {
+                label: "SoCloud",
+                value: "https://raw.githubusercontent.com/SleepyHeeead/subconverter-config/master/remote-config/customized/socloud.ini"
+              },
+              {
+                label: "ARK",
+                value: "https://raw.githubusercontent.com/SleepyHeeead/subconverter-config/master/remote-config/customized/ark.ini"
+              },
+              {
+                label: "N3RO",
+                value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/n3ro_optimized.ini"
+              },
+              {
+                label: "Scholar",
+                value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/scholar_optimized.ini"
+              },
+              {
+                label: "Flowercloud",
+                value: "https://raw.githubusercontent.com/SleepyHeeead/subconverter-config/master/remote-config/customized/flowercloud.ini"
+              }
+            ]
+          },
+          {
+            label: "特殊",
+            options: [
+              {
+                label: "NeteaseUnblock",
+                value: "https://raw.githubusercontent.com/SleepyHeeead/subconverter-config/master/remote-config/special/netease.ini"
+              },
+              {
+                label: "Basic",
+                value: "https://raw.githubusercontent.com/SleepyHeeead/subconverter-config/master/remote-config/special/basic.ini"
               }
             ]
           }
@@ -477,8 +588,8 @@ export default {
       form: {
         sourceSubUrl: "",
         clientType: "",
-        customBackend: "",
-        remoteConfig: "",
+        customBackend: "http://h.danshui.life:25500/sub?",
+        remoteConfig: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_AdblockPlus.ini",
         excludeRemarks: "",
         includeRemarks: "",
         filename: "",
@@ -714,18 +825,18 @@ export default {
           }
         })
         .then(res => {
-          if (res.data.Code === 1 && res.data.url !== "") {
+          if (res.data.code === 0 && res.data.data.url !== "") {
             this.$message.success(
               "远程配置上传成功，配置链接已复制到剪贴板，有效期三个月望知悉"
             );
 
             // 自动填充至『表单-远程配置』
-            this.form.remoteConfig = res.data.Url;
+            this.form.remoteConfig = res.data.data.url;
             this.$copyText(this.form.remoteConfig);
 
             this.dialogUploadConfigVisible = false;
           } else {
-            this.$message.error("远程配置上传失败：" + res.data.Message);
+            this.$message.error("远程配置上传失败: " + res.data.msg);
           }
         })
         .catch(() => {

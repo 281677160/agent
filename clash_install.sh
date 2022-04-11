@@ -211,6 +211,11 @@ function install_subweb() {
     echo -e "\033[31m sub-web下载失败! \033[0m"
     exit 1
   else
+    wget -q -O Subconverter.vue -P /root/sub-web/src https://raw.githubusercontent.com/281677160/agent/main/Subconverter.vue
+    if [[ $? -ne 0 ]]; then
+      curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/Subconverter.vue > "/root/sub-web/src/views/Subconverter.vue"
+    fi
+    
     cd sub-web
     sed -i "s?https://api.wcc.best?http://${wzym}:25500?g" "/root/sub-web/.env"
     sed -i "s?https://suo.yt?http://${wzym}:25500?g" "/root/sub-web/.env"

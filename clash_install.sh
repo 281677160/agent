@@ -299,7 +299,7 @@ EOF
     exit 1
   fi
     
-  if [[ 1 -ge $(lsof -i:"25500" | grep -i -c "listen") ]]; then
+  if [[ $(lsof -i:"25500" | grep -i -c "listen") -ge "1" ]]; then
     print_ok "subconverter服务正在运行"
   else
     print_error "subconverter服务没有运行，安装失败"

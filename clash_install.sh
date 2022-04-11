@@ -163,7 +163,7 @@ function systemctl_status() {
   ECHOG "检测docker是否在运行"
   if [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
     service docker start
-    if [[ `service docker start 2>&1 |tee build.log |grep -c "started" build.log` == '1' ]]; then
+    if [[ `docker version |grep -c "runc"` == '1' ]]; then
       print_ok "docker正在运行中!"
     else
       print_error "docker没有启动，请先启动docker，或者检查一下是否安装失败"

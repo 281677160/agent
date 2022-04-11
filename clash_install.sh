@@ -189,7 +189,7 @@ function install_subconverter() {
   fi
 }
 
-function install_subconverter() {
+function install_subweb() {
 ECHOY "正在安装sub-web服务"
   rm -fr sub-web && git clone https://ghproxy.com/https://github.com/CareyWang/sub-web.git sub-web
   if [[ $? -ne 0 ]];then
@@ -242,3 +242,12 @@ EOF
   systemctl restart nginx
   print_ok "sub-web安装完成"
 }
+
+menu() {
+  system_check
+  system_docker
+  systemctl_status
+  install_subconverter
+  install_subweb
+}
+menu "$@"

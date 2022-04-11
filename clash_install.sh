@@ -211,13 +211,13 @@ function install_subweb() {
     echo -e "\033[31m sub-web下载失败! \033[0m"
     exit 1
   else
-    wget -q -O Subconverter.vue -P /root/sub-web/src/views https://raw.githubusercontent.com/281677160/agent/main/Subconverter.vue
+    wget -q https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/Subconverter.vue -O /root/sub-web/src/views/Subconverter.vue
     if [[ $? -ne 0 ]]; then
-      curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/Subconverter.vue > "/root/sub-web/src/views/Subconverter.vue"
+      curl -fsSL https://cdn.jsdelivr.net/gh/281677160/agent@main/Subconverter.vue > "/root/sub-web/src/views/Subconverter.vue"
     fi
-    wget -q -O .env -P /root/sub-web https://raw.githubusercontent.com/281677160/agent/main/xray/clsah.env
+    wget -q https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/xray/clsah.env -O /root/sub-web/.env
     if [[ $? -ne 0 ]]; then
-      curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray/clsah.env > "/root/sub-web/.env"
+      curl -fsSL https://cdn.jsdelivr.net/gh/281677160/agent@main/xray/clsah.env > "/root/sub-web/.env"
     fi
     cd sub-web
     sed -i "s?http://127.0.0.1:25500?http://${wzym}:25500?g" "/root/sub-web/.env"

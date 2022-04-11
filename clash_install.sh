@@ -52,6 +52,7 @@ function system_check() {
   ECHOY "正在安装各种必须依赖"
   echo
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
+    wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
     curl -sL https://rpm.nodesource.com/setup_12.x | bash -
     yum install -y nodejs wget sudo git npm
     npm install -g yarn
@@ -69,6 +70,10 @@ function system_check() {
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
     apt-get update && apt-get install -y yarn
+    rm -f /etc/apt/sources.list.d/nginx.list
+    apt-get lsb-release gnupg2
+    echo "deb http://nginx.org/packages/ubuntu $(lsb_release -cs) nginx" >/etc/apt/sources.list.d/nginx.list
+    curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
   elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
     apt update
     apt install -y curl wget sudo nginx git
@@ -83,6 +88,10 @@ function system_check() {
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
     apt-get update && apt-get install -y yarn
+    rm -f /etc/apt/sources.list.d/nginx.list
+    apt-get lsb-release gnupg2
+    echo "deb http://nginx.org/packages/debian $(lsb_release -cs) nginx" >/etc/apt/sources.list.d/nginx.list
+    curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
   else
     echo -e "\033[31m 不支持该系统 \033[0m"
     exit 1
@@ -102,7 +111,7 @@ function system_check() {
   else
     yarn_version="$(yarn --version |egrep -o '[0-9]+\.[0-9]+\.[0-9]+')"
     echo -e "\033[32m yarn安装成功! \033[0m"
-    echo "yarn版本号为：${node_version}"
+    echo "yarn版本号为：${yarn_version}"
   fi
   
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then

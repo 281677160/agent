@@ -71,7 +71,7 @@ function system_check() {
   elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
     apk update
     apk del yarn nodejs
-    apk add git yarn sudo wget nginx lsof
+    apk add git yarn sudo wget lsof
     apk add  --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.10/main/ nodejs
     export INS="apk add"
   elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then

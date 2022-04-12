@@ -81,16 +81,17 @@ function system_check() {
     echo -e "\033[31m 不支持该系统 \033[0m"
     exit 1
   fi
+}
+
 
 function nodejs_install() {
     apt update
-    ${INS} curl wget sudo git lsof
+    ${INS} curl wget sudo git lsof lsb-release gnupg2
     ${UNINS} --purge npm
     ${UNINS} --purge nodejs
     ${UNINS} --purge nodejs-legacy
     apt autoremove -y
     curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
-    ${INS} nodejs
     ${UNINS} cmdtest
     ${UNINS} yarn
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
@@ -99,7 +100,7 @@ function nodejs_install() {
     echo "deb http://nginx.org/packages/${PUBKEY} $(lsb_release -cs) nginx" >/etc/apt/sources.list.d/nginx.list
     curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
     apt-get update
-    ${INS} yarn lsb-release gnupg2
+    ${INS} nodejs yarn
 }
 
 function nginx_install() {
@@ -110,8 +111,6 @@ function nginx_install() {
     print_ok "Nginx 已存在"
     ${INS} nginx
   fi
-  nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
-  echo "Nginx版本号为：${NGINX_VERSION}"
   
   if [[ -d /etc/nginx/sites-available ]]; then
     sub_path="/etc/nginx/sites-available/${wzym}.conf"
@@ -148,6 +147,24 @@ EOF
   service nginx restart
 }
 
+function command_Version() {
+  if [[ ! -x "$(command -v node)" ]]; then
+    print_error "node安装失败!"
+    exit 1
+  else
+    node_version="$(node --version |egrep -o 'v[0-9]+\.[0-9]+\.[0-9]+')"
+    print_ok "node版本号为：${node_version}"
+  fi
+  if [[ ! -x "$(command -v yarn)" ]]; then
+    print_error "yarn安装失败!"
+    exit 1
+  else
+    yarn_version="$(yarn --version |egrep -o '[0-9]+\.[0-9]+\.[0-9]+')"
+    echo "yarn版本号为：${yarn_version}"
+  fi
+  nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
+  print_ok "Nginx版本号为：${NGINX_VERSION}"
+}
 
 function system_docker() {
   if [[ ! -x "$(command -v docker)" ]]; then
@@ -277,7 +294,9 @@ function install_subweb() {
 
 menu() {
   system_check
+  nodejs_install
   nginx_install
+  command_Version
   system_docker
   systemctl_status
   port_exist_check

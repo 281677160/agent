@@ -193,6 +193,21 @@ function port_exist_check() {
 
 function install_subconverter() {
   ECHOY "正在安装subconverter服务"
+  find / -name 'subconverter' 2>&1 | xargs -i rm -rf {}
+  if [[ `docker images | grep -c "subconverter"` -ge '1' ]] || [[ `docker ps -a | grep -c "subconverter"` -ge '1' ]]; then
+    ECHOY "检测到subconverter服务存在，正在御载subconverter服务，请稍后..."
+    dockerid="$(docker ps -a |grep 'subconverter' |awk '{print $1}')"
+    imagesid="$(docker images |grep 'subconverter' |awk '{print $3}')"
+    docker stop -t=5 "${dockerid}" > /dev/null 2>&1
+    docker rm "${dockerid}"
+    docker rmi "${imagesid}"
+    if [[ `docker ps -a | grep -c "subconverter"` == '0' ]] && [[ `docker images | grep -c "qinglong"` == '0' ]]; then
+      print_ok "subconverter御载完成"
+    else
+      print_error "subconverter御载失败"
+      exit 1
+    fi
+  fi
   latest_vers="$(wget -qO- -t1 -T2 "https://api.github.com/repos/tindy2013/subconverter/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')"
   [[ -z ${latest_vers} ]] && latest_vers="v0.7.2"
   wget https://github.com/tindy2013/subconverter/releases/download/${latest_vers}/subconverter_linux64.tar.gz

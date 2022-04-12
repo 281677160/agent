@@ -222,6 +222,16 @@ function install_subconverter() {
   else
     echo -e "\033[32m subconverter解压成功! \033[0m"
   fi
+  if [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
+    nohup /root/subconverter/./subconverter >/dev/null 2>&1 &
+    echo "@reboot nohup /root/subconverter/./subconverter >/dev/null 2>&1 &" > "/etc/crontabs/root"
+    if [[ $(lsof -i:"25500" | grep -i -c "listen") -ge "1" ]]; then
+      print_ok "subconverter服务正在运行"
+    else
+      print_error "subconverter服务没有运行，安装失败"
+      exit 1
+    fi
+  else
 cat >/etc/systemd/system/subconverter.service <<-EOF
 [Unit]
 Description=subconverter
@@ -239,15 +249,16 @@ StandardError=syslog
 [Install]
 WantedBy=multi-user.target
 EOF
-  chmod 775 /etc/systemd/system/subconverter.service
-  systemctl daemon-reload
-  systemctl start subconverter
-  systemctl enable subconverter
-  if [[ `systemctl status subconverter |grep -c "active (running) "` == '1' ]]; then
-    print_ok "subconverter安装成功"
-  else
-    print_error "subconverter安装失败"
-    exit 1
+    chmod 775 /etc/systemd/system/subconverter.service
+    systemctl daemon-reload
+    systemctl start subconverter
+    systemctl enable subconverter
+    if [[ `systemctl status subconverter |grep -c "active (running) "` == '1' ]]; then
+      print_ok "subconverter安装成功"
+    else
+      print_error "subconverter安装失败"
+      exit 1
+    fi
   fi
 }
 
@@ -281,22 +292,6 @@ function install_subweb() {
   fi
 
   print_ok "sub-web安装完成"
-  
-  systemctl_status
-  
-  if [[ `service nginx status |grep -c "status"` -ge '1' ]]; then
-    print_ok "nginx正在运行"
-  else
-    print_error "nginx没有运行，安装失败"
-    exit 1
-  fi
-    
-  if [[ $(lsof -i:"25500" | grep -i -c "listen") -ge "1" ]]; then
-    print_ok "subconverter服务正在运行"
-  else
-    print_error "subconverter服务没有运行，安装失败"
-    exit 1
-  fi
     
   ECHOY "全部服务安装完毕,请登录 http://${wzym} 进行使用"
 }

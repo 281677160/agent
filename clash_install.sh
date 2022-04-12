@@ -222,6 +222,7 @@ function install_subconverter() {
   else
     echo -e "\033[32m subconverter解压成功! \033[0m"
   fi
+  rm -rf "/root/subconverter_linux64.tar.gz"
   if [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
     nohup /root/subconverter/./subconverter >/dev/null 2>&1 &
     echo "@reboot nohup /root/subconverter/./subconverter >/dev/null 2>&1 &" >> "/etc/crontabs/root"

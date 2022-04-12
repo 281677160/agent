@@ -309,7 +309,6 @@ menu() {
   system_check
   nginx_install
   command_Version
-  systemctl_status
   port_exist_check
   install_subconverter
   install_subweb

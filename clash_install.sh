@@ -212,7 +212,7 @@ function install_subconverter() {
   fi
   latest_vers="$(wget -qO- -t1 -T2 "https://api.github.com/repos/tindy2013/subconverter/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')"
   [[ -z ${latest_vers} ]] && latest_vers="v0.7.2"
-  wget https://github.com/tindy2013/subconverter/releases/download/${latest_vers}/subconverter_linux64.tar.gz
+  wget https://ghproxy.com/https://github.com/tindy2013/subconverter/releases/download/${latest_vers}/subconverter_linux64.tar.gz
   if [[ $? -ne 0 ]];then
     echo -e "\033[31m subconverter下载失败! \033[0m"
     exit 1

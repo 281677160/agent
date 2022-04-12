@@ -61,7 +61,7 @@ function system_check() {
   echo
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
     yum update -y
-    yum install -y wget curl sudo git lsof
+    yum install -y wget curl sudo git lsof tar
     wget -N -P /etc/yum.repos.d/ https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
     curl -sL https://rpm.nodesource.com/setup_12.x | bash -
     yum update -y
@@ -71,7 +71,7 @@ function system_check() {
   elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
     apk update
     apk del yarn nodejs
-    apk add git yarn sudo wget lsof
+    apk add git yarn sudo wget lsof tar
     apk add  --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.10/main/ nodejs
     export INS="apk add"
   elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
@@ -92,7 +92,7 @@ function system_check() {
 
 function nodejs_install() {
     apt update
-    ${INS} curl wget sudo git lsof lsb-release gnupg2
+    ${INS} curl wget sudo git lsof tar lsb-release gnupg2
     ${UNINS} --purge npm
     ${UNINS} --purge nodejs
     ${UNINS} --purge nodejs-legacy
@@ -176,33 +176,6 @@ function command_Version() {
   fi
 }
 
-function system_docker() {
-  if [[ ! -x "$(command -v docker)" ]]; then
-    ECHOY "没检测到docker，正在安装docker"
-    bash -c "$(curl -fsSL https://cdn.jsdelivr.net/gh/281677160/ql@main/docker.sh)"
-  fi
-}
-
-function systemctl_status() {
-  if [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
-    if [[ `service docker status |grep -c "status"` -ge '1' ]]; then
-      print_ok "docker正在运行中!"
-    else
-      print_error "docker没有启动，请先启动docker，或者检查一下是否安装失败"
-      sleep 1
-      exit 1
-    fi
-  else
-    if [[ `systemctl status docker |grep -c "active (running) "` == '1' ]]; then
-      print_ok "docker正在运行中!"
-    else
-      print_error "docker没有启动，请先启动docker，或者检查一下是否安装失败"
-      sleep 1
-      exit 1
-    fi
-  fi
-}
-
 function port_exist_check() {
   if [[ 0 -eq $(lsof -i:"25500" | grep -i -c "listen") ]]; then
     print_ok "25500 端口未被占用"
@@ -219,25 +192,44 @@ function port_exist_check() {
 }
 
 function install_subconverter() {
-  find / -name 'subconverter' 2>&1 | xargs -i rm -rf {}
-  if [[ `docker images | grep -c "subconverter"` -ge '1' ]] || [[ `docker ps -a | grep -c "subconverter"` -ge '1' ]]; then
-    ECHOY "检测到subconverter服务存在，正在御载subconverter服务，请稍后..."
-    dockerid="$(docker ps -a |grep 'subconverter' |awk '{print $1}')"
-    imagesid="$(docker images |grep 'subconverter' |awk '{print $3}')"
-    docker stop -t=5 "${dockerid}" > /dev/null 2>&1
-    docker rm "${dockerid}"
-    docker rmi "${imagesid}"
-    if [[ `docker ps -a | grep -c "subconverter"` == '0' ]] && [[ `docker images | grep -c "qinglong"` == '0' ]]; then
-      print_ok "subconverter御载完成"
-    else
-      print_error "subconverter御载失败"
-      exit 1
-    fi
-  fi
   ECHOY "正在安装subconverter服务"
-  docker run -d --restart=always -p 25500:25500 tindy2013/subconverter:latest
-  if [[ `docker images | grep -c "subconverter"` -ge '1' ]] && [[ `docker ps -a | grep -c "subconverter"` -ge '1' ]]; then
-    print_ok "subconverter安装完成"
+  latest_vers="$(wget -qO- -t1 -T2 "https://api.github.com/repos/tindy2013/subconverter/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')"
+  [[ -z ${latest_vers} ]] && latest_vers="v0.7.2"
+  wget https://github.com/tindy2013/subconverter/releases/download/${latest_vers}/subconverter_linux64.tar.gz
+  if [[ $? -ne 0 ]];then
+    echo -e "\033[31m subconverter下载失败! \033[0m"
+    exit 1
+  fi
+  tar -zxvf subconverter_linux64.tar.gz
+  if [[ $? -ne 0 ]];then
+    echo -e "\033[31m subconverter解压失败! \033[0m"
+    exit 1
+  else
+    echo -e "\033[32m subconverter解压成功! \033[0m"
+  fi
+cat >/etc/systemd/system/subconverter.service <<-EOF
+[Unit]
+Description=subconverter
+Documentation=https://github.com/tindy2013/subconverter
+After=network.target
+Wants=network.target
+[Service]
+WorkingDirectory=/root/subconverter
+ExecStart=/root/subconverter/subconverter
+Restart=on-abnormal
+RestartSec=5s
+KillMode=mixed
+StandardOutput=null
+StandardError=syslog
+[Install]
+WantedBy=multi-user.target
+EOF
+  chmod 775 /etc/systemd/system/subconverter.service
+  systemctl daemon-reload
+  systemctl start subconverter
+  systemctl enable subconverter
+  if [[ `systemctl status subconverter |grep -c "active (running) "` == '1' ]]; then
+    print_ok "subconverter安装成功"
   else
     print_error "subconverter安装失败"
     exit 1

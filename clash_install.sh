@@ -60,15 +60,20 @@ function system_check() {
   ECHOY "正在安装各种必须依赖"
   echo
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
-    yum install -y nodejs wget sudo git npm lsof
+    yum update -y
+    yum install -y wget curl sudo git lsof
     wget -N -P /etc/yum.repos.d/ https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
     curl -sL https://rpm.nodesource.com/setup_12.x | bash -
+    yum update -y
+    yum install -y nodejs npm
     npm install -g yarn
+    export INS="yum install -y"
   elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
     apk update
-    apk del yarn nginx nodejs
+    apk del yarn nodejs
     apk add git yarn sudo wget nginx lsof
     apk add  --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.10/main/ nodejs
+    export INS="apk add"
   elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
     export INS="apt-get install -y"
     export UNINS="apt-get remove -y"

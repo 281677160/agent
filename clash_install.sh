@@ -70,13 +70,15 @@ function system_check() {
     apk add git yarn sudo wget nginx lsof
     apk add  --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.10/main/ nodejs
   elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
-    INS="apt-get install -y"
-    UNINS="apt-get remove -y"
-    PUBKEY="ubuntu"
+    export INS="apt-get install -y"
+    export UNINS="apt-get remove -y"
+    export PUBKEY="ubuntu"
+    nodejs_install
   elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
-    INS="apt install -y"
-    UNINS="apt remove -y"
-    PUBKEY="debian"
+    export INS="apt install -y"
+    export UNINS="apt remove -y"
+    export PUBKEY="debian"
+    nodejs_install
   else
     echo -e "\033[31m 不支持该系统 \033[0m"
     exit 1
@@ -293,7 +295,6 @@ function install_subweb() {
 
 menu() {
   system_check
-  nodejs_install
   nginx_install
   command_Version
   system_docker

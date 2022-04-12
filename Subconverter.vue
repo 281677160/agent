@@ -32,7 +32,7 @@
 
               <div v-if="advanced === '2'">
 
-                <el-form-item label="远程配置:">
+                <el-form-item label="规则选择:">
                   <el-select
                     v-model="form.remoteConfig"
                     allow-create

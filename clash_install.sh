@@ -69,10 +69,14 @@ function system_check() {
     npm install -g yarn
     export INS="yum install -y"
   elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
+    echo "
+    https://dl-cdn.alpinelinux.org/alpine/v3.14/main
+    https://dl-cdn.alpinelinux.org/alpine/v3.14/community
+    " > /etc/apk/repositories
+    sed -i "s/^[ \t]*//g" /etc/apk/repositories
     apk update
     apk del yarn nodejs
-    apk add git yarn sudo wget lsof tar
-    apk add  --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.10/main/ nodejs
+    apk add git nodejs yarn sudo wget lsof tar
     export INS="apk add"
   elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
     export INS="apt-get install -y"

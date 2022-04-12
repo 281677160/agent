@@ -83,7 +83,6 @@ function system_check() {
   fi
 }
 
-
 function nodejs_install() {
     apt update
     ${INS} curl wget sudo git lsof lsb-release gnupg2

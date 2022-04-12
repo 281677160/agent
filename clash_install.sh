@@ -112,7 +112,6 @@ function nodejs_install() {
 function nginx_install() {
   if ! command -v nginx >/dev/null 2>&1; then
     ${INS} nginx
-    judge "Nginx 安装"
   else
     print_ok "Nginx 已存在"
     ${INS} nginx
@@ -168,8 +167,13 @@ function command_Version() {
     yarn_version="$(yarn --version |egrep -o '[0-9]+\.[0-9]+\.[0-9]+')"
     echo "yarn版本号为：${yarn_version}"
   fi
-  nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
-  print_ok "Nginx版本号为：${NGINX_VERSION}"
+  if [[ ! -x "$(command -v nginx)" ]]; then
+    print_error "nginx安装失败!"
+    exit 1
+  else
+    nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
+    print_ok "Nginx版本号为：${NGINX_VERSION}"
+  fi
 }
 
 function system_docker() {

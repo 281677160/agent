@@ -233,6 +233,7 @@ function install_subconverter() {
   if [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
     nohup /root/subconverter/./subconverter >/dev/null 2>&1 &
     echo "@reboot nohup /root/subconverter/./subconverter >/dev/null 2>&1 &" >> "/etc/crontabs/root"
+    rc-update add nginx boot
     sleep 3
     if [[ $(lsof -i:"25500" | grep -i -c "listen") -ge "1" ]]; then
       print_ok "subconverter安装成功"

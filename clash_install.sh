@@ -184,25 +184,12 @@ function system_docker() {
 }
 
 function systemctl_status() {
-  echo
-  ECHOG "检测docker是否在运行"
-  if [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
-    service docker start
-    if [[ `docker version |grep -c "runc"` == '1' ]]; then
-      print_ok "docker正在运行中!"
-    else
-      print_error "docker没有启动，请先启动docker，或者检查一下是否安装失败"
-      sleep 1
-      exit 1
-    fi
-  else  
-    if [[ `systemctl status docker |grep -c "active (running) "` == '1' ]]; then
-      print_ok "docker正在运行中!"
-    else
-      print_error "docker没有启动，请先启动docker，或者检查一下是否安装失败"
-      sleep 1
-      exit 1
-    fi
+  if [[ `service docker status |grep -c "status"` -ge '1' ]]; then
+    print_ok "docker正在运行中!"
+  else
+    print_error "docker没有启动，请先启动docker，或者检查一下是否安装失败"
+    sleep 1
+    exit 1
   fi
 }
 
@@ -278,14 +265,14 @@ function install_subweb() {
 
   print_ok "sub-web安装完成"
   
-  if [[ `service docker status |grep -c "status"` == '1' ]]; then
+  if [[ `service docker status |grep -c "status"` -ge '1' ]]; then
     print_ok "docker正在运行"
   else
     print_error "docker没有运行，安装失败"
     exit 1
   fi
   
-  if [[ `service nginx status |grep -c "status"` == '1' ]]; then
+  if [[ `service nginx status |grep -c "status"` -ge '1' ]]; then
     print_ok "nginx正在运行"
   else
     print_error "nginx没有运行，安装失败"

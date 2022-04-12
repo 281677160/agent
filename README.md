@@ -56,7 +56,7 @@ bash <(wget -qO- https://git.io/mtg.sh)
 - 一键搭建CLASH节点转换,无需域名无需证书,自己转换自己使用,支持本地虚拟机（支持ubuntu、debian、alpine）
 #
 ```yaml
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/clash_install.sh)"
+bash -c "$(curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/clash_install.sh)"
 ```
 #
 ---

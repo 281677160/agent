@@ -70,8 +70,8 @@ function system_check() {
     export INS="yum install -y"
   elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
     echo "
-    https://dl-cdn.alpinelinux.org/alpine/v3.14/main
-    https://dl-cdn.alpinelinux.org/alpine/v3.14/community
+    https://dl-cdn.alpinelinux.org/alpine/v3.12/main
+    https://dl-cdn.alpinelinux.org/alpine/v3.12/community
     " > /etc/apk/repositories
     sed -i 's/^[ ]*//g' /etc/apk/repositories
     sed -i '/^$/d' /etc/apk/repositories

@@ -224,7 +224,8 @@ function install_subconverter() {
   fi
   if [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
     nohup /root/subconverter/./subconverter >/dev/null 2>&1 &
-    echo "@reboot nohup /root/subconverter/./subconverter >/dev/null 2>&1 &" > "/etc/crontabs/root"
+    echo "@reboot nohup /root/subconverter/./subconverter >/dev/null 2>&1 &" >> "/etc/crontabs/root"
+    sleep 3
     if [[ $(lsof -i:"25500" | grep -i -c "listen") -ge "1" ]]; then
       print_ok "subconverter服务正在运行"
     else

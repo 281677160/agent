@@ -165,7 +165,7 @@ function command_Version() {
     exit 1
   else
     yarn_version="$(yarn --version |egrep -o '[0-9]+\.[0-9]+\.[0-9]+')"
-    echo "yarn版本号为：${yarn_version}"
+    print_ok "yarn版本号为：${yarn_version}"
   fi
   if [[ ! -x "$(command -v nginx)" ]]; then
     print_error "nginx安装失败!"

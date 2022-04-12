@@ -221,26 +221,26 @@ export default {
             label: "通用",
             options: [
               {
-                label: "默认（自动测速）",
+                label: "默认（负载均衡）",
                 value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_AdblockPlus.ini"
-              },
-              {
-                label: "默认",
-                value: "https://raw.githubusercontent.com/Meilieage/webcdn/main/rule/Area_Media_NoAuto.ini"
-              },
-              {
-                label: "默认（索尼电视专用）",
-                value: "https://raw.githubusercontent.com/youshandefeiyang/webcdn/main/SONY.ini"
-              },
-              {
-                label: "默认（附带用于 Clash 的 AdGuard DNS）",
-                value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/default_with_clash_adg.yml"
               }
             ]
           },
           {
             label: "ACL规则",
             options: [
+              {
+                label: "Clash默认规则",
+                value: ""
+              },
+              {
+                label: "索尼电视专用",
+                value: "https://raw.githubusercontent.com/youshandefeiyang/webcdn/main/SONY.ini"
+              },
+              {
+                label: "附带用于 Clash 的 AdGuard DNS",
+                value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/default_with_clash_adg.yml"
+              },
               {
                 label: "ACL_默认版",
                 value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online.ini"

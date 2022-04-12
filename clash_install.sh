@@ -73,7 +73,8 @@ function system_check() {
     https://dl-cdn.alpinelinux.org/alpine/v3.14/main
     https://dl-cdn.alpinelinux.org/alpine/v3.14/community
     " > /etc/apk/repositories
-    sed -i "s/^[ \t]*//g" /etc/apk/repositories
+    sed -i 's/^[ ]*//g' /etc/apk/repositories
+    sed -i '/^$/d' /etc/apk/repositories
     apk update
     apk del yarn nodejs
     apk add git nodejs yarn sudo wget lsof tar

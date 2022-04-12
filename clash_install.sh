@@ -230,7 +230,7 @@ function install_subconverter() {
     echo "@reboot nohup /root/subconverter/./subconverter >/dev/null 2>&1 &" >> "/etc/crontabs/root"
     sleep 3
     if [[ $(lsof -i:"25500" | grep -i -c "listen") -ge "1" ]]; then
-      print_ok "subconverter安装失败,请再次执行安装命令试试"
+      print_ok "subconverter安装成功"
     else
       print_error "subconverter安装失败,请再次执行安装命令试试"
       exit 1

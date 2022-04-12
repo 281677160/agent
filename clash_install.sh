@@ -127,29 +127,53 @@ function system_check() {
     echo "yarn版本号为：${yarn_version}"
     echo
   fi
-  
-  if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
-    yum remove -y nginx
-    find / -iname 'nginx' 2>&1 | xargs -i rm -rf {}
-    yum install -y nginx
+}
+
+function nginx_install() {
+  if ! command -v nginx >/dev/null 2>&1; then
+    ${INS} nginx
     judge "Nginx 安装"
-    nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
-    echo "Nginx版本号为：${NGINX_VERSION}"
-  elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
-    echo
   else
-    apt-get --purge remove -y nginx
-    apt-get autoremove -y
-    apt-get --purge remove -y nginx
-    apt-get --purge remove -y nginx-common
-    apt-get --purge remove -y nginx-core
-    find / -iname 'nginx' 2>&1 | xargs -i rm -rf {}
-    apt-get install -y nginx
-    judge "Nginx 安装"
-    nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
-    echo "Nginx版本号为：${NGINX_VERSION}"
+    print_ok "Nginx 已存在"
+    ${INS} nginx
   fi
-} 
+  nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
+  echo "Nginx版本号为：${NGINX_VERSION}"
+  
+  if [[ -d /etc/nginx/sites-available ]]; then
+    sub_path="/etc/nginx/sites-available/${wzym}.conf"
+  elif [[ -d /etc/nginx/http.d ]]; then  
+    sub_path="/etc/nginx/http.d/${wzym}.conf"
+  else
+    mkdir -p /etc/nginx/conf.d >/dev/null 2>&1
+    sub_path="/etc/nginx/conf.d/${wzym}.conf"
+  fi
+cat >"${sub_path}" <<-EOF
+server {
+    listen 80;
+    server_name ${wzym};
+
+    root /www/dist;
+    index index.html index.htm;
+
+    error_page 404 /index.html;
+
+    gzip on; #开启gzip压缩
+    gzip_min_length 1k; #设置对数据启用压缩的最少字节数
+    gzip_buffers 4 16k;
+    gzip_http_version 1.0;
+    gzip_comp_level 6; #设置数据的压缩等级,等级为1-9，压缩比从小到大
+    gzip_types text/plain text/css text/javascript application/json application/javascript application/x-javascript application/xml; #设置需要压缩的数据格式
+    gzip_vary on;
+
+    location ~* \.(css|js|png|jpg|jpeg|gif|gz|svg|mp4|ogg|ogv|webm|htc|xml|woff)$ {
+        access_log off;
+        add_header Cache-Control "public,max-age=30*24*3600";
+    }
+}
+EOF
+  service nginx restart
+}
 
 function system_docker() {
   if [[ ! -x "$(command -v docker)" ]]; then
@@ -251,38 +275,6 @@ function install_subweb() {
     fi
   fi
 
-  if [[ -f /etc/nginx/sites-available/default ]]; then
-    sub_path="/etc/nginx/sites-available/default"
-  elif [[ -f /etc/nginx/http.d/default.conf ]]; then  
-    sub_path="/etc/nginx/http.d/default.conf"
-  else
-    sub_path="/etc/nginx/conf.d/${wzym}.conf"
-  fi
-cat >"${sub_path}" <<-EOF
-server {
-    listen 80;
-    server_name ${wzym};
-
-    root /www/dist;
-    index index.html index.htm;
-
-    error_page 404 /index.html;
-
-    gzip on; #开启gzip压缩
-    gzip_min_length 1k; #设置对数据启用压缩的最少字节数
-    gzip_buffers 4 16k;
-    gzip_http_version 1.0;
-    gzip_comp_level 6; #设置数据的压缩等级,等级为1-9，压缩比从小到大
-    gzip_types text/plain text/css text/javascript application/json application/javascript application/x-javascript application/xml; #设置需要压缩的数据格式
-    gzip_vary on;
-
-    location ~* \.(css|js|png|jpg|jpeg|gif|gz|svg|mp4|ogg|ogv|webm|htc|xml|woff)$ {
-        access_log off;
-        add_header Cache-Control "public,max-age=30*24*3600";
-    }
-}
-EOF
-  service nginx restart
   print_ok "sub-web安装完成"
   
   if [[ `service docker status |grep -c "status"` == '1' ]]; then
@@ -311,6 +303,7 @@ EOF
 
 menu() {
   system_check
+  nginx_install
   system_docker
   systemctl_status
   port_exist_check

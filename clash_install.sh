@@ -194,19 +194,21 @@ function port_exist_check() {
 function install_subconverter() {
   ECHOY "正在安装subconverter服务"
   find / -name 'subconverter' 2>&1 | xargs -i rm -rf {}
-  if [[ `docker images | grep -c "subconverter"` -ge '1' ]] || [[ `docker ps -a | grep -c "subconverter"` -ge '1' ]]; then
-    ECHOY "检测到subconverter服务存在，正在御载subconverter服务，请稍后..."
-    dockerid="$(docker ps -a |grep 'subconverter' |awk '{print $1}')"
-    imagesid="$(docker images |grep 'subconverter' |awk '{print $3}')"
-    docker stop -t=5 "${dockerid}" > /dev/null 2>&1
-    docker rm "${dockerid}"
-    docker rmi "${imagesid}"
-    if [[ `docker ps -a | grep -c "subconverter"` == '0' ]] && [[ `docker images | grep -c "qinglong"` == '0' ]]; then
-      print_ok "subconverter御载完成"
-    else
-      print_error "subconverter御载失败"
-      exit 1
-    fi
+  if [[ -x "$(command -v docker)" ]]; then
+    if [[ `docker images | grep -c "subconverter"` -ge '1' ]] || [[ `docker ps -a | grep -c "subconverter"` -ge '1' ]]; then
+      ECHOY "检测到subconverter服务存在，正在御载subconverter服务，请稍后..."
+      dockerid="$(docker ps -a |grep 'subconverter' |awk '{print $1}')"
+      imagesid="$(docker images |grep 'subconverter' |awk '{print $3}')"
+      docker stop -t=5 "${dockerid}" > /dev/null 2>&1
+      docker rm "${dockerid}"
+      docker rmi "${imagesid}"
+      if [[ `docker ps -a | grep -c "subconverter"` == '0' ]] && [[ `docker images | grep -c "qinglong"` == '0' ]]; then
+        print_ok "subconverter御载完成"
+      else
+        print_error "subconverter御载失败"
+        exit 1
+      fi
+    fi  
   fi
   latest_vers="$(wget -qO- -t1 -T2 "https://api.github.com/repos/tindy2013/subconverter/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')"
   [[ -z ${latest_vers} ]] && latest_vers="v0.7.2"
@@ -228,9 +230,9 @@ function install_subconverter() {
     echo "@reboot nohup /root/subconverter/./subconverter >/dev/null 2>&1 &" >> "/etc/crontabs/root"
     sleep 3
     if [[ $(lsof -i:"25500" | grep -i -c "listen") -ge "1" ]]; then
-      print_ok "subconverter服务正在运行"
+      print_ok "subconverter安装失败,请再次执行安装命令试试"
     else
-      print_error "subconverter服务没有运行，安装失败"
+      print_error "subconverter安装失败,请再次执行安装命令试试"
       exit 1
     fi
   else
@@ -268,7 +270,7 @@ function install_subweb() {
   ECHOY "正在安装sub-web服务"
   rm -fr sub-web && git clone https://ghproxy.com/https://github.com/CareyWang/sub-web.git sub-web
   if [[ $? -ne 0 ]];then
-    echo -e "\033[31m sub-web下载失败! \033[0m"
+    echo -e "\033[31m sub-web下载失败,请再次执行安装命令试试! \033[0m"
     exit 1
   else
     wget -q https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/Subconverter.vue -O /root/sub-web/src/views/Subconverter.vue
@@ -288,7 +290,7 @@ function install_subweb() {
       [[ ! -d /www/dist ]] && mkdir -p /www/dist || rm -rf /www/dist/*
       cp -R /root/sub-web/dist/* /www/dist/
     else
-      print_error "生成页面文件失败"
+      print_error "生成页面文件失败,请再次执行安装命令试试"
       exit 1
     fi
   fi

@@ -253,6 +253,7 @@ function install_subconverter() {
     fi
   else
     systemctl enable nginx
+    rm -rf /etc/systemd/system/subconverter.service >/dev/null 2>&1
 cat >/etc/systemd/system/subconverter.service <<-EOF
 [Unit]
 Description=subconverter

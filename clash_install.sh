@@ -312,7 +312,7 @@ function install_subweb() {
 
   print_ok "sub-web安装完成"
     
-  ECHOY "全部服务安装完毕,请登录 http://${wzym} 进行使用"
+  ECHOY "全部服务安装完毕,请登录 ${current_ip} 进行使用"
 }
 
 menu() {

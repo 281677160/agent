@@ -240,6 +240,7 @@ function install_subconverter() {
   rm -rf "/root/subconverter_linux64.tar.gz"
   if [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
     nohup /root/subconverter/./subconverter >/dev/null 2>&1 &
+    sed -i '/subconverter/d' "/etc/crontabs/root"
     echo "@reboot nohup /root/subconverter/./subconverter >/dev/null 2>&1 &" >> "/etc/crontabs/root"
     rc-update add nginx boot
     sleep 3

@@ -52,9 +52,12 @@ function system_check() {
   clear
   echo
   echo -e "\033[33m 请输入您的域名或当前服务器IP \033[0m"
-  read -p " 您当前域名/服务器IP：" wzym
-  export wzym="${wzym}"
-  echo -e "\033[32m 您当前域名/服务器IP为：${wzym} \033[0m"
+  read -p " 您当前服务器IP/域名：" current_ip
+  export current_ip="${current_ip}"
+  export current_ip="$(echo "${current_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/www.//g' |sed 's/\///g')"
+  echo -e "\033[32m 您当前服务器IP/域名为：${current_ip} \033[0m"
+  export current_ip="http://${current_ip}"
+  export after_ip="http://127.0.0.1"
   echo
 
   ECHOY "正在安装各种必须依赖"
@@ -271,6 +274,9 @@ EOF
       exit 1
     fi
   fi
+    sed -i "s?${after_ip}?${current_ip}?g" "/root/subconverter/pref.example.ini"
+    sed -i "s?0.0.0.0?$127.0.0.1?g" "/root/subconverter/pref.example.ini"
+    sed -i "s?0.0.0.0?$127.0.0.1?g" "/root/subconverter/pref.example.toml"
 }
 
 function install_subweb() {
@@ -289,8 +295,8 @@ function install_subweb() {
       curl -fsSL https://cdn.jsdelivr.net/gh/281677160/agent@main/xray/clsah.env > "/root/sub-web/.env"
     fi
     cd sub-web
-    sed -i "s?http://127.0.0.1:25500?http://${wzym}:25500?g" "/root/sub-web/.env"
-    sed -i "s?http://127.0.0.1:25500/sub?http://${wzym}:25500/sub?g" "/root/sub-web/src/views/Subconverter.vue"
+    sed -i "s?${after_ip}?${current_ip}?g" "/root/sub-web/.env"
+    sed -i "s?${after_ip}?${current_ip}?g" "/root/sub-web/src/views/Subconverter.vue"
     yarn install
     yarn build
     if [[ -d /root/sub-web/dist ]]; then

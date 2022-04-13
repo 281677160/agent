@@ -275,7 +275,7 @@ function install_subweb() {
     exit 1
   fi
     
-  if [[ `systemctl status subconverter |grep -c "active (running) "` == '1' ]]; then
+  if [[ $(lsof -i:"25500" | grep -i -c "listen") -ge "1" ]]; then
     print_ok "subconverter服务正在运行"
   else
     print_error "subconverter服务没有运行，安装失败"

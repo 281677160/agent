@@ -180,7 +180,7 @@ function system_docker() {
 }
 
 function systemctl_status() {
-  if [[ `systemctl status docker |grep -c "active (running) "` == '1' ]]; then
+  if [[ `systemctl status docker |grep -c "active (running) "` == '1' ]] || [[ `service docker status |grep -c "running"` -ge '1' ]]; then
     print_ok "docker正在运行中!"
   else
     print_error "docker没有启动，请先启动docker，或者检查一下是否安装失败"
@@ -261,14 +261,14 @@ function install_subweb() {
 
   print_ok "sub-web安装完成"
   
-  if [[ `systemctl status docker |grep -c "active (running) "` == '1' ]]; then
+  if [[ `systemctl status docker |grep -c "active (running) "` == '1' ]] || [[ `service docker status |grep -c "running"` -ge '1' ]]; then
     print_ok "docker正在运行"
   else
     print_error "docker没有运行，安装失败"
     exit 1
   fi
   
-  if [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then
+  if [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]] || [[ `service nginx status |grep -c "running"` -ge '1' ]]; then
     print_ok "nginx正在运行"
   else
     print_error "nginx没有运行，安装失败"

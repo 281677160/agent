@@ -54,9 +54,9 @@ function system_check() {
   echo -e "\033[33m 请输入您的域名或当前服务器IP \033[0m"
   read -p " 您当前服务器IP/域名：" current_ip
   export current_ip="${current_ip}"
-  export current_ip="$(echo "${current_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/www.//g' |sed 's/\///g')"
-  echo -e "\033[32m 您当前服务器IP/域名为：${current_ip} \033[0m"
-  export current_ip="http://${current_ip}"
+  export CUrrent_ip="$(echo "${current_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/www.//g' |sed 's/\///g')"
+  echo -e "\033[32m 您当前服务器IP/域名为：${CUrrent_ip} \033[0m"
+  export current_ip="http://${CUrrent_ip}"
   export after_ip="http://127.0.0.1"
   echo
 
@@ -126,17 +126,17 @@ function nginx_install() {
   fi
   
   if [[ -d /etc/nginx/sites-available ]]; then
-    sub_path="/etc/nginx/sites-available/${wzym}.conf"
+    sub_path="/etc/nginx/sites-available/${CUrrent_ip}.conf"
   elif [[ -d /etc/nginx/http.d ]]; then  
-    sub_path="/etc/nginx/http.d/${wzym}.conf"
+    sub_path="/etc/nginx/http.d/${CUrrent_ip}.conf"
   else
     mkdir -p /etc/nginx/conf.d >/dev/null 2>&1
-    sub_path="/etc/nginx/conf.d/${wzym}.conf"
+    sub_path="/etc/nginx/conf.d/${CUrrent_ip}.conf"
   fi
 cat >"${sub_path}" <<-EOF
 server {
     listen 80;
-    server_name ${wzym};
+    server_name ${CUrrent_ip};
 
     root /www/dist;
     index index.html index.htm;

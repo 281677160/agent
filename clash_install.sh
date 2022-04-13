@@ -231,6 +231,11 @@ function install_subconverter() {
     exit 1
   else
     echo -e "\033[32m subconverter解压成功! \033[0m"
+    export HDPASS="$(cat /proc/sys/kernel/random/uuid)"
+    sed -i "s?${after_ip}?${current_ip}?g" "/root/subconverter/pref.example.ini"
+    sed -i "s?api_access_token=password?api_access_token=${HDPASS}?g" "/root/subconverter/pref.example.ini"
+    sed -i "s?0.0.0.0?$127.0.0.1?g" "/root/subconverter/pref.example.ini"
+    sed -i "s?0.0.0.0?$127.0.0.1?g" "/root/subconverter/pref.example.toml"
   fi
   rm -rf "/root/subconverter_linux64.tar.gz"
   if [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
@@ -274,11 +279,6 @@ EOF
       exit 1
     fi
   fi
-    export HDPASS="$(cat /proc/sys/kernel/random/uuid)"
-    sed -i "s?${after_ip}?${current_ip}?g" "/root/subconverter/pref.example.ini"
-    sed -i "s?api_access_token=password?api_access_token=${HDPASS}?g" "/root/subconverter/pref.example.ini"
-    sed -i "s?0.0.0.0?$127.0.0.1?g" "/root/subconverter/pref.example.ini"
-    sed -i "s?0.0.0.0?$127.0.0.1?g" "/root/subconverter/pref.example.toml"
 }
 
 function install_subweb() {

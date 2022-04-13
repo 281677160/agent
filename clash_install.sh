@@ -242,6 +242,7 @@ function install_subconverter() {
     nohup /root/subconverter/./subconverter >/dev/null 2>&1 &
     sed -i '/subconverter/d' "/etc/crontabs/root"
     echo "@reboot nohup /root/subconverter/./subconverter >/dev/null 2>&1 &" >> "/etc/crontabs/root"
+    sed -i '/^$/d' "/etc/crontabs/root"
     rc-update add nginx boot
     sleep 3
     if [[ $(lsof -i:"25500" | grep -i -c "listen") -ge "1" ]]; then

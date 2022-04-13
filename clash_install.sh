@@ -33,6 +33,12 @@ function ECHOG()
   echo -e "${Green} $1 ${Font}"
   echo
 }
+function ECHOR()
+{
+  echo
+  echo -e "${Red} $1 ${Font}"
+  echo
+}
 judge() {
   if [[ 0 -eq $? ]]; then
     print_ok "$1 完成"
@@ -189,12 +195,12 @@ function port_exist_check() {
     print_ok "25500 端口未被占用"
     sleep 1
   else
-    print_error "检测到 25500 端口被占用，以下为 25500 端口占用信息"
+    ECHOR "检测到 25500 端口被占用，以下为 25500 端口占用信息"
     lsof -i:"25500"
-    print_error "5s 后将尝试自动 kill 占用进程"
+    ECHOR "5s 后将尝试自动清理占用进程"
     sleep 5
     lsof -i:"25500" | awk '{print $2}' | grep -v "PID" | xargs kill -9
-    print_ok "kill 完成"
+    print_ok "25500端口占用进程清理完成"
     sleep 1
   fi
 }

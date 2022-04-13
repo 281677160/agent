@@ -274,7 +274,9 @@ EOF
       exit 1
     fi
   fi
+    export HDPASS="$(cat /proc/sys/kernel/random/uuid)"
     sed -i "s?${after_ip}?${current_ip}?g" "/root/subconverter/pref.example.ini"
+    sed -i "s?api_access_token=password?api_access_token=${HDPASS}?g" "/root/subconverter/pref.example.ini"
     sed -i "s?0.0.0.0?$127.0.0.1?g" "/root/subconverter/pref.example.ini"
     sed -i "s?0.0.0.0?$127.0.0.1?g" "/root/subconverter/pref.example.toml"
 }

@@ -608,6 +608,8 @@ function xray_uninstall() {
   find / -iname 'xray' | xargs -i rm -rf {}
   print_ok "Xray御载 完成"
   if [[ -x "$(command -v nginx)" ]]; then
+    clear
+    echo
     ECHOY "是否卸载nginx? 按[Y/y]进行御载,按任意键跳过御载程序"
     echo
     ECHOY "如果您还有其他应用在使用nginx，比如clash节点转换，请跳过御载"

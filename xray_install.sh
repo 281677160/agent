@@ -542,6 +542,18 @@ StandardError=syslog
 [Install]
 WantedBy=multi-user.target
 EOF
+nginx_conf="/etc/nginx/conf.d/${domain}.conf"
+cat >"$nginx_conf" <<-EOF
+server {
+    listen  80;
+    server_name  ${domain};
+    location / { 
+        root   /www/xray_web;
+        index  index.html index.htm;
+           proxy_pass http://127.0.0.1:5212;
+    }
+}
+EOF
   cd "$HOME"
   chmod 775 "${cloudreve_service}"/cloudreve.service
   systemctl daemon-reload

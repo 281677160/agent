@@ -415,16 +415,9 @@ function xray_install() {
 }
 
 function configure_nginx() {
-nginx_conf="/etc/nginx/conf.d/${domain}.conf"
-cat >"$nginx_conf" <<-EOF
-server {
-    listen  80;
-    server_name  ${domain};
-    location / {
-           proxy_pass http://127.0.0.1:5212;
-    }
-}
-EOF
+  nginx_conf="/etc/nginx/conf.d/${domain}.conf"
+  cd /etc/nginx/conf.d/ && rm -f ${domain}.conf && wget -O ${domain}.conf https://raw.githubusercontent.com/281677160/agent/main/xray/web.conf
+  sed -i "s/xxxx/${domain}/g" ${nginx_conf}
   judge "Nginx 配置 修改"
 
   systemctl restart nginx
@@ -471,7 +464,7 @@ function acme() {
   judge "安装 SSL 证书生成脚本"
   "$HOME"/.acme.sh/acme.sh --set-default-ca --server letsencrypt
   systemctl restart nginx
-  if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --nginx -k ec-256 --force; then
+  if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --webroot "/usr/local/cloudreve" -k ec-256 --force; then
     print_ok "SSL 证书生成成功"
     sleep 2
     if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --reloadcmd "systemctl restart xray" --ecc --force; then

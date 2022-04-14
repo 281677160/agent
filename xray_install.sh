@@ -651,12 +651,8 @@ function xray_uninstall() {
     read -p " 输入您的选择：" uninstall_nginx
     case $uninstall_nginx in
     [Yy])
-      ${UNINS} --purge remove -y nginx
+      ${UNINS} remove nginx*
       ${UNINS} autoremove -y
-      ${UNINS} --purge remove -y nginx
-      ${UNINS} --purge remove -y nginx-common
-      ${UNINS} --purge remove -y nginx-core
-      find / -iname 'nginx' | xargs -i rm -rf {}
       print_ok "nginx御载 完成"
     ;;
     *) 

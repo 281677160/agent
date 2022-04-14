@@ -38,6 +38,7 @@ cloudreve_service="/etc/systemd/system"
 cert_group="nobody"
 random_num=$((RANDOM % 12 + 4))
 HOME="/root"
+domainjilu="$HOME/.acme.sh/domainjilu"
 
 function print_ok() {
   echo -e " ${OK} ${Blue} $1 ${Font}"
@@ -275,7 +276,9 @@ function uuid_path() {
   export UUID="$(cat /proc/sys/kernel/random/uuid)"
   export QJPASS="$(cat /proc/sys/kernel/random/uuid)"
   export PORT="${PORT}"
+  [[ -z "${PORT}" ]] && export PORT="$(grep -i 'PORT' ${domainjilu} | cut -d "=" -f2)"
   export domain="${domain}"
+  [[ -z "${domain}" ]] && export domain="$(grep -i 'domain' ${domainjilu} | cut -d "=" -f2)"
 }
 
 function nginx_install() {
@@ -443,8 +446,8 @@ function ssl_judge_and_install() {
     judge "证书启用"
     sleep 2
     /root/.acme.sh/acme.sh  --upgrade  --auto-upgrade
-    echo "domain=${domain}" > "$HOME"/.acme.sh/domainjilu
-    echo -e "\nPORT=${PORT}" >> "$HOME"/.acme.sh/domainjilu
+    echo "domain=${domain}" > "${domainjilu}"
+    echo -e "\nPORT=${PORT}" >> "${domainjilu}"
     judge "域名记录"
   else
     rm -rf /ssl/* > /dev/null 2>&1
@@ -470,8 +473,8 @@ function acme() {
     if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --reloadcmd "systemctl restart xray" --ecc --force; then
       print_ok "SSL 证书配置成功"
       /root/.acme.sh/acme.sh  --upgrade  --auto-upgrade
-      echo "domain=${domain}" > "$HOME"/.acme.sh/domainjilu
-      echo -e "\nPORT=${PORT}" >> "$HOME"/.acme.sh/domainjilu
+      echo "domain=${domain}" > "${domainjilu}"
+      echo -e "\nPORT=${PORT}" >> "${domainjilu}"
       judge "域名记录"
     fi
   else

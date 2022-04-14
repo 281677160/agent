@@ -274,6 +274,8 @@ function uuid_path() {
   export VMESS_WS_PATH="${DISANGE}${DIERGE}${DIYIGE}${MIAO2}${SHI2}${FEN2}"
   export UUID="$(cat /proc/sys/kernel/random/uuid)"
   export QJPASS="$(cat /proc/sys/kernel/random/uuid)"
+  export PORT="${PORT}"
+  export domain="${domain}"
 }
 
 function nginx_install() {

@@ -653,6 +653,7 @@ function xray_uninstall() {
     [Yy])
       ${UNINS} remove nginx*
       ${UNINS} autoremove -y
+      rm -rf /etc/nginx
       print_ok "nginx御载 完成"
     ;;
     *) 
@@ -675,9 +676,6 @@ function xray_uninstall() {
         "$HOME"/.acme.sh/acme.sh --uninstall
         rm -rf $HOME/.acme.sh
         rm -rf /ssl/*
-        sed -i '/acme.sh/d' /root/.bashrc > /dev/null 2>&1
-        sed -i '/acme.sh/d' /root/.cshrc > /dev/null 2>&1
-        sed -i '/acme.sh/d' /root/.tcshrc > /dev/null 2>&1
       else
         ECHOR "是否卸载acme.sh? 按[Y/y]进行御载,按任意键跳过御载程序"
         echo
@@ -689,9 +687,6 @@ function xray_uninstall() {
            "$HOME"/.acme.sh/acme.sh --uninstall
            rm -rf "$HOME"/.acme.sh
            rm -rf /ssl/*
-           sed -i '/acme.sh/d' /root/.bashrc > /dev/null 2>&1
-           sed -i '/acme.sh/d' /root/.cshrc > /dev/null 2>&1
-           sed -i '/acme.sh/d' /root/.tcshrc > /dev/null 2>&1
 	   print_ok "acme.sh御载 完成"
 	   sleep 2
         ;;

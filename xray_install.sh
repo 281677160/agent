@@ -440,8 +440,7 @@ function ssl_judge_and_install() {
     "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --ecc
     judge "证书启用"
     sleep 2
-    cd "$HOME"
-    acme.sh  --upgrade  --auto-upgrade
+    /root/.acme.sh/acme.sh  --upgrade  --auto-upgrade
     echo "$domain" > "$HOME"/.acme.sh/domainjilu
     judge "域名记录"
   else
@@ -460,18 +459,14 @@ function ssl_judge_and_install() {
 function acme() {
   curl -L get.acme.sh | bash
   judge "安装 SSL 证书生成脚本"
-  
   "$HOME"/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-
   systemctl restart nginx
-
   if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --nginx -k ec-256 --force; then
     print_ok "SSL 证书生成成功"
     sleep 2
     if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --reloadcmd "systemctl restart xray" --ecc --force; then
       print_ok "SSL 证书配置成功"
-      cd "$HOME"
-      acme.sh  --upgrade  --auto-upgrade
+      /root/.acme.sh/acme.sh  --upgrade  --auto-upgrade
       echo "$domain" > "$HOME"/.acme.sh/domainjilu
       judge "域名记录"
     fi

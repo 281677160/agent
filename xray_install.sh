@@ -421,9 +421,8 @@ function configure_nginx() {
   nginx_conf="/etc/nginx/conf.d/${domain}.conf"
   cd /etc/nginx/conf.d/ && rm -f ${domain}.conf && wget -O ${domain}.conf https://raw.githubusercontent.com/281677160/agent/main/xray/web.conf
   sed -i "s/xxxx/${domain}/g" ${nginx_conf}
-  judge "Nginx 配置 修改"
-
   systemctl restart nginx
+  judge "Nginx 配置 修改"
 }
 
 function generate_certificate() {
@@ -438,6 +437,7 @@ function generate_certificate() {
 
 function ssl_judge_and_install() {
   [[ ! -d /ssl ]] && mkdir -p /ssl
+  [[ ! -d /www/xray_web ]] && mkdir -p /www/xray_web
   if [[ -f "$HOME/.acme.sh/${domain}_ecc/${domain}.key" && -f "$HOME/.acme.sh/${domain}_ecc/${domain}.cer" && -f "$HOME/.acme.sh/acme.sh" ]]; then
     print_ok "[${domain}]证书已存在，重新启用证书"
     sleep 2
@@ -467,7 +467,7 @@ function acme() {
   judge "安装 SSL 证书生成脚本"
   "$HOME"/.acme.sh/acme.sh --set-default-ca --server letsencrypt
   systemctl restart nginx
-  if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --webroot "/usr/local/cloudreve" -k ec-256 --force; then
+  if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --webroot /www/xray_web -k ec-256 --force; then
     print_ok "SSL 证书生成成功"
     sleep 2
     if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --reloadcmd "systemctl restart xray" --ecc --force; then

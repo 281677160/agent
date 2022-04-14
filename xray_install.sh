@@ -116,17 +116,20 @@ function system_check() {
   if [[ "${ID}" == "centos" && ${VERSION_ID} -ge 7 ]]; then
     print_ok "当前系统为 Centos ${VERSION_ID} ${VERSION}"
     export INS="yum install -y"
+    export UNINS="yum"
     ${INS} socat wget git sudo ca-certificates && update-ca-trust force-enable
     wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
   elif [[ "${ID}" == "ol" ]]; then
     print_ok "当前系统为 Oracle Linux ${VERSION_ID} ${VERSION}"
     export INS="yum install -y"
+    export UNINS="yum"
     ${INS} wget git sudo
     wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
   elif [[ "${ID}" == "debian" && ${VERSION_ID} -ge 9 ]]; then
     print_ok "当前系统为 Debian ${VERSION_ID} ${VERSION}"
     export XITONG_ID="debian"
     export INS="apt install -y"
+    export UNINS="apt"
     ${INS} socat wget git sudo ca-certificates && update-ca-certificates
     # 清除可能的遗留问题
     rm -f /etc/apt/sources.list.d/nginx.list
@@ -140,6 +143,7 @@ function system_check() {
     print_ok "当前系统为 Ubuntu ${VERSION_ID} ${UBUNTU_CODENAME}"
     export XITONG_ID="ubuntu"
     export INS="apt install -y"
+    export UNINS="apt-get"
     ${INS} socat wget git sudo ca-certificates && update-ca-certificates
     # 清除可能的遗留问题
     rm -f /etc/apt/sources.list.d/nginx.list
@@ -610,25 +614,28 @@ function xray_uninstall() {
   bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove --purge
   find / -iname 'xray' | xargs -i rm -rf {}
   print_ok "Xray御载 完成"
-  sleep 2
-  systemctl stop cloudreve
-  systemctl disable cloudreve
-  systemctl daemon-reload
-  find / -iname 'cloudreve' | xargs -i rm -rf {}
-  print_ok "cloudreve御载 完成"
-  sleep 2
-  if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]] || [[ "$(. /etc/os-release && echo "$ID")" == "ol" ]]; then
-    yum remove nginx -y
-  else
-    apt-get --purge remove -y nginx
-    apt-get autoremove -y
-    apt-get --purge remove -y nginx
-    apt-get --purge remove -y nginx-common
-    apt-get --purge remove -y nginx-core
+  if [[ -x "$(command -v nginx)" ]]; then
+    ECHOY "是否卸载nginx? 按[Y/y]进行御载,按任意键跳过御载程序"
+    echo
+    ECHOY "如果您还有其他应用在使用nginx，比如clash节点转换，请跳过御载"
+    echo
+    read -p " 输入您的选择：" uninstall_nginx
+    case $uninstall_nginx in
+    [Yy])
+      ${UNINS} --purge remove -y nginx
+      ${UNINS} autoremove -y
+      ${UNINS} --purge remove -y nginx
+      ${UNINS} --purge remove -y nginx-common
+      ${UNINS} --purge remove -y nginx-core
+      find / -iname 'nginx' | xargs -i rm -rf {}
+      print_ok "nginx御载 完成"
+    ;;
+    *) 
+       print_ok "您已跳过御载nginx"
+       echo
+     ;;
+    esac
   fi
-  find / -iname 'nginx' | xargs -i rm -rf {}
-  print_ok "nginx御载 完成"
-  sleep 2
   if [[ -e "$HOME"/.acme.sh ]]; then
     clear
     echo

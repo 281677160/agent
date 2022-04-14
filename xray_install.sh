@@ -464,13 +464,14 @@ function acme() {
 
   systemctl restart nginx
 
-  if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --webroot "$website_dir" -k ec-256 --force; then
+  if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --nginx -k ec-256 --force; then
     print_ok "SSL 证书生成成功"
     sleep 2
     if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --reloadcmd "systemctl restart xray" --ecc --force; then
       print_ok "SSL 证书配置成功"
-      "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
-      echo $domain >"$HOME"/.acme.sh/domainjilu
+      cd "$HOME"
+      acme.sh  --upgrade  --auto-upgrade
+      echo "$domain" > "$HOME"/.acme.sh/domainjilu
       judge "域名记录"
     fi
   else

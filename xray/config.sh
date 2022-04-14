@@ -49,10 +49,6 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                     ],
                     "certificates": [
                         {
-                            "certificateFile": "/usr/local/etc/xray/self_signed_cert.pem",
-                            "keyFile": "/usr/local/etc/xray/self_signed_key.pem"
-                       },
-                        {
                             "certificateFile": "/ssl/xray.crt",
                             "keyFile": "/ssl/xray.key"
                        }

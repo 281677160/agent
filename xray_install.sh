@@ -440,8 +440,9 @@ function ssl_judge_and_install() {
     "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --ecc
     judge "证书启用"
     sleep 2
-    "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
-    echo $domain >"$HOME"/.acme.sh/domainjilu
+    cd "$HOME"
+    acme.sh  --upgrade  --auto-upgrade
+    echo "$domain" > "$HOME"/.acme.sh/domainjilu
     judge "域名记录"
   else
     rm -rf /ssl/* > /dev/null 2>&1

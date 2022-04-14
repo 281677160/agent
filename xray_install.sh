@@ -407,9 +407,16 @@ function xray_install() {
 }
 
 function configure_nginx() {
-  nginx_conf="/etc/nginx/conf.d/${domain}.conf"
-  cd /etc/nginx/conf.d/ && rm -f ${domain}.conf && wget -O ${domain}.conf https://raw.githubusercontent.com/281677160/agent/main/xray/web.conf
-  sed -i "s/xxx/${domain}/g" ${nginx_conf}
+nginx_conf="/etc/nginx/conf.d/${domain}.conf"
+cat >"$nginx_conf" <<-EOF
+server {
+    listen  80;
+    server_name  ${domain};
+    location / {
+           proxy_pass http://127.0.0.1:5212;
+    }
+}
+EOF
   judge "Nginx 配置 修改"
 
   systemctl restart nginx
@@ -456,8 +463,6 @@ function acme() {
   
   "$HOME"/.acme.sh/acme.sh --set-default-ca --server letsencrypt
 
-  sed -i "6s/^/#/" "$nginx_conf"
-  sed -i "6a\\\troot $website_dir;" "$nginx_conf"
   systemctl restart nginx
 
   if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --webroot "$website_dir" -k ec-256 --force; then
@@ -474,9 +479,6 @@ function acme() {
     rm -rf "$HOME/.acme.sh/${domain}_ecc"
     exit 1
   fi
-
-  sed -i "7d" "$nginx_conf"
-  sed -i "6s/#//" "$nginx_conf"
 }
 
 function xrayliugen_conf() {
@@ -527,18 +529,6 @@ StandardOutput=null
 StandardError=syslog
 [Install]
 WantedBy=multi-user.target
-EOF
-nginx_conf="/etc/nginx/conf.d/${domain}.conf"
-cat >"$nginx_conf" <<-EOF
-server {
-    listen  80;
-    server_name  ${domain};
-    location / { 
-        root   /usr/share/nginx/html;
-        index  index.html index.htm;
-           proxy_pass http://127.0.0.1:5212;
-    }
-}
 EOF
   cd "$HOME"
   chmod 775 "${cloudreve_service}"/cloudreve.service

@@ -29,6 +29,7 @@ ERROR="${Red}[ERROR]${Font}"
 # 变量
 github_branch="main"
 xray_conf_dir="/usr/local/etc/xray"
+website_dir="/www/xray_web/"
 xray_access_log="/var/log/xray/access.log"
 xray_error_log="/var/log/xray/error.log"
 cert_dir="/usr/local/etc/xray"
@@ -420,7 +421,7 @@ function xray_install() {
 function configure_nginx() {
   nginx_conf="/etc/nginx/conf.d/${domain}.conf"
   cd /etc/nginx/conf.d/ && rm -f ${domain}.conf && wget -O ${domain}.conf https://raw.githubusercontent.com/281677160/agent/main/xray/web.conf
-  sed -i "s/xxxx/${domain}/g" ${nginx_conf}
+  sed -i "s/xxx/${domain}/g" ${nginx_conf}
   systemctl restart nginx
   judge "Nginx 配置 修改"
 }
@@ -465,9 +466,14 @@ function ssl_judge_and_install() {
 function acme() {
   curl -L get.acme.sh | bash
   judge "安装 SSL 证书生成脚本"
+  
   "$HOME"/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+
+  sed -i "6s/^/#/" "$nginx_conf"
+  sed -i "6a\\\troot $website_dir;" "$nginx_conf"
   systemctl restart nginx
-  if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --webroot /www/xray_web -k ec-256 --force; then
+
+  if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --webroot "$website_dir" -k ec-256 --force; then
     print_ok "SSL 证书生成成功"
     sleep 2
     if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --reloadcmd "systemctl restart xray" --ecc --force; then
@@ -482,6 +488,9 @@ function acme() {
     rm -rf "$HOME/.acme.sh/${domain}_ecc"
     exit 1
   fi
+
+  sed -i "7d" "$nginx_conf"
+  sed -i "6s/#//" "$nginx_conf"
 }
 
 function xrayliugen_conf() {

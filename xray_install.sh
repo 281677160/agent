@@ -57,13 +57,16 @@ function ECHOG()
 {
   echo -e "${Green} $1 ${Font}"
 }
+function ECHOR()
+{
+  echo -e "${Red} $1 ${Font}"
+}
+
 function is_root() {
-  if [[ 0 == "$UID" ]]; then
-    print_ok "当前用户是 root 用户，请开始您的骚操作"
-  else
-    print_error "当前用户不是 root 用户，请切换到 root 用户后重新执行脚本"
-    exit 1
-  fi
+if [[ ! "$USER" == "root" ]]; then
+  print_error "警告：请使用root用户操作!~~"
+  exit 1
+fi
 }
 judge() {
   if [[ 0 -eq $? ]]; then
@@ -604,9 +607,22 @@ function configure_gengxinxinxi() {
 }
 
 function xray_uninstall() {
-  bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove --purge
-  find / -iname 'xray' | xargs -i rm -rf {}
-  print_ok "Xray御载 完成"
+  
+  if [[ -x "$(command -v xray)" ]]; then
+    bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove --purge
+    find / -iname 'xray' | xargs -i rm -rf {}
+    print_ok "Xray御载 完成"
+  fi
+  
+  sleep 2
+  if [[ -f ${cloudreve_path}/cloudreve.db ]] && [[ -f ${cloudreve_path}/cloudreve ]]; then
+    systemctl stop cloudreve
+    systemctl disable cloudreve
+    systemctl daemon-reload
+    find / -iname 'cloudreve' | xargs -i rm -rf {}
+    print_ok "cloudreve御载 完成"
+  fi
+  
   if [[ -x "$(command -v nginx)" ]]; then
     clear
     echo
@@ -631,6 +647,7 @@ function xray_uninstall() {
      ;;
     esac
   fi
+  
   if [[ -e "$HOME"/.acme.sh ]]; then
     clear
     echo

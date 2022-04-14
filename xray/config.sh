@@ -45,7 +45,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                 "security": "xtls",
                 "xtlsSettings": {
                     "alpn": [
-                        "http/1.1"
+                        "http/1.2"
                     ],
                     "certificates": [
                         {

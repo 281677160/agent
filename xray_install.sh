@@ -453,9 +453,6 @@ function ssl_judge_and_install() {
   else
     rm -rf /ssl/* > /dev/null 2>&1
     rm -fr "$HOME"/.acme.sh > /dev/null 2>&1
-    sed -i '/acme.sh/d' "$HOME"/.bashrc > /dev/null 2>&1
-    sed -i '/acme.sh/d' "$HOME"/.cshrc > /dev/null 2>&1
-    sed -i '/acme.sh/d' "$HOME"/.tcshrc > /dev/null 2>&1
     cp -a $cert_dir/self_signed_cert.pem /ssl/xray.crt
     cp -a $cert_dir/self_signed_key.pem /ssl/xray.key
     acme
@@ -465,7 +462,7 @@ function ssl_judge_and_install() {
 
 function acme() {
   curl -L get.acme.sh | bash
-  judge "安装 SSL 证书生成脚本"
+  judge "安装 acme"
   
   "$HOME"/.acme.sh/acme.sh --set-default-ca --server letsencrypt
 
@@ -473,7 +470,7 @@ function acme() {
   sed -i "6a\\\troot $website_dir;" "$nginx_conf"
   systemctl restart nginx
 
-  if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --webroot "$website_dir" -k ec-256 --force; then
+  if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --webroot /usr/share/nginx/html -k ec-256 --force; then
     print_ok "SSL 证书生成成功"
     sleep 2
     if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --reloadcmd "systemctl restart xray" --ecc --force; then
@@ -548,7 +545,7 @@ server {
     listen  80;
     server_name  ${domain};
     location / { 
-        root   /www/xray_web;
+        root   /usr/share/nginx/html;
         index  index.html index.htm;
            proxy_pass http://127.0.0.1:5212;
     }

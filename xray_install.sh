@@ -626,7 +626,7 @@ function xray_uninstall() {
   if [[ -x "$(command -v nginx)" ]]; then
     clear
     echo
-    ECHOY "是否卸载nginx? 按[Y/y]进行御载,按任意键跳过御载程序"
+    ECHOR "是否卸载nginx? 按[Y/y]进行御载,按任意键跳过御载程序"
     echo
     ECHOY "如果您还有其他应用在使用nginx，比如clash节点转换，请跳过御载"
     echo
@@ -665,7 +665,7 @@ function xray_uninstall() {
         sed -i '/acme.sh/d' /root/.cshrc > /dev/null 2>&1
         sed -i '/acme.sh/d' /root/.tcshrc > /dev/null 2>&1
       else
-        ECHOY "是否卸载acme.sh? 按[Y/y]进行御载,按任意键跳过御载程序"
+        ECHOR "是否卸载acme.sh? 按[Y/y]进行御载,按任意键跳过御载程序"
         echo
         ECHOY "${TISHI}"
         echo

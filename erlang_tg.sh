@@ -132,7 +132,13 @@ do_kaishi_install() {
     MIAO2="$(echo "$(date +%S)")"
     STR1='123454323'
     DISIGE="$(echo ${STR1:0-$FEN:1})"
+    export IP=`curl -s -4 -m 10 http://ipv4.seriyps.ru || curl -s -4 -m 10 https://digitalresistance.dog/myIp`
     export SJPORT="${DISIGE}${MIAO2}${FEN2}"
+    echo
+    echo -e "\033[33m 请输入域名,直接回车则使用本机IP \033[0m"
+    export DUANKOU="请输入域名"
+    read -p " ${DUANKOU}：" IP
+    export IP=${IP:-"$IP"}
     echo
     echo -e "\033[33m 请输入端口,直接回车则使用随机分配端口 \033[0m"
     export DUANKOU="请输入[1-65535]之间的值"
@@ -152,7 +158,9 @@ do_kaishi_install() {
         ;;
     esac
     done
-    echo -e "\033[32m 您设置端口为：${PORT} \033[0m"
+    echo -e "\033[32m 您的域名/IP：${IP} \033[0m"
+    echo
+    echo -e "\033[32m 您的端口为：${PORT} \033[0m"
     echo
     echo -e "\033[33m 正在为您安装TG代理，请稍后... \033[0m"
     sys_pro="/etc/systemd/system"
@@ -434,7 +442,6 @@ do_install() {
 
 do_print_links() {
     info "Detecting IP address"
-    IP=`curl -s -4 -m 10 http://ipv4.seriyps.ru || curl -s -4 -m 10 https://digitalresistance.dog/myIp`
     info "Detected external IP is ${IP}"
 
     URL_PREFIX="https://t.me/proxy?server=${IP}&port=${PORT}&secret="

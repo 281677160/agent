@@ -432,7 +432,6 @@ function generate_certificate() {
 
 function ssl_judge_and_install() {
   [[ ! -d /ssl ]] && mkdir -p /ssl
-  [[ ! -d /www/xray_web ]] && mkdir -p /www/xray_web
   if [[ -f "$HOME/.acme.sh/${domain}_ecc/${domain}.key" && -f "$HOME/.acme.sh/${domain}_ecc/${domain}.cer" && -f "$HOME/.acme.sh/acme.sh" ]]; then
     print_ok "[${domain}]证书已存在，重新启用证书"
     sleep 2

@@ -129,7 +129,6 @@ function system_check() {
     wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
   elif [[ "${ID}" == "debian" && ${VERSION_ID} -ge 9 ]]; then
     print_ok "当前系统为 Debian ${VERSION_ID} ${VERSION}"
-    export XITONG_ID="debian"
     export INS="apt install -y"
     ${INS} socat wget git sudo ca-certificates && update-ca-certificates
     # 清除可能的遗留问题
@@ -142,7 +141,6 @@ function system_check() {
     apt update
   elif [[ "${ID}" == "ubuntu" && $(echo "${VERSION_ID}" | cut -d '.' -f1) -ge 18 ]]; then
     print_ok "当前系统为 Ubuntu ${VERSION_ID} ${UBUNTU_CODENAME}"
-    export XITONG_ID="ubuntu"
     export INS="apt install -y"
     ${INS} socat wget git sudo ca-certificates && update-ca-certificates
     # 清除可能的遗留问题
@@ -623,9 +621,9 @@ function configure_gengxinxinxi() {
 function xray_uninstall() {
   source '/etc/os-release'
   if [[ "${ID}" == "centos" ]] || [[ "${ID}" == "ol" ]]; then
-  export UNINS="yum"
+    export UNINS="yum"
   else
-  
+    export UNINS="apt"
   fi
   
   if [[ -x "$(command -v xray)" ]]; then
@@ -653,9 +651,12 @@ function xray_uninstall() {
     read -p " 输入您的选择：" uninstall_nginx
     case $uninstall_nginx in
     [Yy])
-      ${UNINS} remove --purge nginx*
+      ${UNINS} --purge remove -y nginx
       ${UNINS} autoremove -y
-      rm -rf /etc/nginx
+      ${UNINS} --purge remove -y nginx
+      ${UNINS} --purge remove -y nginx-common
+      ${UNINS} --purge remove -y nginx-core
+      find / -iname 'nginx' | xargs -i rm -rf {}
       print_ok "nginx御载 完成"
     ;;
     *) 

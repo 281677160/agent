@@ -166,13 +166,7 @@ server {
     }
 }
 EOF
-  if [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
-    service nginx restart
-    rc-update add nginx boot
-  else
-    systemctl start nginx
-    systemctl enable nginx
-  fi
+service nginx restart
 }
 
 function command_Version() {
@@ -235,6 +229,7 @@ function install_subconverter() {
   fi
   latest_vers="$(wget -qO- -t1 -T2 "https://api.github.com/repos/tindy2013/subconverter/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')"
   [[ -z ${latest_vers} ]] && latest_vers="v0.7.2"
+  rm -rf "/root/subconverter_linux64.tar.gz"
   wget https://ghproxy.com/https://github.com/tindy2013/subconverter/releases/download/${latest_vers}/subconverter_linux64.tar.gz
   if [[ $? -ne 0 ]];then
     echo -e "\033[31m subconverter下载失败! \033[0m"
@@ -249,52 +244,57 @@ function install_subconverter() {
     export HDPASS="$(cat /proc/sys/kernel/random/uuid)"
     sed -i "s?${after_ip}?${current_ip}?g" "/root/subconverter/pref.example.ini"
     sed -i "s?api_access_token=password?api_access_token=${HDPASS}?g" "/root/subconverter/pref.example.ini"
-    sed -i "s?0.0.0.0?127.0.0.1?g" "/root/subconverter/pref.example.ini"
-    sed -i "s?0.0.0.0?127.0.0.1?g" "/root/subconverter/pref.example.toml"
   fi
   rm -rf "/root/subconverter_linux64.tar.gz"
+ }
+
+function update_rc() {
   if [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
-    nohup /root/subconverter/./subconverter >/dev/null 2>&1 &
-    sed -i '/subconverter/d' "/etc/crontabs/root"
-    echo "@reboot nohup /root/subconverter/./subconverter >/dev/null 2>&1 &" >> "/etc/crontabs/root"
-    sed -i '/^$/d' "/etc/crontabs/root"
-    sleep 3
-    if [[ $(lsof -i:"25500" | grep -i -c "listen") -ge "1" ]]; then
-      print_ok "subconverter安装成功"
-    else
-      print_error "subconverter安装失败,请再次执行安装命令试试"
-      exit 1
-    fi
-  else
-cat >/etc/systemd/system/subconverter.service <<-EOF
-[Unit]
-Description=subconverter
-Documentation=https://github.com/tindy2013/subconverter
-After=network.target
-Wants=network.target
-[Service]
-WorkingDirectory=/root/subconverter
-ExecStart=/root/subconverter/subconverter
-Restart=on-abnormal
-RestartSec=5s
-KillMode=mixed
-StandardOutput=null
-StandardError=syslog
-[Install]
-WantedBy=multi-user.target
-EOF
-    chmod 775 /etc/systemd/system/subconverter.service
-    systemctl daemon-reload
-    systemctl start subconverter
-    systemctl enable subconverter
-    if [[ `systemctl status subconverter |grep -c "active (running) "` == '1' ]]; then
-      print_ok "subconverter安装成功"
-    else
-      print_error "subconverter安装失败"
-      exit 1
-    fi
-  fi
+    rc-update add nginx boot
+cat >/etc/init.d/subconverter <<-EOF
+#!/sbin/openrc-run
+ 
+name="subconverter"
+command="/root/subconverter/${name}"
+#command_background="yes"
+ 
+depend() {
+             after sshd
 }
+EOF
+    chmod 755 /etc/init.d/subconverter
+    rc-service --list
+    rc-service subconverter start
+    rc-update add subconverter
+  else
+    systemctl enable nginx
+    pm2 delete subconverter
+    pm2 start /root/subconverter/subconverter -n subconverter
+    echo '
+    #! /bin/sh
+    ### BEGIN INIT INFO
+    # Provides:        subconverter
+    # Required-Start:  $local_fs $remote_fs
+    # Required-Stop:   $local_fs $remote_fs
+    # Default-Start:   2 3 4 5
+    # Default-Stop:
+    # Short-Description: automatic crash report generation
+    ### END INIT INFO
+    pm2 delete subconverter
+    pm2 start /root/subconverter/subconverter -n subconverter
+    ' >/etc/init.d/subconverter
+    sed -i 's/^[ ]*//g' /etc/init.d/subconverter
+    sed -i '/^$/d' /etc/init.d/subconverter
+    chmod 755 /etc/init.d/subconverter
+    update-rc.d subconverter defaults 90
+  fi
+  if [[ $(lsof -i:"25500" | grep -i -c "listen") -ge "1" ]]; then
+    print_ok "subconverter安装成功"
+  else
+    print_error "subconverter安装失败,请再次执行安装命令试试"
+    exit 1
+  fi
+ }
 
 function install_subweb() {
   ECHOY "正在安装sub-web服务"

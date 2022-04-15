@@ -77,7 +77,7 @@ function system_check() {
   break
   ;;
   *)
-    export YUMING="敬告：请输入正确的域名或IP"
+    export YUMING="敬告,请输入正确的域名或IP"
   ;;
   esac
   done

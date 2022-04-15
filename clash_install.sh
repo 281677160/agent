@@ -76,7 +76,6 @@ function system_check() {
     yum update -y
     yum install -y nodejs npm
     npm install -g yarn
-    npm install pm2 -g
     export INS="yum install -y"
   elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
     echo "
@@ -87,8 +86,7 @@ function system_check() {
     sed -i '/^$/d' /etc/apk/repositories
     apk update
     apk del yarn nodejs
-    apk add git nodejs yarn sudo wget lsof tar npm
-    npm install pm2 -g
+    apk add git nodejs yarn sudo wget lsof tar
     export INS="apk add"
   elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
     export INS="apt-get install -y"

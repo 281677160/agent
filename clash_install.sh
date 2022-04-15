@@ -60,7 +60,7 @@ function system_check() {
   echo
   echo -e "\033[32m 有域名用域名,无域名或是局域网的用当前服务器IP \033[0m"
   ECHOY "[比如：v2.clash.com 或 192.168.2.2]"
-  export YUMINGIP="请输入："
+  export YUMINGIP="请输入"
   while :; do
   CUrrenty=""
   read -p " ${YUMINGIP}：" CUrrent_ip

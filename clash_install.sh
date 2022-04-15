@@ -262,7 +262,7 @@ depend() {
 EOF
     chmod 755 /etc/init.d/subconverter
     rc-service --list
-    rc-service subconverter start
+    timeout -k 1s 3s rc-service subconverter start
     rc-update add subconverter
   else
     systemctl enable nginx

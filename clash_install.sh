@@ -334,6 +334,7 @@ menu() {
   command_Version
   port_exist_check
   install_subconverter
+  update_rc
   install_subweb
 }
 menu "$@"

@@ -237,6 +237,7 @@ function install_subconverter() {
     exit 1
   else
     echo -e "\033[32m subconverter解压成功! \033[0m"
+    chmod -R 777 /root/subconverter
     export HDPASS="$(cat /proc/sys/kernel/random/uuid)"
     sed -i "s?${after_ip}?${current_ip}?g" "/root/subconverter/pref.example.ini"
     sed -i "s?api_access_token=password?api_access_token=${HDPASS}?g" "/root/subconverter/pref.example.ini"

@@ -64,7 +64,7 @@ function system_check() {
   while :; do
   CUrrenty=""
   read -p " ${YUMINGIP}：" CUrrent_ip
-  if [[ -n "${CUrrent_ip}" ]] && [[ "$(echo ${CUrrent_ip} |grep -c '\.')" -ge '1' ]]; then
+  if [[ -n "${CUrrent_ip}" ]] && [[ "$(echo ${CUrrent_ip} |grep -c '.')" -ge '1' ]]; then
     CUrrenty="Y"
   fi
   case $CUrrenty in

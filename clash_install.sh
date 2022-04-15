@@ -144,7 +144,7 @@ function nginx_install() {
     ${INS} nginx
   else
     print_ok "Nginx 已存在"
-    ${INS} nginx
+    ${INS} nginx >/dev/null 2>&1
   fi
   
   if [[ -d /etc/nginx/sites-available ]]; then

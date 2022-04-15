@@ -57,14 +57,30 @@ fi
 function system_check() {
   clear
   echo
-  echo -e "\033[33m 请输入您的域名或当前服务器IP \033[0m"
-  read -p " 您当前服务器IP/域名：" current_ip
-  export current_ip="${current_ip}"
-  export CUrrent_ip="$(echo "${current_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/www.//g' |sed 's/\///g')"
-  echo -e "\033[32m 您当前服务器IP/域名为：${CUrrent_ip} \033[0m"
-  export current_ip="http://${CUrrent_ip}"
-  export after_ip="http://127.0.0.1"
   echo
+  echo -e "\033[32m 有域名用域名,无域名或是局域网的用当前服务器IP \033[0m"
+  ECHOY "[比如：v2.clash.com 或 192.168.2.2]"
+  export YUMINGIP="请输入："
+  while :; do
+  CUrrenty=""
+  read -p " ${YUMING}：" CUrrent_ip
+  export CUrrent_ip="$(echo "${current_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/www.//g' |sed 's/\///g')"
+  if [[ -n "${CUrrent_ip}" ]] && [[ "$(echo ${CUrrent_ip} |grep -c '\.')" -ge '1' ]]; then
+    CUrrenty="Y"
+  fi
+  case $CUrrenty in
+  Y)
+    export CUrrenty="${CUrrenty}"
+    export current_ip="http://${CUrrent_ip}"
+    export after_ip="http://127.0.0.1"
+    echo -e "\033[32m 您当前服务器IP/域名为：${CUrrent_ip} \033[0m"
+  break
+  ;;
+  *)
+    export YUMING="敬告：请输入正确的域名或IP"
+  ;;
+  esac
+  done
 
   ECHOY "正在安装各种必须依赖"
   echo

@@ -72,7 +72,7 @@ function system_check() {
     export CUrrent_ip="$(echo "${CUrrent_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/www.//g' |sed 's/\///g')"
     export current_ip="http://${CUrrent_ip}"
     export after_ip="http://127.0.0.1"
-    echo -e "\033[32m 您当前服务器IP/域名为：${CUrrent_ip} \033[0m"
+    ECHOG "您当前服务器IP/域名为：${CUrrent_ip}"
   break
   ;;
   *)

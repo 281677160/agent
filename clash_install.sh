@@ -86,7 +86,7 @@ function system_check() {
     sed -i '/^$/d' /etc/apk/repositories
     apk update
     apk del yarn nodejs
-    apk add git nodejs yarn sudo wget lsof tar
+    apk add git nodejs yarn sudo wget lsof tar npm
     export INS="apk add"
   elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
     export INS="apt-get install -y"
@@ -247,23 +247,11 @@ function install_subconverter() {
  }
 
 function update_rc() {
+  pm2 delete subconverter
   if [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
     rc-update add nginx boot
-cat >/etc/init.d/subconverter <<-EOF
-#!/sbin/openrc-run
- 
-name="subconverter"
-command="/root/subconverter/\${name}"
-#command_background="yes"
- 
-depend() {
-             after sshd
-}
-EOF
-    chmod 755 /etc/init.d/subconverter
-    rc-service --list
-    timeout -k 1s 3s rc-service subconverter start
-    rc-update add subconverter
+    pm2 start /root/subconverter/subconverter -n subconverter
+    echo "@reboot pm2 start /root/subconverter/subconverter -n subconverter" >> "/etc/crontabs/root"
   else
     systemctl enable nginx
     pm2 delete subconverter

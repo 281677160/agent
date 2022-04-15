@@ -122,7 +122,7 @@ function nodejs_install() {
     echo "deb http://nginx.org/packages/${PUBKEY} $(lsb_release -cs) nginx" >/etc/apt/sources.list.d/nginx.list
     curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
     apt-get update
-    ${INS} nodejs yarn npm
+    ${INS} nodejs yarn
     npm install pm2 -g
 }
 

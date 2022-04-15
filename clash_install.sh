@@ -63,7 +63,7 @@ function system_check() {
   export YUMINGIP="请输入："
   while :; do
   CUrrenty=""
-  read -p " ${YUMING}：" CUrrent_ip
+  read -p " ${YUMINGIP}：" CUrrent_ip
   export CUrrent_ip="$(echo "${current_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/www.//g' |sed 's/\///g')"
   if [[ -n "${CUrrent_ip}" ]] && [[ "$(echo ${CUrrent_ip} |grep -c '\.')" -ge '1' ]]; then
     CUrrenty="Y"

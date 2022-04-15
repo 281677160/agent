@@ -227,7 +227,7 @@ function install_subconverter() {
   fi
   latest_vers="$(wget -qO- -t1 -T2 "https://api.github.com/repos/tindy2013/subconverter/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')"
   [[ -z ${latest_vers} ]] && latest_vers="v0.7.2"
-  rm -rf "/root/subconverter_linux64.tar.gz"
+  rm -rf "/root/subconverter_linux64.tar.gz" >/dev/null 2>&1
   wget https://ghproxy.com/https://github.com/tindy2013/subconverter/releases/download/${latest_vers}/subconverter_linux64.tar.gz
   if [[ $? -ne 0 ]];then
     echo -e "\033[31m subconverter下载失败! \033[0m"
@@ -247,14 +247,13 @@ function install_subconverter() {
  }
 
 function update_rc() {
-  pm2 delete subconverter
+  pm2 delete subconverter >/dev/null 2>&1
   if [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
     rc-update add nginx boot
     pm2 start /root/subconverter/subconverter -n subconverter
     echo "@reboot pm2 start /root/subconverter/subconverter -n subconverter" >> "/etc/crontabs/root"
   else
     systemctl enable nginx
-    pm2 delete subconverter
     pm2 start /root/subconverter/subconverter -n subconverter
     echo '
     #! /bin/sh

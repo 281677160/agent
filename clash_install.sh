@@ -253,7 +253,7 @@ cat >/etc/init.d/subconverter <<-EOF
 #!/sbin/openrc-run
  
 name="subconverter"
-command="/root/subconverter/subconverter"
+command="/root/subconverter/\${name}"
 #command_background="yes"
  
 depend() {

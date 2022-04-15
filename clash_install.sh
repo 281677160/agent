@@ -121,6 +121,7 @@ function nodejs_install() {
     curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
     apt-get update
     ${INS} nodejs yarn
+    npm install pm2 -g
 }
 
 function nginx_install() {
@@ -260,29 +261,7 @@ function install_subconverter() {
     fi
   else
     systemctl enable nginx
-    rm -rf /etc/systemd/system/subconverter.service >/dev/null 2>&1
-    touch /etc/systemd/system/subconverter.service
-cat >/etc/systemd/system/subconverter.service <<-EOF
-[Unit]
-Description=subconverter
-Documentation=https://github.com/tindy2013/subconverter
-After=network.target
-Wants=network.target
-[Service]
-WorkingDirectory=/root/subconverter
-ExecStart=/root/subconverter/subconverter
-Restart=on-abnormal
-RestartSec=5s
-KillMode=mixed
-StandardOutput=null
-StandardError=syslog
-[Install]
-WantedBy=multi-user.target
-EOF
-    chmod 775 /etc/systemd/system/subconverter.service
-    systemctl daemon-reload
-    systemctl start subconverter
-    systemctl enable subconverter
+    pm2 start /root/subconverter/subconverter -n subconverter
     if [[ `systemctl status subconverter |grep -c "active (running) "` == '1' ]]; then
       print_ok "subconverter安装成功"
     else

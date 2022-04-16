@@ -92,6 +92,8 @@ function system_check() {
     npm install -g yarn
     npm install -g pm2
     export INS="yum install -y"
+    export PUBKEY="centos"
+    export Subcon="/etc/rc.d/init.d/subconverter"
   elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
     echo "
     https://dl-cdn.alpinelinux.org/alpine/v3.12/main
@@ -107,11 +109,13 @@ function system_check() {
     export INS="apt-get install -y"
     export UNINS="apt-get remove -y"
     export PUBKEY="ubuntu"
+    export Subcon="/etc/init.d/subconverter"
     nodejs_install
   elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
     export INS="apt install -y"
     export UNINS="apt remove -y"
     export PUBKEY="debian"
+    export Subcon="/etc/init.d/subconverter"
     nodejs_install
   else
     echo -e "\033[31m 不支持该系统 \033[0m"
@@ -283,11 +287,16 @@ function update_rc() {
     ### END INIT INFO
     pm2 delete subconverter
     pm2 start /root/subconverter/subconverter -n subconverter
-    ' >/etc/init.d/subconverter
-    sed -i 's/^[ ]*//g' /etc/init.d/subconverter
-    sed -i '/^$/d' /etc/init.d/subconverter
-    chmod 755 /etc/init.d/subconverter
-    update-rc.d subconverter defaults 90
+    ' >"${Subcon}"
+    sed -i 's/^[ ]*//g' "${Subcon}"
+    sed -i '/^$/d' "${Subcon}"
+    chmod 755 "${Subcon}"
+    if [[ ${PUBKEY} == "centos" ]]; then
+      chkconfig --add autostart.sh
+      chkconfig autostart.sh on
+    else
+      update-rc.d subconverter defaults 90
+    fi
   fi
   if [[ $(lsof -i:"25500" | grep -i -c "listen") -ge "1" ]]; then
     print_ok "subconverter安装成功"

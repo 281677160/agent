@@ -276,29 +276,28 @@ function update_rc() {
     echo "@reboot pm2 start /root/subconverter/subconverter -n subconverter" >> "/etc/crontabs/root"
   else
     systemctl enable nginx
-    pm2 start /root/subconverter/subconverter -n subconverter
     echo '
-    #! /bin/sh
-    ### BEGIN INIT INFO
-    # Provides:        subconverter
-    # Required-Start:  $local_fs $remote_fs
-    # Required-Stop:   $local_fs $remote_fs
-    # Default-Start:   2 3 4 5
-    # Default-Stop:
-    # Short-Description: automatic crash report generation
-    ### END INIT INFO
-    pm2 delete subconverter
-    pm2 start /root/subconverter/subconverter -n subconverter
-    ' >"${Subcon}"
-    sed -i 's/^[ ]*//g' "${Subcon}"
-    sed -i '/^$/d' "${Subcon}"
-    chmod 755 "${Subcon}"
-    if [[ ${PUBKEY} == "centos" ]]; then
-      chkconfig --add subconverter
-      chkconfig subconverter on
-    else
-      update-rc.d subconverter defaults 90
-    fi
+    [Unit]
+    Description=A API For Subscription Convert
+    After=network.target
+    
+    [Service]
+    Type=simple
+    ExecStart=/root/subconverter/subconverter
+    WorkingDirectory=/root/subconverter
+    Restart=always
+    RestartSec=10
+ 
+    [Install]
+    WantedBy=multi-user.target
+    ' > /etc/systemd/system/subconverter
+    sed -i 's/^[ ]*//g' /etc/systemd/system/subconverter
+    sed -i '1d' /etc/systemd/system/subconverter
+    chmod 755 /etc/systemd/system/subconverter
+    systemctl daemon-reload
+    systemctl start subconverter
+    systemctl enable subconverter
+    systemctl status subconverter
   fi
   if [[ $(lsof -i:"25500" | grep -i -c "listen") -ge "1" ]]; then
     print_ok "subconverter安装成功"

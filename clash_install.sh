@@ -90,7 +90,8 @@ function system_check() {
     curl -sL https://rpm.nodesource.com/setup_12.x | bash -
     yum update -y
     yum install -y nodejs
-    npm install -g yarn pm2
+    npm install -g yarn
+    npm install -g pm2
     export INS="yum install -y"
   elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
     echo "

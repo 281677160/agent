@@ -288,10 +288,10 @@ function update_rc() {
  
     [Install]
     WantedBy=multi-user.target
-    ' > /etc/systemd/system/subconverter
-    sed -i 's/^[ ]*//g' /etc/systemd/system/subconverter
-    sed -i '1d' /etc/systemd/system/subconverter
-    chmod 755 /etc/systemd/system/subconverter
+    ' > /etc/systemd/system/subconverter.service
+    sed -i 's/^[ ]*//g' /etc/systemd/system/subconverter.service
+    sed -i '1d' /etc/systemd/system/subconverter.service
+    chmod 755 /etc/systemd/system/subconverter.service
     systemctl daemon-reload
     systemctl start subconverter
     systemctl enable subconverter

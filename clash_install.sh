@@ -87,6 +87,8 @@ function system_check() {
     yum install -y wget curl sudo git lsof tar
     wget -N -P /etc/yum.repos.d/ https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
     curl -sL https://rpm.nodesource.com/setup_12.x | bash -
+    sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
+    setenforce 0
     yum update -y
     yum install -y nodejs
     npm install -g yarn

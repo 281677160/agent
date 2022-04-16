@@ -292,6 +292,7 @@ function update_rc() {
     sed -i 's/^[ ]*//g' /etc/systemd/system/subconverter.service
     sed -i '1d' /etc/systemd/system/subconverter.service
     chmod 755 /etc/systemd/system/subconverter.service
+    sleep 2
     systemctl daemon-reload
     systemctl start subconverter
     systemctl enable subconverter

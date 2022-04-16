@@ -292,8 +292,8 @@ function update_rc() {
     sed -i '/^$/d' "${Subcon}"
     chmod 755 "${Subcon}"
     if [[ ${PUBKEY} == "centos" ]]; then
-      chkconfig --add autostart.sh
-      chkconfig autostart.sh on
+      chkconfig --add subconverter
+      chkconfig subconverter on
     else
       update-rc.d subconverter defaults 90
     fi

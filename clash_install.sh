@@ -89,7 +89,7 @@ function system_check() {
     wget -N -P /etc/yum.repos.d/ https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
     curl -sL https://rpm.nodesource.com/setup_12.x | bash -
     yum update -y
-    yum install -y nodejs npm
+    yum install -y nodejs
     npm install -g yarn
     export INS="yum install -y"
   elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then

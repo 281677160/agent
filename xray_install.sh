@@ -165,6 +165,31 @@ function system_check() {
   systemctl disable nftables
   systemctl stop ufw
   systemctl disable ufw
+  if [[ `systemctl status iptables |grep -c "enabled"` == '1' ]]; then
+    iptables -P INPUT ACCEPT
+    iptables -P FORWARD ACCEPT
+    iptables -P OUTPUT ACCEPT
+    iptables -F
+    echo '
+    #! /bin/sh
+    ### BEGIN INIT INFO
+    # Provides:        acceptoff
+    # Required-Start:  $local_fs $remote_fs
+    # Required-Stop:   $local_fs $remote_fs
+    # Default-Start:   2 3 4 5
+    # Default-Stop:
+    # Short-Description: automatic crash report generation
+    ### END INIT INFO
+    iptables -P INPUT ACCEPT
+    iptables -P FORWARD ACCEPT
+    iptables -P OUTPUT ACCEPT
+    iptables -F
+    ' >/etc/init.d/acceptoff
+    sed -i 's/^[ ]*//g' /etc/init.d/acceptoff
+    sed -i '/^$/d' /etc/init.d/acceptoff
+    chmod 755 /etc/init.d/acceptoff
+    update-rc.d acceptoff defaults 90
+  fi
 }
 
 function kaishi_install() {

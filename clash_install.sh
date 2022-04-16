@@ -295,7 +295,6 @@ function update_rc() {
     systemctl daemon-reload
     systemctl start subconverter
     systemctl enable subconverter
-    systemctl status subconverter
   fi
   if [[ $(lsof -i:"25500" | grep -i -c "listen") -ge "1" ]]; then
     print_ok "subconverter安装成功"

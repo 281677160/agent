@@ -92,7 +92,6 @@ function system_check() {
     yum update -y
     yum install -y nodejs
     npm install -g yarn
-    npm install -g pm2
     export INS="yum install -y"
     export PUBKEY="centos"
     export Subcon="/etc/rc.d/init.d/subconverter"
@@ -142,7 +141,6 @@ function nodejs_install() {
     curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
     apt-get update
     ${INS} nodejs yarn
-    npm install pm2 -g
 }
 
 function nginx_install() {

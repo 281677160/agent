@@ -1,3 +1,4 @@
+
 #!/usr/bin/env bash
 
 #====================================================
@@ -29,7 +30,7 @@ ERROR="${Red}[ERROR]${Font}"
 # 变量
 github_branch="main"
 xray_conf_dir="/usr/local/etc/xray"
-website_dir="/usr/share/nginx/html/"
+website_dir="/www/xray_web/"
 xray_access_log="/var/log/xray/access.log"
 xray_error_log="/var/log/xray/error.log"
 cert_dir="/usr/local/etc/xray"
@@ -39,7 +40,6 @@ cloudreve_service="/etc/systemd/system"
 cert_group="nobody"
 random_num=$((RANDOM % 12 + 4))
 HOME="/root"
-domainjilu="$HOME/.acme.sh/domainjilu"
 
 function print_ok() {
   echo -e " ${OK} ${Blue} $1 ${Font}"
@@ -58,16 +58,13 @@ function ECHOG()
 {
   echo -e "${Green} $1 ${Font}"
 }
-function ECHOR()
-{
-  echo -e "${Red} $1 ${Font}"
-}
-
 function is_root() {
-if [[ ! "$USER" == "root" ]]; then
-  print_error "警告：请使用root用户操作!~~"
-  exit 1
-fi
+  if [[ 0 == "$UID" ]]; then
+    print_ok "当前用户是 root 用户，请开始您的骚操作"
+  else
+    print_error "当前用户不是 root 用户，请切换到 root 用户后重新执行脚本"
+    exit 1
+  fi
 }
 judge() {
   if [[ 0 -eq $? ]]; then
@@ -164,37 +161,10 @@ function system_check() {
   # 关闭各类防火墙
   systemctl stop firewalld
   systemctl disable firewalld
-  systemctl mask firewalld
   systemctl stop nftables
   systemctl disable nftables
   systemctl stop ufw
   systemctl disable ufw
-  if [[ `systemctl status iptables |grep -c "enabled"` == '1' ]]; then
-    iptables -P INPUT ACCEPT
-    iptables -P FORWARD ACCEPT
-    iptables -P OUTPUT ACCEPT
-    iptables -F
-    echo '
-    #! /bin/sh
-    ### BEGIN INIT INFO
-    # Provides:        acceptoff
-    # Required-Start:  $local_fs $remote_fs
-    # Required-Stop:   $local_fs $remote_fs
-    # Default-Start:   2 3 4 5
-    # Default-Stop:
-    # Short-Description: automatic crash report generation
-    ### END INIT INFO
-
-    iptables -P INPUT ACCEPT
-    iptables -P FORWARD ACCEPT
-    iptables -P OUTPUT ACCEPT
-    iptables -F
-    ' >/etc/init.d/acceptoff
-    sed -i 's/^[ ]*//g' /etc/init.d/acceptoff
-    sed -i '/^$/d' /etc/init.d/acceptoff
-    chmod 755 /etc/init.d/acceptoff
-    update-rc.d acceptoff defaults 90
-  fi
 }
 
 function kaishi_install() {
@@ -225,7 +195,7 @@ function kaishi_install() {
   while :; do
   read -p " ${DUANKOU}：" PORT
   export PORT=${PORT:-"443"}
-  if [[ "$PORT" -ge "1" ]] && [[ "$PORT" -le "65535" ]]; then
+  if [[ $PORT -ge 1 ]] && [[ $PORT -le 65535 ]]; then
     export PORTY="y"
   fi
   case $PORTY in
@@ -253,34 +223,15 @@ function kaishi_install() {
     print_ok "您已确认无误!"
   ;;
   esac
+  export WS_PATH="$(date +VLEws%d%M%S)"
+  export VMTCP="$(date +VME%S%d%H)"
+  export VMWS="$(date +VMEws%M%S%H)"
+  export UUID="$(cat /proc/sys/kernel/random/uuid)"
+  export QJPASS="$(date +JQ%M%S%H%S)"
   echo
   ECHOY "开始执行安装程序,请耐心等候..."
   sleep 3
   echo
-}
-
-function uuid_path() {
-  SHI="$(echo "$(date +%H)" | sed 's/^.//g')"
-  FEN="$(echo "$(date +%M)" | sed 's/^.//g')"
-  MIAO="$(echo "$(date +%S)" | sed 's/^.//g')"
-  SHI2="$(echo "$(date +%H)")"
-  FEN2="$(echo "$(date +%M)")"
-  MIAO2="$(echo "$(date +%S)")"
-  STR1='ABCDEFGHI'
-  STR2='JKLMNOPQR'
-  STR3='STUVWXYDZ'
-  DIYIGE="$(echo ${STR3:0-$MIAO:1})" 
-  DIERGE="$(echo ${STR2:0-$FEN:1})"
-  DISANGE="$(echo ${STR1:0-$SHI:1})"
-  export VLESS_WS_PATH="${DIYIGE}${DIERGE}${DISANGE}${MIAO2}${FEN2}${SHI2}"
-  export VMESS_TCP_PATH="${DIYIGE}${DISANGE}${DIERGE}${SHI2}${FEN2}${MIAO2}"
-  export VMESS_WS_PATH="${DISANGE}${DIERGE}${DIYIGE}${MIAO2}${SHI2}${FEN2}"
-  export UUID="$(cat /proc/sys/kernel/random/uuid)"
-  export QJPASS="$(cat /proc/sys/kernel/random/uuid)"
-  export PORT="${PORT}"
-  [[ -z "${PORT}" ]] && export PORT="$(grep -i 'PORT' ${domainjilu} | cut -d "=" -f2)"
-  export domain="${domain}"
-  [[ -z "${domain}" ]] && export domain="$(grep -i 'domain' ${domainjilu} | cut -d "=" -f2)"
 }
 
 function nginx_install() {
@@ -349,7 +300,6 @@ function dependency_install() {
 
   # 防止部分系统xray的默认bin目录缺失
   mkdir /usr/local/bin >/dev/null 2>&1
-  bash -c  "$(curl -fsSL https://raw.githubusercontent.com/281677160/pve/main/ssh.sh)"
 }
 
 function basic_optimization() {
@@ -416,8 +366,9 @@ function configure_nginx() {
   nginx_conf="/etc/nginx/conf.d/${domain}.conf"
   cd /etc/nginx/conf.d/ && rm -f ${domain}.conf && wget -O ${domain}.conf https://raw.githubusercontent.com/281677160/agent/main/xray/web.conf
   sed -i "s/xxx/${domain}/g" ${nginx_conf}
-  systemctl restart nginx
   judge "Nginx 配置 修改"
+
+  systemctl restart nginx
 }
 
 function generate_certificate() {
@@ -439,38 +390,38 @@ function ssl_judge_and_install() {
     "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --ecc
     judge "证书启用"
     sleep 2
-    /root/.acme.sh/acme.sh  --upgrade  --auto-upgrade
-    echo "domain=${domain}" > "${domainjilu}"
-    echo -e "\nPORT=${PORT}" >> "${domainjilu}"
+    "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
+    echo $domain >"$HOME"/.acme.sh/domainjilu
+    echo $domain >"echo $domain >$domain_tmp_dir/domain
     judge "域名记录"
   else
     rm -rf /ssl/* > /dev/null 2>&1
     rm -fr "$HOME"/.acme.sh > /dev/null 2>&1
+    sed -i '/acme.sh/d' "$HOME"/.bashrc > /dev/null 2>&1
+    sed -i '/acme.sh/d' "$HOME"/.cshrc > /dev/null 2>&1
+    sed -i '/acme.sh/d' "$HOME"/.tcshrc > /dev/null 2>&1
     cp -a $cert_dir/self_signed_cert.pem /ssl/xray.crt
     cp -a $cert_dir/self_signed_key.pem /ssl/xray.key
     acme
   fi
   chown -R nobody.$cert_group /ssl/*
 }
-
 function acme() {
   curl -L get.acme.sh | bash
-  judge "安装 acme"
+  judge "安装 SSL 证书生成脚本"
   
   "$HOME"/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-
   sed -i "6s/^/#/" "$nginx_conf"
   sed -i "6a\\\troot $website_dir;" "$nginx_conf"
   systemctl restart nginx
 
-  if "$HOME"/.acme.sh/acme.sh  --issue  -d ${domain}  --nginx /etc/nginx/conf.d/${domain}.conf -k ec-256 --force; then
+  if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --webroot "$website_dir" -k ec-256 --force; then
     print_ok "SSL 证书生成成功"
     sleep 2
     if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --reloadcmd "systemctl restart xray" --ecc --force; then
       print_ok "SSL 证书配置成功"
-      /root/.acme.sh/acme.sh  --upgrade  --auto-upgrade
-      echo "domain=${domain}" > "${domainjilu}"
-      echo -e "\nPORT=${PORT}" >> "${domainjilu}"
+      "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
+      echo $domain >"$HOME"/.acme.sh/domainjilu
       judge "域名记录"
     fi
   else
@@ -485,16 +436,14 @@ function acme() {
 
 function xrayliugen_conf() {
 echo "
-#!/usr/bin/env bash
-export VLESS_WS_PATH="${VLESS_WS_PATH}"
-export VMESS_TCP_PATH="${VMESS_TCP_PATH}"
-export VMESS_WS_PATH="${VMESS_WS_PATH}"
+#此文件请勿删除，如果要修改，请保持此处变量跟config.json文件一致
+export WS_PATH="${WS_PATH}"
+export VMTCP="${VMTCP}"
+export VMWS="${VMWS}"
 export PORT="${PORT}"
 export UUID="${UUID}"
 export QJPASS="${QJPASS}"
-export domain="${domain}"
-" > $domain_tmp_dir/variable.sh
-chmod 775 $domain_tmp_dir/variable.sh
+" > $domain_tmp_dir/pzconcon
 }
 
 function configure_cloudreve() {
@@ -536,6 +485,7 @@ nginx_conf="/etc/nginx/conf.d/${domain}.conf"
 cat >"$nginx_conf" <<-EOF
 server {
     listen  80;
+    listen [::]:80;
     server_name  ${domain};
     location / { 
         root   /usr/share/nginx/html;
@@ -552,12 +502,12 @@ EOF
 }
 
 function configure_pzcon() {
-  bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray/pzcon.sh)"
+  bash -c "$(curl -L https://raw.githubusercontent.com/281677160/agent/main/xray/pzcon.sh)"
   judge "节点链接信息"
   sleep 2
   echo
   echo
-  chmod 775 $domain_tmp_dir/pzcon && source $domain_tmp_dir/pzcon
+  source $domain_tmp_dir/pzcon
 }
 
 function restart_all() {
@@ -566,8 +516,6 @@ function restart_all() {
   systemctl restart nginx
   systemctl restart cloudreve
   systemctl restart xray
-  curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray_install.sh > /sbin/glxray
-  chmod 777 /sbin/glxray
   sleep 3
   clear
   echo

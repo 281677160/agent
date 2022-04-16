@@ -84,7 +84,7 @@ function system_check() {
   ECHOY "正在安装各种必须依赖"
   echo
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
-    yum install -y wget curl sudo git lsof tar
+    yum install -y wget curl sudo git lsof tar systemd
     wget -N -P /etc/yum.repos.d/ https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
     curl -sL https://rpm.nodesource.com/setup_12.x | bash -
     sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
@@ -126,7 +126,7 @@ function system_check() {
 
 function nodejs_install() {
     apt update
-    ${INS} curl wget sudo git lsof tar lsb-release gnupg2
+    ${INS} curl wget sudo git lsof tar systemd lsb-release gnupg2
     ${UNINS} --purge npm
     ${UNINS} --purge nodejs
     ${UNINS} --purge nodejs-legacy

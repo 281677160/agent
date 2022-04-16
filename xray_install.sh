@@ -40,6 +40,7 @@ cloudreve_service="/etc/systemd/system"
 cert_group="nobody"
 random_num=$((RANDOM % 12 + 4))
 HOME="/root"
+domainjilu="$HOME/.acme.sh/domainjilu"
 
 function print_ok() {
   echo -e " ${OK} ${Blue} $1 ${Font}"
@@ -58,13 +59,16 @@ function ECHOG()
 {
   echo -e "${Green} $1 ${Font}"
 }
+function ECHOR()
+{
+  echo -e "${Red} $1 ${Font}"
+}
+
 function is_root() {
-  if [[ 0 == "$UID" ]]; then
-    print_ok "当前用户是 root 用户，请开始您的骚操作"
-  else
-    print_error "当前用户不是 root 用户，请切换到 root 用户后重新执行脚本"
-    exit 1
-  fi
+if [[ ! "$USER" == "root" ]]; then
+  print_error "警告：请使用root用户操作!~~"
+  exit 1
+fi
 }
 judge() {
   if [[ 0 -eq $? ]]; then
@@ -161,6 +165,7 @@ function system_check() {
   # 关闭各类防火墙
   systemctl stop firewalld
   systemctl disable firewalld
+  systemctl mask firewalld
   systemctl stop nftables
   systemctl disable nftables
   systemctl stop ufw
@@ -220,7 +225,7 @@ function kaishi_install() {
   while :; do
   read -p " ${DUANKOU}：" PORT
   export PORT=${PORT:-"443"}
-  if [[ $PORT -ge 1 ]] && [[ $PORT -le 65535 ]]; then
+  if [[ "$PORT" -ge "1" ]] && [[ "$PORT" -le "65535" ]]; then
     export PORTY="y"
   fi
   case $PORTY in
@@ -248,15 +253,34 @@ function kaishi_install() {
     print_ok "您已确认无误!"
   ;;
   esac
-  export WS_PATH="$(date +VLEws%d%M%S)"
-  export VMTCP="$(date +VME%S%d%H)"
-  export VMWS="$(date +VMEws%M%S%H)"
-  export UUID="$(cat /proc/sys/kernel/random/uuid)"
-  export QJPASS="$(date +JQ%M%S%H%S)"
   echo
   ECHOY "开始执行安装程序,请耐心等候..."
   sleep 3
   echo
+}
+
+function uuid_path() {
+  SHI="$(echo "$(date +%H)" | sed 's/^.//g')"
+  FEN="$(echo "$(date +%M)" | sed 's/^.//g')"
+  MIAO="$(echo "$(date +%S)" | sed 's/^.//g')"
+  SHI2="$(echo "$(date +%H)")"
+  FEN2="$(echo "$(date +%M)")"
+  MIAO2="$(echo "$(date +%S)")"
+  STR1='ABCDEFGHI'
+  STR2='JKLMNOPQR'
+  STR3='STUVWXYDZ'
+  DIYIGE="$(echo ${STR3:0-$MIAO:1})" 
+  DIERGE="$(echo ${STR2:0-$FEN:1})"
+  DISANGE="$(echo ${STR1:0-$SHI:1})"
+  export VLESS_WS_PATH="${DIYIGE}${DIERGE}${DISANGE}${MIAO2}${FEN2}${SHI2}"
+  export VMESS_TCP_PATH="${DIYIGE}${DISANGE}${DIERGE}${SHI2}${FEN2}${MIAO2}"
+  export VMESS_WS_PATH="${DISANGE}${DIERGE}${DIYIGE}${MIAO2}${SHI2}${FEN2}"
+  export UUID="$(cat /proc/sys/kernel/random/uuid)"
+  export QJPASS="$(cat /proc/sys/kernel/random/uuid)"
+  export PORT="${PORT}"
+  [[ -z "${PORT}" ]] && export PORT="$(grep -i 'PORT' ${domainjilu} | cut -d "=" -f2)"
+  export domain="${domain}"
+  [[ -z "${domain}" ]] && export domain="$(grep -i 'domain' ${domainjilu} | cut -d "=" -f2)"
 }
 
 function nginx_install() {
@@ -416,15 +440,12 @@ function ssl_judge_and_install() {
     judge "证书启用"
     sleep 2
     "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
-    echo $domain >"$HOME"/.acme.sh/domainjilu
-    echo $domain >"echo $domain >$domain_tmp_dir/domain
+    echo "domain=${domain}" > "${domainjilu}"
+    echo -e "\nPORT=${PORT}" >> "${domainjilu}"
     judge "域名记录"
   else
     rm -rf /ssl/* > /dev/null 2>&1
     rm -fr "$HOME"/.acme.sh > /dev/null 2>&1
-    sed -i '/acme.sh/d' "$HOME"/.bashrc > /dev/null 2>&1
-    sed -i '/acme.sh/d' "$HOME"/.cshrc > /dev/null 2>&1
-    sed -i '/acme.sh/d' "$HOME"/.tcshrc > /dev/null 2>&1
     cp -a $cert_dir/self_signed_cert.pem /ssl/xray.crt
     cp -a $cert_dir/self_signed_key.pem /ssl/xray.key
     acme
@@ -446,7 +467,8 @@ function acme() {
     if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --reloadcmd "systemctl restart xray" --ecc --force; then
       print_ok "SSL 证书配置成功"
       "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
-      echo $domain >"$HOME"/.acme.sh/domainjilu
+      echo "domain=${domain}" > "${domainjilu}"
+      echo -e "\nPORT=${PORT}" >> "${domainjilu}"
       judge "域名记录"
     fi
   else
@@ -461,14 +483,16 @@ function acme() {
 
 function xrayliugen_conf() {
 echo "
-#此文件请勿删除，如果要修改，请保持此处变量跟config.json文件一致
-export WS_PATH="${WS_PATH}"
-export VMTCP="${VMTCP}"
-export VMWS="${VMWS}"
+#!/usr/bin/env bash
+export VLESS_WS_PATH="${VLESS_WS_PATH}"
+export VMESS_TCP_PATH="${VMESS_TCP_PATH}"
+export VMESS_WS_PATH="${VMESS_WS_PATH}"
 export PORT="${PORT}"
 export UUID="${UUID}"
 export QJPASS="${QJPASS}"
-" > $domain_tmp_dir/pzconcon
+export domain="${domain}"
+" > $domain_tmp_dir/variable.sh
+chmod 775 $domain_tmp_dir/variable.sh
 }
 
 function configure_cloudreve() {

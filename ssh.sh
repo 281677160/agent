@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
 
-if [[ ! "$USER" == "root" ]]; then
-   echo -e "\033[41;33m 警告：请使用root用户操作!~~  \033[0m"
-   exit 1
-fi
-
 function system_check() {
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
+    yum install -y sudo
+    sudo -i
     system_centos
   elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
     apt -y update
+    apt install -y sudo
+    sudo -i
     system_ubuntu
   elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
     apt -y update
+    apt install -y sudo
+    sudo -i
     system_debian
   else
     echo -e "\033[41;33m 不支持您的系统  \033[0m"

@@ -1,9 +1,9 @@
 #!/bin/bash
 
-tcpBase64Default=$(echo -n "{\"add\":\"${domain}\",\"aid\":0,\"host\":\"${domain}\",\"id\":\"${UUID}\",\"net\":\"tcp\",\"path\":\"/${VMESS_TCP_PATH}\",\"port\":${PORT},\"ps\":\"VMESS_TCP_${domain}\",\"scy\":\"none\",\"sni\":\"${domain}\",\"tls\":\"tls\",\"v\":2,\"type\":\"http\",\"allowInsecure\":0,\"peer\":\"${domain}\",\"obfs\":\"http\",\"obfsParam\":\"${domain}\"}" | base64)
+tcpBase64Default=$(echo -n "{\"add\":\"${domain}\",\"aid\":0,\"host\":\"${domain}\",\"id\":\"${UUID}\",\"net\":\"tcp\",\"path\":\"${VMESS_TCP_PATH}\",\"port\":${PORT},\"ps\":\"VMESS_TCP_${domain}\",\"scy\":\"none\",\"sni\":\"${domain}\",\"tls\":\"tls\",\"v\":2,\"type\":\"http\",\"allowInsecure\":0,\"peer\":\"${domain}\",\"obfs\":\"http\",\"obfsParam\":\"${domain}\"}" | base64)
 Vmess_tcp="${tcpBase64Default// /}"
 
-wsBase64Default=$(echo -n "{\"port\":${PORT},\"ps\":\"VMESS_WS_${domain}\",\"tls\":\"tls\",\"id\":\"${UUID}\",\"aid\":0,\"v\":2,\"host\":\"${domain}\",\"type\":\"none\",\"path\":\"/${VMESS_WS_PATH}/\",\"net\":\"ws\",\"add\":\"${domain}\",\"allowInsecure\":0,\"method\":\"none\",\"peer\":\"${domain}\",\"sni\":\"${domain}\"}" | base64 -w 0)
+wsBase64Default=$(echo -n "{\"port\":${PORT},\"ps\":\"VMESS_WS_${domain}\",\"tls\":\"tls\",\"id\":\"${UUID}\",\"aid\":0,\"v\":2,\"host\":\"${domain}\",\"type\":\"none\",\"path\":\"${VMESS_WS_PATH}\",\"net\":\"ws\",\"add\":\"${domain}\",\"allowInsecure\":0,\"method\":\"none\",\"peer\":\"${domain}\",\"sni\":\"${domain}\"}" | base64 -w 0)
 Vmess_ws="${wsBase64Default// /}"
 
 cat >/usr/local/etc/xray/pzcon <<-EOF
@@ -76,11 +76,11 @@ echo -e "\033[33m 伪装协议：none/none \033[0m"
 echo
 echo
 echo
-echo -e "\033[31m （4）VLESS+WS+TLS（可套cloudflare CDN使用） \033[0m"
+echo -e "\033[31m （4）VLESS+WS+TLS \033[0m"
 echo
-echo "vless://${UUID}@${domain}:${PORT}?encryption=none&security=tls&type=ws&host=${domain}&sni=${domain}&path=%2f${VLESS_WS_PATH}%2f#VLESS_WS_TLS_${domain}"
+echo "vless://${UUID}@${domain}:${PORT}?encryption=none&security=tls&type=ws&host=${domain}&sni=${domain}&path=${VLESS_WS_PATH}#VLESS_WS_TLS_${domain}"
 echo
-echo -e "\033[32m 二维码链接(浏览器打开):https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=vless://${UUID}@${domain}:${PORT}?encryption=none&security=tls&type=ws&host=${domain}&sni=${domain}&path=%2f${VLESS_WS_PATH}%2f#VLESS_WS_TLS_${domain} \033[0m"
+echo -e "\033[32m 二维码链接(浏览器打开):https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=vless://${UUID}@${domain}:${PORT}?encryption=none&security=tls&type=ws&host=${domain}&sni=${domain}&path=${VLESS_WS_PATH}#VLESS_WS_TLS_${domain} \033[0m"
 echo
 echo -e "\033[33m 节点备注/别名：VLESS+WS+TLS${PORT}（可自行修改） \033[0m"
 echo -e "\033[33m 节点类型：XRay \033[0m"

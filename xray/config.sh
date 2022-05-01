@@ -13,8 +13,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                     {
                         "id": "${UUID}",
                         "flow": "xtls-rprx-direct",
-                        "level": 0,
-                        "email": "love@example.com"
+                        "level": 0
                     }
                 ],
                 "decryption": "none",
@@ -58,14 +57,13 @@ cat >/usr/local/etc/xray/config.json <<-EOF
         },
         {
             "port": 52000,
-            "listen": "127.0.0.1",
+            "listen": "0.0.0.0",
             "protocol": "trojan",
             "settings": {
                 "clients": [
                     {
                         "password": "${QJPASS}",
-                        "level": 0,
-                        "email": "love@example.com"
+                        "level": 0
                     }
                 ],
                 "fallbacks": [
@@ -84,14 +82,13 @@ cat >/usr/local/etc/xray/config.json <<-EOF
         },
         {
             "port": 52001,
-            "listen": "127.0.0.1",
+            "listen": "0.0.0.0",
             "protocol": "vless",
             "settings": {
                 "clients": [
                     {
                         "id": "${UUID}",
-                        "level": 0,
-                        "email": "love@example.com"
+                        "level": 0
                     }
                 ],
                 "decryption": "none"
@@ -107,20 +104,18 @@ cat >/usr/local/etc/xray/config.json <<-EOF
         },
         {
             "port": 52002,
-            "listen": "127.0.0.1",
+            "listen": "0.0.0.0",
             "protocol": "vmess",
             "settings": {
                 "clients": [
                     {
                         "id": "${UUID}",
-                        "level": 0,
-                        "email": "love@example.com"
+                        "alterId": 0
                     }
                 ]
             },
             "streamSettings": {
                 "network": "tcp",
-                "security": "none",
                 "tcpSettings": {
                     "acceptProxyProtocol": true,
                     "header": {
@@ -136,20 +131,18 @@ cat >/usr/local/etc/xray/config.json <<-EOF
         },
         {
             "port": 52003,
-            "listen": "127.0.0.1",
+            "listen": "0.0.0.0",
             "protocol": "vmess",
             "settings": {
                 "clients": [
                     {
                         "id": "${UUID}",
-                        "level": 0,
-                        "email": "love@example.com"
+                        "alterId": 0
                     }
                 ]
             },
             "streamSettings": {
                 "network": "ws",
-                "security": "none",
                 "wsSettings": {
                     "acceptProxyProtocol": true,
                     "path": "/${VMESS_WS_PATH}/"

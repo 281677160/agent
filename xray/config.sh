@@ -23,17 +23,17 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                         "xver": 1
                     },
                     {
-                        "path": "/${VLESS_WS_PATH}/",
+                        "path": "${VLESS_WS_PATH}",
                         "dest": 52001,
                         "xver": 1
                     },
                     {
-                        "path": "/${VMESS_TCP_PATH}/",
+                        "path": "${VMESS_TCP_PATH}",
                         "dest": 52002,
                         "xver": 1
                     },
                     {
-                        "path": "/${VMESS_WS_PATH}/",
+                        "path": "${VMESS_WS_PATH}",
                         "dest": 52003,
                         "xver": 1
                     }
@@ -98,7 +98,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                 "security": "none",
                 "wsSettings": {
                     "acceptProxyProtocol": true,
-                    "path": "/${VLESS_WS_PATH}/"
+                    "path": "${VLESS_WS_PATH}"
                 }
             }
         },
@@ -123,7 +123,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                         "type": "http",
                         "request": {
                             "path": [
-                                "/${VMESS_TCP_PATH}/"
+                                "${VMESS_TCP_PATH}"
                             ]
                         }
                     }
@@ -147,7 +147,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                 "network": "ws",
                 "wsSettings": {
                     "acceptProxyProtocol": true,
-                    "path": "/${VMESS_WS_PATH}/"
+                    "path": "${VMESS_WS_PATH}"
                 }
             }
         }

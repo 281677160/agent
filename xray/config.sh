@@ -110,6 +110,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                 "clients": [
                     {
                         "id": "${UUID}",
+                        "level": 0,
                         "alterId": 0
                     }
                 ]
@@ -137,6 +138,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                 "clients": [
                     {
                         "id": "${UUID}",
+                        "level": 0,
                         "alterId": 0
                     }
                 ]

@@ -57,7 +57,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
         },
         {
             "port": 52000,
-            "listen": "0.0.0.0",
+            "listen": "127.0.0.1",
             "protocol": "trojan",
             "settings": {
                 "clients": [
@@ -68,7 +68,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
                 ],
                 "fallbacks": [
                     {
-                        "dest": 80
+                        "dest": 52100
                     }
                 ]
             },
@@ -82,7 +82,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
         },
         {
             "port": 52001,
-            "listen": "0.0.0.0",
+            "listen": "127.0.0.1",
             "protocol": "vless",
             "settings": {
                 "clients": [
@@ -104,7 +104,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
         },
         {
             "port": 52002,
-            "listen": "0.0.0.0",
+            "listen": "127.0.0.1",
             "protocol": "vmess",
             "settings": {
                 "clients": [
@@ -131,7 +131,7 @@ cat >/usr/local/etc/xray/config.json <<-EOF
         },
         {
             "port": 52003,
-            "listen": "0.0.0.0",
+            "listen": "127.0.0.1",
             "protocol": "vmess",
             "settings": {
                 "clients": [

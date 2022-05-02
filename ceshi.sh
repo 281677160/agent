@@ -421,63 +421,65 @@ function xray_install() {
 }
 
 function configure_nginx() {
-  nginx_conf="/etc/nginx/conf.d/${domain}.conf"
-  cd /etc/nginx/conf.d/ && rm -f ${domain}.conf && wget -O ${domain}.conf https://raw.githubusercontent.com/281677160/agent/main/xray/web.conf
-  sed -i "s/xxx/${domain}/g" ${nginx_conf}
-  judge "Nginx 配置 修改"
-
+nginx_conf="/etc/nginx/conf.d/${domain}.conf"
+cat >"$nginx_conf" <<-EOF
+server {
+    listen  80;
+    listen [::]:80;
+    server_name  ${domain};
+    location / {
+           proxy_pass http://127.0.0.1:5212;
+    }
+}
+EOF
   systemctl restart nginx
+  judge "修改nginx配置"
 }
 
 function ssl_judge_and_install() {
-  [[ ! -d /ssl ]] && mkdir -p /ssl
   if [[ -f "$HOME/.acme.sh/${domain}_ecc/${domain}.key" && -f "$HOME/.acme.sh/${domain}_ecc/${domain}.cer" && -f "$HOME/.acme.sh/acme.sh" ]]; then
     print_ok "[${domain}]证书已存在，重新启用证书"
-    sleep 2
-    rm -fr /ssl/* >/dev/null 2>&1
-    "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --ecc
+    [[ ! -d /ssl ]] && mkdir -p /ssl || rm -fr /ssl/*
+    [[ ! -f "/usr/bin/acme.sh" ]] && ln -s  /root/.acme.sh/acme.sh /usr/bin/acme.sh
+    acme.sh --installcert -d "${domain}" --ecc  --key-file   /ssl/xray.key   --fullchain-file /ssl/xray.crt
     judge "证书启用"
+    chown -R nobody.$cert_group /ssl/*
     sleep 2
-    "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
+    .acme.sh/acme.sh --upgrade --auto-upgrade
     echo "domain=${domain}" > "${domainjilu}"
     echo -e "\nPORT=${PORT}" >> "${domainjilu}"
     judge "域名记录"
   else
     rm -rf /ssl/* > /dev/null 2>&1
     rm -fr "$HOME"/.acme.sh > /dev/null 2>&1
-    cp -a $cert_dir/self_signed_cert.pem /ssl/xray.crt
-    cp -a $cert_dir/self_signed_key.pem /ssl/xray.key
     acme
   fi
-  chown -R nobody.$cert_group /ssl/*
 }
 
 function acme() {
   curl -L https://get.acme.sh | sh
   judge "安装acme.sh脚本"
-  
-  ln -s  /root/.acme.sh/acme.sh /usr/bin/acme.sh
-  
+  [[ ! -f "/usr/bin/acme.sh" ]] && ln -s  /root/.acme.sh/acme.sh /usr/bin/acme.sh
   acme.sh --set-default-ca --server letsencrypt
-
   systemctl stop nginx
-
   if acme.sh  --issue -d "${domain}"  --standalone -k ec-256; then
     print_ok "SSL 证书生成成功"
     sleep 2
     if acme.sh --installcert -d "${domain}" --ecc  --key-file   /ssl/xray.key   --fullchain-file /ssl/xray.crt; then
       print_ok "SSL 证书配置成功"
+      chown -R nobody.$cert_group /ssl/*
+      systemctl start nginx
       acme.sh  --upgrade  --auto-upgrade
       echo "domain=${domain}" > "${domainjilu}"
       echo -e "\nPORT=${PORT}" >> "${domainjilu}"
       judge "域名记录"
     fi
   else
+    systemctl start nginx
     print_error "SSL 证书生成失败"
     rm -rf "$HOME/.acme.sh/${domain}_ecc"
     exit 1
   fi
-  systemctl start nginx
 }
 
 function xrayliugen_conf() {
@@ -528,19 +530,6 @@ StandardOutput=null
 StandardError=syslog
 [Install]
 WantedBy=multi-user.target
-EOF
-nginx_conf="/etc/nginx/conf.d/${domain}.conf"
-cat >"$nginx_conf" <<-EOF
-server {
-    listen  80;
-    listen [::]:80;
-    server_name  ${domain};
-    location / { 
-        root   /usr/share/nginx/html;
-        index  index.html index.htm;
-           proxy_pass http://127.0.0.1:5212;
-    }
-}
 EOF
   cd "$HOME"
   chmod 775 "${cloudreve_service}"/cloudreve.service

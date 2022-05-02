@@ -103,6 +103,5 @@ function ssh_PermitRootLogin() {
     chmod 755 /etc/init.d/acceptoff
     update-rc.d acceptoff defaults 90
   fi
-  passwd -d root
 }
 system_check "$@"

@@ -287,9 +287,9 @@ function uuid_path() {
   export UUID="$(cat /proc/sys/kernel/random/uuid)"
   export QJPASS="$(cat /proc/sys/kernel/random/uuid)"
   export PORT="${PORT}"
-  [[ -z "${PORT}" ]] && export PORT="$(grep -i 'PORT' ${domainjilu} | cut -d "=" -f2)"
+  [[ -z "${PORT}" ]] && export PORT="$(grep 'PORT=' ${domainjilu} | cut -d "=" -f2)"
   export domain="${domain}"
-  [[ -z "${domain}" ]] && export domain="$(grep -i 'domain' ${domainjilu} | cut -d "=" -f2)"
+  [[ -z "${domain}" ]] && export domain="$(grep 'domain=' ${domainjilu} | cut -d "=" -f2)"
 }
 
 function nginx_install() {

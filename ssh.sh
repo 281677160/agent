@@ -2,17 +2,12 @@
 
 function system_check() {
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
-    yum install -y sudo
     sudo -i
     system_centos
   elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
-    apt -y update
-    apt install -y sudo
     sudo -i
     system_ubuntu
   elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
-    apt -y update
-    apt install -y sudo
     sudo -i
     system_debian
   else

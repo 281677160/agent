@@ -664,6 +664,7 @@ function xray_uninstall() {
      if [[ ${WUTISHI} == "Y" ]]; then
         "$HOME"/.acme.sh/acme.sh --uninstall
         rm -rf $HOME/.acme.sh
+	rm -rf /usr/bin/acme.sh
         rm -rf /ssl/*
       else
         ECHOR "是否卸载acme.sh? 按[Y/y]进行御载,按任意键跳过御载程序"
@@ -675,6 +676,7 @@ function xray_uninstall() {
         [Yy])
            "$HOME"/.acme.sh/acme.sh --uninstall
            rm -rf "$HOME"/.acme.sh
+	   rm -rf /usr/bin/acme.sh
            rm -rf /ssl/*
 	   print_ok "acme.sh御载 完成"
 	   sleep 2

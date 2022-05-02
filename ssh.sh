@@ -2,13 +2,10 @@
 
 function system_check() {
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
-    sudo -i
     system_centos
   elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
-    sudo -i
     system_ubuntu
   elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
-    sudo -i
     system_debian
   else
     echo -e "\033[41;33m 不支持您的系统  \033[0m"

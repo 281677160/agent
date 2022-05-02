@@ -561,6 +561,7 @@ function configure_pzcon() {
 
 function restart_all() {
   curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray_install.sh > "/usr/bin/glxray"
+  chmod 777 "/usr/bin/glxray"
   ECHOY "正在重启应用中，请稍后..."
   xrayliugen_conf
   systemctl restart nginx

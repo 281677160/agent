@@ -625,7 +625,7 @@ function xray_uninstall() {
   fi
   
   if [[ -x "$(command -v xray)" ]]; then
-    bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove --purge
+    bash -c "$(curl -fsSL https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove --purge
     find / -iname 'xray' | xargs -i rm -rf {}
     print_ok "Xray御载 完成"
   fi
@@ -781,12 +781,12 @@ menu() {
     break
     ;;
   3)
-    wget -N --no-check-certificate "https://raw.githubusercontent.com/ylx2016/Linux-NetSpeed/master/tcp.sh" && chmod +x tcp.sh && ./tcp.sh
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/ylx2016/Linux-NetSpeed/master/tcp.sh)"
     break
     ;;
   4)
     systemctl stop xray
-    bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" - install
+    bash -c "$(curl -fsSL https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" - install
     restart_all
     break
     ;;
@@ -799,7 +799,7 @@ menu() {
     break
     ;;
   7)
-    bash -c "$(curl -Ls https://raw.githubusercontent.com/281677160/agent/main/xray/uninstall_firewall.sh)"
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray/uninstall_firewall.sh)"
     break
     ;;
   8)

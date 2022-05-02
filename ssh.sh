@@ -2,10 +2,15 @@
 
 function system_check() {
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
+    yum install -y sudo
     system_centos
   elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
+    apt -y update
+    apt install -y sudo
     system_ubuntu
   elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
+    apt -y update
+    apt install -y sudo
     system_debian
   else
     echo -e "\033[41;33m 不支持您的系统  \033[0m"

@@ -132,14 +132,13 @@ do_kaishi_install() {
     MIAO2="$(echo "$(date +%S)")"
     STR1='123454323'
     DISIGE="$(echo ${STR1:0-$FEN:1})"
-    export IP=`curl -s -4 -m 10 http://ipv4.seriyps.ru || curl -s -4 -m 10 https://digitalresistance.dog/myIp`
+    export IIP=`curl -s -4 -m 10 http://ipv4.seriyps.ru || curl -s -4 -m 10 https://digitalresistance.dog/myIp`
     export SJPORT="${DISIGE}${MIAO2}${FEN2}"
     echo
     echo -e "\033[33m 请输入域名,直接回车则使用本机IP \033[0m"
     export DUANKOU="请输入域名"
     read -p " ${DUANKOU}：" IP
-    export IP=${IP:-"$IP"}
-    [[ -z ${IP} ]] && export IP=$(curl -4L api64.ipify.org)
+    export IP=${IP:-"$IIP"}
     echo
     echo -e "\033[33m 请输入端口,直接回车则使用随机分配端口 \033[0m"
     export DUANKOU="请输入[1-65535]之间的值"

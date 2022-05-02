@@ -139,6 +139,7 @@ do_kaishi_install() {
     export DUANKOU="请输入域名"
     read -p " ${DUANKOU}：" IP
     export IP=${IP:-"$IP"}
+    [[ -z ${IP} ]] && export IP=$(curl -4L api64.ipify.org)
     echo
     echo -e "\033[33m 请输入端口,直接回车则使用随机分配端口 \033[0m"
     export DUANKOU="请输入[1-65535]之间的值"

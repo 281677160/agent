@@ -69,6 +69,15 @@ if [[ ! "$USER" == "root" ]]; then
   print_error "警告：请使用root用户操作!~~"
   exit 1
 fi
+if [[ `dpkg --print-architecture |grep -c "arm64"` == '1' ]]; then
+  ARCH_PRINT="amd64"
+elif [[ `dpkg --print-architecture |grep -c "arm64"` == '1' ]]; then
+  ARCH_PRINT="arm64"
+else
+  print_error "不支持此系统,只支持x86_64的ubuntu和arm64的ubuntu"
+  exit 1
+fi
+
 }
 judge() {
   if [[ 0 -eq $? ]]; then
@@ -501,7 +510,7 @@ function configure_cloudreve() {
   latest_ver="$(wget -qO- -t1 -T2 "https://api.github.com/repos/cloudreve/Cloudreve/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')"
   cd "${cloudreve_path}"
   echo "${latest_ver}" > latest_ver
-  wget -q -P "${cloudreve_path}" https://github.com/cloudreve/Cloudreve/releases/download/${latest_ver}/cloudreve_${latest_ver}_linux_amd64.tar.gz -O "${cloudreve_path}"/cloudreve_${latest_ver}_linux_amd64.tar.gz
+  wget -q -P "${cloudreve_path}" https://github.com/cloudreve/Cloudreve/releases/download/${latest_ver}/cloudreve_${latest_ver}_linux_${ARCH_PRINT}.tar.gz -O "${cloudreve_path}"/cloudreve_${latest_ver}_linux_${ARCH_PRINT}.tar.gz
   judge "cloudreve下载"
   sleep 1
   tar xzf cloudreve_${latest_ver}_linux_amd64.tar.gz -C "${cloudreve_path}"

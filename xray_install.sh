@@ -551,7 +551,7 @@ EOF
 }
 
 function configure_pzcon() {
-  bash -c "$(curl -L https://raw.githubusercontent.com/281677160/agent/main/xray/pzcon.sh)"
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray/pzcon.sh)"
   judge "节点链接信息"
   sleep 2
   echo
@@ -560,6 +560,7 @@ function configure_pzcon() {
 }
 
 function restart_all() {
+  curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray_install.sh > "/usr/bin/glxray"
   ECHOY "正在重启应用中，请稍后..."
   xrayliugen_conf
   systemctl restart nginx

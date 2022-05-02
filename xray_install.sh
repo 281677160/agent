@@ -70,9 +70,9 @@ if [[ ! "$USER" == "root" ]]; then
   exit 1
 fi
 if [[ `dpkg --print-architecture |grep -c "arm64"` == '1' ]]; then
-  ARCH_PRINT="amd64"
+  export ARCH_PRINT="amd64"
 elif [[ `dpkg --print-architecture |grep -c "arm64"` == '1' ]]; then
-  ARCH_PRINT="arm64"
+  export ARCH_PRINT="arm64"
 else
   print_error "不支持此系统,只支持x86_64的ubuntu和arm64的ubuntu"
   exit 1
@@ -513,10 +513,10 @@ function configure_cloudreve() {
   wget -q -P "${cloudreve_path}" https://github.com/cloudreve/Cloudreve/releases/download/${latest_ver}/cloudreve_${latest_ver}_linux_${ARCH_PRINT}.tar.gz -O "${cloudreve_path}"/cloudreve_${latest_ver}_linux_${ARCH_PRINT}.tar.gz
   judge "cloudreve下载"
   sleep 1
-  tar xzf cloudreve_${latest_ver}_linux_amd64.tar.gz -C "${cloudreve_path}"
+  tar xzf cloudreve_${latest_ver}_linux_${ARCH_PRINT}.tar.gz -C "${cloudreve_path}"
   judge "cloudreve解压"
   sleep 1
-  rm -fr "${cloudreve_path}"/cloudreve_${latest_ver}_linux_amd64.tar.gz
+  rm -fr "${cloudreve_path}"/cloudreve_${latest_ver}_linux_${ARCH_PRINT}.tar.gz
   chmod +x ./cloudreve
   timeout -k 1s 15s ./cloudreve |tee build.log
   print_ok "cloudreve安装 完成"

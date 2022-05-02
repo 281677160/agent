@@ -304,8 +304,11 @@ function nginx_install() {
   mkdir -p /etc/nginx/conf.d >/dev/null 2>&1
 }
 function dependency_install() {
-  ${INS} lsof tar
-  judge "安装 lsof tar"
+  ${INS} lsof
+  judge "安装 lsof"
+  
+  ${INS} tar
+  judge "安装 tar"
 
   if [[ "${ID}" == "centos" || "${ID}" == "ol" ]]; then
     ${INS} crontabs
@@ -329,14 +332,6 @@ function dependency_install() {
   # upgrade systemd
   ${INS} systemd
   judge "安装/升级 systemd"
-
-  # Nginx 后置 无需编译 不再需要
-  #  if [[ "${ID}" == "centos" ||  "${ID}" == "ol" ]]; then
-  #    yum -y groupinstall "Development tools"
-  #  else
-  #    ${INS} build-essential
-  #  fi
-  #  judge "编译工具包 安装"
 
   if [[ "${ID}" == "centos" ]]; then
     ${INS} pcre pcre-devel zlib-devel epel-release openssl openssl-devel

@@ -287,9 +287,9 @@ function uuid_path() {
   export UUID="$(cat /proc/sys/kernel/random/uuid)"
   export QJPASS="$(cat /proc/sys/kernel/random/uuid)"
   export PORT="${PORT}"
-  [[ -z "${PORT}" ]] && export PORT="$(grep -i 'PORT' ${domainjilu} | cut -d "=" -f2)"
+  [[ -z "${PORT}" ]] && export PORT="$(grep 'PORT=' ${domainjilu} | cut -d "=" -f2)"
   export domain="${domain}"
-  [[ -z "${domain}" ]] && export domain="$(grep -i 'domain' ${domainjilu} | cut -d "=" -f2)"
+  [[ -z "${domain}" ]] && export domain="$(grep 'domain=' ${domainjilu} | cut -d "=" -f2)"
 }
 
 function nginx_install() {
@@ -304,8 +304,11 @@ function nginx_install() {
   mkdir -p /etc/nginx/conf.d >/dev/null 2>&1
 }
 function dependency_install() {
-  ${INS} lsof tar
-  judge "安装 lsof tar"
+  ${INS} lsof
+  judge "安装 lsof"
+  
+  ${INS} tar
+  judge "安装 tar"
 
   if [[ "${ID}" == "centos" || "${ID}" == "ol" ]]; then
     ${INS} crontabs
@@ -329,14 +332,6 @@ function dependency_install() {
   # upgrade systemd
   ${INS} systemd
   judge "安装/升级 systemd"
-
-  # Nginx 后置 无需编译 不再需要
-  #  if [[ "${ID}" == "centos" ||  "${ID}" == "ol" ]]; then
-  #    yum -y groupinstall "Development tools"
-  #  else
-  #    ${INS} build-essential
-  #  fi
-  #  judge "编译工具包 安装"
 
   if [[ "${ID}" == "centos" ]]; then
     ${INS} pcre pcre-devel zlib-devel epel-release openssl openssl-devel
@@ -421,73 +416,65 @@ function xray_install() {
 }
 
 function configure_nginx() {
-  nginx_conf="/etc/nginx/conf.d/${domain}.conf"
-  cd /etc/nginx/conf.d/ && rm -f ${domain}.conf && wget -O ${domain}.conf https://raw.githubusercontent.com/281677160/agent/main/xray/web.conf
-  sed -i "s/xxx/${domain}/g" ${nginx_conf}
-  judge "Nginx 配置 修改"
-
-  systemctl restart nginx
+nginx_conf="/etc/nginx/conf.d/${domain}.conf"
+cat >"$nginx_conf" <<-EOF
+server {
+    listen  80;
+    listen [::]:80;
+    server_name  ${domain};
+    location / {
+           proxy_pass http://127.0.0.1:5212;
+    }
 }
-
-function generate_certificate() {
-  signedcert=$(xray tls cert -domain="$local_ip" -name="$local_ip" -org="$local_ip" -expire=87600h)
-  echo $signedcert | jq '.certificate[]' | sed 's/\"//g' | tee $cert_dir/self_signed_cert.pem
-  echo $signedcert | jq '.key[]' | sed 's/\"//g' >$cert_dir/self_signed_key.pem
-  openssl x509 -in $cert_dir/self_signed_cert.pem -noout || 'print_error "生成自签名证书失败" && exit 1'
-  print_ok "生成自签名证书成功"
-  chown nobody.$cert_group $cert_dir/self_signed_cert.pem
-  chown nobody.$cert_group $cert_dir/self_signed_key.pem
+EOF
+  systemctl restart nginx
+  judge "修改nginx配置"
 }
 
 function ssl_judge_and_install() {
-  [[ ! -d /ssl ]] && mkdir -p /ssl
   if [[ -f "$HOME/.acme.sh/${domain}_ecc/${domain}.key" && -f "$HOME/.acme.sh/${domain}_ecc/${domain}.cer" && -f "$HOME/.acme.sh/acme.sh" ]]; then
     print_ok "[${domain}]证书已存在，重新启用证书"
-    sleep 2
-    rm -fr /ssl/* >/dev/null 2>&1
-    "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --ecc
+    [[ ! -d /ssl ]] && mkdir -p /ssl || rm -fr /ssl/*
+    [[ ! -f "/usr/bin/acme.sh" ]] && ln -s  /root/.acme.sh/acme.sh /usr/bin/acme.sh
+    acme.sh --installcert -d "${domain}" --ecc  --key-file   /ssl/xray.key   --fullchain-file /ssl/xray.crt
     judge "证书启用"
+    chown -R nobody.$cert_group /ssl/*
     sleep 2
-    "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
+    .acme.sh/acme.sh --upgrade --auto-upgrade
     echo "domain=${domain}" > "${domainjilu}"
     echo -e "\nPORT=${PORT}" >> "${domainjilu}"
     judge "域名记录"
   else
     rm -rf /ssl/* > /dev/null 2>&1
     rm -fr "$HOME"/.acme.sh > /dev/null 2>&1
-    cp -a $cert_dir/self_signed_cert.pem /ssl/xray.crt
-    cp -a $cert_dir/self_signed_key.pem /ssl/xray.key
     acme
   fi
-  chown -R nobody.$cert_group /ssl/*
 }
-function acme() {
-  curl -L get.acme.sh | bash
-  judge "安装 SSL 证书生成脚本"
-  
-  "$HOME"/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-  sed -i "6s/^/#/" "$nginx_conf"
-  sed -i "6a\\\troot $website_dir;" "$nginx_conf"
-  systemctl restart nginx
 
-  if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --webroot "$website_dir" -k ec-256 --force; then
+function acme() {
+  curl -L https://get.acme.sh | sh
+  judge "安装acme.sh脚本"
+  [[ ! -f "/usr/bin/acme.sh" ]] && ln -s  /root/.acme.sh/acme.sh /usr/bin/acme.sh
+  acme.sh --set-default-ca --server letsencrypt
+  systemctl stop nginx
+  if acme.sh  --issue -d "${domain}"  --standalone -k ec-256; then
     print_ok "SSL 证书生成成功"
     sleep 2
-    if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --reloadcmd "systemctl restart xray" --ecc --force; then
+    if acme.sh --installcert -d "${domain}" --ecc  --key-file   /ssl/xray.key   --fullchain-file /ssl/xray.crt; then
       print_ok "SSL 证书配置成功"
-      "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
+      chown -R nobody.$cert_group /ssl/*
+      systemctl start nginx
+      acme.sh  --upgrade  --auto-upgrade
       echo "domain=${domain}" > "${domainjilu}"
       echo -e "\nPORT=${PORT}" >> "${domainjilu}"
       judge "域名记录"
     fi
   else
+    systemctl start nginx
     print_error "SSL 证书生成失败"
     rm -rf "$HOME/.acme.sh/${domain}_ecc"
     exit 1
   fi
-
-  sed -i "7d" "$nginx_conf"
-  sed -i "6s/#//" "$nginx_conf"
 }
 
 function xrayliugen_conf() {
@@ -538,19 +525,6 @@ StandardOutput=null
 StandardError=syslog
 [Install]
 WantedBy=multi-user.target
-EOF
-nginx_conf="/etc/nginx/conf.d/${domain}.conf"
-cat >"$nginx_conf" <<-EOF
-server {
-    listen  80;
-    listen [::]:80;
-    server_name  ${domain};
-    location / { 
-        root   /usr/share/nginx/html;
-        index  index.html index.htm;
-           proxy_pass http://127.0.0.1:5212;
-    }
-}
 EOF
   cd "$HOME"
   chmod 775 "${cloudreve_service}"/cloudreve.service
@@ -685,6 +659,7 @@ function xray_uninstall() {
      if [[ ${WUTISHI} == "Y" ]]; then
         "$HOME"/.acme.sh/acme.sh --uninstall
         rm -rf $HOME/.acme.sh
+	rm -rf /usr/bin/acme.sh
         rm -rf /ssl/*
       else
         ECHOR "是否卸载acme.sh? 按[Y/y]进行御载,按任意键跳过御载程序"
@@ -696,6 +671,7 @@ function xray_uninstall() {
         [Yy])
            "$HOME"/.acme.sh/acme.sh --uninstall
            rm -rf "$HOME"/.acme.sh
+	   rm -rf /usr/bin/acme.sh
            rm -rf /ssl/*
 	   print_ok "acme.sh御载 完成"
 	   sleep 2
@@ -750,7 +726,6 @@ function install_xray_ws() {
   configure_xray_ws
   nginx_install
   configure_nginx
-  generate_certificate
   ssl_judge_and_install
   configure_cloudreve
   restart_all

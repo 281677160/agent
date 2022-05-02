@@ -69,7 +69,7 @@ if [[ ! "$USER" == "root" ]]; then
   print_error "警告：请使用root用户操作!~~"
   exit 1
 fi
-if [[ `dpkg --print-architecture |grep -c "arm64"` == '1' ]]; then
+if [[ `dpkg --print-architecture |grep -c "amd64"` == '1' ]]; then
   export ARCH_PRINT="amd64"
 elif [[ `dpkg --print-architecture |grep -c "arm64"` == '1' ]]; then
   export ARCH_PRINT="arm64"

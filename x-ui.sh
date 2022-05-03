@@ -55,14 +55,22 @@ function ECHOG()
 {
   echo -e "${Green} $1 ${Font}"
 }
+
 function is_root() {
-  if [[ 0 == "$UID" ]]; then
-    print_ok "当前用户是 root 用户，请开始您的骚操作"
-  else
-    print_error "当前用户不是 root 用户，请切换到 root 用户后重新执行脚本"
-    exit 1
-  fi
+if [[ ! "$USER" == "root" ]]; then
+  print_error "警告：请使用root用户操作!~~"
+  exit 1
+fi
+if [[ `dpkg --print-architecture |grep -c "amd64"` == '1' ]]; then
+  export ARCH_PRINT="amd64"
+elif [[ `dpkg --print-architecture |grep -c "arm64"` == '1' ]]; then
+  export ARCH_PRINT="arm64"
+else
+  print_error "不支持此系统,只支持x86_64的ubuntu和arm64的ubuntu"
+  exit 1
+fi
 }
+
 judge() {
   if [[ 0 -eq $? ]]; then
     print_ok "$1 完成"
@@ -146,10 +154,36 @@ function system_check() {
   # 关闭各类防火墙
   systemctl stop firewalld
   systemctl disable firewalld
+  systemctl mask firewalld
   systemctl stop nftables
   systemctl disable nftables
   systemctl stop ufw
   systemctl disable ufw
+  if [[ `systemctl status iptables |grep -c "enabled"` == '1' ]]; then
+    iptables -P INPUT ACCEPT
+    iptables -P FORWARD ACCEPT
+    iptables -P OUTPUT ACCEPT
+    iptables -F
+    echo '
+    #! /bin/sh
+    ### BEGIN INIT INFO
+    # Provides:        acceptoff
+    # Required-Start:  $local_fs $remote_fs
+    # Required-Stop:   $local_fs $remote_fs
+    # Default-Start:   2 3 4 5
+    # Default-Stop:
+    # Short-Description: automatic crash report generation
+    ### END INIT INFO
+    iptables -P INPUT ACCEPT
+    iptables -P FORWARD ACCEPT
+    iptables -P OUTPUT ACCEPT
+    iptables -F
+    ' >/etc/init.d/acceptoff
+    sed -i 's/^[ ]*//g' /etc/init.d/acceptoff
+    sed -i '/^$/d' /etc/init.d/acceptoff
+    chmod 755 /etc/init.d/acceptoff
+    update-rc.d acceptoff defaults 90
+  fi
 }
 
 function kaishi_install() {
@@ -173,7 +207,30 @@ function kaishi_install() {
   esac
   done
   echo
+  ECHOY "请输入面板帐号,直接回车则使用 admin"
+  read -p " 请输入帐号：" config_account
+  export config_account=${config_account:-"admin"}
+  
+  echo
+  ECHOY "请输入面板密码,直接回车则使用 admin"
+  read -p " 请输入密码：" config_password
+  export config_password=${config_password:-"admin"}
+  
+  echo
+  ECHOY "请输入面板端口,直接回车则使用 54321"
+  read -p " 请输入密码：" config_port
+  export config_port=${config_port:-"54321"}
+  
+  echo
+  ECHOY "请输入面板根路径,前面要带 “/” 符号,直接回车则使用 /xui"
+  read -p " 请输入密码：" config_web
+  export config_web=${config_web:-"admin"}
+  
+  
   ECHOG "您的域名为：${domain}"
+  ECHOG "面板帐号为：${config_account}"
+  ECHOG "面板密码为：${config_password}"
+  ECHOG "面板根路径为：${config_web}"
   echo
   read -p " [检查是否正确,正确回车继续,不正确按Q回车重新输入]： " NNKC
   case $NNKC in
@@ -229,14 +286,6 @@ function dependency_install() {
   # upgrade systemd
   ${INS} systemd
   judge "安装/升级 systemd"
-
-  # Nginx 后置 无需编译 不再需要
-  #  if [[ "${ID}" == "centos" ||  "${ID}" == "ol" ]]; then
-  #    yum -y groupinstall "Development tools"
-  #  else
-  #    ${INS} build-essential
-  #  fi
-  #  judge "编译工具包 安装"
 
   if [[ "${ID}" == "centos" ]]; then
     ${INS} pcre pcre-devel zlib-devel epel-release openssl openssl-devel
@@ -316,10 +365,10 @@ function xui_install() {
   print_ok "安装 x-ui"
   cd /root
   latest_ver="$(wget -qO- -t1 -T2 "https://api.github.com/repos/vaxilu/x-ui/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')"
-  wget -q -P /root https://ghproxy.com/https://github.com/vaxilu/x-ui/releases/download/${latest_ver}/x-ui-linux-amd64.tar.gz -O /root/x-ui-linux-amd64.tar.gz
+  wget -q -P /root https://ghproxy.com/https://github.com/vaxilu/x-ui/releases/download/${latest_ver}/x-ui-linux-${ARCH_PRINT}.tar.gz -O /root/x-ui-linux-${ARCH_PRINT}.tar.gz
   judge "x-ui 文件下载"
   rm x-ui/ /usr/local/x-ui/ /usr/bin/x-ui -rf
-  tar zxvf x-ui-linux-amd64.tar.gz
+  tar zxvf x-ui-linux-${ARCH_PRINT}.tar.gz
   judge "x-ui 文件解压"
   chmod +x x-ui/x-ui x-ui/bin/xray-linux-* x-ui/x-ui.sh
   cp x-ui/x-ui.sh /usr/bin/x-ui
@@ -328,102 +377,138 @@ function xui_install() {
   systemctl daemon-reload
   systemctl enable x-ui
   systemctl restart x-ui
-  rm -rf /root/x-ui-linux-amd64.tar.gz
   judge "x-ui 安装"
+  rm -rf /root/x-ui-linux-${ARCH_PRINT}.tar.gz
 }
 
 function configure_nginx() {
   nginx_conf="/etc/nginx/conf.d/${domain}.conf"
-  cd /etc/nginx/conf.d/ && rm -f ${domain}.conf && wget -O ${domain}.conf https://raw.githubusercontent.com/281677160/agent/main/xray/web.conf
-  sed -i "s/xxx/${domain}/g" ${nginx_conf}
-  judge "Nginx 配置 修改"
-
+  curl -L https://raw.githubusercontent.com/281677160/agent/main/xray/xui.conf > "${nginx_conf}"
   systemctl restart nginx
+  judge "Nginx 配置 修改"
 }
 
 function generate_certificate() {
-  signedcert=$(xray tls cert -domain="$local_ip" -name="$local_ip" -org="$local_ip" -expire=87600h)
-  echo $signedcert | jq '.certificate[]' | sed 's/\"//g' | tee $cert_dir/self_signed_cert.pem
-  echo $signedcert | jq '.key[]' | sed 's/\"//g' >$cert_dir/self_signed_key.pem
-  openssl x509 -in $cert_dir/self_signed_cert.pem -noout || 'print_error "生成自签名证书失败" && exit 1'
-  print_ok "生成自签名证书成功"
-  chown nobody.$cert_group $cert_dir/self_signed_cert.pem
-  chown nobody.$cert_group $cert_dir/self_signed_key.pem
+  /usr/local/x-ui/x-ui setting -username ${config_account} -password ${config_password}
+  /usr/local/x-ui/x-ui setting -port ${config_port}
 }
 
 function ssl_judge_and_install() {
-  [[ ! -d /ssl ]] && mkdir -p /ssl
   if [[ -f "$HOME/.acme.sh/${domain}_ecc/${domain}.key" && -f "$HOME/.acme.sh/${domain}_ecc/${domain}.cer" && -f "$HOME/.acme.sh/acme.sh" ]]; then
     print_ok "[${domain}]证书已存在，重新启用证书"
-    sleep 2
-    rm -fr /ssl/* >/dev/null 2>&1
-    "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --ecc
+    [[ ! -d /ssl ]] && mkdir -p /ssl || rm -fr /ssl/*
+    [[ ! -f "/usr/bin/acme.sh" ]] && ln -s  /root/.acme.sh/acme.sh /usr/bin/acme.sh
+    acme.sh --installcert -d "${domain}" --ecc  --key-file   /ssl/xray.key   --fullchain-file /ssl/xray.crt
     judge "证书启用"
+    chown -R nobody.$cert_group /ssl/*
     sleep 2
-    "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
-    echo $domain >"$HOME"/.acme.sh/domainjilu
+    .acme.sh/acme.sh --upgrade --auto-upgrade
+    echo "domain=${domain}" > "${domainjilu}"
+    echo -e "\nPORT=${PORT}" >> "${domainjilu}"
     judge "域名记录"
   else
     rm -rf /ssl/* > /dev/null 2>&1
     rm -fr "$HOME"/.acme.sh > /dev/null 2>&1
-    sed -i '/acme.sh/d' "$HOME"/.bashrc > /dev/null 2>&1
-    sed -i '/acme.sh/d' "$HOME"/.cshrc > /dev/null 2>&1
-    sed -i '/acme.sh/d' "$HOME"/.tcshrc > /dev/null 2>&1
-    cp -a $cert_dir/self_signed_cert.pem /ssl/xray.crt
-    cp -a $cert_dir/self_signed_key.pem /ssl/xray.key
     acme
   fi
-  chown -R nobody.$cert_group /ssl/*
 }
 
 function acme() {
-  curl -L get.acme.sh | bash
-  judge "安装 SSL 证书生成脚本"
-  
-  "$HOME"/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-
-  sed -i "6s/^/#/" "$nginx_conf"
-  sed -i "6a\\\troot $website_dir;" "$nginx_conf"
-  systemctl restart nginx
-
-  if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --webroot "$website_dir" -k ec-256 --force; then
+  curl -L https://get.acme.sh | sh
+  judge "安装acme.sh脚本"
+  [[ ! -f "/usr/bin/acme.sh" ]] && ln -s  /root/.acme.sh/acme.sh /usr/bin/acme.sh
+  acme.sh --set-default-ca --server letsencrypt
+  systemctl stop nginx
+  if acme.sh  --issue -d "${domain}"  --standalone -k ec-256; then
     print_ok "SSL 证书生成成功"
     sleep 2
-    if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /ssl/xray.crt --keypath /ssl/xray.key --reloadcmd "systemctl restart x-ui" --ecc --force; then
+    if acme.sh --installcert -d "${domain}" --ecc  --key-file   /ssl/xray.key   --fullchain-file /ssl/xray.crt; then
       print_ok "SSL 证书配置成功"
-      "$HOME"/.acme.sh/acme.sh --upgrade --auto-upgrade
-      echo $domain >"$HOME"/.acme.sh/domainjilu
+      chown -R nobody.$cert_group /ssl/*
+      systemctl start nginx
+      acme.sh  --upgrade  --auto-upgrade
+      echo "domain=${domain}" > "${domainjilu}"
+      echo -e "\nPORT=${PORT}" >> "${domainjilu}"
       judge "域名记录"
     fi
   else
+    systemctl start nginx
     print_error "SSL 证书生成失败"
     rm -rf "$HOME/.acme.sh/${domain}_ecc"
     exit 1
   fi
+}
 
-  sed -i "7d" "$nginx_conf"
-  sed -i "6s/#//" "$nginx_conf"
+function configure_cloudreve() {
+  [[ ! -d "${cloudreve_service}" ]] && mkdir -p "${cloudreve_service}"
+  [[ ! -d "${cloudreve_path}" ]] && mkdir -p "${cloudreve_path}"
+  latest_ver="$(wget -qO- -t1 -T2 "https://api.github.com/repos/cloudreve/Cloudreve/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')"
+  cd "${cloudreve_path}"
+  echo "${latest_ver}" > latest_ver
+  wget -q -P "${cloudreve_path}" https://github.com/cloudreve/Cloudreve/releases/download/${latest_ver}/cloudreve_${latest_ver}_linux_${ARCH_PRINT}.tar.gz -O "${cloudreve_path}"/cloudreve_${latest_ver}_linux_${ARCH_PRINT}.tar.gz
+  judge "cloudreve下载"
+  sleep 1
+  tar xzf cloudreve_${latest_ver}_linux_${ARCH_PRINT}.tar.gz -C "${cloudreve_path}"
+  judge "cloudreve解压"
+  sleep 1
+  rm -fr "${cloudreve_path}"/cloudreve_${latest_ver}_linux_${ARCH_PRINT}.tar.gz
+  chmod +x ./cloudreve
+  timeout -k 1s 15s ./cloudreve |tee build.log
+  print_ok "cloudreve安装 完成"
+  Passwd="$(cat ${cloudreve_path}/build.log | grep "初始管理员密码：" | awk '{print $4}')"
+  sleep 2
+cat >"${cloudreve_service}"/cloudreve.service <<-EOF
+[Unit]
+Description=Cloudreve
+Documentation=https://docs.cloudreve.org
+After=network.target
+Wants=network.target
+[Service]
+WorkingDirectory=${cloudreve_path}
+ExecStart=${cloudreve_path}/cloudreve
+Restart=on-abnormal
+RestartSec=5s
+KillMode=mixed
+StandardOutput=null
+StandardError=syslog
+[Install]
+WantedBy=multi-user.target
+EOF
+  cd "$HOME"
+  chmod 775 "${cloudreve_service}"/cloudreve.service
+  systemctl daemon-reload
+  systemctl start cloudreve
+  systemctl enable cloudreve
 }
 
 function restart_all() {
   x-ui enable
   restart_xui
-  curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/x-ui.sh > /sbin/glxray
-  chmod 777 /sbin/glxray
+  curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/x-ui.sh > "/usr/bin/glxray"
+  chmod 777 "/usr/bin/glxray"
   echo
-  ECHOY "1、用浏览器打开此链接： http://${local_ip}:54321"
-  ECHOY "2、初始管理员账号：admin"
-  ECHOY "3、初始管理员密码：admin"
-  ECHOY "4、面板证书公钥文件路径：/ssl/xray.crt"
-  ECHOY "5、面板证书密钥文件路径：/ssl/xray.key"
-  ECHOY "6、[54321]端口自行修改成其他的"
-  ECHOY "7、全部修改完成重启面板后可以用 https://${domain}:端口 访问"
+  ECHOY "1、用浏览器打开此链接： http://${local_ip}:${config_port}"
+  ECHOY "2、然后用您设置的帐号密码登录面板，然后把面板根目录修改成 ${config_web}"
+  ECHOY "3、根目录路径修改完成,报错设置,重启面板后可以用 https://${domain}${config_web} 访问"
   echo
   ECHOG "友情提示：再次输入安装命令或者输入[glxray]命令可以对程序进行管理"
   cat >/ssl/conck <<-EOF
   echo -e "\033[32m面板证书公钥文件路径：\033[0m/ssl/xray.crt"
   echo -e "\033[32m面板证书密钥文件路径：\033[0m/ssl/xray.key"
 EOF
+  echo
+  echo
+  echo -e "\033[31m 请注意：以下[cloudreve云盘]操作必须完成  \033[0m"
+  echo
+  ECHOY "1、用浏览器打开此链接： https://${domain}"
+  ECHOY "2、初始管理员账号：admin@cloudreve.org"
+  ECHOY "3、${Passwd}"
+  ECHOY "4、点击右上角头像 -> 管理面板"
+  ECHOY "5、点击[管理面板]会弹出对话框 \"确定站点URL设置\" 必须选择 \"更改\""
+  ECHOY "6、左侧 -> 参数设置 -> 注册与登陆 -> 不允许新用户注册 -> 往下拉点击保存"
+  ECHOY "7、左侧 -> 用户 -> 新建用户 -> 添加一个新的管理员，用于自己登录所用"
+  echo
+  echo
 }
 
 function restart_xui() {
@@ -520,6 +605,7 @@ function install_xui() {
   configure_nginx
   generate_certificate
   ssl_judge_and_install
+  configure_cloudreve
   restart_all
 }
 menu() {

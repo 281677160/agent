@@ -381,13 +381,6 @@ function xui_install() {
   rm -rf /root/x-ui-linux-${ARCH_PRINT}.tar.gz
 }
 
-function configure_nginx() {
-  nginx_conf="/etc/nginx/conf.d/${domain}.conf"
-  curl -L https://raw.githubusercontent.com/281677160/agent/main/xray/xui.conf > "${nginx_conf}"
-  systemctl restart nginx
-  judge "Nginx 配置 修改"
-}
-
 function generate_certificate() {
   /usr/local/x-ui/x-ui setting -username ${config_account} -password ${config_password}
   /usr/local/x-ui/x-ui setting -port ${config_port}
@@ -437,6 +430,12 @@ function acme() {
     rm -rf "$HOME/.acme.sh/${domain}_ecc"
     exit 1
   fi
+}
+
+function configure_nginx() {
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray/xui.conf)"
+  systemctl restart nginx
+  judge "Nginx 配置 修改"
 }
 
 function configure_cloudreve() {
@@ -602,9 +601,9 @@ function install_xui() {
   port_exist_check 80
   xui_install
   nginx_install
-  configure_nginx
   generate_certificate
   ssl_judge_and_install
+  configure_nginx
   configure_cloudreve
   restart_all
 }

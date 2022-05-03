@@ -34,9 +34,12 @@ xray_access_log="/var/log/xray/access.log"
 xray_error_log="/var/log/xray/error.log"
 cert_dir="/usr/local/x-ui"
 domain_tmp_dir="/usr/local/x-ui"
+cloudreve_path="/usr/local/cloudreve"
+cloudreve_service="/etc/systemd/system"
 cert_group="nobody"
 random_num=$((RANDOM % 12 + 4))
 HOME="/root"
+domainjilu="$HOME/.acme.sh/domainjilu"
 
 function print_ok() {
   echo -e " ${OK} ${Blue} $1 ${Font}"

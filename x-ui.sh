@@ -243,9 +243,12 @@ function kaishi_install() {
   export config_port=${config_port:-"54321"}
   
   echo
-  ECHOY "请输入x-ui面板根路径,前面要带 “/” 符号,直接回车则使用 /xui"
-  ECHOR "比如根路径为 /xui 就会使用 ${domain}/xui 来登录x-ui面板"
-  ECHOG "而 ${domain} 则会是clash节点转换网址"
+  ECHOY "1、请输入x-ui面板根路径,前面要带 “/” 符号,直接回车则使用 /xui"
+  echo
+  ECHOR "2、比如根路径为 /xui 就会使用 ${domain}/xui 来登录x-ui面板"
+  echo
+  ECHOG "3、而 ${domain} 则会是clash节点转换网址"
+  echo
   read -p " 请输入面板根路径：" config_web
   export config_web=${config_web:-"/xui"}
   export config_web="$(echo "${config_web}" |sed 's/\///g' |sed 's/ //g' |sed 's/^/\/&/')"
@@ -501,10 +504,10 @@ function restart_all() {
   ECHOG "3、左侧-->面板设置，然后把《面板证书公钥文件路径》改成 /ssl/xray.crt"
   ECHOG "4、左侧-->面板设置，然后把《面板证书密钥文件路径》改成 /ssl/xray.key"
   ECHOG "5、左侧-->面板设置，然后把《面板 url 根路径》改成 ${config_web}/"
-  ECHOY "6、然后左侧上面-->保存配置,重启面板"
+  ECHOG "6、然后左侧上面-->保存配置,重启面板"
   ECHOY "7、重启面板后使用 https://${domain}${config_web} 访问您的x-ui面板"
-  ECHOY "8、clash节点转换页面为 https://${domain}"
-  ECHOR "9、提醒：面板 url 根路径不能修改成其他的,要修改的话,要相对于的修改nginx的配置文件"
+  ECHOG "8、clash节点转换页面为 https://${domain}"
+  ECHOR "9、提醒：《面板 url 根路径》和《端口》是不能修改成其他的,要修改的话,就相对应的修改nginx的配置文件"
   echo
   ECHOG "友情提示：再次输入安装命令或者输入[glxray]命令可以对程序进行管理"
   cat >/ssl/conck <<-EOF

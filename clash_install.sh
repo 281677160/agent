@@ -364,6 +364,7 @@ menu2() {
     rm -rf /root/subconverter
     rm -rf /root/sub-web
     rm -rf /www/dist_web
+    rm -rf /etc/systemd/system/subconverter.service
     print_ok "subconverter御载完成"
   break
   ;;

@@ -106,11 +106,11 @@ function running_state() {
     export XUI_ZT="${Blue} x-ui状态：${Font}未知"
   fi
 
-  if [[ ! -d "subconverter" ]] || [[ ! -f "/etc/systemd/system/subconverter.service" ]]; then
+  if [[ ! -d "/root/subconverter" ]] || [[ ! -f "/etc/systemd/system/subconverter.service" ]]; then
     export CLASH_ZT="${Blue} clash节点转换状态${Font}：${Red}未安装${Font}"
   elif [[ `systemctl status subconverter |grep -c "active (running) "` == '1' ]]; then
     export CLASH_ZT="${Blue} clash节点转换状态${Font}：${Green}运行中 ${Font}|${Blue} 版本${Font}：${Green}${subconverter_ver}${Font}"
-  elif [[ -d "subconverter" ]] && [[ -f "/etc/systemd/system/subconverter.service" ]] && [[ `systemctl status subconverter |grep -c "active (running) "` == '0' ]]; then
+  elif [[ -d "/root/subconverter" ]] && [[ -f "/etc/systemd/system/subconverter.service" ]] && [[ `systemctl status subconverter |grep -c "active (running) "` == '0' ]]; then
     export CLASH_ZT="${Blue} clash节点转换状态${Font}：${Green}已安装${Font},${Red}未运行${Font}"
   else
     export CLASH_ZT="${Blue} clash节点转换状态：${Font}未知"

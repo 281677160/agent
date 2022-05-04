@@ -65,7 +65,7 @@ fi
 
 function system_check() {
 
-  ECHOY "正在安装各种必须依赖"
+  ECHOY "正在安装clash节点转换"
   echo
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
     curl -sL https://rpm.nodesource.com/setup_12.x | bash -

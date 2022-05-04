@@ -506,6 +506,7 @@ function restart_all() {
   ECHOY "6、然后左侧上面-->保存配置,重启面板"
   ECHOY "7、重启面板后使用 https://${domain}${config_web} 访问您的x-ui面板"
   ECHOY "8、clash节点转换页面为 https://${domain}"
+  ECHOR "9、提醒：面板 url 根路径不能修改成其他的,要修改的话,要相对于的修改nginx的配置文件"
   echo
   ECHOG "友情提示：再次输入安装命令或者输入[glxray]命令可以对程序进行管理"
   cat >/ssl/conck <<-EOF

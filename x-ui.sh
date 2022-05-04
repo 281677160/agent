@@ -86,14 +86,29 @@ judge() {
 
 function running_state() {
   nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
+  [[ -z "${NGINX_VERSION}" ]] && NGINX_VERSION="未知"
+  xui_ver="$(cat /usr/bin/x-ui/xui_ver)"
+  [[ -z "${xui_ver}" ]] && xui_ver="未知"
+  subconverter_ver="$(cat /root/subconverter/subconverter_vers)"
+  [[ -z "${subconverter_ver}" ]] && subconverter_ver="未知"
   if [[ `command -v x-ui |grep -c "x-ui"` == '0' ]]; then
     export XUI_ZT="${Blue} x-ui状态${Font}：${Red}未安装${Font}"
   elif [[ `systemctl status x-ui |grep -c "active (running) "` == '1' ]]; then
-    export XUI_ZT="${Blue} x-ui状态${Font}：${Green}运行中 ${Font}|${Blue} 版本${Font}：${Green}v0.3.2${Font}"
+    export XUI_ZT="${Blue} x-ui状态${Font}：${Green}运行中 ${Font}|${Blue} 版本${Font}：${Green}${xui_ver}${Font}"
   elif [[ `command -v x-ui |grep -c "x-ui"` -ge '1' ]] && [[ `systemctl status cloudreve |grep -c "active (running) "` == '0' ]]; then
     export XUI_ZT="${Blue} x-ui状态${Font}：${Green}已安装${Font},${Red}未运行${Font}"
   else
     export XUI_ZT="${Blue} x-ui状态：${Font}未知"
+  fi
+
+  if [[ ! -d "subconverter" ]] || [[ ! -f "/etc/systemd/system/subconverter.service" ]]; then
+    export CLASH_ZT="${Blue} clash节点转换状态${Font}：${Red}未安装${Font}"
+  elif [[ `systemctl status subconverter |grep -c "active (running) "` == '1' ]]; then
+    export CLASH_ZT="${Blue} clash节点转换状态${Font}：${Green}运行中 ${Font}|${Blue} 版本${Font}：${Green}${subconverter_ver}${Font}"
+  elif [[ -d "subconverter" ]] && [[ -f "/etc/systemd/system/subconverter.service" ]] && [[ `systemctl status subconverter |grep -c "active (running) "` == '0' ]]; then
+    export CLASH_ZT="${Blue} clash节点转换状态${Font}：${Green}已安装${Font},${Red}未运行${Font}"
+  else
+    export CLASH_ZT="${Blue} clash节点转换状态：${Font}未知"
   fi
 
   if [[ `command -v nginx |grep -c "nginx"` == '0' ]]; then
@@ -192,7 +207,7 @@ function system_check() {
 function kaishi_install() {
   echo
   echo
-  export YUMING="请输入面板所用的域名"
+  export YUMING="请输入x-ui面板所用的域名"
   ECHOY "${YUMING}[比如：v2.xray.com]"
   while :; do
   read -p " ${YUMING}：" domain
@@ -210,28 +225,30 @@ function kaishi_install() {
   esac
   done
   echo
-  ECHOY "请输入面板帐号,直接回车则使用 admin"
+  ECHOY "请输入x-ui面板帐号,直接回车则使用 admin"
   read -p " 请输入帐号：" config_account
   export config_account=${config_account:-"admin"}
   
   echo
-  ECHOY "请输入面板密码,直接回车则使用 admin"
+  ECHOY "请输入x-ui面板密码,直接回车则使用 admin"
   read -p " 请输入密码：" config_password
   export config_password=${config_password:-"admin"}
   
   echo
-  ECHOY "请输入面板端口,直接回车则使用 54321"
+  ECHOY "请输入x-ui面板端口,直接回车则使用 54321"
   read -p " 请输入面板端口：" config_port
   export config_port=${config_port:-"54321"}
   
   echo
-  ECHOY "请输入面板根路径,前面要带 “/” 符号,直接回车则使用 /xui"
+  ECHOY "请输入x-ui面板根路径,前面要带 “/” 符号,直接回车则使用 /xui"
+  ECHOY "比如你设置的根路径为 /xui ，你就会使用 ${domain}/xui 来进行登录您的x-ui面板"
+  ECHOY "而 ${domain} 则会是clash节点转换网址"
   read -p " 请输入面板根路径：" config_web
   export config_web=${config_web:-"/xui"}
   export config_web="$(echo "${config_web}" |sed 's/\///g' |sed 's/ //g' |sed 's/^/\/&/')"
   
   echo
-  ECHOG "请输入clash节点转换所用的域名,比如：v2.clash.com]"
+  ECHOG "请输入clash节点转换所用的域名,此域名纯粹当IP使用的,不会显示出来,比如：v2.clash.com"
   export YUMINGIP="请输入"
   while :; do
   CUrrenty=""
@@ -247,7 +264,7 @@ function kaishi_install() {
   break
   ;;
   *)
-    export YUMINGIP="敬告,请输入正确的域名或IP"
+    export YUMINGIP="敬告,请输入正确的域名"
   ;;
   esac
   done
@@ -405,6 +422,7 @@ function xui_install() {
   systemctl enable x-ui
   systemctl restart x-ui
   judge "x-ui 安装"
+  echo "${latest_ver}" >/usr/bin/x-ui/xui_ver
   rm -rf /root/x-ui-linux-${ARCH_PRINT}.tar.gz
 }
 
@@ -476,8 +494,13 @@ function restart_all() {
   chmod 777 "/usr/bin/glxray"
   echo
   ECHOY "1、用浏览器打开此链接： http://${local_ip}:${config_port}"
-  ECHOY "2、然后用您设置的帐号密码登录面板，然后把面板根目录修改成 ${config_web}"
-  ECHOY "3、根目录路径修改完成,报错设置,重启面板后可以用 https://${domain}${config_web} 访问"
+  ECHOY "2、然后用您设置的帐号密码登录面板"
+  ECHOG "3、左侧-->面板设置，然后把《面板证书公钥文件路径》改成 /ssl/xray.crt"
+  ECHOG "4、左侧-->面板设置，然后把《面板证书密钥文件路径》改成 /ssl/xray.key"
+  ECHOG "5、左侧-->面板设置，然后把《面板 url 根路径》改成 ${config_web}/"
+  ECHOY "6、然后左侧上面-->保存配置,重启面板"
+  ECHOY "7、重启面板后使用 https://${domain}${config_web} 访问您的x-ui面板"
+  ECHOY "8、clash节点转换页面为 https://${domain}"
   echo
   ECHOG "友情提示：再次输入安装命令或者输入[glxray]命令可以对程序进行管理"
   cat >/ssl/conck <<-EOF
@@ -488,12 +511,19 @@ EOF
 
 function restart_xui() {
   systemctl restart nginx
+  systemctl restart subconverter
   x-ui restart
-  sleep 1
+  sleep 2
   if [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then
     print_ok "nginx运行 正常"
   else
     print_error "nginx没有运行"
+    exit 1
+  fi
+  if [[ `systemctl status subconverter |grep -c "active (running) "` == '1' ]]; then
+    print_ok "subconverter运行 正常"
+  else
+    print_error "subconverter没有运行"
     exit 1
   fi
   if [[ `systemctl status x-ui |grep -c "active (running) "` == '1' ]]; then
@@ -508,7 +538,7 @@ function xui_uninstall() {
   x-ui stop
   x-ui disable
   x-ui uninstall
-  find / -iname 'x-ui' | xargs -i rm -rf {}
+  find / -iname 'x-ui' 2>&1 | xargs -i rm -rf {}
   rm -rf /etc/nginx/conf.d/xui_nginx.conf
   print_ok "x-ui面板御载 完成"
   sleep 2
@@ -521,13 +551,24 @@ function xui_uninstall() {
     apt-get --purge remove -y nginx-common
     apt-get --purge remove -y nginx-core
   fi
-  find / -iname 'nginx' | xargs -i rm -rf {}
+  find / -iname 'nginx' 2>&1 | xargs -i rm -rf {}
   print_ok "nginx御载 完成"
+  sleep 2
+  ECHOY "开始御载subconverter"
+  systemctl stop subconverter
+  systemctl disable subconverter
+  systemctl daemon-reload
+  rm -rf /root/subconverter
+  rm -rf /root/sub-web
+  rm -rf /www/dist_web
+  rm -rf /etc/systemd/system/subconverter.service
+  rm -rf /etc/nginx/sites-available/clash_nginx.conf
+  print_ok "subconverter御载完成"
   sleep 2
   if [[ -d "$HOME"/.acme.sh ]]; then
     clear
     echo
-    [[ -f "$HOME/.acme.sh/domainjilu" ]] && PROFILE="$(cat $HOME/.acme.sh/domainjilu)"
+    [[ -f "$HOME/.acme.sh/domainjilu" ]] && PROFILE="$(grep 'domain=' ${domainjilu} | cut -d "=" -f2)"
     if [[ -f "$HOME/.acme.sh/${PROFILE}_ecc/${PROFILE}.cer" ]] && [[ -f "$HOME/.acme.sh/${PROFILE}_ecc/${PROFILE}.key" ]]; then
         export TISHI="提示：[ ${PROFILE} ]证书已经存在,如果还继续使用此域名建议勿删除.acme.sh"
      else
@@ -536,34 +577,30 @@ function xui_uninstall() {
      if [[ ${WUTISHI} == "Y" ]]; then
         "$HOME"/.acme.sh/acme.sh --uninstall
         rm -rf $HOME/.acme.sh
+	rm -rf /usr/bin/acme.sh
         rm -rf /ssl/*
-        sed -i '/acme.sh/d' /root/.bashrc > /dev/null 2>&1
-        sed -i '/acme.sh/d' /root/.cshrc > /dev/null 2>&1
-        sed -i '/acme.sh/d' /root/.tcshrc > /dev/null 2>&1
       else
-        ECHOY "是否卸载 acme.sh [Y/N]?"
+        ECHOR "是否卸载acme.sh? 按[Y/y]进行御载,按任意键跳过御载程序"
         echo
         ECHOY "${TISHI}"
         echo
         read -p " 输入您的选择：" uninstall_acme
         case $uninstall_acme in
-        [yY])
+        [Yy])
            "$HOME"/.acme.sh/acme.sh --uninstall
            rm -rf "$HOME"/.acme.sh
+	   rm -rf /usr/bin/acme.sh
            rm -rf /ssl/*
-           sed -i '/acme.sh/d' /root/.bashrc > /dev/null 2>&1
-           sed -i '/acme.sh/d' /root/.cshrc > /dev/null 2>&1
-           sed -i '/acme.sh/d' /root/.tcshrc > /dev/null 2>&1
 	   print_ok "acme.sh御载 完成"
 	   sleep 2
         ;;
         *) 
-            print_ok "您已跳过御载acme.sh"
-            echo
+           print_ok "您已跳过御载acme.sh"
+           echo
         ;;
         esac
-       fi
-    fi
+     fi
+  fi
   print_ok "所有卸载程序执行完毕!"
   exit 0
 }
@@ -590,13 +627,14 @@ menu() {
   echo
   running_state
   echo -e "${XUI_ZT}"
+  echo -e "${CLASH_ZT}"
   echo -e "${NGINX_ZT}"
   echo
-  ECHOY "1、安装 x-ui面板和nginx"
-  ECHOY "2、重启 x-ui面板和nginx"
+  ECHOY "1、安装 x-ui面板、nginx和clash节点转换"
+  ECHOY "2、重启 x-ui面板、nginx和clash节点转换"
   ECHOY "3、查询 证书路径"
   ECHOY "4、安装 BBR、锐速加速"
-  ECHOY "5、卸载 x-ui面板和nginx"
+  ECHOY "5、卸载 x-ui面板、nginx和clash节点转换"
   ECHOY "6、退出"
   echo
   echo
@@ -617,7 +655,7 @@ menu() {
     break
     ;;
   4)
-    wget -N --no-check-certificate "https://raw.githubusercontent.com/ylx2016/Linux-NetSpeed/master/tcp.sh" && chmod +x tcp.sh && ./tcp.sh
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/ylx2016/Linux-NetSpeed/master/tcp.sh)"
     break
     ;;
   5)

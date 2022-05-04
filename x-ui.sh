@@ -228,26 +228,41 @@ function kaishi_install() {
   esac
   done
   echo
-  ECHOR "请输入x-ui面板帐号,直接回车则使用 admin"
+  ECHOR "请设置x-ui面板帐号,直接回车则使用 admin"
   read -p " 请输入帐号：" config_account
   export config_account=${config_account:-"admin"}
   
   echo
-  ECHOY "请输入x-ui面板密码,直接回车则使用 admin"
+  ECHOY "请设置x-ui面板密码,直接回车则使用 admin"
   read -p " 请输入密码：" config_password
   export config_password=${config_password:-"admin"}
   
   echo
-  ECHOG "请输入x-ui面板端口,直接回车则使用 54321"
-  read -p " 请输入面板端口：" config_port
+  ECHOG "请设置x-ui面板端口,直接回车则使用 54321"
+  export DUANKO="请输入[10000-65535]之间的值"
+  while :; do
+  read -p " ${DUANKO}：" config_port
   export config_port=${config_port:-"54321"}
+  if [[ "$PORT" -ge "10000" ]] && [[ "$PORT" -le "65535" ]]; then
+    export PORTY="y"
+  fi
+  case $PORTY in
+  y)
+    export config_port="${config_port}"
+  break
+  ;;
+  *)
+    export DUANKO="敬告：请输入[10000-65535]之间的值"
+  ;;
+  esac
+  done
   
   echo
-  ECHOY "1、请输入x-ui面板根路径,前面要带 “/” 符号,直接回车则使用 /xui"
+  ECHOY "请输入x-ui面板根路径,前面要带 “/” 符号,直接回车则使用 /xui"
   echo
-  ECHOR "2、比如根路径为 /xui 就会使用 ${domain}/xui 来登录x-ui面板"
+  ECHOR "比如根路径为 /xui 就会使用 ${domain}/xui 来登录x-ui面板"
   echo
-  ECHOG "3、而 ${domain} 则会是clash节点转换网址"
+  ECHOG "而 ${domain} 则会是clash节点转换的网址"
   echo
   read -p " 请输入面板根路径：" config_web
   export config_web=${config_web:-"/xui"}

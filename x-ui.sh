@@ -228,6 +228,7 @@ function kaishi_install() {
   ECHOY "请输入面板根路径,前面要带 “/” 符号,直接回车则使用 /xui"
   read -p " 请输入密码：" config_web
   export config_web=${config_web:-"/xui"}
+  export config_web="$(echo "${config_web}" |sed 's/\///g' |sed 's/ //g' |sed 's/^/\/&/')"
   
   echo
   ECHOG "请输入clash节点转换所用的域名,比如：v2.clash.com]"

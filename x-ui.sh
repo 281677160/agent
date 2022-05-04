@@ -243,7 +243,7 @@ function kaishi_install() {
   while :; do
   read -p " ${DUANKO}：" config_port
   export config_port=${config_port:-"54321"}
-  if [[ "${config_port}" -ge "10000" ]] || [[ "${config_port}" -le "65535" ]]; then
+  if [[ "${config_port}" -ge "10000" ]] && [[ "${config_port}" -le "65535" ]]; then
     export PORTY="y"
   fi
   case $PORTY in

@@ -229,6 +229,7 @@ function kaishi_install() {
   read -p " 请输入密码：" config_web
   export config_web=${config_web:-"admin"}
   
+  echo
   echo -e "\033[32m 请输入clash节点转换所用的域名 \033[0m"
   ECHOY "[比如：v2.clash.com]"
   export YUMINGIP="请输入"

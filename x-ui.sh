@@ -58,6 +58,11 @@ function ECHOG()
 {
   echo -e "${Green} $1 ${Font}"
 }
+function ECHOR()
+{
+  echo -e "${Red} $1 ${Font}"
+}
+
 
 function is_root() {
 if [[ ! "$USER" == "root" ]]; then

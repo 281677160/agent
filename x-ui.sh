@@ -230,7 +230,7 @@ function kaishi_install() {
   esac
   done
   echo
-  ECHOY "请输入x-ui面板帐号,直接回车则使用 admin"
+  ECHOR "请输入x-ui面板帐号,直接回车则使用 admin"
   read -p " 请输入帐号：" config_account
   export config_account=${config_account:-"admin"}
   
@@ -240,7 +240,7 @@ function kaishi_install() {
   export config_password=${config_password:-"admin"}
   
   echo
-  ECHOY "请输入x-ui面板端口,直接回车则使用 54321"
+  ECHOG "请输入x-ui面板端口,直接回车则使用 54321"
   read -p " 请输入面板端口：" config_port
   export config_port=${config_port:-"54321"}
   
@@ -253,7 +253,7 @@ function kaishi_install() {
   export config_web="$(echo "${config_web}" |sed 's/\///g' |sed 's/ //g' |sed 's/^/\/&/')"
   
   echo
-  ECHOG "请输入clash节点转换所用的域名,此域名纯粹当IP使用的"
+  ECHOY "请输入clash节点转换所用的域名,此域名纯粹当IP使用的"
   export YUMINGIP="请输入"
   while :; do
   CUrrenty=""

@@ -174,7 +174,7 @@ server {
     listen 80;
     server_name ${CUrrent_ip};
 
-    root /www/dist;
+    root /www/dist_web;
     index index.html index.htm;
 
     error_page 404 /index.html;
@@ -336,8 +336,8 @@ function install_subweb() {
     yarn install
     yarn build
     if [[ -d /root/sub-web/dist ]]; then
-      [[ ! -d /www/dist ]] && mkdir -p /www/dist || rm -rf /www/dist/*
-      cp -R /root/sub-web/dist/* /www/dist/
+      [[ ! -d /www/dist_web ]] && mkdir -p /www/dist_web || rm -rf /www/dist_web/*
+      cp -R /root/sub-web/dist/* /www/dist_web/
     else
       print_error "生成页面文件失败,请再次执行安装命令试试"
       exit 1
@@ -349,6 +349,35 @@ function install_subweb() {
   ECHOY "全部服务安装完毕,请登录 ${current_ip} 进行使用"
 }
 
+
+menu2() {
+  ECHOG "subconverter已存在，是否要御载subconverter[Y/n]?"
+  export DUuuid="请输入[Y/y]确认或[N/n]退出"
+  while :; do
+  read -p " ${DUuuid}：" IDPATg
+  case $IDPATg in
+  [Yy])
+    ECHOY "开始御载subconverter"
+    systemctl stop subconverter
+    systemctl disable subconverter
+    systemctl daemon-reload
+    rm -rf /root/subconverter
+    rm -rf /root/sub-web
+    rm -rf /www/dist_web
+    print_ok "subconverter御载完成"
+  break
+  ;;
+  [Nn])
+   exit 1
+  break
+  ;;
+  *)
+    export DUuuid="请正确输入[Y/y]确认或[N/n]退出"
+  ;;
+  esac
+  done
+}
+
 menu() {
   system_check
   nginx_install
@@ -358,4 +387,15 @@ menu() {
   update_rc
   install_subweb
 }
-menu "$@"
+
+if [[ -d /root/subconverter ]]; then
+  systemctl start subconverter > /dev/null 2>&1
+  sleep 2
+  if [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then
+    menu2 "$@"
+  else
+    menu "$@"
+  fi
+else
+  menu "$@"
+fi

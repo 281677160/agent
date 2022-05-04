@@ -475,21 +475,22 @@ function ssl_judge_and_install() {
 function acme() {
   curl -L https://get.acme.sh | sh
   judge "安装acme.sh脚本"
-  [[ ! -f "/usr/bin/acme.sh" ]] && ln -s  /root/.acme.sh/acme.sh /usr/bin/acme.sh
+  [[ ! -f "/usr/bin/acme.sh" ]] && ln -s /root/.acme.sh/acme.sh /usr/bin/acme.sh
   acme.sh --set-default-ca --server letsencrypt
   systemctl stop nginx
-  if acme.sh  --issue -d "${domain}"  --standalone -k ec-256; then
+  sleep 2
+  acme.sh  --issue -d "${domain}"  --standalone -k ec-256
+  if [[ $? -eq 0 ]]; then
     print_ok "SSL 证书生成成功"
-    sleep 2
-    if acme.sh --installcert -d "${domain}" --ecc  --key-file   /ssl/xui.key   --fullchain-file /ssl/xui.crt; then
-      print_ok "SSL 证书配置成功"
-      chown -R nobody.$cert_group /ssl/*
-      systemctl start nginx
-      acme.sh  --upgrade  --auto-upgrade
-      echo "domain=${domain}" > "${domainjilu}"
-      echo -e "\nPORT=${PORT}" >> "${domainjilu}"
-      judge "域名记录"
-    fi
+    [[ ! -d /ssl ]] && mkdir -p /ssl || rm -fr /ssl/*  
+    acme.sh --installcert -d "${domain}" --ecc  --key-file   /ssl/xui.key   --fullchain-file /ssl/xui.crt
+    judge "SSL 证书配置成功"
+    chown -R nobody.$cert_group /ssl/*
+    systemctl start nginx
+    acme.sh  --upgrade  --auto-upgrade
+    echo "domain=${domain}" > "${domainjilu}"
+    echo -e "\nPORT=${PORT}" >> "${domainjilu}"
+    judge "域名记录"
   else
     systemctl start nginx
     print_error "SSL 证书生成失败"

@@ -301,6 +301,7 @@ function nginx_install() {
     ${INS} nginx
   fi
   # 遗留问题处理
+  rm -rf /etc/nginx/conf.d/xray_nginx.conf
   mkdir -p /etc/nginx/conf.d >/dev/null 2>&1
 }
 function dependency_install() {

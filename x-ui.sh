@@ -595,8 +595,8 @@ function xui_uninstall() {
   if [[ -d "$HOME"/.acme.sh ]]; then
     clear
     echo
-    [[ -f "$HOME/.acme.sh/domainjilu" ]] && PROFILE="$(grep 'domain=' ${domainjilu} | cut -d "=" -f2)"
-    if [[ -f "$HOME/.acme.sh/${PROFILE}_ecc/${PROFILE}.cer" ]] && [[ -f "$HOME/.acme.sh/${PROFILE}_ecc/${PROFILE}.key" ]]; then
+    [[ -f "${domainjilu}" ]] && domain="$(grep 'domain=' ${domainjilu} | cut -d "=" -f2)"
+    if [[ -f "$HOME/.acme.sh/${domain}_ecc/${domain}.key" && -f "$HOME/.acme.sh/${domain}_ecc/${domain}.cer" && -f "$HOME/.acme.sh/acme.sh" ]]; then
         export TISHI="提示：[ ${PROFILE} ]证书已经存在,如果还继续使用此域名建议勿删除.acme.sh"
      else
         export WUTISHI="Y"

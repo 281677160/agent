@@ -221,12 +221,12 @@ function kaishi_install() {
   
   echo
   ECHOY "请输入面板端口,直接回车则使用 54321"
-  read -p " 请输入密码：" config_port
+  read -p " 请输入面板端口：" config_port
   export config_port=${config_port:-"54321"}
   
   echo
   ECHOY "请输入面板根路径,前面要带 “/” 符号,直接回车则使用 /xui"
-  read -p " 请输入密码：" config_web
+  read -p " 请输入面板根路径：" config_web
   export config_web=${config_web:-"/xui"}
   export config_web="$(echo "${config_web}" |sed 's/\///g' |sed 's/ //g' |sed 's/^/\/&/')"
   

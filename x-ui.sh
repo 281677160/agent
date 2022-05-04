@@ -87,9 +87,9 @@ judge() {
 function running_state() {
   nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
   [[ -z "${NGINX_VERSION}" ]] && NGINX_VERSION="未知"
-  xui_ver="$(cat /usr/bin/x-ui/xui_ver 2>&1)"
+  [[ -f "/usr/bin/x-ui/xui_ver" ]] && xui_ver="$(cat /usr/bin/x-ui/xui_ver)"
   [[ -z "${xui_ver}" ]] && xui_ver="未知"
-  subconverter_ver="$(cat /root/subconverter/subconverter_vers 2>&1)"
+  [[ -f "/root/subconverter/subconverter_vers" ]] && subconverter_ver="$(cat /root/subconverter/subconverter_vers)"
   [[ -z "${subconverter_ver}" ]] && subconverter_ver="未知"
   if [[ `command -v x-ui |grep -c "x-ui"` == '0' ]]; then
     export XUI_ZT="${Blue} x-ui状态${Font}：${Red}未安装${Font}"

@@ -227,11 +227,10 @@ function kaishi_install() {
   echo
   ECHOY "请输入面板根路径,前面要带 “/” 符号,直接回车则使用 /xui"
   read -p " 请输入密码：" config_web
-  export config_web=${config_web:-"admin"}
+  export config_web=${config_web:-"/xui"}
   
   echo
-  echo -e "\033[32m 请输入clash节点转换所用的域名 \033[0m"
-  ECHOY "[比如：v2.clash.com]"
+  ECHOG "请输入clash节点转换所用的域名,比如：v2.clash.com]"
   export YUMINGIP="请输入"
   while :; do
   CUrrenty=""

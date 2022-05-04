@@ -246,14 +246,14 @@ function kaishi_install() {
   
   echo
   ECHOY "请输入x-ui面板根路径,前面要带 “/” 符号,直接回车则使用 /xui"
-  ECHOY "比如你设置的根路径为 /xui ，你就会使用 ${domain}/xui 来进行登录您的x-ui面板"
+  ECHOY "比如根路径为 /xui 就会使用 ${domain}/xui 来登录x-ui面板"
   ECHOY "而 ${domain} 则会是clash节点转换网址"
   read -p " 请输入面板根路径：" config_web
   export config_web=${config_web:-"/xui"}
   export config_web="$(echo "${config_web}" |sed 's/\///g' |sed 's/ //g' |sed 's/^/\/&/')"
   
   echo
-  ECHOG "请输入clash节点转换所用的域名,此域名纯粹当IP使用的,不会显示出来,比如：v2.clash.com"
+  ECHOG "请输入clash节点转换所用的域名,此域名纯粹当IP使用的"
   export YUMINGIP="请输入"
   while :; do
   CUrrenty=""

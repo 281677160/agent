@@ -74,7 +74,7 @@ if [[ `dpkg --print-architecture |grep -c "amd64"` == '1' ]]; then
 elif [[ `dpkg --print-architecture |grep -c "arm64"` == '1' ]]; then
   export ARCH_PRINT="arm64"
 else
-  print_error "不支持此系统,只支持x86_64的ubuntu和arm64的系统"
+  print_error "不支持此系统,只支持x86_64和arm64的系统"
   exit 1
 fi
 }

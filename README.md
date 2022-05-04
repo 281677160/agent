@@ -33,7 +33,8 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xra
 ---
 #
 ---
-- x-ui安装（支持的协议：vmess、vless、trojan、shadowsocks、dokodemo-door、socks、http）
+- x-ui安装+clash节点转换（支持的协议：vmess、vless、trojan、shadowsocks、dokodemo-door、socks、http）
+- 需要解析两个域名到服务器，一个是面板使用跟创建节点的时候用，一个是clash节点转换当IP用的
 #
 ```yaml
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/x-ui.sh)"

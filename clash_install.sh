@@ -157,16 +157,17 @@ function nginx_install() {
     ${INS} nginx
   else
     print_ok "Nginx 已存在"
+    rm -fr /etc/nginx/conf.d/clash_nginx.conf > /dev/null 2>&1
     ${INS} nginx >/dev/null 2>&1
   fi
   
   if [[ -d /etc/nginx/sites-available ]]; then
-    sub_path="/etc/nginx/sites-available/${CUrrent_ip}.conf"
+    sub_path="/etc/nginx/sites-available/clash_nginx.conf"
   elif [[ -d /etc/nginx/http.d ]]; then  
-    sub_path="/etc/nginx/http.d/${CUrrent_ip}.conf"
+    sub_path="/etc/nginx/http.d/clash_nginx.conf"
   else
     mkdir -p /etc/nginx/conf.d >/dev/null 2>&1
-    sub_path="/etc/nginx/conf.d/${CUrrent_ip}.conf"
+    sub_path="/etc/nginx/conf.d/clash_nginx.conf"
   fi
 cat >"${sub_path}" <<-EOF
 server {

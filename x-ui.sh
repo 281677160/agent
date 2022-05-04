@@ -92,7 +92,7 @@ judge() {
 function running_state() {
   nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
   [[ -z "${NGINX_VERSION}" ]] && NGINX_VERSION="未知"
-  [[ -f "/usr/bin/x-ui/xui_ver" ]] && xui_ver="$(cat /usr/bin/x-ui/xui_ver)"
+  [[ -f "/usr/local/x-ui/xui_ver" ]] && xui_ver="$(cat /usr/local/x-ui/xui_ver)"
   [[ -z "${xui_ver}" ]] && xui_ver="未知"
   [[ -f "/root/subconverter/subconverter_vers" ]] && subconverter_ver="$(cat /root/subconverter/subconverter_vers)"
   [[ -z "${subconverter_ver}" ]] && subconverter_ver="未知"
@@ -105,7 +105,6 @@ function running_state() {
   else
     export XUI_ZT="${Blue} x-ui状态：${Font}未知"
   fi
-
   if [[ ! -d "/root/subconverter" ]] || [[ ! -f "/etc/systemd/system/subconverter.service" ]]; then
     export CLASH_ZT="${Blue} clash节点转换状态${Font}：${Red}未安装${Font}"
   elif [[ `systemctl status subconverter |grep -c "active (running) "` == '1' ]]; then
@@ -115,7 +114,6 @@ function running_state() {
   else
     export CLASH_ZT="${Blue} clash节点转换状态：${Font}未知"
   fi
-
   if [[ `command -v nginx |grep -c "nginx"` == '0' ]]; then
     export NGINX_ZT="${Blue} Nginx状态${Font}：${Red}未安装${Font}"
   elif [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then
@@ -427,7 +425,7 @@ function xui_install() {
   systemctl enable x-ui
   systemctl restart x-ui
   judge "x-ui 安装"
-  echo "${latest_ver}" >/usr/bin/x-ui/xui_ver
+  echo "v${latest_ver}" >/usr/local/x-ui/xui_ver
   rm -rf /root/x-ui-linux-${ARCH_PRINT}.tar.gz
 }
 

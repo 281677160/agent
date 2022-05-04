@@ -228,6 +228,7 @@ function install_subconverter() {
     sed -i "s?api_access_token=password?api_access_token=${HDPASS}?g" "/root/subconverter/pref.ini"
   fi
   rm -rf "/root/subconverter_${ARCH_PRINT}.tar.gz"
+  echo "${latest_vers}" >/root/subconverter/subconverter_vers
  }
 
 function update_rc() {

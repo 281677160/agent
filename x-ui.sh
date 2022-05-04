@@ -192,7 +192,7 @@ function system_check() {
 function kaishi_install() {
   echo
   echo
-  export YUMING="请输入您的域名"
+  export YUMING="请输入面板所用的域名"
   ECHOY "${YUMING}[比如：v2.xray.com]"
   while :; do
   read -p " ${YUMING}：" domain
@@ -229,11 +229,34 @@ function kaishi_install() {
   read -p " 请输入密码：" config_web
   export config_web=${config_web:-"admin"}
   
+  echo -e "\033[32m 请输入clash节点转换所用的域名 \033[0m"
+  ECHOY "[比如：v2.clash.com]"
+  export YUMINGIP="请输入"
+  while :; do
+  CUrrenty=""
+  read -p " ${YUMINGIP}：" CUrrent_ip
+  if [[ -n "${CUrrent_ip}" ]] && [[ "$(echo ${CUrrent_ip} |grep -c '.')" -ge '1' ]]; then
+    CUrrenty="Y"
+  fi
+  case $CUrrenty in
+  Y)
+    export CUrrent_ip="$(echo "${CUrrent_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/\///g')"
+    export current_ip="http://${CUrrent_ip}"
+    export after_ip="http://127.0.0.1"
+  break
+  ;;
+  *)
+    export YUMINGIP="敬告,请输入正确的域名或IP"
+  ;;
+  esac
+  done
   
-  ECHOG "您的域名为：${domain}"
+  echo
+  ECHOG "您的面板域名为：${domain}"
   ECHOG "面板帐号为：${config_account}"
   ECHOG "面板密码为：${config_password}"
   ECHOG "面板根路径为：${config_web}"
+  ECHOG "节点转换域名为：${CUrrent_ip}"
   echo
   read -p " [检查是否正确,正确回车继续,不正确按Q回车重新输入]： " NNKC
   case $NNKC in
@@ -442,45 +465,7 @@ function configure_nginx() {
 }
 
 function configure_cloudreve() {
-  [[ ! -d "${cloudreve_service}" ]] && mkdir -p "${cloudreve_service}"
-  [[ ! -d "${cloudreve_path}" ]] && mkdir -p "${cloudreve_path}"
-  latest_ver="$(wget -qO- -t1 -T2 "https://api.github.com/repos/cloudreve/Cloudreve/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')"
-  cd "${cloudreve_path}"
-  echo "${latest_ver}" > latest_ver
-  wget -q -P "${cloudreve_path}" https://github.com/cloudreve/Cloudreve/releases/download/${latest_ver}/cloudreve_${latest_ver}_linux_${ARCH_PRINT}.tar.gz -O "${cloudreve_path}"/cloudreve_${latest_ver}_linux_${ARCH_PRINT}.tar.gz
-  judge "cloudreve下载"
-  sleep 1
-  tar xzf cloudreve_${latest_ver}_linux_${ARCH_PRINT}.tar.gz -C "${cloudreve_path}"
-  judge "cloudreve解压"
-  sleep 1
-  rm -fr "${cloudreve_path}"/cloudreve_${latest_ver}_linux_${ARCH_PRINT}.tar.gz
-  chmod +x ./cloudreve
-  timeout -k 1s 15s ./cloudreve |tee build.log
-  print_ok "cloudreve安装 完成"
-  Passwd="$(cat ${cloudreve_path}/build.log | grep "初始管理员密码：" | awk '{print $4}')"
-  sleep 2
-cat >"${cloudreve_service}"/cloudreve.service <<-EOF
-[Unit]
-Description=Cloudreve
-Documentation=https://docs.cloudreve.org
-After=network.target
-Wants=network.target
-[Service]
-WorkingDirectory=${cloudreve_path}
-ExecStart=${cloudreve_path}/cloudreve
-Restart=on-abnormal
-RestartSec=5s
-KillMode=mixed
-StandardOutput=null
-StandardError=syslog
-[Install]
-WantedBy=multi-user.target
-EOF
-  cd "$HOME"
-  chmod 775 "${cloudreve_service}"/cloudreve.service
-  systemctl daemon-reload
-  systemctl start cloudreve
-  systemctl enable cloudreve
+bash -c  "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xuiclash.sh)"
 }
 
 function restart_all() {
@@ -498,19 +483,6 @@ function restart_all() {
   echo -e "\033[32m面板证书公钥文件路径：\033[0m/ssl/xray.crt"
   echo -e "\033[32m面板证书密钥文件路径：\033[0m/ssl/xray.key"
 EOF
-  echo
-  echo
-  echo -e "\033[31m 请注意：以下[cloudreve云盘]操作必须完成  \033[0m"
-  echo
-  ECHOY "1、用浏览器打开此链接： https://${domain}"
-  ECHOY "2、初始管理员账号：admin@cloudreve.org"
-  ECHOY "3、${Passwd}"
-  ECHOY "4、点击右上角头像 -> 管理面板"
-  ECHOY "5、点击[管理面板]会弹出对话框 \"确定站点URL设置\" 必须选择 \"更改\""
-  ECHOY "6、左侧 -> 参数设置 -> 注册与登陆 -> 不允许新用户注册 -> 往下拉点击保存"
-  ECHOY "7、左侧 -> 用户 -> 新建用户 -> 添加一个新的管理员，用于自己登录所用"
-  echo
-  echo
 }
 
 function restart_xui() {

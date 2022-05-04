@@ -365,6 +365,7 @@ menu2() {
     rm -rf /root/sub-web
     rm -rf /www/dist_web
     rm -rf /etc/systemd/system/subconverter.service
+    rm -rf /etc/nginx/sites-available/clash_nginx.conf
     print_ok "subconverter御载完成"
   break
   ;;

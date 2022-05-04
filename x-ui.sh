@@ -258,7 +258,7 @@ function kaishi_install() {
   done
   
   echo
-  ECHOY "请输入x-ui面板根路径,前面要带 “/” 符号,直接回车则使用 /xui"
+  ECHOY "请设置x-ui面板根路径,前面要带 “/” 符号,直接回车则使用 /xui"
   echo
   ECHOR "比如根路径为 /xui 就会使用 ${domain}/xui 来登录x-ui面板"
   echo

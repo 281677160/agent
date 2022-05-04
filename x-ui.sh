@@ -246,8 +246,8 @@ function kaishi_install() {
   
   echo
   ECHOY "请输入x-ui面板根路径,前面要带 “/” 符号,直接回车则使用 /xui"
-  ECHOY "比如根路径为 /xui 就会使用 ${domain}/xui 来登录x-ui面板"
-  ECHOY "而 ${domain} 则会是clash节点转换网址"
+  ECHOR "比如根路径为 /xui 就会使用 ${domain}/xui 来登录x-ui面板"
+  ECHOG "而 ${domain} 则会是clash节点转换网址"
   read -p " 请输入面板根路径：" config_web
   export config_web=${config_web:-"/xui"}
   export config_web="$(echo "${config_web}" |sed 's/\///g' |sed 's/ //g' |sed 's/^/\/&/')"

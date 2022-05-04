@@ -49,8 +49,17 @@ judge() {
   fi
 }
 
+
 if [[ ! "$USER" == "root" ]]; then
   print_error "警告：请使用root用户操作!~~"
+  exit 1
+fi
+if [[ `dpkg --print-architecture |grep -c "amd64"` == '1' ]]; then
+  export ARCH_PRINT="linux64"
+elif [[ `dpkg --print-architecture |grep -c "arm64"` == '1' ]]; then
+  export ARCH_PRINT="aarch64"
+else
+  print_error "不支持此系统,只支持x86_64的ubuntu和arm64的ubuntu"
   exit 1
 fi
 
@@ -246,13 +255,13 @@ function install_subconverter() {
   fi
   latest_vers="$(wget -qO- -t1 -T2 "https://api.github.com/repos/tindy2013/subconverter/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')"
   [[ -z ${latest_vers} ]] && latest_vers="v0.7.2"
-  rm -rf "/root/subconverter_linux64.tar.gz" >/dev/null 2>&1
-  wget https://ghproxy.com/https://github.com/tindy2013/subconverter/releases/download/${latest_vers}/subconverter_linux64.tar.gz
+  rm -rf "/root/subconverter_${ARCH_PRINT}.tar.gz" >/dev/null 2>&1
+  wget https://ghproxy.com/https://github.com/tindy2013/subconverter/releases/download/${latest_vers}/subconverter_${ARCH_PRINT}.tar.gz
   if [[ $? -ne 0 ]];then
     echo -e "\033[31m subconverter下载失败! \033[0m"
     exit 1
   fi
-  tar -zxvf subconverter_linux64.tar.gz
+  tar -zxvf subconverter_${ARCH_PRINT}.tar.gz
   if [[ $? -ne 0 ]];then
     echo -e "\033[31m subconverter解压失败! \033[0m"
     exit 1
@@ -263,7 +272,7 @@ function install_subconverter() {
     sed -i "s?${after_ip}?${current_ip}?g" "/root/subconverter/pref.ini"
     sed -i "s?api_access_token=password?api_access_token=${HDPASS}?g" "/root/subconverter/pref.ini"
   fi
-  rm -rf "/root/subconverter_linux64.tar.gz"
+  rm -rf "/root/subconverter_${ARCH_PRINT}.tar.gz"
  }
 
 function update_rc() {

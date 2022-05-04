@@ -536,6 +536,7 @@ function xui_uninstall() {
   x-ui disable
   x-ui uninstall
   find / -iname 'x-ui' | xargs -i rm -rf {}
+  rm -rf /etc/nginx/conf.d/xui_nginx.conf
   print_ok "x-ui面板御载 完成"
   sleep 2
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]] || [[ "$(. /etc/os-release && echo "$ID")" == "ol" ]]; then

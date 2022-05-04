@@ -77,17 +77,6 @@ function system_check() {
     export INS="yum install -y"
     export PUBKEY="centos"
     export Subcon="/etc/rc.d/init.d/subconverter"
-  elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
-    echo "
-    https://dl-cdn.alpinelinux.org/alpine/v3.12/main
-    https://dl-cdn.alpinelinux.org/alpine/v3.12/community
-    " > /etc/apk/repositories
-    sed -i 's/^[ ]*//g' /etc/apk/repositories
-    sed -i '/^$/d' /etc/apk/repositories
-    apk update
-    apk del yarn nodejs
-    apk add git nodejs yarn sudo wget lsof tar npm
-    export INS="apk add"
   elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
     export INS="apt-get install -y"
     export UNINS="apt-get remove -y"
@@ -155,6 +144,8 @@ server {
 }
 EOF
 service nginx restart
+judge "nginx更新配置"
+systemctl enable nginx
 }
 
 function command_Version() {
@@ -232,36 +223,28 @@ function install_subconverter() {
  }
 
 function update_rc() {
-  pm2 delete subconverter >/dev/null 2>&1
-  if [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
-    rc-update add nginx boot
-    pm2 start /root/subconverter/subconverter -n subconverter
-    echo "@reboot pm2 start /root/subconverter/subconverter -n subconverter" >> "/etc/crontabs/root"
-  else
-    systemctl enable nginx
-    echo '
-    [Unit]
-    Description=A API For Subscription Convert
-    After=network.target
+  echo '
+  [Unit]
+  Description=A API For Subscription Convert
+  After=network.target
     
-    [Service]
-    Type=simple
-    ExecStart=/root/subconverter/subconverter
-    WorkingDirectory=/root/subconverter
-    Restart=always
-    RestartSec=10
+  [Service]
+  Type=simple
+  ExecStart=/root/subconverter/subconverter
+  WorkingDirectory=/root/subconverter
+  Restart=always
+  RestartSec=10
  
-    [Install]
-    WantedBy=multi-user.target
-    ' > /etc/systemd/system/subconverter.service
-    sed -i 's/^[ ]*//g' /etc/systemd/system/subconverter.service
-    sed -i '1d' /etc/systemd/system/subconverter.service
-    chmod 755 /etc/systemd/system/subconverter.service
-    sleep 2
-    systemctl daemon-reload
-    systemctl start subconverter
-    systemctl enable subconverter
-  fi
+  [Install]
+  WantedBy=multi-user.target
+  ' > /etc/systemd/system/subconverter.service
+  sed -i 's/^[ ]*//g' /etc/systemd/system/subconverter.service
+  sed -i '1d' /etc/systemd/system/subconverter.service
+  chmod 755 /etc/systemd/system/subconverter.service
+  sleep 2
+  systemctl daemon-reload
+  systemctl start subconverter
+  systemctl enable subconverter
   if [[ $(lsof -i:"25500" | grep -i -c "listen") -ge "1" ]]; then
     print_ok "subconverter安装成功"
   else

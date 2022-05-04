@@ -416,7 +416,7 @@ function xray_install() {
 }
 
 function configure_nginx() {
-nginx_conf="/etc/nginx/conf.d/${domain}.conf"
+nginx_conf="/etc/nginx/conf.d/xray_nginx.conf"
 cat >"$nginx_conf" <<-EOF
 server {
     listen  80;
@@ -609,7 +609,8 @@ function xray_uninstall() {
   
   if [[ -x "$(command -v xray)" ]]; then
     bash -c "$(curl -fsSL https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove --purge
-    find / -iname 'xray' | xargs -i rm -rf {}
+    find / -iname 'xray' 2>&1 | xargs -i rm -rf {}
+    rm -rf /etc/nginx/conf.d/xray_nginx.conf
     print_ok "Xray御载 完成"
   fi
   
@@ -618,7 +619,7 @@ function xray_uninstall() {
     systemctl stop cloudreve
     systemctl disable cloudreve
     systemctl daemon-reload
-    find / -iname 'cloudreve' | xargs -i rm -rf {}
+    find / -iname 'cloudreve' -o -iname 'cloudreve.db' 2>&1 | xargs -i rm -rf {}
     print_ok "cloudreve御载 完成"
   fi
   
@@ -632,12 +633,14 @@ function xray_uninstall() {
     read -p " 输入您的选择：" uninstall_nginx
     case $uninstall_nginx in
     [Yy])
+      systemctl stop nginx
+      systemctl disable nginx
       ${UNINS} --purge remove -y nginx
       ${UNINS} autoremove -y
       ${UNINS} --purge remove -y nginx
       ${UNINS} --purge remove -y nginx-common
       ${UNINS} --purge remove -y nginx-core
-      find / -iname 'nginx' | xargs -i rm -rf {}
+      find / -iname 'nginx' 2>&1 | xargs -i rm -rf {}
       print_ok "nginx御载 完成"
     ;;
     *) 

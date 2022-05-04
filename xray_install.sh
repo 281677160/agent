@@ -463,7 +463,7 @@ function acme() {
   if [[ $? -eq 0 ]]; then
     print_ok "SSL 证书生成成功"
     [[ ! -d /ssl ]] && mkdir -p /ssl || rm -fr /ssl/*  
-    acme.sh --installcert -d "${domain}" --ecc  --key-file   /ssl/xui.key   --fullchain-file /ssl/xui.crt
+    acme.sh --installcert -d "${domain}" --ecc  --key-file   /ssl/xray.key   --fullchain-file /ssl/xray.crt
     judge "SSL 证书配置成功"
     chown -R nobody.$cert_group /ssl/*
     systemctl start nginx

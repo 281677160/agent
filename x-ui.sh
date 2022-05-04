@@ -442,7 +442,7 @@ function ssl_judge_and_install() {
     print_ok "[${domain}]证书已存在，重新启用证书"
     [[ ! -d /ssl ]] && mkdir -p /ssl || rm -fr /ssl/*
     [[ ! -f "/usr/bin/acme.sh" ]] && ln -s  /root/.acme.sh/acme.sh /usr/bin/acme.sh
-    acme.sh --installcert -d "${domain}" --ecc  --key-file   /ssl/xray.key   --fullchain-file /ssl/xray.crt
+    acme.sh --installcert -d "${domain}" --ecc  --key-file   /ssl/xui.key   --fullchain-file /ssl/xui.crt
     judge "证书启用"
     chown -R nobody.$cert_group /ssl/*
     sleep 2
@@ -466,7 +466,7 @@ function acme() {
   if acme.sh  --issue -d "${domain}"  --standalone -k ec-256; then
     print_ok "SSL 证书生成成功"
     sleep 2
-    if acme.sh --installcert -d "${domain}" --ecc  --key-file   /ssl/xray.key   --fullchain-file /ssl/xray.crt; then
+    if acme.sh --installcert -d "${domain}" --ecc  --key-file   /ssl/xui.key   --fullchain-file /ssl/xui.crt; then
       print_ok "SSL 证书配置成功"
       chown -R nobody.$cert_group /ssl/*
       systemctl start nginx
@@ -498,21 +498,27 @@ function restart_all() {
   restart_xui
   curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/x-ui.sh > "/usr/bin/glxray"
   chmod 777 "/usr/bin/glxray"
+  clear
+  echo
+  echo
+  echo
   echo
   ECHOY "1、用浏览器打开此链接： http://${local_ip}:${config_port}"
   ECHOY "2、然后用您设置的帐号密码登录面板"
-  ECHOG "3、左侧-->面板设置，然后把《面板证书公钥文件路径》改成 /ssl/xray.crt"
-  ECHOG "4、左侧-->面板设置，然后把《面板证书密钥文件路径》改成 /ssl/xray.key"
+  ECHOG "3、左侧-->面板设置，然后把《面板证书公钥文件路径》改成 /ssl/xui.crt"
+  ECHOG "4、左侧-->面板设置，然后把《面板证书密钥文件路径》改成 /ssl/xui.key"
   ECHOG "5、左侧-->面板设置，然后把《面板 url 根路径》改成 ${config_web}/"
   ECHOG "6、然后左侧上面-->保存配置,重启面板"
   ECHOY "7、重启面板后使用 https://${domain}${config_web} 访问您的x-ui面板"
   ECHOG "8、clash节点转换页面为 https://${domain}"
   ECHOR "9、提醒：《面板 url 根路径》和《端口》是不能修改成其他的,要修改的话,就相对应的修改nginx的配置文件"
   echo
+  echo
   ECHOG "友情提示：再次输入安装命令或者输入[glxray]命令可以对程序进行管理"
+  echo
   cat >/ssl/conck <<-EOF
-  echo -e "\033[32m面板证书公钥文件路径：\033[0m/ssl/xray.crt"
-  echo -e "\033[32m面板证书密钥文件路径：\033[0m/ssl/xray.key"
+  echo -e "\033[32m面板证书公钥文件路径：\033[0m/ssl/xui.crt"
+  echo -e "\033[32m面板证书密钥文件路径：\033[0m/ssl/xui.key"
 EOF
 }
 

@@ -521,9 +521,9 @@ function restart_xui() {
     exit 1
   fi
   if [[ `systemctl status subconverter |grep -c "active (running) "` == '1' ]]; then
-    print_ok "subconverter运行 正常"
+    print_ok "clash节点转换运行 正常"
   else
-    print_error "subconverter没有运行"
+    print_error "clash节点转换没有运行"
     exit 1
   fi
   if [[ `systemctl status x-ui |grep -c "active (running) "` == '1' ]]; then

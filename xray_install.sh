@@ -154,7 +154,7 @@ function system_check() {
     export INS="apt install -y"
     ${INS} socat wget git sudo ca-certificates && update-ca-certificates
     # 清除可能的遗留问题
-    rm -f /etc/apt/sources.list.d/nginx.list
+    rm -f /etc/apt/sources.list.d/nginx.list >/dev/null 2>&1
     $INS lsb-release gnupg2
 
     echo "deb http://nginx.org/packages/ubuntu $(lsb_release -cs) nginx" >/etc/apt/sources.list.d/nginx.list

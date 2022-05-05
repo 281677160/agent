@@ -270,11 +270,11 @@ function port_exist_check() {
 function ssl_judge_and_install() {
   if [[ -f "$HOME/.acme.sh/${domain}_ecc/${domain}.key" && -f "$HOME/.acme.sh/${domain}_ecc/${domain}.cer" && -f "$HOME/.acme.sh/acme.sh" ]]; then
     print_ok "[${domain}]证书已存在，重新启用证书"
-    [[ ! -d /ssl ]] && mkdir -p /ssl || rm -fr /ssl/*
     [[ ! -f "/usr/bin/acme.sh" ]] && ln -s  /root/.acme.sh/acme.sh /usr/bin/acme.sh
-    acme.sh --installcert -d "${domain}" --ecc  --key-file   /ssl/xray.key   --fullchain-file /ssl/xray.crt
+    acme.sh --installcert -d "${domain}" --ecc  --key-file   ${clash_path}/server.key   --fullchain-file ${clash_path}/server.crt
     judge "证书启用"
-    chown -R nobody.$cert_group /ssl/*
+    chown -R nobody.$cert_group ${clash_path}/server.key
+    chown -R nobody.$cert_group ${clash_path}/server.crt
     sleep 2
     .acme.sh/acme.sh --upgrade --auto-upgrade
     echo "domain=${domain}" > "${domainjilu}"
@@ -294,13 +294,13 @@ function acme() {
   acme.sh --set-default-ca --server letsencrypt
   systemctl stop nginx
   sleep 2
-  acme.sh  --issue -d "${domain}"  --standalone -k ec-256
+  acme.sh --issue --dns dns_cf -d "${domain}" -d "www.${domain}" -k ec-256
   if [[ $? -eq 0 ]]; then
-    print_ok "SSL 证书生成成功"
-    [[ ! -d /ssl ]] && mkdir -p /ssl || rm -fr /ssl/*  
-    acme.sh --installcert -d "${domain}" --ecc  --key-file   /ssl/xray.key   --fullchain-file /ssl/xray.crt
+    print_ok "SSL 证书生成成功" 
+    acme.sh --installcert -d "${domain}" --ecc  --key-file   ${clash_path}/server.key   --fullchain-file ${clash_path}/server.crt
     judge "SSL 证书配置成功"
-    chown -R nobody.$cert_group /ssl/*
+    chown -R nobody.$cert_group ${clash_path}/server.key
+    chown -R nobody.$cert_group ${clash_path}/server.crt
     systemctl start nginx
     acme.sh  --upgrade  --auto-upgrade
     echo "domain=${domain}" > "${domainjilu}"

@@ -1,19 +1,4 @@
-
-#!/usr/bin/env bash
-
-#====================================================
-# Author：281677160
-# Dscription：Xary onekey Management
-# github：https://github.com/281677160/danshui
-#====================================================
-
-export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-stty erase ^?
-
-cd "$(
-  cd "$(dirname "$0")" || exit
-  pwd
-)" || exit
+#!/bin/bash
 
 # 字体颜色配置
 Green="\033[32m"
@@ -24,60 +9,35 @@ Font="\033[0m"
 GreenBG="\033[42;37m"
 RedBG="\033[41;37m"
 OK="${Green}[OK]${Font}"
-Hi="${Green}[Hi]${Font}"
 ERROR="${Red}[ERROR]${Font}"
 
-# 变量
-github_branch="main"
-xray_conf_dir="/usr/local/etc/xray"
-website_dir="/www/xray_web/"
-xray_access_log="/var/log/xray/access.log"
-xray_error_log="/var/log/xray/error.log"
-cert_dir="/usr/local/etc/xray"
-domain_tmp_dir="/usr/local/etc/xray"
-cloudreve_path="/usr/local/cloudreve"
-cloudreve_service="/etc/systemd/system"
-cert_group="nobody"
-random_num=$((RANDOM % 12 + 4))
-HOME="/root"
-domainjilu="$HOME/.acme.sh/domainjilu"
-
 function print_ok() {
+  echo
   echo -e " ${OK} ${Blue} $1 ${Font}"
-}
-function print_Hi() {
-  echo -e " ${Hi} ${Blue} $1 ${Font}"
+  echo
 }
 function print_error() {
+  echo
   echo -e "${ERROR} ${RedBG} $1 ${Font}"
+  echo
 }
 function ECHOY()
 {
+  echo
   echo -e "${Yellow} $1 ${Font}"
+  echo
 }
 function ECHOG()
 {
+  echo
   echo -e "${Green} $1 ${Font}"
+  echo
 }
 function ECHOR()
 {
+  echo
   echo -e "${Red} $1 ${Font}"
-}
-
-function is_root() {
-if [[ ! "$USER" == "root" ]]; then
-  print_error "警告：请使用root用户操作!~~"
-  exit 1
-fi
-if [[ `dpkg --print-architecture |grep -c "amd64"` == '1' ]]; then
-  export ARCH_PRINT="amd64"
-elif [[ `dpkg --print-architecture |grep -c "arm64"` == '1' ]]; then
-  export ARCH_PRINT="arm64"
-else
-  print_error "不支持此系统,只支持x86_64的ubuntu和arm64的ubuntu"
-  exit 1
-fi
-
+  echo
 }
 judge() {
   if [[ 0 -eq $? ]]; then
@@ -89,172 +49,100 @@ judge() {
   fi
 }
 
-function running_state() {
-  [[ -f '/usr/local/bin/xray' ]] && XRAY_VERSION="$(/usr/local/bin/xray -version | awk 'NR==1 {print $2}')"
-  nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
-  [[ -f '/usr/local/cloudreve/latest_ver' ]] && CLOUDREVE_VERSION="$(cat /usr/local/cloudreve/latest_ver)"
-  if [[ `command -v xray |grep -c "xray"` == '0' ]]; then
-    export XRAY_ZT="${Blue} Xray状态${Font}：${Red}未安装${Font}"
-  elif [[ `systemctl status xray |grep -c "active (running) "` == '1' ]]; then
-    export XRAY_ZT="${Blue} Xray状态${Font}：${Green}运行中 ${Font}|${Blue} 版本${Font}：${Green}v${XRAY_VERSION}${Font}"
-  elif [[ `command -v xray |grep -c "xray"` -ge '1' ]] && [[ `systemctl status xray |grep -c "active (running) "` == '0' ]]; then
-    export XRAY_ZT="${Blue} Xray状态${Font}：${Green}已安装${Font},${Red}未运行${Font}"
-  else
-    export XRAY_ZT="${Blue} Xray状态：${Font}未知"
-  fi
+export clash_path="/usr/local/etc/clash"
 
-  if [[ `command -v nginx |grep -c "nginx"` == '0' ]]; then
-    export NGINX_ZT="${Blue} Nginx状态${Font}：${Red}未安装${Font}"
-  elif [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then
-    export NGINX_ZT="${Blue} Nginx状态${Font}：${Green}运行中 ${Font}|${Blue} 版本${Font}：${Green}v${NGINX_VERSION}${Font}"
-  elif [[ `command -v nginx |grep -c "nginx"` -ge '1' ]] && [[ `systemctl status nginx |grep -c "active (running) "` == '0' ]]; then
-    export NGINX_ZT="${Blue} Nginx状态${Font}：${Green}已安装${Font},${Red}未运行${Font}"
-  else
-    export NGINX_ZT="${Blue} Nginx状态：${Font}未知"
-  fi
-
-  if [[ ! -f ${cloudreve_path}/cloudreve.db ]] && [[ ! -f ${cloudreve_path}/cloudreve ]]; then
-    export CLOUDREVE_ZT="${Blue} Cloudreve状态${Font}：${Red}未安装${Font}"
-  elif [[ -f ${cloudreve_path}/cloudreve.db ]] && [[ `systemctl status cloudreve |grep -c "active (running) "` == '1' ]]; then
-    export CLOUDREVE_ZT="${Blue} Cloudreve状态${Font}：${Green}运行中 ${Font}|${Blue} 版本${Font}：${Green}v${CLOUDREVE_VERSION}${Font}"
-  elif [[ -f ${cloudreve_path}/cloudreve.db ]] && [[ `systemctl status cloudreve |grep -c "active (running) "` == '0' ]]; then
-    export CLOUDREVE_ZT="${Blue} Cloudreve状态${Font}：${Green}已安装${Font},${Red}未运行${Font}"
-  else
-    export CLOUDREVE_ZT="${Blue} Cloudreve状态：${Font}未知"
-  fi
-}
+if [[ ! "$USER" == "root" ]]; then
+  print_error "警告：请使用root用户操作!~~"
+  exit 1
+fi
+if [[ `dpkg --print-architecture |grep -c "amd64"` == '1' ]]; then
+  export ARCH_PRINT="linux64"
+elif [[ `dpkg --print-architecture |grep -c "arm64"` == '1' ]]; then
+  export ARCH_PRINT="aarch64"
+else
+  print_error "不支持此系统,只支持x86_64的ubuntu和arm64的ubuntu"
+  exit 1
+fi
 
 function system_check() {
-  source '/etc/os-release'
-
-  if [[ "${ID}" == "centos" && ${VERSION_ID} -ge 7 ]]; then
-    print_ok "当前系统为 Centos ${VERSION_ID} ${VERSION}"
-    export INS="yum install -y"
-    ${INS} socat wget git sudo ca-certificates && update-ca-trust force-enable
-    wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
-  elif [[ "${ID}" == "ol" ]]; then
-    print_ok "当前系统为 Oracle Linux ${VERSION_ID} ${VERSION}"
-    export INS="yum install -y"
-    ${INS} wget git sudo
-    wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
-  elif [[ "${ID}" == "debian" && ${VERSION_ID} -ge 9 ]]; then
-    print_ok "当前系统为 Debian ${VERSION_ID} ${VERSION}"
-    export INS="apt install -y"
-    ${INS} socat wget git sudo ca-certificates && update-ca-certificates
-    # 清除可能的遗留问题
-    rm -f /etc/apt/sources.list.d/nginx.list
-    $INS lsb-release gnupg2
-
-    echo "deb http://nginx.org/packages/debian $(lsb_release -cs) nginx" >/etc/apt/sources.list.d/nginx.list
-    curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
-
-    apt update
-  elif [[ "${ID}" == "ubuntu" && $(echo "${VERSION_ID}" | cut -d '.' -f1) -ge 18 ]]; then
-    print_ok "当前系统为 Ubuntu ${VERSION_ID} ${UBUNTU_CODENAME}"
-    export INS="apt install -y"
-    ${INS} socat wget git sudo ca-certificates && update-ca-certificates
-    # 清除可能的遗留问题
-    rm -f /etc/apt/sources.list.d/nginx.list
-    $INS lsb-release gnupg2
-
-    echo "deb http://nginx.org/packages/ubuntu $(lsb_release -cs) nginx" >/etc/apt/sources.list.d/nginx.list
-    curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
-    apt update
-  else
-    print_error "当前系统为 ${ID} ${VERSION_ID} 不在支持的系统列表内"
-    exit 1
-  fi
-
-  if [[ $(grep "nogroup" /etc/group) ]]; then
-    cert_group="nogroup"
-  fi
-
-  $INS dbus
-
-  # 关闭各类防火墙
-  systemctl stop firewalld
-  systemctl disable firewalld
-  systemctl mask firewalld
-  systemctl stop nftables
-  systemctl disable nftables
-  systemctl stop ufw
-  systemctl disable ufw
-  if [[ `systemctl status iptables |grep -c "enabled"` == '1' ]]; then
-    iptables -P INPUT ACCEPT
-    iptables -P FORWARD ACCEPT
-    iptables -P OUTPUT ACCEPT
-    iptables -F
-    echo '
-    #! /bin/sh
-    ### BEGIN INIT INFO
-    # Provides:        acceptoff
-    # Required-Start:  $local_fs $remote_fs
-    # Required-Stop:   $local_fs $remote_fs
-    # Default-Start:   2 3 4 5
-    # Default-Stop:
-    # Short-Description: automatic crash report generation
-    ### END INIT INFO
-    iptables -P INPUT ACCEPT
-    iptables -P FORWARD ACCEPT
-    iptables -P OUTPUT ACCEPT
-    iptables -F
-    ' >/etc/init.d/acceptoff
-    sed -i 's/^[ ]*//g' /etc/init.d/acceptoff
-    sed -i '/^$/d' /etc/init.d/acceptoff
-    chmod 755 /etc/init.d/acceptoff
-    update-rc.d acceptoff defaults 90
-  fi
-}
-
-function kaishi_install() {
+  clear
   echo
   echo
-  export YUMING="请输入您的域名"
-  ECHOY "${YUMING}[比如：v2.xray.com]"
+  [[ ! -d "${clash_path}" ]] && mkdir -p "${clash_path}"
+  echo -e "\033[32m 请输入已解析泛域名的域名 \033[0m"
+  ECHOY "[比如：clash.com]"
+  export YUMINGIP="请输入"
   while :; do
-  domainy=""
-  read -p " ${YUMING}：" domain
-  if [[ -n "${domain}" ]] && [[ "$(echo ${domain} |grep -c '\.')" -ge '1' ]]; then
-    domainy="Y"
+  CUrrenty=""
+  read -p " ${YUMINGIP}：" CUrrent_ip
+  if [[ -n "${CUrrent_ip}" ]] && [[ "$(echo ${CUrrent_ip} |grep -c '.')" -ge '1' ]]; then
+    CUrrenty="Y"
   fi
-  case $domainy in
+  case $CUrrenty in
   Y)
-    export domain="${domain}"
+    export CUrrent_ip="$(echo "${CUrrent_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/\///g' |sed 's/ //g')"
+    export current_ip="${CUrrent_ip}"
+    export after_ip="http://127.0.0.1:25500"
+    export suc_ip="https://suc.${current_ip}"
+    ECHOG "您当前服务器IP/域名为：${CUrrent_ip}"
   break
   ;;
   *)
-    export YUMING="敬告：请输入正确的域名"
+    export YUMINGIP="敬告,请输入正确的域名或IP"
   ;;
   esac
   done
-  echo
-  ECHOY "请输入端口号"
-  ECHOG "建议直接回车使用默认[443]端口,只有443端口才能使用伪装网站"
-  export DUANKOU="请输入[1-65535]之间的值"
+  
+  echo -e "\033[32m cloudflare网站里面的Global API Key \033[0m"
+  export CFKeyIP="请输入"
   while :; do
-  read -p " ${DUANKOU}：" PORT
-  export PORT=${PORT:-"443"}
-  if [[ "$PORT" -ge "1" ]] && [[ "$PORT" -le "65535" ]]; then
-    export PORTY="y"
+  CFKeyIPty=""
+  read -p " ${CFKeyIP}：" CF_Key
+  if [[ -n "${CF_Key}" ]]; then
+    CFKeyIPty="Y"
   fi
-  case $PORTY in
-  y)
-    export PORT="${PORT}"
+  case $CFKeyIPty in
+  Y)
+    export CF_Key="${CF_Key}"
+    ECHOG "您的CF_Key为：${CF_Key}"
   break
   ;;
   *)
-    export DUANKOU="敬告：请输入[1-65535]之间的值"
+    export CFKeyIP="敬告,请输入正确的域名或IP"
   ;;
   esac
   done
+  
+  echo -e "\033[32m 注册绑定cloudflare网站的邮箱 \033[0m"
+  export EmailIP="请输入"
+  while :; do
+  EmailIPty=""
+  read -p " ${EmailIP}：" CF_Email
+  if [[ -n "${CF_Email}" ]]; then
+    EmailIPty="Y"
+  fi
+  case $EmailIPty in
+  Y)
+    export CF_Email="${CF_Email}"
+    ECHOG "CF注册邮箱为：${CF_Email}"
+  break
+  ;;
+  *)
+    export EmailIP="敬告,请输入正确的域名或IP"
+  ;;
+  esac
+  done
+  
+  
   echo
-  ECHOG "您的域名为：${domain}"
-  ECHOG "您设置端口为：${PORT}"
+  ECHOG "您的域名为：${CUrrent_ip}"
+  ECHOG "Global API Key为：${CF_Key}"
+  ECHOG "CF注册邮箱为：${CF_Email}"
   echo
   read -p " [检查是否正确,正确回车继续,不正确按Q回车重新输入]： " NNKC
   case $NNKC in
   [Qq])
-    install_xray_ws
+    system_check
     exit 0
   ;;
   *)
@@ -264,437 +152,434 @@ function kaishi_install() {
   esac
   echo
   ECHOY "开始执行安装程序,请耐心等候..."
-  sleep 3
+  sleep 2
   echo
+  
+
+  ECHOY "正在安装各种必须依赖"
+  echo
+  if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
+    yum install -y wget curl sudo git lsof tar systemd
+    wget -N -P /etc/yum.repos.d/ https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
+    curl -sL https://rpm.nodesource.com/setup_12.x | bash -
+    sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
+    setenforce 0
+    yum update -y
+    yum install -y nodejs
+    npm install -g yarn
+    export INS="yum install -y"
+    export PUBKEY="centos"
+    export Subcon="/etc/rc.d/init.d/subconverter"
+  elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
+    export INS="apt-get install -y"
+    export UNINS="apt-get remove -y"
+    export PUBKEY="ubuntu"
+    export Subcon="/etc/init.d/subconverter"
+    nodejs_install
+  elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
+    export INS="apt install -y"
+    export UNINS="apt remove -y"
+    export PUBKEY="debian"
+    export Subcon="/etc/init.d/subconverter"
+    nodejs_install
+  else
+    echo -e "\033[31m 不支持该系统 \033[0m"
+    exit 1
+  fi
 }
 
-function uuid_path() {
-  SHI="$(echo "$(date +%H)" | sed 's/^.//g')"
-  FEN="$(echo "$(date +%M)" | sed 's/^.//g')"
-  MIAO="$(echo "$(date +%S)" | sed 's/^.//g')"
-  SHI2="$(echo "$(date +%H)")"
-  FEN2="$(echo "$(date +%M)")"
-  MIAO2="$(echo "$(date +%S)")"
-  STR1='ABCDEFGHI'
-  STR2='JKLMNOPQR'
-  STR3='STUVWXYDZ'
-  DIYIGE="$(echo ${STR3:0-$MIAO:1})" 
-  DIERGE="$(echo ${STR2:0-$FEN:1})"
-  DISANGE="$(echo ${STR1:0-$SHI:1})"
-  export VLESS_WS_PATH="/${DIYIGE}${DIERGE}${DISANGE}${MIAO2}${FEN2}${SHI2}"
-  export VMESS_TCP_PATH="/${DIYIGE}${DISANGE}${DIERGE}${SHI2}${FEN2}${MIAO2}"
-  export VMESS_WS_PATH="/${DISANGE}${DIERGE}${DIYIGE}${MIAO2}${SHI2}${FEN2}"
-  export UUID="$(cat /proc/sys/kernel/random/uuid)"
-  export QJPASS="$(cat /proc/sys/kernel/random/uuid)"
-  export PORT="${PORT}"
-  [[ -z "${PORT}" ]] && export PORT="$(grep 'PORT=' ${domainjilu} | cut -d "=" -f2)"
-  export domain="${domain}"
-  [[ -z "${domain}" ]] && export domain="$(grep 'domain=' ${domainjilu} | cut -d "=" -f2)"
+function nodejs_install() {
+    apt update
+    ${INS} curl wget sudo git lsof tar systemd lsb-release gnupg2
+    ${UNINS} --purge npm
+    ${UNINS} --purge nodejs
+    ${UNINS} --purge nodejs-legacy
+    apt autoremove -y
+    curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
+    ${UNINS} cmdtest
+    ${UNINS} yarn
+    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+    rm -f /etc/apt/sources.list.d/nginx.list
+    echo "deb http://nginx.org/packages/${PUBKEY} $(lsb_release -cs) nginx" >/etc/apt/sources.list.d/nginx.list
+    curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
+    apt-get update
+    ${INS} nodejs yarn
 }
 
 function nginx_install() {
   if ! command -v nginx >/dev/null 2>&1; then
     ${INS} nginx
-    judge "Nginx 安装"
   else
     print_ok "Nginx 已存在"
-    ${INS} nginx
-  fi
-  # 遗留问题处理
-  mkdir -p /etc/nginx/conf.d >/dev/null 2>&1
-}
-function dependency_install() {
-  ${INS} lsof
-  judge "安装 lsof"
-  
-  ${INS} tar
-  judge "安装 tar"
-
-  if [[ "${ID}" == "centos" || "${ID}" == "ol" ]]; then
-    ${INS} crontabs
-  else
-    ${INS} cron
-  fi
-  judge "安装 crontab"
-
-  if [[ "${ID}" == "centos" || "${ID}" == "ol" ]]; then
-    touch /var/spool/cron/root && chmod 600 /var/spool/cron/root
-    systemctl start crond && systemctl enable crond
-  else
-    touch /var/spool/cron/crontabs/root && chmod 600 /var/spool/cron/crontabs/root
-    systemctl start cron && systemctl enable cron
-  fi
-  judge "crontab 自启动配置 "
-
-  ${INS} unzip
-  judge "安装 unzip"
-
-  # upgrade systemd
-  ${INS} systemd
-  judge "安装/升级 systemd"
-
-  if [[ "${ID}" == "centos" ]]; then
-    ${INS} pcre pcre-devel zlib-devel epel-release openssl openssl-devel
-  elif [[ "${ID}" == "ol" ]]; then
-    ${INS} pcre pcre-devel zlib-devel openssl openssl-devel
-    # Oracle Linux 不同日期版本的 VERSION_ID 比较乱 直接暴力处理。如出现问题或有更好的方案，请提交 Issue。
-    yum-config-manager --enable ol7_developer_EPEL >/dev/null 2>&1
-    yum-config-manager --enable ol8_developer_EPEL >/dev/null 2>&1
-  else
-    ${INS} libpcre3 libpcre3-dev zlib1g-dev openssl libssl-dev
-  fi
-
-  ${INS} jq
-
-  if ! command -v jq; then
-    wget -P /usr/bin https://raw.githubusercontent.com/281677160/agent/main/xray/jq && chmod +x /usr/bin/jq
-    judge "安装 jq"
-  fi
-
-  # 防止部分系统xray的默认bin目录缺失
-  mkdir /usr/local/bin >/dev/null 2>&1
-}
-
-function basic_optimization() {
-  # 最大文件打开数
-  sed -i '/^\*\ *soft\ *nofile\ *[[:digit:]]*/d' /etc/security/limits.conf
-  sed -i '/^\*\ *hard\ *nofile\ *[[:digit:]]*/d' /etc/security/limits.conf
-  echo '* soft nofile 65536' >>/etc/security/limits.conf
-  echo '* hard nofile 65536' >>/etc/security/limits.conf
-
-  # RedHat 系发行版关闭 SELinux
-  if [[ "${ID}" == "centos" || "${ID}" == "ol" ]]; then
-    sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
-    setenforce 0
+    ${INS} nginx >/dev/null 2>&1
   fi
 }
 
-function domain_check() {
-  export domain_ip="$(ping "${domain}" -c 1 | sed '1{s/[^(]*(//;s/).*//;q}')" > /dev/null 2>&1
-  export local_ip=$(curl -4L api64.ipify.org)
-  print_ok "检测域名解析"
-  if [[ ! ${local_ip} == ${domain_ip} ]]; then
-    echo
-    ECHOY "域名解析IP为：${domain_ip}"
-    echo
-    ECHOY "本机IP为：${local_ip}"
-    echo
-    print_error "域名解析IP跟本机IP不一致"
+function command_Version() {
+  if [[ ! -x "$(command -v node)" ]]; then
+    print_error "node安装失败!"
     exit 1
   else
-    print_ok "域名解析IP为：${domain_ip}"
-    print_ok "本机IP为：${local_ip}"
-    print_ok "域名解析IP跟本机IP一致"
+    node_version="$(node --version |egrep -o 'v[0-9]+\.[0-9]+\.[0-9]+')"
+    print_ok "node版本号为：${node_version}"
+  fi
+  if [[ ! -x "$(command -v yarn)" ]]; then
+    print_error "yarn安装失败!"
+    exit 1
+  else
+    yarn_version="$(yarn --version |egrep -o '[0-9]+\.[0-9]+\.[0-9]+')"
+    print_ok "yarn版本号为：${yarn_version}"
+  fi
+  if [[ ! -x "$(command -v nginx)" ]]; then
+    print_error "nginx安装失败!"
+    exit 1
+  else
+    nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
+    print_ok "Nginx版本号为：${NGINX_VERSION}"
   fi
 }
 
 function port_exist_check() {
-  if [[ 0 -eq $(lsof -i:"$1" | grep -i -c "listen") ]]; then
-    print_ok "$1 端口未被占用"
+  if [[ 0 -eq $(lsof -i:"25500" | grep -i -c "listen") ]]; then
+    print_ok "25500 端口未被占用"
     sleep 1
   else
-    print_error "检测到 $1 端口被占用，以下为 $1 端口占用信息"
-    lsof -i:"$1"
-    print_error "5s 后将尝试自动 kill 占用进程"
+    ECHOR "检测到 25500 端口被占用，以下为 25500 端口占用信息"
+    lsof -i:"25500"
+    ECHOR "5s 后将尝试自动清理占用进程"
     sleep 5
-    lsof -i:"$1" | awk '{print $2}' | grep -v "PID" | xargs kill -9
-    print_ok "kill 完成"
+    lsof -i:"25500" | awk '{print $2}' | grep -v "PID" | xargs kill -9
+    print_ok "25500端口占用进程清理完成"
     sleep 1
   fi
 }
 
-function configure_xray_ws() {
-  bash -c "$(curl -L https://raw.githubusercontent.com/281677160/agent/main/xray/config.sh)"
-  judge "修改 Xray 配置文件"
-  chmod +x $domain_tmp_dir/config.json
-}
-
-function xray_install() {
-  print_ok "安装 Xray"
-  curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh | bash -s -- install
-  judge "Xray 安装"
-}
-
-function configure_nginx() {
-nginx_conf="/etc/nginx/conf.d/${domain}.conf"
-cat >"$nginx_conf" <<-EOF
-server {
-    listen  80;
-    listen [::]:80;
-    server_name  ${domain};
-    location / {
-           proxy_pass http://127.0.0.1:5212;
-    }
-}
-EOF
-  systemctl restart nginx
-  judge "修改nginx配置"
-}
-
-function ssl_judge_and_install() {
-  if [[ -f "$HOME/.acme.sh/${domain}_ecc/${domain}.key" && -f "$HOME/.acme.sh/${domain}_ecc/${domain}.cer" && -f "$HOME/.acme.sh/acme.sh" ]]; then
-    print_ok "[${domain}]证书已存在，重新启用证书"
-    [[ ! -d /ssl ]] && mkdir -p /ssl || rm -fr /ssl/*
-    [[ ! -f "/usr/bin/acme.sh" ]] && ln -s  /root/.acme.sh/acme.sh /usr/bin/acme.sh
-    acme.sh --installcert -d "${domain}" --ecc  --key-file   /ssl/xray.key   --fullchain-file /ssl/xray.crt
-    judge "证书启用"
-    chown -R nobody.$cert_group /ssl/*
-    sleep 2
-    .acme.sh/acme.sh --upgrade --auto-upgrade
-    echo "domain=${domain}" > "${domainjilu}"
-    echo -e "\nPORT=${PORT}" >> "${domainjilu}"
-    judge "域名记录"
-  else
-    rm -rf /ssl/* > /dev/null 2>&1
-    rm -fr "$HOME"/.acme.sh > /dev/null 2>&1
-    acme
-  fi
-}
-
-function acme() {
-  curl -L https://get.acme.sh | sh
-  judge "安装acme.sh脚本"
-  [[ ! -f "/usr/bin/acme.sh" ]] && ln -s  /root/.acme.sh/acme.sh /usr/bin/acme.sh
-  acme.sh --set-default-ca --server letsencrypt
-  systemctl stop nginx
-  if acme.sh  --issue -d "${domain}"  --standalone -k ec-256; then
-    print_ok "SSL 证书生成成功"
-    sleep 2
-    if acme.sh --installcert -d "${domain}" --ecc  --key-file   /ssl/xray.key   --fullchain-file /ssl/xray.crt; then
-      print_ok "SSL 证书配置成功"
-      chown -R nobody.$cert_group /ssl/*
-      systemctl start nginx
-      acme.sh  --upgrade  --auto-upgrade
-      echo "domain=${domain}" > "${domainjilu}"
-      echo -e "\nPORT=${PORT}" >> "${domainjilu}"
-      judge "域名记录"
-    fi
-  else
-    systemctl start nginx
-    print_error "SSL 证书生成失败"
-    rm -rf "$HOME/.acme.sh/${domain}_ecc"
-    exit 1
-  fi
-}
-
-function xrayliugen_conf() {
-echo "
-#!/usr/bin/env bash
-export VLESS_WS_PATH="${VLESS_WS_PATH}"
-export VMESS_TCP_PATH="${VMESS_TCP_PATH}"
-export VMESS_WS_PATH="${VMESS_WS_PATH}"
-export PORT="${PORT}"
-export UUID="${UUID}"
-export QJPASS="${QJPASS}"
-export domain="${domain}"
-" > $domain_tmp_dir/variable.sh
-chmod 775 $domain_tmp_dir/variable.sh
-}
-
-function configure_cloudreve() {
-  [[ ! -d "${cloudreve_service}" ]] && mkdir -p "${cloudreve_service}"
-  [[ ! -d "${cloudreve_path}" ]] && mkdir -p "${cloudreve_path}"
-  latest_ver="$(wget -qO- -t1 -T2 "https://api.github.com/repos/cloudreve/Cloudreve/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')"
-  cd "${cloudreve_path}"
-  echo "${latest_ver}" > latest_ver
-  wget -q -P "${cloudreve_path}" https://github.com/cloudreve/Cloudreve/releases/download/${latest_ver}/cloudreve_${latest_ver}_linux_${ARCH_PRINT}.tar.gz -O "${cloudreve_path}"/cloudreve_${latest_ver}_linux_${ARCH_PRINT}.tar.gz
-  judge "cloudreve下载"
-  sleep 1
-  tar xzf cloudreve_${latest_ver}_linux_${ARCH_PRINT}.tar.gz -C "${cloudreve_path}"
-  judge "cloudreve解压"
-  sleep 1
-  rm -fr "${cloudreve_path}"/cloudreve_${latest_ver}_linux_${ARCH_PRINT}.tar.gz
-  chmod +x ./cloudreve
-  timeout -k 1s 15s ./cloudreve |tee build.log
-  print_ok "cloudreve安装 完成"
-  Passwd="$(cat ${cloudreve_path}/build.log | grep "初始管理员密码：" | awk '{print $4}')"
-  sleep 2
-cat >"${cloudreve_service}"/cloudreve.service <<-EOF
-[Unit]
-Description=Cloudreve
-Documentation=https://docs.cloudreve.org
-After=network.target
-Wants=network.target
-[Service]
-WorkingDirectory=${cloudreve_path}
-ExecStart=${cloudreve_path}/cloudreve
-Restart=on-abnormal
-RestartSec=5s
-KillMode=mixed
-StandardOutput=null
-StandardError=syslog
-[Install]
-WantedBy=multi-user.target
-EOF
-  cd "$HOME"
-  chmod 775 "${cloudreve_service}"/cloudreve.service
-  systemctl daemon-reload
-  systemctl start cloudreve
-  systemctl enable cloudreve
-}
-
-function configure_pzcon() {
-  bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray/pzcon.sh)"
-  judge "节点链接信息"
-  sleep 2
-  echo
-  echo
-  source $domain_tmp_dir/pzcon
-}
-
-function restart_all() {
-  curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray_install.sh > "/usr/bin/glxray"
-  chmod 777 "/usr/bin/glxray"
-  ECHOY "正在重启应用中，请稍后..."
-  xrayliugen_conf
-  systemctl restart nginx
-  systemctl restart cloudreve
-  systemctl restart xray
-  sleep 3
-  clear
-  echo
-  echo
-  if [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then
-    print_ok "nginx运行 正常"
-  else
-    print_error "nginx没有运行"
-    exit 1
-  fi
-  if [[ `systemctl status cloudreve |grep -c "active (running) "` == '1' ]]; then
-    print_ok "cloudreve运行 正常"
-  else
-    print_error "cloudreve没有运行"
-  fi
-  if [[ `systemctl status xray |grep -c "active (running) "` == '1' ]]; then
-    print_ok "xray运行 正常"
-  else
-    print_error "xray没有运行"
-    exit 1
-  fi
-}
-
-function cloudreve_xinxi() {
-  echo
-  echo
-  echo -e "\033[31m 请注意：以下[cloudreve云盘]操作必须完成  \033[0m"
-  echo
-  ECHOY "1、用浏览器打开此链接： https://${domain}"
-  ECHOY "2、初始管理员账号：admin@cloudreve.org"
-  ECHOY "3、${Passwd}"
-  ECHOY "4、点击右上角头像 -> 管理面板"
-  ECHOY "5、点击[管理面板]会弹出对话框 \"确定站点URL设置\" 必须选择 \"更改\""
-  ECHOY "6、左侧 -> 参数设置 -> 注册与登陆 -> 不允许新用户注册 -> 往下拉点击保存"
-  ECHOY "7、左侧 -> 用户 -> 新建用户 -> 添加一个新的管理员，用于自己登录所用"
-  echo
-  echo
-}
-
-function configure_gengxinxinxi() {
-  echo
-  bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray/config.sh)"
-  judge "生成新配置"
-  bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray/pzcon.sh)"
-  judge "生成新的节点链接信息"
-  print_ok "重新生成UUID/路径/Tronjian密码完成"
-  restart_all
-}
-
-function xray_uninstall() {
-  source '/etc/os-release'
-  if [[ "${ID}" == "centos" ]] || [[ "${ID}" == "ol" ]]; then
-    export UNINS="yum"
-  else
-    export UNINS="apt"
-  fi
-  
-  if [[ -x "$(command -v xray)" ]]; then
-    bash -c "$(curl -fsSL https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove --purge
-    find / -iname 'xray' | xargs -i rm -rf {}
-    print_ok "Xray御载 完成"
-  fi
-  
-  sleep 2
-  if [[ -f ${cloudreve_path}/cloudreve.db ]] && [[ -f ${cloudreve_path}/cloudreve ]]; then
-    systemctl stop cloudreve
-    systemctl disable cloudreve
-    systemctl daemon-reload
-    find / -iname 'cloudreve' | xargs -i rm -rf {}
-    print_ok "cloudreve御载 完成"
-  fi
-  
-  if [[ -x "$(command -v nginx)" ]]; then
-    clear
-    echo
-    ECHOR "是否卸载nginx? 按[Y/y]进行御载,按任意键跳过御载程序"
-    echo
-    ECHOY "如果您还有其他应用在使用nginx，比如clash节点转换，请跳过御载"
-    echo
-    read -p " 输入您的选择：" uninstall_nginx
-    case $uninstall_nginx in
-    [Yy])
-      ${UNINS} --purge remove -y nginx
-      ${UNINS} autoremove -y
-      ${UNINS} --purge remove -y nginx
-      ${UNINS} --purge remove -y nginx-common
-      ${UNINS} --purge remove -y nginx-core
-      find / -iname 'nginx' | xargs -i rm -rf {}
-      print_ok "nginx御载 完成"
-    ;;
-    *) 
-       print_ok "您已跳过御载nginx"
-       echo
-     ;;
-    esac
-  fi
-  
-  if [[ -e "$HOME"/.acme.sh ]]; then
-    clear
-    echo
-    [[ -f "$HOME/.acme.sh/domainjilu" ]] && PROFILE="$(grep -i 'domain' ${domainjilu} | cut -d "=" -f2)"
-    if [[ -f "$HOME/.acme.sh/${PROFILE}_ecc/${PROFILE}.cer" ]] && [[ -f "$HOME/.acme.sh/${PROFILE}_ecc/${PROFILE}.key" ]]; then
-        export TISHI="提示：[ ${PROFILE} ]证书已经存在,如果还继续使用此域名建议勿删除.acme.sh"
-     else
-        export WUTISHI="Y"
-     fi
-     if [[ ${WUTISHI} == "Y" ]]; then
-        "$HOME"/.acme.sh/acme.sh --uninstall
-        rm -rf $HOME/.acme.sh
-	rm -rf /usr/bin/acme.sh
-        rm -rf /ssl/*
+function install_subconverter() {
+  ECHOY "正在安装subconverter服务"
+  find / -name 'subconverter' 2>&1 | xargs -i rm -rf {}
+  if [[ -x "$(command -v docker)" ]]; then
+    if [[ `docker images | grep -c "subconverter"` -ge '1' ]] || [[ `docker ps -a | grep -c "subconverter"` -ge '1' ]]; then
+      ECHOY "检测到subconverter服务存在，正在御载subconverter服务，请稍后..."
+      dockerid="$(docker ps -a |grep 'subconverter' |awk '{print $1}')"
+      imagesid="$(docker images |grep 'subconverter' |awk '{print $3}')"
+      docker stop -t=5 "${dockerid}" > /dev/null 2>&1
+      docker rm "${dockerid}"
+      docker rmi "${imagesid}"
+      if [[ `docker ps -a | grep -c "subconverter"` == '0' ]] && [[ `docker images | grep -c "subconverter"` == '0' ]]; then
+        print_ok "subconverter御载完成"
       else
-        ECHOR "是否卸载acme.sh? 按[Y/y]进行御载,按任意键跳过御载程序"
-        echo
-        ECHOY "${TISHI}"
-        echo
-        read -p " 输入您的选择：" uninstall_acme
-        case $uninstall_acme in
-        [Yy])
-           "$HOME"/.acme.sh/acme.sh --uninstall
-           rm -rf "$HOME"/.acme.sh
-	   rm -rf /usr/bin/acme.sh
-           rm -rf /ssl/*
-	   print_ok "acme.sh御载 完成"
-	   sleep 2
-        ;;
-        *) 
-            print_ok "您已跳过御载acme.sh"
-            echo
-        ;;
-        esac
-       fi
+        print_error "subconverter御载失败"
+        exit 1
+      fi
+    fi  
+  fi
+  latest_vers="$(wget -qO- -t1 -T2 "https://api.github.com/repos/tindy2013/subconverter/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')"
+  [[ -z ${latest_vers} ]] && latest_vers="v0.7.2"
+  rm -rf "${clash_path}/subconverter_${ARCH_PRINT}.tar.gz" >/dev/null 2>&1
+  wget -P "${clash_path}" https://github.com/tindy2013/subconverter/releases/download/${latest_vers}/subconverter_${ARCH_PRINT}.tar.gz -O "${clash_path}/subconverter_${ARCH_PRINT}.tar.gz"
+  if [[ $? -ne 0 ]];then
+    echo -e "\033[31m subconverter下载失败! \033[0m"
+    exit 1
+  fi
+  tar -zxvf ${clash_path}/subconverter_${ARCH_PRINT}.tar.gz -C ${clash_path}/subconverter
+  if [[ $? -ne 0 ]];then
+    echo -e "\033[31m subconverter解压失败! \033[0m"
+    exit 1
+  else
+    echo -e "\033[32m subconverter解压成功! \033[0m"
+    export HDPASS="$(cat /proc/sys/kernel/random/uuid)"
+    sed -i "s?api_access_token=.*?api_access_token=${HDPASS}?g" "${clash_path}/subconverter/pref.example.ini"
+    sed -i "s?managed_config_prefix=.*?managed_config_prefix=suc.${current_ip}?g" "${clash_path}/subconverter/pref.example.ini"
+    sed -i "s?listen=.*?listen=127.0.0.1?g" "${clash_path}/subconverter/pref.example.ini"
+    sed -i "s?serve_file_root=.*?serve_file_root=/www/dist_web?g" "${clash_path}/subconverter/pref.example.ini"
+    
+    sed -i "s?listen =.*?listen = \"127.0.0.1\"?g" "${clash_path}/subconverter/pref.example.ini"
+    sed -i "s?serve_file_root =.*?serve_file_root = \"/www/dist_web\"?g" "${clash_path}/subconverter/pref.example.ini"
+  fi
+  rm -rf "/root/subconverter_${ARCH_PRINT}.tar.gz"
+ }
+
+function update_rc() {
+  echo '
+  [Unit]
+  Description=A API For Subscription Convert
+  After=network.target
+    
+  [Service]
+  Type=simple
+  ExecStart=/usr/local/etc/clash/subconverter/subconverter
+  WorkingDirectory=/usr/local/etc/clash/subconverter
+  Restart=always
+  RestartSec=10
+ 
+  [Install]
+  WantedBy=multi-user.target
+  ' > /etc/systemd/system/subconverter.service
+  sed -i 's/^[ ]*//g' /etc/systemd/system/subconverter.service
+  sed -i '1d' /etc/systemd/system/subconverter.service
+  chmod 755 /etc/systemd/system/subconverter.service
+  sleep 2
+  systemctl daemon-reload
+  systemctl start subconverter
+  systemctl enable subconverter
+
+  if [[ $(lsof -i:"25500" | grep -i -c "listen") -ge "1" ]]; then
+    print_ok "subconverter安装成功"
+  else
+    print_error "subconverter安装失败,请再次执行安装命令试试"
+    exit 1
+  fi
+ }
+
+function install_subweb() {
+  ECHOY "正在安装sub-web服务"
+  rm -fr "${clash_path}/sub-web" && git clone https://github.com/CareyWang/sub-web.git "${clash_path}/sub-web"
+  if [[ $? -ne 0 ]];then
+    echo -e "\033[31m sub-web下载失败,请再次执行安装命令试试! \033[0m"
+    exit 1
+  else
+    wget -q https://raw.githubusercontent.com/281677160/agent/main/Subconverter.vue -O "${clash_path}/sub-web/src/views/Subconverter.vue"
+    if [[ $? -ne 0 ]]; then
+      curl -fsSL https://cdn.jsdelivr.net/gh/281677160/agent@main/Subconverter.vue > "${clash_path}/sub-web/src/views/Subconverter.vue"
     fi
-  print_ok "所有卸载程序执行完毕!"
-  exit 0
+    wget -q https://raw.githubusercontent.com/281677160/agent/main/xray/clsah.env -O "${clash_path}/sub-web/.env"
+    if [[ $? -ne 0 ]]; then
+      curl -fsSL https://cdn.jsdelivr.net/gh/281677160/agent@main/xray/clsah.env > "${clash_path}/sub-web/.env"
+    fi
+    cd "${clash_path}/sub-web"
+    sed -i "s?${after_ip}?${suc_ip}?g" "${clash_path}/sub-web/.env"
+    sed -i "s?http://127.0.0.2:25500?https://dl.${current_ip}?g" "${clash_path}/sub-web/.env"
+    sed -i "s?${after_ip}?${suc_ip}?g" "${clash_path}/sub-web/src/views/Subconverter.vue"
+    yarn install
+    yarn build
+    if [[ -d "${clash_path}/sub-web/dist" ]]; then
+      [[ ! -d /www/dist_web ]] && mkdir -p /www/dist_web || rm -rf /www/dist_web/*
+      cp -R ${clash_path}/sub-web/dist/* /www/dist_web/
+    else
+      print_error "生成页面文件失败,请再次执行安装命令试试"
+      exit 1
+    fi
+  fi
+
+  print_ok "sub-web安装完成"
 }
 
-function xiugai_uuid_path() {
-  ECHOG "是否需要重新生成UUID/路径/Tronjian密码?重新生成后,之前所用节点链接将会全部失效."
+function install_myurls() {
+  ECHOY "正在安装短链程序"
+  wget -P "${clash_path}" https://github.com/CareyWang/MyUrls/releases/download/v1.10/linux-amd64.tar.gz -O "${clash_path}/linux-amd64.tar.gz"
+  if [[ $? -ne 0 ]];then
+    echo -e "\033[31m 短链程序下载失败,请再次执行安装命令试试! \033[0m"
+    exit 1
+  fi
+  tar -zxvf ${clash_path}/linux-amd64.tar.gz -C ${clash_path}/myurls
+  if [[ $? -ne 0 ]];then
+    echo -e "\033[31m myurls解压失败! \033[0m"
+    exit 1
+  else
+    echo -e "\033[32m myurls解压成功! \033[0m"
+    sed -i "s?const backend = .*?const backend = \'https://dl.${current_ip}\'?g" "${clash_path}/myurls/public/index.html"
+  fi
+
+  echo "
+  [Unit]
+  Description=A API For Subscription Convert
+  After=network.target
+    
+  [Service]
+  Type=simple
+  ExecStart=/usr/local/etc/clash/myurls/linux-amd64-myurls.service -domain ${current_ip} -port 8002
+  WorkingDirectory=/usr/local/etc/clash/myurls
+  Restart=always
+  RestartSec=10
+ 
+  [Install]
+  WantedBy=multi-user.target
+  " > /etc/systemd/system/myurls.service
+  sed -i 's/^[ ]*//g' /etc/systemd/system/myurls.service
+  sed -i '1d' /etc/systemd/system/myurls.service
+  chmod 755 /etc/systemd/system/myurls.service
+  systemctl daemon-reload
+  systemctl start myurls
+  systemctl enable myurls
+  sleep 2
+  if [[ `systemctl status myurls |grep -c "active (running) "` == '1' ]]; then
+    print_ok "短链程序安装成功"
+  else
+    print_error "短链程序安装失败"
+    exit 1
+  fi
+  
+  print_ok "短链程序安装完成"
+    
+  ECHOY "全部服务安装完毕,请登录 https://www.${current_ip} 进行使用"
+}
+
+function nginx_conf() {
+cat >"/etc/systemd/system/www_nginx.conf" <<-EOF
+server {
+    listen  80; 
+    server_name  www.${current_ip};
+    return 301 https://\$host\$request_uri; 
+}
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name  www.${current_ip};
+    ssl_certificate /usr/local/etc/clash/server.crt;
+    ssl_certificate_key /usr/local/etc/clash/server.key;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-GCM-SHA256:TLS13-AES-128-CCM-8-SHA256:TLS13-AES-128-CCM-SHA256:EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5;
+    ssl_prefer_server_ciphers on;
+    ssl_session_timeout 60m;
+    index index.php index.html index.htm default.php default.htm default.html;
+    root /www/dist_web;
+    add_header Access-Control-Allow-Origin *;
+    
+    error_page 404 /index.html;
+    gzip on; #开启gzip压缩
+    gzip_min_length 1k; #设置对数据启用压缩的最少字节数
+    gzip_buffers 4 16k;
+    gzip_http_version 1.0;
+    gzip_comp_level 6; #设置数据的压缩等级,等级为1-9，压缩比从小到大
+    gzip_types text/plain text/css text/javascript application/json application/javascript application/x-javascript application/xml; #设置需要压缩的数据格式
+    gzip_vary on;
+    
+    location ~* \.(css|js|png|jpg|jpeg|gif|gz|svg|mp4|ogg|ogv|webm|htc|xml|woff)$ {
+        access_log off;
+        add_header Cache-Control "public,max-age=30*24*3600";
+    }
+    
+    location ~ ^/(.user.ini|.htaccess|.git|.svn|.project|LICENSE|README.md)
+    {
+        return 404;
+    }
+    access_log off;
+}
+EOF
+
+cat >"/etc/systemd/system/suc_nginx.conf" <<-EOF
+server {
+    listen  80; 
+    server_name  suc.${current_ip};
+    return 301 https://\$host\$request_uri;  
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name  suc.${current_ip};
+    ssl_certificate /usr/local/etc/clash/server.crt;
+    ssl_certificate_key /usr/local/etc/clash/server.key;
+    ssl_session_timeout 1d;
+    ssl_session_cache shared:MozSSL:10m;
+    ssl_session_tickets off;
+    ssl_protocols         TLSv1.2 TLSv1.3;
+    ssl_ciphers           ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
+    ssl_prefer_server_ciphers off;
+   
+    location / {
+        proxy_pass http://127.0.0.1:25500;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header REMOTE-HOST \$remote_addr;
+        add_header Access-Control-Allow-Origin *;
+    }
+   
+    error_page 404 /index.html;
+    gzip on; #开启gzip压缩
+    gzip_min_length 1k; #设置对数据启用压缩的最少字节数
+    gzip_buffers 4 16k;
+    gzip_http_version 1.0;
+    gzip_comp_level 6; #设置数据的压缩等级,等级为1-9，压缩比从小到大
+    gzip_types text/plain text/css text/javascript application/json application/javascript application/x-javascript application/xml; #设置需要压缩的数据格式
+    gzip_vary on;
+    
+    location ~* \.(css|js|png|jpg|jpeg|gif|gz|svg|mp4|ogg|ogv|webm|htc|xml|woff)$ {
+        access_log off;
+        add_header Cache-Control "public,max-age=30*24*3600";
+    }
+    
+    location ~ ^/(.user.ini|.htaccess|.git|.svn|.project|LICENSE|README.md)
+    {
+        return 404;
+    }
+    access_log off;
+}
+EOF
+
+cat >"/etc/systemd/system/dl_nginx.conf" <<-EOF
+server {
+    listen  80; 
+    server_name  dl.${current_ip};
+    return 301 https://\$host\$request_uri; 
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name  dl.${current_ip};
+    ssl_certificate /usr/local/etc/clash/server.crt;
+    ssl_certificate_key /usr/local/etc/clash/server.key;
+    ssl_session_timeout 1d;
+    ssl_session_cache shared:MozSSL:10m;
+    ssl_session_tickets off;
+    ssl_protocols         TLSv1.2 TLSv1.3;
+    ssl_ciphers           ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
+    ssl_prefer_server_ciphers off;
+    index index.php index.html index.htm default.php default.htm default.html;
+    root /usr/local/etc/clash/myurls/public;
+    add_header Access-Control-Allow-Origin *;
+   
+    location / {
+        proxy_pass http://127.0.0.1:8002;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header REMOTE-HOST \$remote_addr;
+        add_header Access-Control-Allow-Origin *;
+    }
+   
+    error_page 404 /index.html;
+    gzip on; #开启gzip压缩
+    gzip_min_length 1k; #设置对数据启用压缩的最少字节数
+    gzip_buffers 4 16k;
+    gzip_http_version 1.0;
+    gzip_comp_level 6; #设置数据的压缩等级,等级为1-9，压缩比从小到大
+    gzip_types text/plain text/css text/javascript application/json application/javascript application/x-javascript application/xml; #设置需要压缩的数据格式
+    gzip_vary on;
+    
+    location ~* \.(css|js|png|jpg|jpeg|gif|gz|svg|mp4|ogg|ogv|webm|htc|xml|woff)$ {
+        access_log off;
+        add_header Cache-Control "public,max-age=30*24*3600";
+    }
+    
+    location ~ ^/(.user.ini|.htaccess|.git|.svn|.project|LICENSE|README.md)
+    {
+        return 404;
+    }
+    access_log off;
+}
+EOF
+}
+
+
+menu2() {
+  ECHOG "subconverter已存在，是否要御载subconverter[Y/n]?"
   export DUuuid="请输入[Y/y]确认或[N/n]退出"
   while :; do
-  read -p " ${DUuuid}：" IDPATH
-  case $IDPATH in
+  read -p " ${DUuuid}：" IDPATg
+  case $IDPATg in
   [Yy])
-    ECHOY "开始重置UUID/路径/Tronjian密码"
+    ECHOY "开始御载subconverter"
+    systemctl stop subconverter
+    systemctl disable subconverter
+    systemctl daemon-reload
+    rm -rf /root/subconverter
+    rm -rf /root/sub-web
+    rm -rf /www/dist_web
+    rm -rf /etc/systemd/system/subconverter.service
+    rm -rf /etc/nginx/sites-available/clash_nginx.conf
+    print_ok "subconverter御载完成"
   break
   ;;
   [Nn])
@@ -706,98 +591,26 @@ function xiugai_uuid_path() {
   ;;
   esac
   done
-  source $domain_tmp_dir/variable.sh
-  uuid_path
-  configure_gengxinxinxi
-  xrayliugen_conf
-  configure_pzcon
 }
 
-function install_xray_ws() {
-  is_root
-  kaishi_install
-  uuid_path
-  system_check
-  dependency_install
-  basic_optimization
-  domain_check
-  port_exist_check 80
-  xray_install
-  configure_xray_ws
-  nginx_install
-  configure_nginx
-  ssl_judge_and_install
-  configure_cloudreve
-  restart_all
-  configure_pzcon
-  cloudreve_xinxi
-}
 menu() {
-  clear
-  echo
-  echo
-  running_state
-  echo -e "${XRAY_ZT}"
-  echo -e "${NGINX_ZT}"
-  echo -e "${CLOUDREVE_ZT}"
-  echo
-  ECHOY "1、安装 Xray、nginx和cloudreve"
-  ECHOY "2、打印 Xray 节点信息"
-  ECHOY "3、安装 BBR、锐速加速"
-  ECHOY "4、更新 Xray"
-  ECHOY "5、重新生成 UUID/路径/Tronjian密码"
-  ECHOY "6、重启 Xray、nginx和cloudreve"
-  ECHOY "7、删除 阿里云盾或腾讯云盾"
-  ECHOY "8、卸载 Xray、nginx和cloudreve"
-  ECHOY "9、退出"
-  echo
-  echo
-  XUANZHE="请输入数字"
-  while :; do
-  read -p " ${XUANZHE}：" menu_num
-  case $menu_num in
-  1)
-    install_xray_ws
-    break
-    ;;
-  2)
-    source $domain_tmp_dir/pzcon
-    break
-    ;;
-  3)
-    bash -c "$(curl -fsSL https://raw.githubusercontent.com/ylx2016/Linux-NetSpeed/master/tcp.sh)"
-    break
-    ;;
-  4)
-    systemctl stop xray
-    bash -c "$(curl -fsSL https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" - install
-    restart_all
-    break
-    ;;
-  5)
-    xiugai_uuid_path
-    break
-    ;;
-  6)
-    restart_all
-    break
-    ;;
-  7)
-    bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray/uninstall_firewall.sh)"
-    break
-    ;;
-  8)
-    xray_uninstall
-    break
-    ;;
-  9)
-    exit 0
-    break
-    ;;
-    *)
-    XUANZHE="请输入正确的选择"
-    ;;
-  esac
-  done
+  system_check
+  nginx_install
+  command_Version
+  port_exist_check
+  install_subconverter
+  update_rc
+  install_subweb
 }
-menu "$@"
+
+if [[ -d /root/subconverter ]]; then
+  systemctl start subconverter > /dev/null 2>&1
+  sleep 2
+  if [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then
+    menu2 "$@"
+  else
+    menu "$@"
+  fi
+else
+  menu "$@"
+fi

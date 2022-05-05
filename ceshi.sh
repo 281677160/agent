@@ -357,9 +357,7 @@ function install_subconverter() {
     sed -i "s?serve_file_root =.*?serve_file_root = \"/www/dist_web\"?g" "${clash_path}/subconverter/pref.example.ini"
   fi
   rm -rf "/root/subconverter_${ARCH_PRINT}.tar.gz"
- }
 
-function update_rc() {
   echo '
   [Unit]
   Description=A API For Subscription Convert

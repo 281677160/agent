@@ -355,7 +355,8 @@ function install_subconverter() {
     echo -e "\033[31m subconverter下载失败! \033[0m"
     exit 1
   fi
-  tar -zxvf ${clash_path}/subconverter_${ARCH_PRINT}.tar.gz -C ${clash_path}/subconverter
+  rm -rf "${clash_path}/subconverter"
+  tar -zxvf "${clash_path}/subconverter_${ARCH_PRINT}.tar.gz" -C "${clash_path}"
   if [[ $? -ne 0 ]];then
     echo -e "\033[31m subconverter解压失败! \033[0m"
     exit 1
@@ -370,7 +371,7 @@ function install_subconverter() {
     sed -i "s?listen =.*?listen = \"127.0.0.1\"?g" "${clash_path}/subconverter/pref.example.ini"
     sed -i "s?serve_file_root =.*?serve_file_root = \"/www/dist_web\"?g" "${clash_path}/subconverter/pref.example.ini"
   fi
-  rm -rf "/root/subconverter_${ARCH_PRINT}.tar.gz"
+  rm -rf "${clash_path}/subconverter_${ARCH_PRINT}.tar.gz"
 
   echo '
   [Unit]
@@ -443,7 +444,8 @@ function install_myurls() {
     echo -e "\033[31m 短链程序下载失败,请再次执行安装命令试试! \033[0m"
     exit 1
   fi
-  tar -zxvf ${clash_path}/linux-amd64.tar.gz -C ${clash_path}/myurls
+  rm -rf "${clash_path}/myurls"
+  tar -zxvf "${clash_path}/linux-amd64.tar.gz" -C "${clash_path}"
   if [[ $? -ne 0 ]];then
     echo -e "\033[31m myurls解压失败! \033[0m"
     exit 1

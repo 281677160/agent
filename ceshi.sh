@@ -253,6 +253,18 @@ function port_exist_check() {
     print_ok "25500端口占用进程清理完成"
     sleep 1
   fi
+  if [[ 0 -eq $(lsof -i:"8002" | grep -i -c "listen") ]]; then
+    print_ok "8002 端口未被占用"
+    sleep 1
+  else
+    ECHOR "检测到 8002 端口被占用，以下为 25500 端口占用信息"
+    lsof -i:"8002"
+    ECHOR "5s 后将尝试自动清理占用进程"
+    sleep 5
+    lsof -i:"8002" | awk '{print $2}' | grep -v "PID" | xargs kill -9
+    print_ok "8002端口占用进程清理完成"
+    sleep 1
+  fi
   if [[ 0 -eq $(lsof -i:"$1" | grep -i -c "listen") ]]; then
     print_ok "$1 端口未被占用"
     sleep 1

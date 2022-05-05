@@ -84,6 +84,7 @@ function system_check() {
     export current_ip="${CUrrent_ip}"
     export after_ip="http://127.0.0.1:25500"
     export suc_ip="https://suc.${current_ip}"
+    export domain="${CUrrent_ip}"
     ECHOG "您当前服务器IP/域名为：${CUrrent_ip}"
   break
   ;;
@@ -265,15 +266,15 @@ function port_exist_check() {
     print_ok "8002端口占用进程清理完成"
     sleep 1
   fi
-  if [[ 0 -eq $(lsof -i:"$1" | grep -i -c "listen") ]]; then
-    print_ok "$1 端口未被占用"
+  if [[ 0 -eq $(lsof -i:"80" | grep -i -c "listen") ]]; then
+    print_ok "80 端口未被占用"
     sleep 1
   else
-    print_error "检测到 $1 端口被占用，以下为 $1 端口占用信息"
-    lsof -i:"$1"
+    print_error "检测到 80 端口被占用，以下为 80 端口占用信息"
+    lsof -i:"80"
     print_error "5s 后将尝试自动 kill 占用进程"
     sleep 5
-    lsof -i:"$1" | awk '{print $2}' | grep -v "PID" | xargs kill -9
+    lsof -i:"80" | awk '{print $2}' | grep -v "PID" | xargs kill -9
     print_ok "kill 完成"
     sleep 1
   fi

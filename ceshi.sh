@@ -480,13 +480,12 @@ function install_myurls() {
   systemctl enable myurls
   sleep 2
   if [[ `systemctl status myurls |grep -c "active (running) "` == '1' ]]; then
-    print_ok "短链程序安装成功"
+    print_ok "短链程序安装完成"
+    rm -rf "${clash_path}/linux-amd64.tar.gz"
   else
     print_error "短链程序安装失败"
     exit 1
   fi
-  
-  print_ok "短链程序安装完成"
 }
 
 function nginx_conf() {

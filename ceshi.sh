@@ -490,7 +490,7 @@ function install_myurls() {
 
 function nginx_conf() {
 ECHOY "正在设置所有应用配置文件"
-cat >"/etc/systemd/system/www_nginx.conf" <<-EOF
+cat >"/etc/nginx/conf.d/www_nginx.conf" <<-EOF
 server {
     listen  80; 
     server_name  www.${current_ip};
@@ -532,7 +532,7 @@ server {
 }
 EOF
 
-cat >"/etc/systemd/system/suc_nginx.conf" <<-EOF
+cat >"/etc/nginx/conf.d/suc_nginx.conf" <<-EOF
 server {
     listen  80; 
     server_name  suc.${current_ip};
@@ -582,7 +582,7 @@ server {
 }
 EOF
 
-cat >"/etc/systemd/system/dl_nginx.conf" <<-EOF
+cat >"/etc/nginx/conf.d/dl_nginx.conf" <<-EOF
 server {
     listen  80; 
     server_name  dl.${current_ip};

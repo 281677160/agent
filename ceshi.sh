@@ -257,7 +257,7 @@ function port_exist_check() {
     print_ok "8002 端口未被占用"
     sleep 1
   else
-    ECHOR "检测到 8002 端口被占用，以下为 25500 端口占用信息"
+    ECHOR "检测到 8002 端口被占用，以下为 8002 端口占用信息"
     lsof -i:"8002"
     ECHOR "5s 后将尝试自动清理占用进程"
     sleep 5

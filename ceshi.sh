@@ -213,6 +213,9 @@ function nodejs_install() {
 }
 
 function nginx_install() {
+  if [[ $(grep "nogroup" /etc/group) ]]; then
+    cert_group="nogroup"
+  fi
   if ! command -v nginx >/dev/null 2>&1; then
     ${INS} nginx
   else

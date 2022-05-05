@@ -50,6 +50,10 @@ judge() {
 }
 
 export clash_path="/usr/local/etc/clash"
+export cert_group="nobody"
+export random_num=$((RANDOM % 12 + 4))
+export HOME="/root"
+export domainjilu="$HOME/.acme.sh/domainjilu"
 
 if [[ ! "$USER" == "root" ]]; then
   print_error "警告：请使用root用户操作!~~"
@@ -291,10 +295,8 @@ function ssl_judge_and_install() {
     sleep 2
     .acme.sh/acme.sh --upgrade --auto-upgrade
     echo "domain=${domain}" > "${domainjilu}"
-    echo -e "\nPORT=${PORT}" >> "${domainjilu}"
     judge "域名记录"
   else
-    rm -rf /ssl/* > /dev/null 2>&1
     rm -fr "$HOME"/.acme.sh > /dev/null 2>&1
     acme
   fi
@@ -317,7 +319,6 @@ function acme() {
     systemctl start nginx
     acme.sh  --upgrade  --auto-upgrade
     echo "domain=${domain}" > "${domainjilu}"
-    echo -e "\nPORT=${PORT}" >> "${domainjilu}"
     judge "域名记录"
   else
     systemctl start nginx

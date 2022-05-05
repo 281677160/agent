@@ -684,14 +684,6 @@ menu() {
   nginx_conf
 }
 
-if [[ -d "${clash_path}/subconverter" ]]; then
-  systemctl start subconverter > /dev/null 2>&1
-  sleep 2
-  if [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then
-    menu2 "$@"
-  else
-    menu "$@"
-  fi
-else
-  menu "$@"
-fi
+
+menu "$@"
+

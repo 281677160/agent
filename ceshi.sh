@@ -253,6 +253,65 @@ function port_exist_check() {
     print_ok "25500端口占用进程清理完成"
     sleep 1
   fi
+  if [[ 0 -eq $(lsof -i:"$1" | grep -i -c "listen") ]]; then
+    print_ok "$1 端口未被占用"
+    sleep 1
+  else
+    print_error "检测到 $1 端口被占用，以下为 $1 端口占用信息"
+    lsof -i:"$1"
+    print_error "5s 后将尝试自动 kill 占用进程"
+    sleep 5
+    lsof -i:"$1" | awk '{print $2}' | grep -v "PID" | xargs kill -9
+    print_ok "kill 完成"
+    sleep 1
+  fi
+}
+
+function ssl_judge_and_install() {
+  if [[ -f "$HOME/.acme.sh/${domain}_ecc/${domain}.key" && -f "$HOME/.acme.sh/${domain}_ecc/${domain}.cer" && -f "$HOME/.acme.sh/acme.sh" ]]; then
+    print_ok "[${domain}]证书已存在，重新启用证书"
+    [[ ! -d /ssl ]] && mkdir -p /ssl || rm -fr /ssl/*
+    [[ ! -f "/usr/bin/acme.sh" ]] && ln -s  /root/.acme.sh/acme.sh /usr/bin/acme.sh
+    acme.sh --installcert -d "${domain}" --ecc  --key-file   /ssl/xray.key   --fullchain-file /ssl/xray.crt
+    judge "证书启用"
+    chown -R nobody.$cert_group /ssl/*
+    sleep 2
+    .acme.sh/acme.sh --upgrade --auto-upgrade
+    echo "domain=${domain}" > "${domainjilu}"
+    echo -e "\nPORT=${PORT}" >> "${domainjilu}"
+    judge "域名记录"
+  else
+    rm -rf /ssl/* > /dev/null 2>&1
+    rm -fr "$HOME"/.acme.sh > /dev/null 2>&1
+    acme
+  fi
+}
+
+function acme() {
+  curl -L https://get.acme.sh | sh
+  judge "安装acme.sh脚本"
+  [[ ! -f "/usr/bin/acme.sh" ]] && ln -s /root/.acme.sh/acme.sh /usr/bin/acme.sh
+  acme.sh --set-default-ca --server letsencrypt
+  systemctl stop nginx
+  sleep 2
+  acme.sh  --issue -d "${domain}"  --standalone -k ec-256
+  if [[ $? -eq 0 ]]; then
+    print_ok "SSL 证书生成成功"
+    [[ ! -d /ssl ]] && mkdir -p /ssl || rm -fr /ssl/*  
+    acme.sh --installcert -d "${domain}" --ecc  --key-file   /ssl/xray.key   --fullchain-file /ssl/xray.crt
+    judge "SSL 证书配置成功"
+    chown -R nobody.$cert_group /ssl/*
+    systemctl start nginx
+    acme.sh  --upgrade  --auto-upgrade
+    echo "domain=${domain}" > "${domainjilu}"
+    echo -e "\nPORT=${PORT}" >> "${domainjilu}"
+    judge "域名记录"
+  else
+    systemctl start nginx
+    print_error "SSL 证书生成失败"
+    rm -rf "$HOME/.acme.sh/${domain}_ecc"
+    exit 1
+  fi
 }
 
 function install_subconverter() {
@@ -411,11 +470,10 @@ function install_myurls() {
   fi
   
   print_ok "短链程序安装完成"
-    
-  ECHOY "全部服务安装完毕,请登录 https://www.${current_ip} 进行使用"
 }
 
 function nginx_conf() {
+ECHOY "正在设置所有应用配置文件"
 cat >"/etc/systemd/system/www_nginx.conf" <<-EOF
 server {
     listen  80; 
@@ -560,6 +618,15 @@ server {
     access_log off;
 }
 EOF
+
+  systemctl restart nginx
+  if [[ $? -ne 0 ]];then
+    print_error "配置文件启动失败"
+    exit 1
+  else
+    print_ok "配置文件启动成功"
+    ECHOY "全部服务安装完毕,请登录 https://www.${current_ip} 进行使用"
+  fi
 }
 
 
@@ -598,12 +665,14 @@ menu() {
   nginx_install
   command_Version
   port_exist_check
+  ssl_judge_and_install
   install_subconverter
-  update_rc
   install_subweb
+  install_myurls
+  nginx_conf
 }
 
-if [[ -d /root/subconverter ]]; then
+if [[ -d "${clash_path}/subconverter" ]]; then
   systemctl start subconverter > /dev/null 2>&1
   sleep 2
   if [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then

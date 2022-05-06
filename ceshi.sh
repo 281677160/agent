@@ -90,9 +90,10 @@ function system_check() {
   case $CUrrenty in
   Y)
     export CUrrent_ip="$(echo "${CUrrent_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/\///g' |sed 's/ //g')"
-    export current_ip="${CUrrent_ip}"
     export after_ip="http://127.0.0.1:25500"
     export suc_ip="https://suc.${current_ip}"
+    export www_ip="www.${current_ip}"
+    export myurls_ip="dl.${current_ip}"
     export domain="${CUrrent_ip}"
   break
   ;;
@@ -390,16 +391,16 @@ function install_subconverter() {
   rm -rf "${clash_path}/subconverter_${ARCH_PRINT}.tar.gz" >/dev/null 2>&1
   wget -P "${clash_path}" https://github.com/tindy2013/subconverter/releases/download/${latest_vers}/subconverter_${ARCH_PRINT}.tar.gz -O "${clash_path}/subconverter_${ARCH_PRINT}.tar.gz"
   if [[ $? -ne 0 ]];then
-    echo -e "\033[31m subconverter下载失败! \033[0m"
+    print_error "subconverter源码下载失败"
     exit 1
   fi
   rm -rf "${clash_path}/subconverter"
   tar -zxvf "${clash_path}/subconverter_${ARCH_PRINT}.tar.gz" -C "${clash_path}"
   if [[ $? -ne 0 ]];then
-    echo -e "\033[31m subconverter解压失败! \033[0m"
+    print_error "subconverter解压失败"
     exit 1
   else
-    echo -e "\033[32m subconverter解压成功! \033[0m"
+    print_ok "subconverter解压完成"
     export HDPASS="$(cat /proc/sys/kernel/random/uuid)"
     sed -i "s?api_access_token=.*?api_access_token=${HDPASS}?g" "${clash_path}/subconverter/pref.example.ini"
     sed -i "s?managed_config_prefix=.*?managed_config_prefix=${suc_ip}?g" "${clash_path}/subconverter/pref.example.ini"
@@ -459,7 +460,7 @@ function install_subweb() {
     fi
     cd "${clash_path}/sub-web"
     sed -i "s?${after_ip}?${suc_ip}?g" "${clash_path}/sub-web/.env"
-    sed -i "s?http://127.0.0.2:25500?https://dl.${current_ip}?g" "${clash_path}/sub-web/.env"
+    sed -i "s?http://127.0.0.2:25500?https://${myurls_ip}?g" "${clash_path}/sub-web/.env"
     sed -i "s?${after_ip}?${suc_ip}?g" "${clash_path}/sub-web/src/views/Subconverter.vue"
     yarn install
     yarn build
@@ -491,7 +492,7 @@ function install_myurls() {
     exit 1
   else
     print_ok "myurls解压完成"
-    sed -i "s?const backend = .*?const backend = \'https://dl.${current_ip}\'?g" "${clash_path}/myurls/public/index.html"
+    sed -i "s?const backend = .*?const backend = \'https://${myurls_ip}\'?g" "${clash_path}/myurls/public/index.html"
   fi
 
   echo "
@@ -501,7 +502,7 @@ function install_myurls() {
     
   [Service]
   Type=simple
-  ExecStart=${clash_path}/myurls/linux-amd64-myurls.service -domain dl.${current_ip} -port 8002
+  ExecStart=${clash_path}/myurls/linux-amd64-myurls.service -domain ${myurls_ip} -port 8002
   WorkingDirectory=${clash_path}/myurls
   Restart=always
   RestartSec=10
@@ -530,13 +531,13 @@ ECHOY "正在设置所有应用配置文件"
 cat >"/etc/nginx/conf.d/www_nginx.conf" <<-EOF
 server {
     listen  80; 
-    server_name  www.${current_ip};
+    server_name  ${www_ip};
     return 301 https://\$host\$request_uri; 
 }
 server {
     listen 443 ssl;
     listen [::]:443 ssl;
-    server_name  www.${current_ip};
+    server_name  ${www_ip};
     ssl_certificate ${clash_path}/server.crt;
     ssl_certificate_key ${clash_path}/server.key;
     ssl_protocols TLSv1.2 TLSv1.3;
@@ -622,14 +623,14 @@ EOF
 cat >"/etc/nginx/conf.d/dl_nginx.conf" <<-EOF
 server {
     listen  80; 
-    server_name  dl.${current_ip};
+    server_name  ${myurls_ip};
     return 301 https://\$host\$request_uri; 
 }
 
 server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
-    server_name  dl.${current_ip};
+    server_name  ${myurls_ip};
     ssl_certificate ${clash_path}/server.crt;
     ssl_certificate_key ${clash_path}/server.key;
     ssl_session_timeout 1d;
@@ -640,7 +641,6 @@ server {
     ssl_prefer_server_ciphers off;
     index index.php index.html index.htm default.php default.htm default.html;
     root /usr/local/etc/clash/myurls/public;
-    add_header Access-Control-Allow-Origin *;
    
     location / {
         proxy_pass http://127.0.0.1:8002;

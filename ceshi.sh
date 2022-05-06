@@ -189,8 +189,9 @@ function system_check() {
     curl -sL https://rpm.nodesource.com/setup_12.x | bash -
     sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
     setenforce 0
+    sudo yum install epel-release
     yum update -y
-    yum install -y nodejs
+    yum install -y nodejs redis
     npm install -g yarn
     export INS="yum install -y"
     export PUBKEY="centos"
@@ -215,7 +216,7 @@ function system_check() {
 
 function nodejs_install() {
     apt update
-    ${INS} curl wget sudo git lsof tar systemd lsb-release gnupg2
+    ${INS} curl wget sudo git lsof tar systemd lsb-release redis-server gnupg2
     ${UNINS} --purge npm
     ${UNINS} --purge nodejs
     ${UNINS} --purge nodejs-legacy
@@ -265,6 +266,12 @@ function command_Version() {
   else
     nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
     print_ok "Nginx版本号为：${NGINX_VERSION}"
+  fi
+  if [[ `systemctl status redis |grep -c "active (running) "` == '1' ]]; then
+    print_ok "redis安装成功"
+  else
+    print_error "redis安装失败,有可能是您的机器禁止IPV6造成的,请百度安装redis自行安装试试"
+    exit 1
   fi
 }
 

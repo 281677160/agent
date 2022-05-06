@@ -470,16 +470,18 @@ function install_myurls() {
   ECHOY "正在安装短链程序"
   wget -P "${clash_path}" https://github.com/CareyWang/MyUrls/releases/download/v1.10/linux-amd64.tar.gz -O "${clash_path}/linux-amd64.tar.gz"
   if [[ $? -ne 0 ]];then
-    echo -e "\033[31m 短链程序下载失败,请再次执行安装命令试试! \033[0m"
+    print_error "myurls短链程序下载失败,请再次执行安装命令试试!"
     exit 1
+  else
+    print_ok "myurls短链程序下载完成"
   fi
   rm -rf "${clash_path}/myurls"
   tar -zxvf "${clash_path}/linux-amd64.tar.gz" -C "${clash_path}"
   if [[ $? -ne 0 ]];then
-    echo -e "\033[31m myurls解压失败! \033[0m"
+    print_error "myurls解压失败"
     exit 1
   else
-    echo -e "\033[32m myurls解压成功! \033[0m"
+    print_ok "myurls解压完成"
     sed -i "s?const backend = .*?const backend = \'https://dl.${current_ip}\'?g" "${clash_path}/myurls/public/index.html"
   fi
 

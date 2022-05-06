@@ -182,11 +182,44 @@ function system_check() {
   sleep 2
   echo
   
-
   ECHOY "正在安装各种必须依赖"
+  # 关闭各类防火墙
+  systemctl stop firewalld
+  systemctl disable firewalld
+  systemctl mask firewalld
+  systemctl stop nftables
+  systemctl disable nftables
+  systemctl stop ufw
+  systemctl disable ufw
+  if [[ `systemctl status iptables |grep -c "enabled"` == '1' ]]; then
+    iptables -P INPUT ACCEPT
+    iptables -P FORWARD ACCEPT
+    iptables -P OUTPUT ACCEPT
+    iptables -F
+    echo '
+    #! /bin/sh
+    ### BEGIN INIT INFO
+    # Provides:        acceptoff
+    # Required-Start:  $local_fs $remote_fs
+    # Required-Stop:   $local_fs $remote_fs
+    # Default-Start:   2 3 4 5
+    # Default-Stop:
+    # Short-Description: automatic crash report generation
+    ### END INIT INFO
+    iptables -P INPUT ACCEPT
+    iptables -P FORWARD ACCEPT
+    iptables -P OUTPUT ACCEPT
+    iptables -F
+    ' >/etc/init.d/acceptoff
+    sed -i 's/^[ ]*//g' /etc/init.d/acceptoff
+    sed -i '/^$/d' /etc/init.d/acceptoff
+    chmod 755 /etc/init.d/acceptoff
+    update-rc.d acceptoff defaults 90
+  fi
+
   echo
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
-    yum install -y wget curl sudo git lsof tar systemd
+    yum install -y wget curl sudo git lsof tar systemd dbus
     wget -N -P /etc/yum.repos.d/ https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
     curl -sL https://rpm.nodesource.com/setup_12.x | bash -
     sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
@@ -218,7 +251,7 @@ function system_check() {
 
 function nodejs_install() {
     apt update
-    ${INS} curl wget sudo git lsof tar systemd lsb-release redis-server gnupg2
+    ${INS} curl wget sudo git lsof tar systemd lsb-release redis-server dbus gnupg2
     ${UNINS} --purge npm
     ${UNINS} --purge nodejs
     ${UNINS} --purge nodejs-legacy

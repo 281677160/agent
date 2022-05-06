@@ -89,7 +89,6 @@ function system_check() {
     export after_ip="http://127.0.0.1:25500"
     export suc_ip="https://suc.${current_ip}"
     export domain="${CUrrent_ip}"
-    ECHOG "您当前服务器IP/域名为：${CUrrent_ip}"
   break
   ;;
   *)
@@ -109,11 +108,10 @@ function system_check() {
   case $CFKeyIPty in
   Y)
     export CF_Key="${CF_Key}"
-    ECHOG "您的CF_Key为：${CF_Key}"
   break
   ;;
   *)
-    export CFKeyIP="敬告,请输入正确的域名或IP"
+    export CFKeyIP="敬告,Global API Key不能为空"
   ;;
   esac
   done
@@ -129,15 +127,13 @@ function system_check() {
   case $EmailIPty in
   Y)
     export CF_Email="${CF_Email}"
-    ECHOG "CF注册邮箱为：${CF_Email}"
   break
   ;;
   *)
-    export EmailIP="敬告,请输入正确的域名或IP"
+    export EmailIP="敬告,CF注册邮箱不能为空"
   ;;
   esac
   done
-  
   
   echo
   ECHOG "您的域名为：${CUrrent_ip}"

@@ -183,6 +183,37 @@ function system_check() {
   echo
   
   ECHOY "正在安装各种必须依赖"
+  echo
+  if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
+    yum install -y wget curl sudo git lsof tar systemd dbus
+    wget -N -P /etc/yum.repos.d/ https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
+    curl -sL https://rpm.nodesource.com/setup_12.x | bash -
+    sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
+    setenforce 0
+    sudo yum install epel-release
+    yum update -y
+    yum install -y nodejs redis
+    npm install -g yarn
+    export INS="yum install -y"
+    export PUBKEY="centos"
+    export Subcon="/etc/rc.d/init.d/subconverter"
+  elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
+    export INS="apt-get install -y"
+    export UNINS="apt-get remove -y"
+    export PUBKEY="ubuntu"
+    export Subcon="/etc/init.d/subconverter"
+    nodejs_install
+  elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
+    export INS="apt install -y"
+    export UNINS="apt remove -y"
+    export PUBKEY="debian"
+    export Subcon="/etc/init.d/subconverter"
+    nodejs_install
+  else
+    echo -e "\033[31m 不支持该系统 \033[0m"
+    exit 1
+  fi
+  
   # 关闭各类防火墙
   systemctl stop firewalld
   systemctl disable firewalld
@@ -215,37 +246,6 @@ function system_check() {
     sed -i '/^$/d' /etc/init.d/acceptoff
     chmod 755 /etc/init.d/acceptoff
     update-rc.d acceptoff defaults 90
-  fi
-
-  echo
-  if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
-    yum install -y wget curl sudo git lsof tar systemd dbus
-    wget -N -P /etc/yum.repos.d/ https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
-    curl -sL https://rpm.nodesource.com/setup_12.x | bash -
-    sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
-    setenforce 0
-    sudo yum install epel-release
-    yum update -y
-    yum install -y nodejs redis
-    npm install -g yarn
-    export INS="yum install -y"
-    export PUBKEY="centos"
-    export Subcon="/etc/rc.d/init.d/subconverter"
-  elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
-    export INS="apt-get install -y"
-    export UNINS="apt-get remove -y"
-    export PUBKEY="ubuntu"
-    export Subcon="/etc/init.d/subconverter"
-    nodejs_install
-  elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
-    export INS="apt install -y"
-    export UNINS="apt remove -y"
-    export PUBKEY="debian"
-    export Subcon="/etc/init.d/subconverter"
-    nodejs_install
-  else
-    echo -e "\033[31m 不支持该系统 \033[0m"
-    exit 1
   fi
 }
 

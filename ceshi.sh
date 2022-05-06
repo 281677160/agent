@@ -454,6 +454,7 @@ function install_subweb() {
     rm -fr "${clash_path}/subweb" && git clone https://github.com/281677160/agent "${clash_path}/subweb"
     judge "sub-web补丁下载"
     cp -R ${clash_path}/subweb/subweb/* "${clash_path}/sub-web/"
+    mv -f "${clash_path}/subweb/subweb/.env" "${clash_path}/sub-web/.env"
     rm -fr "${clash_path}/subweb"
     cd "${clash_path}/sub-web"
     sed -i "s?${after_ip}?${http_suc_ip}?g" "${clash_path}/sub-web/.env"

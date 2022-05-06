@@ -72,7 +72,7 @@ function system_check() {
   clear
   echo
   echo
-  [[ ! -d "${clash_path}" ]] && mkdir -p "${clash_path}" || rm -rf "${clash_path}/*"
+  [[ ! -d "${clash_path}" ]] && mkdir -p "${clash_path}"
   CF_domain="0"
   if [[ -f "${domainjilu}" ]]; then
     PROFILE="$(grep 'domain=' ${domainjilu} | cut -d "=" -f2)"
@@ -448,21 +448,18 @@ function install_subweb() {
   ECHOY "正在安装sub-web服务"
   rm -fr "${clash_path}/sub-web" && git clone https://github.com/CareyWang/sub-web.git "${clash_path}/sub-web"
   if [[ $? -ne 0 ]];then
-    echo -e "\033[31m sub-web下载失败,请再次执行安装命令试试! \033[0m"
+    print_error "sub-web下载失败,请再次执行安装命令试试"
     exit 1
   else
-    wget -q https://raw.githubusercontent.com/281677160/agent/main/Subconverter.vue -O "${clash_path}/sub-web/src/views/Subconverter.vue"
-    if [[ $? -ne 0 ]]; then
-      curl -fsSL https://cdn.jsdelivr.net/gh/281677160/agent@main/Subconverter.vue > "${clash_path}/sub-web/src/views/Subconverter.vue"
-    fi
-    wget -q https://raw.githubusercontent.com/281677160/agent/main/xray/clsah.env -O "${clash_path}/sub-web/.env"
-    if [[ $? -ne 0 ]]; then
-      curl -fsSL https://cdn.jsdelivr.net/gh/281677160/agent@main/xray/clsah.env > "${clash_path}/sub-web/.env"
-    fi
+    rm -fr "${clash_path}/subweb" && svn co https://github.com/281677160/agent/trunk/subweb "${clash_path}/subweb"
+    judge "sub-web补丁下载"
+    cp -R ${clash_path}/subweb/* "${clash_path}/sub-web/"
+    rm -fr "${clash_path}/subweb"
     cd "${clash_path}/sub-web"
     sed -i "s?${after_ip}?${http_suc_ip}?g" "${clash_path}/sub-web/.env"
     sed -i "s?http://127.0.0.2:25500?https://${myurls_ip}?g" "${clash_path}/sub-web/.env"
     sed -i "s?${after_ip}?${http_suc_ip}?g" "${clash_path}/sub-web/src/views/Subconverter.vue"
+    sed -i "s?http://127.0.0.2:25500?https://${myurls_ip}?g" "${clash_path}/sub-web/src/views/Subconverter.vue"
     yarn install
     yarn build
     if [[ -d "${clash_path}/sub-web/dist" ]]; then

@@ -278,42 +278,9 @@ function command_Version() {
 }
 
 function port_exist_check() {
-  if [[ 0 -eq $(lsof -i:"25500" | grep -i -c "listen") ]]; then
-    print_ok "25500 端口未被占用"
-    sleep 1
-  else
-    ECHOR "检测到 25500 端口被占用，以下为 25500 端口占用信息"
-    lsof -i:"25500"
-    ECHOR "5s 后将尝试自动清理占用进程"
-    sleep 5
-    lsof -i:"25500" | awk '{print $2}' | grep -v "PID" | xargs kill -9
-    print_ok "25500端口占用进程清理完成"
-    sleep 1
-  fi
-  if [[ 0 -eq $(lsof -i:"8002" | grep -i -c "listen") ]]; then
-    print_ok "8002 端口未被占用"
-    sleep 1
-  else
-    ECHOR "检测到 8002 端口被占用，以下为 8002 端口占用信息"
-    lsof -i:"8002"
-    ECHOR "5s 后将尝试自动清理占用进程"
-    sleep 5
-    lsof -i:"8002" | awk '{print $2}' | grep -v "PID" | xargs kill -9
-    print_ok "8002端口占用进程清理完成"
-    sleep 1
-  fi
-  if [[ 0 -eq $(lsof -i:"80" | grep -i -c "listen") ]]; then
-    print_ok "80 端口未被占用"
-    sleep 1
-  else
-    print_error "检测到 80 端口被占用，以下为 80 端口占用信息"
-    lsof -i:"80"
-    print_error "5s 后将尝试自动 kill 占用进程"
-    sleep 5
-    lsof -i:"80" | awk '{print $2}' | grep -v "PID" | xargs kill -9
-    print_ok "kill 完成"
-    sleep 1
-  fi
+  lsof -i:"25500" | awk '{print $2}' | grep -v "PID" | xargs kill -9
+  lsof -i:"8002" | awk '{print $2}' | grep -v "PID" | xargs kill -9
+  lsof -i:"80" | awk '{print $2}' | grep -v "PID" | xargs kill -9
 }
 
 function ssl_judge_and_install() {

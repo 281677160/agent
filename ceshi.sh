@@ -72,7 +72,13 @@ function system_check() {
   clear
   echo
   echo
-  [[ ! -d "${clash_path}" ]] && mkdir -p "${clash_path}"
+  [[ ! -d "${clash_path}" ]] && mkdir -p "${clash_path}" || rm -rf "${clash_path}/*"
+  CF_domain="0"
+  if [[ -f "${domainjilu}" ]]; then
+    PROFILE="$(grep 'domain=' ${domainjilu} | cut -d "=" -f2)"
+    CFKEYLE="$(grep 'CF_Key=' ${domainjilu} | cut -d "=" -f2)"
+    EMAILLE="$(grep 'CF_Email=' ${domainjilu} | cut -d "=" -f2)"
+  fi
   echo -e "\033[32m 请输入已解析泛域名的域名 \033[0m"
   ECHOY "[比如：clash.com]"
   export YUMINGIP="请输入"
@@ -92,49 +98,57 @@ function system_check() {
   break
   ;;
   *)
-    export YUMINGIP="敬告,请输入正确的域名或IP"
+    export YUMINGIP="敬告,请输入正确的域名"
   ;;
   esac
   done
-  
-  echo -e "\033[32m cloudflare网站里面的Global API Key \033[0m"
-  export CFKeyIP="请输入"
-  while :; do
-  CFKeyIPty=""
-  read -p " ${CFKeyIP}：" CF_Key
-  if [[ -n "${CF_Key}" ]]; then
-    CFKeyIPty="Y"
-  fi
-  case $CFKeyIPty in
-  Y)
-    export CF_Key="${CF_Key}"
-  break
-  ;;
-  *)
-    export CFKeyIP="敬告,Global API Key不能为空"
-  ;;
-  esac
-  done
-  
-  echo -e "\033[32m 注册绑定cloudflare网站的邮箱 \033[0m"
-  export EmailIP="请输入"
-  while :; do
-  EmailIPty=""
-  read -p " ${EmailIP}：" CF_Email
-  if [[ -n "${CF_Email}" ]]; then
-    EmailIPty="Y"
-  fi
-  case $EmailIPty in
-  Y)
-    export CF_Email="${CF_Email}"
-  break
-  ;;
-  *)
-    export EmailIP="敬告,CF注册邮箱不能为空"
-  ;;
-  esac
-  done
-  
+    if [[ "${CFKEYLE}" == "CF_Key_xx" ]] && [[ "${CF_Email}" == "CF_Email_xx" ]]; then
+       CF_domain="1"
+    else
+      "$HOME"/.acme.sh/acme.sh --uninstall > /dev/null 2>&1
+       rm -rf "$HOME"/.acme.sh > /dev/null 2>&1
+	     rm -rf /usr/bin/acme.sh > /dev/null 2>&1
+       echo -e "\033[32m cloudflare网站里面的Global API Key \033[0m"
+       export CFKeyIP="请输入"
+       while :; do
+       CFKeyIPty=""
+       read -p " ${CFKeyIP}：" CF_Key
+       if [[ -n "${CF_Key}" ]]; then
+         CFKeyIPty="Y"
+       fi
+       case $CFKeyIPty in
+       Y)
+         export CF_Key="${CF_Key}"
+       break
+       ;;
+       *)
+         export CFKeyIP="敬告,Global API Key不能为空"
+       ;;
+       esac
+       done
+    fi
+    if [[ "${CFKEYLE}" == "CF_Key_xx" ]] && [[ "${CF_Email}" == "CF_Email_xx" ]]; then
+       CF_domain="1"
+    else
+       echo -e "\033[32m 注册绑定cloudflare网站的邮箱 \033[0m"
+       export EmailIP="请输入"
+       while :; do
+       EmailIPty=""
+       read -p " ${EmailIP}：" CF_Email
+       if [[ -n "${CF_Email}" ]]; then
+         EmailIPty="Y"
+       fi
+       case $EmailIPty in
+       Y)
+         export CF_Email="${CF_Email}"
+       break
+       ;;
+       *)
+         export EmailIP="敬告,CF注册邮箱不能为空"
+       ;;
+       esac
+       done
+    fi
   echo
   ECHOG "您的域名为：${CUrrent_ip}"
   ECHOG "Global API Key为：${CF_Key}"
@@ -287,6 +301,7 @@ function ssl_judge_and_install() {
   if [[ -f "$HOME/.acme.sh/${domain}_ecc/${domain}.key" && -f "$HOME/.acme.sh/${domain}_ecc/${domain}.cer" && -f "$HOME/.acme.sh/acme.sh" ]]; then
     print_ok "[${domain}]证书已存在，重新启用证书"
     [[ ! -f "/usr/bin/acme.sh" ]] && ln -s  /root/.acme.sh/acme.sh /usr/bin/acme.sh
+    rm -rf ${clash_path}/server.key ${clash_path}/server.crt
     acme.sh --installcert -d "${domain}" --ecc  --key-file   ${clash_path}/server.key   --fullchain-file ${clash_path}/server.crt
     judge "证书启用"
     chown -R nobody.$cert_group "${clash_path}/server.key"
@@ -294,6 +309,8 @@ function ssl_judge_and_install() {
     sleep 2
     .acme.sh/acme.sh --upgrade --auto-upgrade
     echo "domain=${domain}" > "${domainjilu}"
+    echo "CF_Key=CF_Key_xx" >> "${domainjilu}"
+    echo "CF_Email=CF_Email_xx" >> "${domainjilu}"
     judge "域名记录"
   else
     rm -fr "$HOME"/.acme.sh > /dev/null 2>&1
@@ -311,6 +328,7 @@ function acme() {
   acme.sh --issue --dns dns_cf -d "${domain}" -d "www.${domain}" -k ec-256
   if [[ $? -eq 0 ]]; then
     print_ok "SSL 证书生成成功" 
+    rm -rf ${clash_path}/server.key ${clash_path}/server.crt
     acme.sh --installcert -d "${domain}" --ecc  --key-file   ${clash_path}/server.key   --fullchain-file ${clash_path}/server.crt
     judge "SSL 证书配置成功"
     chown -R nobody.$cert_group "${clash_path}/server.key"
@@ -318,6 +336,8 @@ function acme() {
     systemctl start nginx
     acme.sh  --upgrade  --auto-upgrade
     echo "domain=${domain}" > "${domainjilu}"
+    echo "CF_Key=CF_Key_xx" >> "${domainjilu}"
+    echo "CF_Email=CF_Email_xx" >> "${domainjilu}"
     judge "域名记录"
   else
     systemctl start nginx

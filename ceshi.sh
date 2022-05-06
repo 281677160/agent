@@ -344,7 +344,7 @@ function acme() {
   acme.sh --set-default-ca --server letsencrypt
   systemctl stop nginx
   sleep 2
-  acme.sh --issue --dns dns_cf -d "${domain}" -d "www.${domain}" -k ec-256
+  acme.sh --issue --dns dns_cf -d "${domain}" -d "*.${domain}" --keylength ec-256
   if [[ $? -eq 0 ]]; then
     print_ok "SSL 证书生成成功" 
     rm -rf ${clash_path}/server.key ${clash_path}/server.crt

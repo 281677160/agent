@@ -123,6 +123,17 @@
                   >复制</el-button>
                 </el-input>
               </el-form-item>
+              <el-form-item label="订阅短链:">
+                <el-input class="copy-content" disabled v-model="curtomShortSubUrl">
+                  <el-button
+                    slot="append"
+                    v-clipboard:copy="curtomShortSubUrl"
+                    v-clipboard:success="onCopy"
+                    ref="copy-btn"
+                    icon="el-icon-document-copy"
+                  >复制</el-button>
+                </el-input>
+              </el-form-item>
 
               <el-form-item label-width="0px" style="margin-top: 40px; text-align: center">
                 <el-button
@@ -131,6 +142,16 @@
                   @click="makeUrl"
                   :disabled="form.sourceSubUrl.length === 0"
                 >生成订阅链接</el-button>
+                <el-button
+                  style="width: 120px"
+                  type="danger"
+                  @click="makeShortUrl"
+                  :loading="loading"
+                  :disabled="customSubUrl.length === 0"
+                >生成短链接</el-button>
+                <!-- <el-button style="width: 120px" type="primary" @click="surgeInstall" icon="el-icon-connection">一键导入Surge</el-button> -->
+              </el-form-item>
+
               </el-form-item>
             </el-form>
           </el-container>

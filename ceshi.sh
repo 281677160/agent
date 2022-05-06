@@ -91,7 +91,8 @@ function system_check() {
   Y)
     export CUrrent_ip="$(echo "${CUrrent_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/\///g' |sed 's/ //g')"
     export after_ip="http://127.0.0.1:25500"
-    export suc_ip="https://suc.${CUrrent_ip}"
+    export http_suc_ip="https://suc.${CUrrent_ip}"
+    export suc_ip="suc.${CUrrent_ip}"
     export www_ip="www.${CUrrent_ip}"
     export myurls_ip="dl.${CUrrent_ip}"
     export domain="${CUrrent_ip}"
@@ -459,9 +460,9 @@ function install_subweb() {
       curl -fsSL https://cdn.jsdelivr.net/gh/281677160/agent@main/xray/clsah.env > "${clash_path}/sub-web/.env"
     fi
     cd "${clash_path}/sub-web"
-    sed -i "s?${after_ip}?${suc_ip}?g" "${clash_path}/sub-web/.env"
+    sed -i "s?${after_ip}?${http_suc_ip}?g" "${clash_path}/sub-web/.env"
     sed -i "s?http://127.0.0.2:25500?https://${myurls_ip}?g" "${clash_path}/sub-web/.env"
-    sed -i "s?${after_ip}?${suc_ip}?g" "${clash_path}/sub-web/src/views/Subconverter.vue"
+    sed -i "s?${after_ip}?${http_suc_ip}?g" "${clash_path}/sub-web/src/views/Subconverter.vue"
     yarn install
     yarn build
     if [[ -d "${clash_path}/sub-web/dist" ]]; then
@@ -492,12 +493,13 @@ function install_myurls() {
     exit 1
   else
     print_ok "myurls解压完成"
+    chmod -R 777 "${clash_path}/myurls"
     sed -i "s?const backend = .*?const backend = \'https://${myurls_ip}\'?g" "${clash_path}/myurls/public/index.html"
   fi
 
   echo "
   [Unit]
-  Description=A API For Subscription Convert
+  Description=A API For myurls Convert
   After=network.target
     
   [Service]
@@ -573,14 +575,14 @@ EOF
 cat >"/etc/nginx/conf.d/suc_nginx.conf" <<-EOF
 server {
     listen  80; 
-    server_name  suc.${current_ip};
+    server_name  ${suc_ip};
     return 301 https://\$host\$request_uri;  
 }
 
 server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
-    server_name  suc.${current_ip};
+    server_name  ${suc_ip};
     ssl_certificate ${clash_path}/server.crt;
     ssl_certificate_key ${clash_path}/server.key;
     ssl_session_timeout 1d;
@@ -678,7 +680,7 @@ EOF
     exit 1
   else
     print_ok "配置文件启动成功"
-    ECHOY "全部服务安装完毕,请登录 https://www.${current_ip} 进行使用"
+    ECHOY "全部服务安装完毕,请登录 https://${www_ip} 进行使用"
   fi
 }
 

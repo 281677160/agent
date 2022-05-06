@@ -464,7 +464,7 @@ function install_myurls() {
     
   [Service]
   Type=simple
-  ExecStart=${clash_path}/myurls/linux-amd64-myurls.service -domain ${current_ip} -port 8002
+  ExecStart=${clash_path}/myurls/linux-amd64-myurls.service -domain dl.${current_ip} -port 8002
   WorkingDirectory=${clash_path}/myurls
   Restart=always
   RestartSec=10

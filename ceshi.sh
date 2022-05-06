@@ -451,9 +451,9 @@ function install_subweb() {
     print_error "sub-web下载失败,请再次执行安装命令试试"
     exit 1
   else
-    rm -fr "${clash_path}/subweb" && svn co https://github.com/281677160/agent/trunk/subweb "${clash_path}/subweb"
+    rm -fr "${clash_path}/subweb" && git clone https://github.com/281677160/agent "${clash_path}/subweb"
     judge "sub-web补丁下载"
-    cp -R ${clash_path}/subweb/* "${clash_path}/sub-web/"
+    cp -R ${clash_path}/subweb/subweb/* "${clash_path}/sub-web/"
     rm -fr "${clash_path}/subweb"
     cd "${clash_path}/sub-web"
     sed -i "s?${after_ip}?${http_suc_ip}?g" "${clash_path}/sub-web/.env"

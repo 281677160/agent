@@ -91,9 +91,9 @@ function system_check() {
   Y)
     export CUrrent_ip="$(echo "${CUrrent_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/\///g' |sed 's/ //g')"
     export after_ip="http://127.0.0.1:25500"
-    export suc_ip="https://suc.${current_ip}"
-    export www_ip="www.${current_ip}"
-    export myurls_ip="dl.${current_ip}"
+    export suc_ip="https://suc.${CUrrent_ip}"
+    export www_ip="www.${CUrrent_ip}"
+    export myurls_ip="dl.${CUrrent_ip}"
     export domain="${CUrrent_ip}"
   break
   ;;

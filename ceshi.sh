@@ -150,9 +150,15 @@ function system_check() {
        done
     fi
   echo
-  ECHOG "您的域名为：${CUrrent_ip}"
-  ECHOG "Global API Key为：${CF_Key}"
-  ECHOG "CF注册邮箱为：${CF_Email}"
+  if [[ "${CF_domain}" == "1" ]]
+    ECHOG "您的域名为：${CUrrent_ip} 已申请证书"
+    ECHOG "Global API Key为：已存在"
+    ECHOG "CF注册邮箱为：已存在"
+  else 
+    ECHOG "您的域名为：${CUrrent_ip}"
+    ECHOG "Global API Key为：${CF_Key}"
+    ECHOG "CF注册邮箱为：${CF_Email}"
+  fi
   echo
   read -p " [检查是否正确,正确回车继续,不正确按Q回车重新输入]： " NNKC
   case $NNKC in

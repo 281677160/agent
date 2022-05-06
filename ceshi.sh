@@ -153,6 +153,7 @@ function system_check() {
        done
     fi
   echo
+  echo
   if [[ "${CF_domain}" == "1" ]]; then
     ECHOG "您的域名为：${CUrrent_ip} 已申请证书"
     ECHOG "Global API Key为：已存在"

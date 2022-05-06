@@ -79,8 +79,7 @@ function system_check() {
     CFKEYLE="$(grep 'CF_Key=' ${domainjilu} | cut -d "=" -f2)"
     EMAILLE="$(grep 'CF_Email=' ${domainjilu} | cut -d "=" -f2)"
   fi
-  echo -e "\033[32m 请输入已解析泛域名的域名 \033[0m"
-  ECHOY "[比如：clash.com]"
+  echo -e "\033[32m 请输入已解析泛域名的域名，比如：clash.com] \033[0m"
   export YUMINGIP="请输入"
   while :; do
   CUrrenty=""
@@ -102,13 +101,15 @@ function system_check() {
   ;;
   esac
   done
+    echo
+    echo
     if [[ "${CFKEYLE}" == "CF_Key_xx" ]] && [[ "${EMAILLE}" == "CF_Email_xx" ]]; then
        CF_domain="1"
     else
       "$HOME"/.acme.sh/acme.sh --uninstall > /dev/null 2>&1
        rm -rf "$HOME"/.acme.sh > /dev/null 2>&1
 	     rm -rf /usr/bin/acme.sh > /dev/null 2>&1
-       echo -e "\033[32m cloudflare网站里面的Global API Key \033[0m"
+       echo -e "\033[32m 输入cloudflare网站里面的Global API Key \033[0m"
        export CFKeyIP="请输入"
        while :; do
        CFKeyIPty=""
@@ -127,6 +128,8 @@ function system_check() {
        esac
        done
     fi
+    echo
+    echo
     if [[ "${CFKEYLE}" == "CF_Key_xx" ]] && [[ "${EMAILLE}" == "CF_Email_xx" ]]; then
        CF_domain="1"
     else

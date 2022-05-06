@@ -293,8 +293,8 @@ function ssl_judge_and_install() {
     [[ ! -f "/usr/bin/acme.sh" ]] && ln -s  /root/.acme.sh/acme.sh /usr/bin/acme.sh
     acme.sh --installcert -d "${domain}" --ecc  --key-file   ${clash_path}/server.key   --fullchain-file ${clash_path}/server.crt
     judge "证书启用"
-    chown -R nobody.$cert_group ${clash_path}/server.key
-    chown -R nobody.$cert_group ${clash_path}/server.crt
+    chown -R nobody.$cert_group "${clash_path}/server.key"
+    chown -R nobody.$cert_group "${clash_path}/server.crt"
     sleep 2
     .acme.sh/acme.sh --upgrade --auto-upgrade
     echo "domain=${domain}" > "${domainjilu}"
@@ -317,8 +317,8 @@ function acme() {
     print_ok "SSL 证书生成成功" 
     acme.sh --installcert -d "${domain}" --ecc  --key-file   ${clash_path}/server.key   --fullchain-file ${clash_path}/server.crt
     judge "SSL 证书配置成功"
-    chown -R nobody.$cert_group ${clash_path}/server.key
-    chown -R nobody.$cert_group ${clash_path}/server.crt
+    chown -R nobody.$cert_group "${clash_path}/server.key"
+    chown -R nobody.$cert_group "${clash_path}/server.crt"
     systemctl start nginx
     acme.sh  --upgrade  --auto-upgrade
     echo "domain=${domain}" > "${domainjilu}"
@@ -367,30 +367,30 @@ function install_subconverter() {
     echo -e "\033[32m subconverter解压成功! \033[0m"
     export HDPASS="$(cat /proc/sys/kernel/random/uuid)"
     sed -i "s?api_access_token=.*?api_access_token=${HDPASS}?g" "${clash_path}/subconverter/pref.example.ini"
-    sed -i "s?managed_config_prefix=.*?managed_config_prefix=suc.${current_ip}?g" "${clash_path}/subconverter/pref.example.ini"
+    sed -i "s?managed_config_prefix=.*?managed_config_prefix=${suc_ip}?g" "${clash_path}/subconverter/pref.example.ini"
     sed -i "s?listen=.*?listen=127.0.0.1?g" "${clash_path}/subconverter/pref.example.ini"
     sed -i "s?serve_file_root=.*?serve_file_root=/www/dist_web?g" "${clash_path}/subconverter/pref.example.ini"
     
-    sed -i "s?listen =.*?listen = \"127.0.0.1\"?g" "${clash_path}/subconverter/pref.example.ini"
-    sed -i "s?serve_file_root =.*?serve_file_root = \"/www/dist_web\"?g" "${clash_path}/subconverter/pref.example.ini"
+    sed -i "s?listen =.*?listen = \"127.0.0.1\"?g" "${clash_path}/subconverter/pref.example.toml"
+    sed -i "s?serve_file_root =.*?serve_file_root = \"/www/dist_web\"?g" "${clash_path}/subconverter/pref.example.toml"
   fi
   rm -rf "${clash_path}/subconverter_${ARCH_PRINT}.tar.gz"
 
-  echo '
+  echo "
   [Unit]
   Description=A API For Subscription Convert
   After=network.target
     
   [Service]
   Type=simple
-  ExecStart=/usr/local/etc/clash/subconverter/subconverter
-  WorkingDirectory=/usr/local/etc/clash/subconverter
+  ExecStart=${clash_path}/subconverter/subconverter
+  WorkingDirectory=${clash_path}/subconverter
   Restart=always
   RestartSec=10
  
   [Install]
   WantedBy=multi-user.target
-  ' > /etc/systemd/system/subconverter.service
+  " > /etc/systemd/system/subconverter.service
   sed -i 's/^[ ]*//g' /etc/systemd/system/subconverter.service
   sed -i '1d' /etc/systemd/system/subconverter.service
   chmod 755 /etc/systemd/system/subconverter.service
@@ -464,8 +464,8 @@ function install_myurls() {
     
   [Service]
   Type=simple
-  ExecStart=/usr/local/etc/clash/myurls/linux-amd64-myurls.service -domain ${current_ip} -port 8002
-  WorkingDirectory=/usr/local/etc/clash/myurls
+  ExecStart=${clash_path}/myurls/linux-amd64-myurls.service -domain ${current_ip} -port 8002
+  WorkingDirectory=${clash_path}/myurls
   Restart=always
   RestartSec=10
  
@@ -500,8 +500,8 @@ server {
     listen 443 ssl;
     listen [::]:443 ssl;
     server_name  www.${current_ip};
-    ssl_certificate /usr/local/etc/clash/server.crt;
-    ssl_certificate_key /usr/local/etc/clash/server.key;
+    ssl_certificate ${clash_path}/server.crt;
+    ssl_certificate_key ${clash_path}/server.key;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-GCM-SHA256:TLS13-AES-128-CCM-8-SHA256:TLS13-AES-128-CCM-SHA256:EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5;
     ssl_prefer_server_ciphers on;
@@ -543,8 +543,8 @@ server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
     server_name  suc.${current_ip};
-    ssl_certificate /usr/local/etc/clash/server.crt;
-    ssl_certificate_key /usr/local/etc/clash/server.key;
+    ssl_certificate ${clash_path}/server.crt;
+    ssl_certificate_key ${clash_path}/server.key;
     ssl_session_timeout 1d;
     ssl_session_cache shared:MozSSL:10m;
     ssl_session_tickets off;
@@ -593,8 +593,8 @@ server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
     server_name  dl.${current_ip};
-    ssl_certificate /usr/local/etc/clash/server.crt;
-    ssl_certificate_key /usr/local/etc/clash/server.key;
+    ssl_certificate ${clash_path}/server.crt;
+    ssl_certificate_key ${clash_path}/server.key;
     ssl_session_timeout 1d;
     ssl_session_cache shared:MozSSL:10m;
     ssl_session_tickets off;

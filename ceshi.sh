@@ -462,7 +462,7 @@ function install_subweb() {
       exit 1
     fi
   fi
-
+  cd "${HOME}"
   print_ok "sub-web安装完成"
 }
 

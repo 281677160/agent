@@ -110,20 +110,21 @@ function system_check() {
        rm -rf "$HOME"/.acme.sh > /dev/null 2>&1
 	     rm -rf /usr/bin/acme.sh > /dev/null 2>&1
        echo -e "\033[32m 输入cloudflare网站里面的Global API Key \033[0m"
-       export CFKeyIP="请输入"
+       CFKeyIP="请输入"
        while :; do
-       CFKeyIPty=""
+       export CFKeyIPty=""
        read -p " ${CFKeyIP}：" CF_Key
        if [[ -n "${CF_Key}" ]]; then
-         CFKeyIPty="Y"
+         export CFKeyIPty="Y"
        fi
        case $CFKeyIPty in
        Y)
          export CF_Key="${CF_Key}"
+	 export CF_Key="$(echo "${CF_Key}" |sed 's/ //g')"
        break
        ;;
        *)
-         export CFKeyIP="敬告,Global API Key不能为空"
+         export CFKeyIP="敬告,Global API Key不能为空,请输入"
        ;;
        esac
        done
@@ -136,7 +137,7 @@ function system_check() {
        echo -e "\033[32m 注册绑定cloudflare网站的邮箱 \033[0m"
        export EmailIP="请输入"
        while :; do
-       EmailIPty=""
+       export EmailIPty=""
        read -p " ${EmailIP}：" CF_Email
        if [[ -n "${CF_Email}" ]]; then
          EmailIPty="Y"
@@ -144,10 +145,11 @@ function system_check() {
        case $EmailIPty in
        Y)
          export CF_Email="${CF_Email}"
+	 export CF_Email="$(echo "${CF_Email}" |sed 's/ //g')"
        break
        ;;
        *)
-         export EmailIP="敬告,CF注册邮箱不能为空"
+         export EmailIP="敬告,CF注册邮箱不能为空,请输入"
        ;;
        esac
        done

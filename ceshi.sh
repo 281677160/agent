@@ -102,7 +102,7 @@ function system_check() {
   ;;
   esac
   done
-    if [[ "${CFKEYLE}" == "CF_Key_xx" ]] && [[ "${CF_Email}" == "CF_Email_xx" ]]; then
+    if [[ "${CFKEYLE}" == "CF_Key_xx" ]] && [[ "${EMAILLE}" == "CF_Email_xx" ]]; then
        CF_domain="1"
     else
       "$HOME"/.acme.sh/acme.sh --uninstall > /dev/null 2>&1
@@ -127,7 +127,7 @@ function system_check() {
        esac
        done
     fi
-    if [[ "${CFKEYLE}" == "CF_Key_xx" ]] && [[ "${CF_Email}" == "CF_Email_xx" ]]; then
+    if [[ "${CFKEYLE}" == "CF_Key_xx" ]] && [[ "${EMAILLE}" == "CF_Email_xx" ]]; then
        CF_domain="1"
     else
        echo -e "\033[32m 注册绑定cloudflare网站的邮箱 \033[0m"

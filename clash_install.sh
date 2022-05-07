@@ -322,7 +322,7 @@ function install_subweb() {
     echo -e "\033[31m sub-web下载失败,请再次执行安装命令试试! \033[0m"
     exit 1
   else
-    rm -fr "subweb" && git clone https://github.com/281677160/agent "subweb"
+    rm -fr "subweb" && git clone https://ghproxy.com/https://github.com/281677160/agent "subweb"
     judge "sub-web补丁下载"
     cp -R subweb/subweb/* "sub-web/"
     mv -f "subweb/subweb/.env" "sub-web/.env"

@@ -167,7 +167,7 @@ function system_check() {
   if [[ "$CF_PORT" == "43002" ]]; then
     echo -e "\033[31m 43002端口已被短链程序占用,请改其他端口 \033[0m"
     export PORTY="n"
-  else [[ "$CF_PORT" -ge "10000" ]] && [[ "$CF_PORT" -le "65535" ]]; then
+  elif [[ "$CF_PORT" -ge "10000" ]] && [[ "$CF_PORT" -le "65535" ]]; then
     export PORTY="y"
   fi
   case $PORTY in

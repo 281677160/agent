@@ -348,7 +348,7 @@ function domain_check() {
     echo
     ECHOY "本机IP为：${local_ip}"
     echo
-    print_error "域名解析IP跟本机IP不一致"
+    print_error "域名解析IP跟本机IP不一致,检测域名解析是否生效,或是否打开了CDN了"
     exit 1
   else
     print_ok "域名解析IP为：${domain_ip}"

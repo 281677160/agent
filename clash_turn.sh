@@ -54,6 +54,8 @@ export cert_group="nobody"
 export random_num=$((RANDOM % 12 + 4))
 export HOME="/root"
 export domainjilu="$HOME/.acme.sh/domainjilu"
+export HDFW_PORT="25500"
+export DLJ_PORT="42301"
 
 if [[ ! "$USER" == "root" ]]; then
   print_error "警告：请使用root用户操作!~~"
@@ -103,11 +105,13 @@ function system_check() {
   ;;
   esac
   done
-    echo
-    echo
-    if [[ "${CFKEYLE}" == "CF_Key_xx" ]] && [[ "${EMAILLE}" == "CF_Email_xx" ]]; then
+    if [[ "${CFKEYLE}" == "CF_Key_xx" ]] && [[ "${EMAILLE}" == "CF_Email_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
+       echo
+       echo
        CF_domain="1"
     else
+       echo
+       echo
       "$HOME"/.acme.sh/acme.sh --uninstall > /dev/null 2>&1
        rm -rf "$HOME"/.acme.sh > /dev/null 2>&1
 	     rm -rf /usr/bin/acme.sh > /dev/null 2>&1
@@ -131,11 +135,13 @@ function system_check() {
        esac
        done
     fi
-    echo
-    echo
-    if [[ "${CFKEYLE}" == "CF_Key_xx" ]] && [[ "${EMAILLE}" == "CF_Email_xx" ]]; then
+    if [[ "${CFKEYLE}" == "CF_Key_xx" ]] && [[ "${EMAILLE}" == "CF_Email_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
+       echo
+       echo
        CF_domain="1"
     else
+       echo
+       echo
        echo -e "\033[33m 注册绑定cloudflare网站的邮箱 \033[0m"
        export EmailIP="请输入"
        while :; do
@@ -158,40 +164,14 @@ function system_check() {
     fi
   echo
   echo
-  echo -e "\033[33m 设置节点转换使用的端口,直接回车默认使用25500 \033[0m"
-  export DUANKOU="请输入[10000-65535]之间的值"
-  while :; do
-  CF_PORT=""
-  read -p " ${DUANKOU}：" CF_PORT
-  export CF_PORT=${CF_PORT:-"25500"}
-  if [[ "$CF_PORT" == "43002" ]]; then
-    echo -e "\033[31m 43002端口已被短链程序占用,请改其他端口 \033[0m"
-    export PORTY="n"
-  elif [[ "$CF_PORT" -ge "10000" ]] && [[ "$CF_PORT" -le "65535" ]]; then
-    export PORTY="y"
-  fi
-  case $PORTY in
-  y)
-    export CF_PORT="${CF_PORT}"
-  break
-  ;;
-  *)
-    export DUANKOU="敬告：请输入[1-65535]之间的值"
-  ;;
-  esac
-  done
-  echo
-  echo
   if [[ "${CF_domain}" == "1" ]]; then
     ECHOG "您的域名为：${CUrrent_ip} 已申请证书"
     ECHOG "Global API Key为：已存在"
     ECHOG "CF注册邮箱为：已存在"
-    ECHOG "端口为：${CF_PORT}"
   else 
     ECHOG "您的域名为：${CUrrent_ip}"
     ECHOG "Global API Key为：${CF_Key}"
     ECHOG "CF注册邮箱为：${CF_Email}"
-    ECHOG "端口为：${CF_PORT}"
   fi
   echo
   read -p " [检查是否正确,正确回车继续,不正确按Q回车重新输入]： " NNKC
@@ -353,11 +333,11 @@ function basic_optimization() {
 }
 
 function port_exist_check() {
-  if [[ 1 -ge $(lsof -i:"${CF_PORT}" | grep -i -c "listen") ]]; then
-    lsof -i:"${CF_PORT}" | awk '{print $2}' | grep -v "PID" | xargs kill -9
+  if [[ 1 -ge $(lsof -i:"${HDFW_PORT}" | grep -i -c "listen") ]]; then
+    lsof -i:"${HDFW_PORT}" | awk '{print $2}' | grep -v "PID" | xargs kill -9
   fi
-  if [[ 1 -ge $(lsof -i:"43002" | grep -i -c "listen") ]]; then
-    lsof -i:"43002" | awk '{print $2}' | grep -v "PID" | xargs kill -9
+  if [[ 1 -ge $(lsof -i:"${DLJ_PORT}" | grep -i -c "listen") ]]; then
+    lsof -i:"${DLJ_PORT}" | awk '{print $2}' | grep -v "PID" | xargs kill -9
   fi
   if [[ 1 -ge $(lsof -i:"80" | grep -i -c "listen") ]]; then
     lsof -i:"80" | awk '{print $2}' | grep -v "PID" | xargs kill -9
@@ -455,8 +435,6 @@ function install_subconverter() {
     sed -i "s?serve_file_root=.*?serve_file_root=/www/dist_web?g" "${clash_path}/subconverter/pref.example.ini"
     sed -i "s?listen =.*?listen = \"127.0.0.1\"?g" "${clash_path}/subconverter/pref.example.toml"
     sed -i "s?serve_file_root =.*?serve_file_root = \"/www/dist_web\"?g" "${clash_path}/subconverter/pref.example.toml"
-    sed -i "s?port=.*?port=${CF_PORT}?g" "${clash_path}/subconverter/pref.example.ini"
-    sed -i "s?port = .*?port = ${CF_PORT}?g" "${clash_path}/subconverter/pref.example.toml"
   fi
   rm -rf "${clash_path}/subconverter_${ARCH_PRINT}.tar.gz"
 
@@ -483,7 +461,7 @@ function install_subconverter() {
   systemctl start subconverter
   systemctl enable subconverter
 
-  if [[ $(lsof -i:"${CF_PORT}" | grep -i -c "listen") -ge "1" ]]; then
+  if [[ $(lsof -i:"${HDFW_PORT}" | grep -i -c "listen") -ge "1" ]]; then
     print_ok "subconverter安装成功"
   else
     print_error "subconverter安装失败,请再次执行安装命令试试"
@@ -549,7 +527,7 @@ function install_myurls() {
     
   [Service]
   Type=simple
-  ExecStart=${clash_path}/myurls/linux-amd64-myurls.service -domain ${myurls_ip} -port 43002
+  ExecStart=${clash_path}/myurls/linux-amd64-myurls.service -domain ${myurls_ip} -port ${DLJ_PORT}
   WorkingDirectory=${clash_path}/myurls
   Restart=always
   RestartSec=10
@@ -638,7 +616,7 @@ server {
     ssl_prefer_server_ciphers off;
    
     location / {
-        proxy_pass http://127.0.0.1:${CF_PORT};
+        proxy_pass http://127.0.0.1:${HDFW_PORT};
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_set_header REMOTE-HOST \$remote_addr;
@@ -690,7 +668,7 @@ server {
     root /usr/local/etc/clash/myurls/public;
    
     location / {
-        proxy_pass http://127.0.0.1:43002;
+        proxy_pass http://127.0.0.1:${DLJ_PORT};
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_set_header REMOTE-HOST \$remote_addr;

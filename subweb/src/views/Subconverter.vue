@@ -227,13 +227,13 @@ export default {
           "自动判断客户端": "auto",
         },
         shortTypes: {
-          "dl.danshui.life":"https://dl.danshui.life/short",
+          "dl.danshui.life":"http://127.0.0.2/short",
         },
         customBackend: {
-          "本地增强型后端": "https://suc.danshui.life/sub?",
+          "本地增强型后端": "http://127.0.0.1/sub?",
         },
         backendOptions: [
-          { value: "https://suc.danshui.life/sub?" },
+          { value: "http://127.0.0.1/sub?" },
         ],
         remoteConfig: [
           {
@@ -607,8 +607,8 @@ export default {
       form: {
         sourceSubUrl: "",
         clientType: "",
-        customBackend: "https://suc.danshui.life/sub?",
-        shortType: "https://dl.danshui.life/short",
+        customBackend: "http://127.0.0.1/sub?",
+        shortType: "http://127.0.0.2/short",
         remoteConfig: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_AdblockPlus.ini",
         excludeRemarks: "",
         includeRemarks: "",

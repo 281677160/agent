@@ -37,12 +37,12 @@
            <el-collapse-item> 
             <template slot="title"> 
              <el-form-item label="高级功能:" style="width: 100%;"> 
-              <el-button type="limr" style="width: 100%;" icon="el-icon-more-outline">
+              <el-button type="limr" style="width: 100%;">
                 点击显示/隐藏 
               </el-button> 
              </el-form-item> 
             </template> 
-            <el-form-item label="包含节点:"> 
+            <el-form-item label="包含节点:">
              <el-input v-model="form.includeRemarks" placeholder="要保留的节点，支持正则" /> 
             </el-form-item> 
             <el-form-item label="排除节点:"> 
@@ -139,19 +139,19 @@
           </el-input> 
          </el-form-item> 
          <el-form-item label-width="0px" style="margin-top: 40px; text-align: center"> 
-          <el-button style="width: 120px" type="danger" @click="makeUrl" :disabled="form.sourceSubUrl.length === 0">
+          <el-button style="width: 140px" type="danger" @click="makeUrl" :disabled="form.sourceSubUrl.length === 0">
             生成订阅链接 
           </el-button> 
-          <el-button style="width: 120px" type="danger" @click="makeShortUrl" :loading="loading" :disabled="customSubUrl.length === 0">
+          <el-button style="width: 140px" type="danger" @click="makeShortUrl" :loading="loading" :disabled="customSubUrl.length === 0">
             生成短链接 
           </el-button> 
-          <!-- <el-button style="width: 120px" type="primary" @click="surgeInstall" icon="el-icon-connection">一键导入Surge</el-button> --> 
+          <!-- <el-button style="width: 140px" type="primary" @click="surgeInstall" icon="el-icon-connection">一键导入Surge</el-button> --> 
          </el-form-item> 
          <el-form-item label-width="0px" style="text-align: center"> 
-          <el-button style="width: 120px" type="primary" @click="dialogUploadConfigVisible = true" icon="el-icon-upload" :loading="loading">
+          <el-button style="width: 140px" type="primary" @click="dialogUploadConfigVisible = true" icon="el-icon-upload" :loading="loading">
             上传自定义配置 
           </el-button> 
-          <el-button style="width: 120px" type="primary" @click="clashInstall" icon="el-icon-connection" :disabled="customSubUrl.length === 0">
+          <el-button style="width: 140px" type="primary" @click="clashInstall" icon="el-icon-connection" :disabled="customSubUrl.length === 0">
             一键导入Clash 
           </el-button> 
          </el-form-item> 
@@ -227,13 +227,13 @@ export default {
           "自动判断客户端": "auto",
         },
         shortTypes: {
-          "dl.danshui.life":"http://127.0.0.2:25500/short",
+          "dl.danshui.life":"https://dl.danshui.life/short",
         },
         customBackend: {
-          "本地增强型后端": "http://127.0.0.1:25500/sub?",
+          "本地增强型后端": "https://suc.danshui.life/sub?",
         },
         backendOptions: [
-          { value: "http://127.0.0.1:25500/sub?" },
+          { value: "https://suc.danshui.life/sub?" },
         ],
         remoteConfig: [
           {
@@ -607,8 +607,8 @@ export default {
       form: {
         sourceSubUrl: "",
         clientType: "",
-        customBackend: "http://127.0.0.1:25500/sub?",
-        shortType: "http://127.0.0.2:25500/short",
+        customBackend: "https://suc.danshui.life/sub?",
+        shortType: "https://dl.danshui.life/short",
         remoteConfig: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_AdblockPlus.ini",
         excludeRemarks: "",
         includeRemarks: "",

@@ -338,6 +338,25 @@ function port_exist_check() {
   fi
 }
 
+function domain_check() {
+  export domain_ip="$(ping "${domain}" -c 1 | sed '1{s/[^(]*(//;s/).*//;q}')" > /dev/null 2>&1
+  export local_ip=$(curl -4L api64.ipify.org)
+  print_ok "检测域名解析"
+  if [[ ! ${local_ip} == ${domain_ip} ]]; then
+    echo
+    ECHOY "域名解析IP为：${domain_ip}"
+    echo
+    ECHOY "本机IP为：${local_ip}"
+    echo
+    print_error "域名解析IP跟本机IP不一致"
+    exit 1
+  else
+    print_ok "域名解析IP为：${domain_ip}"
+    print_ok "本机IP为：${local_ip}"
+    print_ok "域名解析IP跟本机IP一致"
+  fi
+}
+
 function ssl_judge_and_install() {
   if [[ -f "$HOME/.acme.sh/${domain}_ecc/${domain}.key" && -f "$HOME/.acme.sh/${domain}_ecc/${domain}.cer" && -f "$HOME/.acme.sh/acme.sh" ]]; then
     print_ok "[${domain}]证书已存在，重新启用证书"
@@ -738,6 +757,7 @@ menu() {
   command_Version
   basic_optimization
   port_exist_check
+  domain_check
   ssl_judge_and_install
   install_subconverter
   install_subweb

@@ -333,13 +333,13 @@ function basic_optimization() {
 }
 
 function port_exist_check() {
-  if [[ 1 -ge $(lsof -i:"${HDFW_PORT}" | grep -i -c "listen") ]]; then
+  if [[ $(lsof -i:"${HDFW_PORT}" | grep -i -c "listen") -ge "1" ]]; then
     lsof -i:"${HDFW_PORT}" | awk '{print $2}' | grep -v "PID" | xargs kill -9
   fi
-  if [[ 1 -ge $(lsof -i:"${DLJ_PORT}" | grep -i -c "listen") ]]; then
+  if [[ $(lsof -i:"${DLJ_PORT}" | grep -i -c "listen") -ge "1" ]]; then
     lsof -i:"${DLJ_PORT}" | awk '{print $2}' | grep -v "PID" | xargs kill -9
   fi
-  if [[ 1 -ge $(lsof -i:"80" | grep -i -c "listen") ]]; then
+  if [[ $(lsof -i:"80" | grep -i -c "listen") -ge "1" ]]; then
     lsof -i:"80" | awk '{print $2}' | grep -v "PID" | xargs kill -9
   fi
 }

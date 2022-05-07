@@ -106,8 +106,6 @@ function system_check() {
   esac
   done
     if [[ "${CFKEYLE}" == "CF_Key_xx" ]] && [[ "${EMAILLE}" == "CF_Email_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
-       echo
-       echo
        CF_domain="1"
     else
        echo
@@ -136,8 +134,6 @@ function system_check() {
        done
     fi
     if [[ "${CFKEYLE}" == "CF_Key_xx" ]] && [[ "${EMAILLE}" == "CF_Email_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
-       echo
-       echo
        CF_domain="1"
     else
        echo

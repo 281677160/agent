@@ -441,6 +441,7 @@ function install_subconverter() {
     exit 1
   else
     print_ok "subconverter解压完成"
+    chmod -R 775 ${clash_path}/subconverter
     export HDPASS="$(cat /proc/sys/kernel/random/uuid)"
     sed -i "s?api_access_token=.*?api_access_token=${HDPASS}?g" "${clash_path}/subconverter/pref.example.ini"
     sed -i "s?managed_config_prefix=.*?managed_config_prefix=${http_suc_ip}?g" "${clash_path}/subconverter/pref.example.ini"
@@ -491,6 +492,7 @@ function install_subweb() {
   else
     rm -fr "${clash_path}/subweb" && git clone https://github.com/281677160/agent "${clash_path}/subweb"
     judge "sub-web补丁下载"
+    chmod -R 775 ${clash_path}/sub-web
     cp -R ${clash_path}/subweb/subweb/* "${clash_path}/sub-web/"
     mv -f "${clash_path}/subweb/subweb/.env" "${clash_path}/sub-web/.env"
     rm -fr "${clash_path}/subweb"
@@ -709,7 +711,7 @@ server {
     access_log off;
 }
 EOF
-
+  chmod -R 755 /etc/nginx/conf.d
   systemctl restart nginx
   if [[ $? -ne 0 ]];then
     print_error "配置文件启动失败"

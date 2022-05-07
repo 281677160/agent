@@ -455,7 +455,7 @@ function install_subconverter() {
     sed -i "s?serve_file_root=.*?serve_file_root=/www/dist_web?g" "${clash_path}/subconverter/pref.example.ini"
     sed -i "s?listen =.*?listen = \"127.0.0.1\"?g" "${clash_path}/subconverter/pref.example.toml"
     sed -i "s?serve_file_root =.*?serve_file_root = \"/www/dist_web\"?g" "${clash_path}/subconverter/pref.example.toml"
-    sed -i "s?port=.*?port=${CF_PORT}?g" "${clash_path}/subconverter/pref.example.toml"
+    sed -i "s?port=.*?port=${CF_PORT}?g" "${clash_path}/subconverter/pref.example.ini"
     sed -i "s?port = .*?port = ${CF_PORT}?g" "${clash_path}/subconverter/pref.example.toml"
   fi
   rm -rf "${clash_path}/subconverter_${ARCH_PRINT}.tar.gz"

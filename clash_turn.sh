@@ -112,7 +112,7 @@ function system_check() {
        echo
       "$HOME"/.acme.sh/acme.sh --uninstall > /dev/null 2>&1
        rm -rf "$HOME"/.acme.sh > /dev/null 2>&1
-	     rm -rf /usr/bin/acme.sh > /dev/null 2>&1
+       rm -rf /usr/bin/acme.sh > /dev/null 2>&1
        echo -e "\033[33m 输入cloudflare网站里面的Global API Key \033[0m"
        CFKeyIP="请输入"
        while :; do
@@ -192,8 +192,6 @@ function system_check() {
     yum install -y wget curl sudo git lsof tar systemd dbus
     wget -N -P /etc/yum.repos.d/ https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
     curl -sL https://rpm.nodesource.com/setup_12.x | bash -
-    sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
-    setenforce 0
     sudo yum install epel-release
     yum update -y
     yum install -y nodejs redis
@@ -256,13 +254,13 @@ function system_check() {
 function nodejs_install() {
     apt update
     ${INS} curl wget sudo git lsof tar systemd lsb-release redis-server dbus gnupg2
-    ${UNINS} --purge npm
-    ${UNINS} --purge nodejs
-    ${UNINS} --purge nodejs-legacy
+    ${UNINS} --purge npm >/dev/null 2>&1
+    ${UNINS} --purge nodejs >/dev/null 2>&1
+    ${UNINS} --purge nodejs-legacy >/dev/null 2>&1
     apt autoremove -y
     curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
-    ${UNINS} cmdtest
-    ${UNINS} yarn
+    ${UNINS} cmdtest >/dev/null 2>&1
+    ${UNINS} yarn >/dev/null 2>&1
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
     rm -f /etc/apt/sources.list.d/nginx.list

@@ -353,9 +353,15 @@ function basic_optimization() {
 }
 
 function port_exist_check() {
-  lsof -i:"${CF_PORT}" | awk '{print $2}' | grep -v "PID" | xargs kill -9
-  lsof -i:"43002" | awk '{print $2}' | grep -v "PID" | xargs kill -9
-  lsof -i:"80" | awk '{print $2}' | grep -v "PID" | xargs kill -9
+  if [[ 1 -ge $(lsof -i:"${CF_PORT}" | grep -i -c "listen") ]]; then
+    lsof -i:"${CF_PORT}" | awk '{print $2}' | grep -v "PID" | xargs kill -9
+  fi
+  if [[ 1 -ge $(lsof -i:"43002" | grep -i -c "listen") ]]; then
+    lsof -i:"43002" | awk '{print $2}' | grep -v "PID" | xargs kill -9
+  fi
+  if [[ 1 -ge $(lsof -i:"80" | grep -i -c "listen") ]]; then
+    lsof -i:"80" | awk '{print $2}' | grep -v "PID" | xargs kill -9
+  fi
 }
 
 function ssl_judge_and_install() {

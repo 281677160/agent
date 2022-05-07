@@ -163,7 +163,11 @@ function system_check() {
   while :; do
   CF_PORT=""
   read -p " ${DUANKOU}：" CF_PORT
-  export CF_PORT=${PORT:-"25500"}
+  export CF_PORT=${CF_PORT:-"25500"}
+  if [[ "$CF_PORT" == "43002" ]]; then
+    echo -e "\033[31m 43002端口已被短链程序占用,请改其他端口 \033[0m"
+    export PORTY="n"
+  fi
   if [[ "$CF_PORT" -ge "10000" ]] && [[ "$CF_PORT" -le "65535" ]]; then
     export PORTY="y"
   fi

@@ -158,14 +158,37 @@ function system_check() {
     fi
   echo
   echo
+  echo -e "\033[33m 设置节点转换使用的端口,直接回车默认使用25500 \033[0m"
+  export DUANKOU="请输入[1-65535]之间的值"
+  while :; do
+  CF_PORT=""
+  read -p " ${DUANKOU}：" CF_PORT
+  export CF_PORT=${PORT:-"25500"}
+  if [[ "$CF_PORT" -ge "10000" ]] && [[ "$CF_PORT" -le "65535" ]]; then
+    export PORTY="y"
+  fi
+  case $PORTY in
+  y)
+    export CF_PORT="${CF_PORT}"
+  break
+  ;;
+  *)
+    export DUANKOU="敬告：请输入[1-65535]之间的值"
+  ;;
+  esac
+  done
+  echo
+  echo
   if [[ "${CF_domain}" == "1" ]]; then
     ECHOG "您的域名为：${CUrrent_ip} 已申请证书"
     ECHOG "Global API Key为：已存在"
     ECHOG "CF注册邮箱为：已存在"
+    ECHOG "端口为：${CF_PORT}"
   else 
     ECHOG "您的域名为：${CUrrent_ip}"
     ECHOG "Global API Key为：${CF_Key}"
     ECHOG "CF注册邮箱为：${CF_Email}"
+    ECHOG "端口为：${CF_PORT}"
   fi
   echo
   read -p " [检查是否正确,正确回车继续,不正确按Q回车重新输入]： " NNKC
@@ -312,9 +335,23 @@ function command_Version() {
   fi
 }
 
+function basic_optimization() {
+  # 最大文件打开数
+  sed -i '/^\*\ *soft\ *nofile\ *[[:digit:]]*/d' /etc/security/limits.conf
+  sed -i '/^\*\ *hard\ *nofile\ *[[:digit:]]*/d' /etc/security/limits.conf
+  echo '* soft nofile 65536' >>/etc/security/limits.conf
+  echo '* hard nofile 65536' >>/etc/security/limits.conf
+
+  # RedHat 系发行版关闭 SELinux
+  if [[ "${ID}" == "centos" || "${ID}" == "ol" ]]; then
+    sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
+    setenforce 0
+  fi
+}
+
 function port_exist_check() {
-  lsof -i:"25500" | awk '{print $2}' | grep -v "PID" | xargs kill -9
-  lsof -i:"8002" | awk '{print $2}' | grep -v "PID" | xargs kill -9
+  lsof -i:"${CF_PORT}" | awk '{print $2}' | grep -v "PID" | xargs kill -9
+  lsof -i:"43002" | awk '{print $2}' | grep -v "PID" | xargs kill -9
   lsof -i:"80" | awk '{print $2}' | grep -v "PID" | xargs kill -9
 }
 
@@ -407,9 +444,10 @@ function install_subconverter() {
     sed -i "s?managed_config_prefix=.*?managed_config_prefix=${suc_ip}?g" "${clash_path}/subconverter/pref.example.ini"
     sed -i "s?listen=.*?listen=127.0.0.1?g" "${clash_path}/subconverter/pref.example.ini"
     sed -i "s?serve_file_root=.*?serve_file_root=/www/dist_web?g" "${clash_path}/subconverter/pref.example.ini"
-    
     sed -i "s?listen =.*?listen = \"127.0.0.1\"?g" "${clash_path}/subconverter/pref.example.toml"
     sed -i "s?serve_file_root =.*?serve_file_root = \"/www/dist_web\"?g" "${clash_path}/subconverter/pref.example.toml"
+    sed -i "s?port=.*?port=${CF_PORT}?g" "${clash_path}/subconverter/pref.example.toml"
+    sed -i "s?port = .*?port = ${CF_PORT}?g" "${clash_path}/subconverter/pref.example.toml"
   fi
   rm -rf "${clash_path}/subconverter_${ARCH_PRINT}.tar.gz"
 
@@ -436,7 +474,7 @@ function install_subconverter() {
   systemctl start subconverter
   systemctl enable subconverter
 
-  if [[ $(lsof -i:"25500" | grep -i -c "listen") -ge "1" ]]; then
+  if [[ $(lsof -i:"${CF_PORT}" | grep -i -c "listen") -ge "1" ]]; then
     print_ok "subconverter安装成功"
   else
     print_error "subconverter安装失败,请再次执行安装命令试试"
@@ -502,7 +540,7 @@ function install_myurls() {
     
   [Service]
   Type=simple
-  ExecStart=${clash_path}/myurls/linux-amd64-myurls.service -domain ${myurls_ip} -port 8002
+  ExecStart=${clash_path}/myurls/linux-amd64-myurls.service -domain ${myurls_ip} -port 43002
   WorkingDirectory=${clash_path}/myurls
   Restart=always
   RestartSec=10
@@ -717,6 +755,7 @@ menu() {
   system_check
   nginx_install
   command_Version
+  basic_optimization
   port_exist_check
   ssl_judge_and_install
   install_subconverter

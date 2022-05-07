@@ -569,7 +569,7 @@ ECHOY "正在设置所有应用配置文件"
 cat >"/etc/nginx/conf.d/www_nginx.conf" <<-EOF
 server {
     listen  80; 
-    server_name  ${www_ip};
+    server_name  ${www_ip} ${CUrrent_ip};
     return 301 https://\$host\$request_uri; 
 }
 server {
@@ -611,7 +611,7 @@ EOF
 cat >"/etc/nginx/conf.d/suc_nginx.conf" <<-EOF
 server {
     listen  80; 
-    server_name  ${suc_ip} ${CUrrent_ip};
+    server_name  ${suc_ip};
     return 301 https://\$host\$request_uri;  
 }
 

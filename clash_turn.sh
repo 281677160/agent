@@ -443,7 +443,7 @@ function install_subconverter() {
     print_ok "subconverter解压完成"
     export HDPASS="$(cat /proc/sys/kernel/random/uuid)"
     sed -i "s?api_access_token=.*?api_access_token=${HDPASS}?g" "${clash_path}/subconverter/pref.example.ini"
-    sed -i "s?managed_config_prefix=.*?managed_config_prefix=${suc_ip}?g" "${clash_path}/subconverter/pref.example.ini"
+    sed -i "s?managed_config_prefix=.*?managed_config_prefix=${http_suc_ip}?g" "${clash_path}/subconverter/pref.example.ini"
     sed -i "s?listen=.*?listen=127.0.0.1?g" "${clash_path}/subconverter/pref.example.ini"
     sed -i "s?serve_file_root=.*?serve_file_root=/www/dist_web?g" "${clash_path}/subconverter/pref.example.ini"
     sed -i "s?listen =.*?listen = \"127.0.0.1\"?g" "${clash_path}/subconverter/pref.example.toml"

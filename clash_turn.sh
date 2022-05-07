@@ -159,7 +159,7 @@ function system_check() {
   echo
   echo
   echo -e "\033[33m 设置节点转换使用的端口,直接回车默认使用25500 \033[0m"
-  export DUANKOU="请输入[1-65535]之间的值"
+  export DUANKOU="请输入[10000-65535]之间的值"
   while :; do
   CF_PORT=""
   read -p " ${DUANKOU}：" CF_PORT

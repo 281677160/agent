@@ -712,7 +712,7 @@ export default {
     tanchuang() {
     },
     onCopy() {
-      this.$message.success("短链已复制!");
+      this.$message.success("链接已复制!");
     },
     goToProject() {
       window.open(project);

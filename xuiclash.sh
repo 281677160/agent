@@ -242,10 +242,11 @@ function install_subconverter() {
   sed -i 's/^[ ]*//g' /etc/systemd/system/subconverter.service
   sed -i '1d' /etc/systemd/system/subconverter.service
   chmod 755 /etc/systemd/system/subconverter.service
-  sleep 2
+  sleep 1
   systemctl daemon-reload
   systemctl start subconverter
   systemctl enable subconverter
+  sleep 3
   if [[ $(lsof -i:"25500" | grep -i -c "listen") -ge "1" ]]; then
     print_ok "subconverter安装成功"
   else

@@ -56,6 +56,7 @@ export HOME="/root"
 export domainjilu="$HOME/.acme.sh/domainjilu"
 export HDFW_PORT="25500"
 export DLJ_PORT="42301"
+export arch=$(arch)
 
 if [[ ! "$USER" == "root" ]]; then
   print_error "警告：请使用root用户操作!~~"

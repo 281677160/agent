@@ -92,7 +92,7 @@ function system_check() {
   fi
   case $CUrrenty in
   Y)
-    export CUrrent_ip="$(echo "${CUrrent_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/\///g' |sed 's/ //g')"
+    export CUrrent_ip="$(echo "${CUrrent_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/www.//g' |sed 's/\///g' |sed 's/ //g')"
     export after_ip="http://127.0.0.1:25500"
     export http_suc_ip="https://suc.${CUrrent_ip}"
     export suc_ip="suc.${CUrrent_ip}"

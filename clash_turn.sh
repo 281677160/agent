@@ -106,10 +106,11 @@ function system_check() {
   esac
   done
     if [[ "${CFKEYLE}" == "CF_Key_xx" ]] && [[ "${EMAILLE}" == "CF_Email_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
-       CF_domain="1"
+       export CF_domain="1"
     else
        echo
        echo
+      export CF_domain="0"
       "$HOME"/.acme.sh/acme.sh --uninstall > /dev/null 2>&1
        rm -rf "$HOME"/.acme.sh > /dev/null 2>&1
        rm -rf /usr/bin/acme.sh > /dev/null 2>&1
@@ -339,7 +340,7 @@ function port_exist_check() {
 }
 
 function domain_check() {
-  if [[ ! "${CF_domain}" == "1" ]]; then
+  if [[ "${CF_domain}" == "0" ]]; then
     export domain_ip="$(ping "${domain}" -c 1 | sed '1{s/[^(]*(//;s/).*//;q}')" > /dev/null 2>&1
     export local_ip=$(curl -4L api64.ipify.org)
     print_ok "检测域名解析"

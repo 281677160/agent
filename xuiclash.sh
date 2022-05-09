@@ -10,6 +10,7 @@ GreenBG="\033[42;37m"
 RedBG="\033[41;37m"
 OK="${Green}[OK]${Font}"
 ERROR="${Red}[ERROR]${Font}"
+arch=$(arch)
 
 function print_ok() {
   echo

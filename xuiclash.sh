@@ -72,7 +72,6 @@ function system_check() {
     curl -sL https://rpm.nodesource.com/setup_12.x | bash -
     sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
     setenforce 0
-    yum update -y
     yum install -y nodejs
     npm install -g yarn
     export INS="yum install -y"
@@ -144,8 +143,6 @@ server {
     }
 }
 EOF
-service nginx restart
-judge "nginx更新配置"
 systemctl enable nginx
 }
 
@@ -221,9 +218,7 @@ function install_subconverter() {
   fi
   rm -rf "/root/subconverter_${ARCH_PRINT2}.tar.gz"
   echo "${latest_vers}" >/root/subconverter/subconverter_vers
- }
 
-function update_rc() {
   echo '
   [Unit]
   Description=A API For Subscription Convert
@@ -293,7 +288,6 @@ menu() {
   command_Version
   port_exist_check
   install_subconverter
-  update_rc
   install_subweb
 }
 menu "$@"

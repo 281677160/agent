@@ -191,29 +191,34 @@ function system_check() {
   ECHOY "正在安装各种必须依赖"
   echo
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
-    yum install -y wget curl sudo git lsof tar systemd dbus
-    wget -N -P /etc/yum.repos.d/ https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
     curl -sL https://rpm.nodesource.com/setup_12.x | bash -
-    sudo yum install epel-release
-    yum upgrade -y libmodulemd
-    yum install -y nodejs redis
+    sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
+    setenforce 0
+    nodejs_remove
+    yum install -y nodejs
     npm install -g yarn
     export INS="yum install -y"
     export PUBKEY="centos"
   elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
+    apt update
     export INS="apt-get install -y"
     export UNINS="apt-get remove -y"
     export PUBKEY="ubuntu"
+    nodejs_remove
     nodejs_install
   elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
+    apt update
     export INS="apt install -y"
     export UNINS="apt remove -y"
     export PUBKEY="debian"
+    export Subcon="/etc/init.d/subconverter"
+    nodejs_remove
     nodejs_install
   else
     echo -e "\033[31m 不支持该系统 \033[0m"
     exit 1
   fi
+}
   
   # 关闭各类防火墙
   systemctl stop firewalld
@@ -250,21 +255,19 @@ function system_check() {
   fi
 }
 
-function nodejs_install() {
-    apt update
-    ${INS} curl wget sudo git lsof tar systemd lsb-release redis-server dbus gnupg2
+function nodejs_remove() {
     ${UNINS} --purge npm >/dev/null 2>&1
     ${UNINS} --purge nodejs >/dev/null 2>&1
     ${UNINS} --purge nodejs-legacy >/dev/null 2>&1
-    apt autoremove -y
-    curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
+    apt autoremove -y >/dev/null 2>&1
     ${UNINS} cmdtest >/dev/null 2>&1
     ${UNINS} yarn >/dev/null 2>&1
+}
+
+function nodejs_install() {
+    curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-    rm -f /etc/apt/sources.list.d/nginx.list
-    echo "deb http://nginx.org/packages/${PUBKEY} $(lsb_release -cs) nginx" >/etc/apt/sources.list.d/nginx.list
-    curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
     apt-get update
     ${INS} nodejs yarn
 }

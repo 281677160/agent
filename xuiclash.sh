@@ -54,12 +54,12 @@ if [[ ! "$USER" == "root" ]]; then
   print_error "警告：请使用root用户操作!~~"
   exit 1
 fi
-if [[ `dpkg --print-architecture |grep -c "amd64"` == '1' ]]; then
-  export ARCH_PRINT2="linux64"
-elif [[ `dpkg --print-architecture |grep -c "arm64"` == '1' ]]; then
-  export ARCH_PRINT2="aarch64"
+if [[ $arch == "x86_64" || $arch == "x64" || $arch == "amd64" ]]; then
+  ARCH_PRINT2="linux64"
+elif [[ $arch == "aarch64" || $arch == "arm64" ]]; then
+  ARCH_PRINT2="aarch64"
 else
-  print_error "不支持此系统,只支持x86_64的ubuntu和arm64的ubuntu"
+  print_error "不支持此系统,只支持x86_64和arm64的系统"
   exit 1
 fi
 

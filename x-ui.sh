@@ -40,6 +40,7 @@ cert_group="nobody"
 random_num=$((RANDOM % 12 + 4))
 HOME="/root"
 domainjilu="$HOME/.acme.sh/domainjilu"
+arch=$(arch)
 
 function print_ok() {
   echo -e " ${OK} ${Blue} $1 ${Font}"

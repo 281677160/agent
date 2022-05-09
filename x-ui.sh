@@ -71,9 +71,9 @@ if [[ ! "$USER" == "root" ]]; then
   exit 1
 fi
 if [[ $arch == "x86_64" || $arch == "x64" || $arch == "amd64" ]]; then
-    ARCH_PRINT="amd64"
+  ARCH_PRINT="amd64"
 elif [[ $arch == "aarch64" || $arch == "arm64" ]]; then
-    ARCH_PRINT="arm64"
+  ARCH_PRINT="arm64"
 else
   print_error "不支持此系统,只支持x86_64和arm64的系统"
   exit 1

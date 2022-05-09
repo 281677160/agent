@@ -200,18 +200,15 @@ function system_check() {
     npm install -g yarn
     export INS="yum install -y"
     export PUBKEY="centos"
-    export Subcon="/etc/rc.d/init.d/subconverter"
   elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
     export INS="apt-get install -y"
     export UNINS="apt-get remove -y"
     export PUBKEY="ubuntu"
-    export Subcon="/etc/init.d/subconverter"
     nodejs_install
   elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
     export INS="apt install -y"
     export UNINS="apt remove -y"
     export PUBKEY="debian"
-    export Subcon="/etc/init.d/subconverter"
     nodejs_install
   else
     echo -e "\033[31m 不支持该系统 \033[0m"

@@ -499,14 +499,14 @@ function acme() {
   fi
 }
 
+function configure_cloudreve() {
+bash -c  "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xuiclash.sh)"
+}
+
 function configure_nginx() {
   bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray/xui.conf)"
   systemctl restart nginx
   judge "Nginx 配置 修改"
-}
-
-function configure_cloudreve() {
-bash -c  "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xuiclash.sh)"
 }
 
 function restart_all() {
@@ -646,8 +646,8 @@ function install_xui() {
   nginx_install
   generate_certificate
   ssl_judge_and_install
-  configure_nginx
   configure_cloudreve
+  configure_nginx
   restart_all
 }
 menu() {

@@ -70,6 +70,7 @@ function system_check() {
   echo
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
     curl -sL https://rpm.nodesource.com/setup_12.x | bash -
+    wget -N -P /etc/yum.repos.d/ https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
     sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
     setenforce 0
     nodejs_remove

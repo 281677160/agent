@@ -195,7 +195,7 @@ function system_check() {
     wget -N -P /etc/yum.repos.d/ https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
     curl -sL https://rpm.nodesource.com/setup_12.x | bash -
     sudo yum install epel-release
-    yum update -y
+    yum upgrade -y libmodulemd
     yum install -y nodejs redis
     npm install -g yarn
     export INS="yum install -y"

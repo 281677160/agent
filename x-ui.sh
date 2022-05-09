@@ -428,7 +428,7 @@ function port_exist_check() {
 function xui_install() {
   print_ok "安装 x-ui"
   cd /root
-  latest_ver="$(wget -qO- -t1 -T2 "https://api.github.com/repos/vaxilu/x-ui/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')"
+  latest_ver="$(wget -qO- -t1 -T2 "https://api.github.com/repos/FranzKafkaYu/x-ui/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')"
   wget -q -P /root https://ghproxy.com/https://github.com/FranzKafkaYu/x-ui/releases/download/${latest_ver}/x-ui-linux-${ARCH_PRINT}.tar.gz -O /root/x-ui-linux-${ARCH_PRINT}.tar.gz
   judge "x-ui 文件下载"
   rm x-ui/ /usr/local/x-ui/ /usr/bin/x-ui -rf

@@ -339,21 +339,23 @@ function port_exist_check() {
 }
 
 function domain_check() {
-  export domain_ip="$(ping "${domain}" -c 1 | sed '1{s/[^(]*(//;s/).*//;q}')" > /dev/null 2>&1
-  export local_ip=$(curl -4L api64.ipify.org)
-  print_ok "检测域名解析"
-  if [[ ! ${local_ip} == ${domain_ip} ]]; then
-    echo
-    ECHOY "域名解析IP为：${domain_ip}"
-    echo
-    ECHOY "本机IP为：${local_ip}"
-    echo
-    print_error "域名解析IP跟本机IP不一致,检测域名解析是否生效,或是否打开了CDN了"
-    exit 1
-  else
-    print_ok "域名解析IP为：${domain_ip}"
-    print_ok "本机IP为：${local_ip}"
-    print_ok "域名解析IP跟本机IP一致"
+  if [[ ! "${CF_domain}" == "1" ]]; then
+    export domain_ip="$(ping "${domain}" -c 1 | sed '1{s/[^(]*(//;s/).*//;q}')" > /dev/null 2>&1
+    export local_ip=$(curl -4L api64.ipify.org)
+    print_ok "检测域名解析"
+    if [[ ! ${local_ip} == ${domain_ip} ]]; then
+      echo
+      ECHOY "域名解析IP为：${domain_ip}"
+      echo
+      ECHOY "本机IP为：${local_ip}"
+      echo
+      print_error "域名解析IP跟本机IP不一致,检测域名解析是否生效,或是否打开了CDN了"
+      exit 1
+    else
+      print_ok "域名解析IP为：${domain_ip}"
+      print_ok "本机IP为：${local_ip}"
+      print_ok "域名解析IP跟本机IP一致"
+    fi
   fi
 }
 

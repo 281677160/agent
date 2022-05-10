@@ -95,8 +95,6 @@ function running_state() {
   [[ -z "${NGINX_VERSION}" ]] && NGINX_VERSION="未知"
   [[ -f "/usr/local/x-ui/xui_ver" ]] && xui_ver="$(cat /usr/local/x-ui/xui_ver)"
   [[ -z "${xui_ver}" ]] && xui_ver="未知"
-  [[ -f "/root/subconverter/subconverter_vers" ]] && subconverter_ver="$(cat /root/subconverter/subconverter_vers)"
-  [[ -z "${subconverter_ver}" ]] && subconverter_ver="未知"
   if [[ `command -v x-ui |grep -c "x-ui"` == '0' ]]; then
     export XUI_ZT="${Blue} x-ui状态${Font}：${Red}未安装${Font}"
   elif [[ `systemctl status x-ui |grep -c "active (running) "` == '1' ]]; then
@@ -105,15 +103,6 @@ function running_state() {
     export XUI_ZT="${Blue} x-ui状态${Font}：${Green}已安装${Font},${Red}未运行${Font}"
   else
     export XUI_ZT="${Blue} x-ui状态：${Font}未知"
-  fi
-  if [[ ! -d "/root/subconverter" ]] || [[ ! -f "/etc/systemd/system/subconverter.service" ]]; then
-    export CLASH_ZT="${Blue} clash节点转换状态${Font}：${Red}未安装${Font}"
-  elif [[ `systemctl status subconverter |grep -c "active (running) "` == '1' ]]; then
-    export CLASH_ZT="${Blue} clash节点转换状态${Font}：${Green}运行中 ${Font}|${Blue} 版本${Font}：${Green}${subconverter_ver}${Font}"
-  elif [[ -d "/root/subconverter" ]] && [[ -f "/etc/systemd/system/subconverter.service" ]] && [[ `systemctl status subconverter |grep -c "active (running) "` == '0' ]]; then
-    export CLASH_ZT="${Blue} clash节点转换状态${Font}：${Green}已安装${Font},${Red}未运行${Font}"
-  else
-    export CLASH_ZT="${Blue} clash节点转换状态：${Font}未知"
   fi
   if [[ `command -v nginx |grep -c "nginx"` == '0' ]]; then
     export NGINX_ZT="${Blue} Nginx状态${Font}：${Red}未安装${Font}"
@@ -127,6 +116,123 @@ function running_state() {
 }
 
 function system_check() {
+  clear
+  echo
+  echo
+  [[ ! -d "${clash_path}" ]] && mkdir -p "${clash_path}"
+  CF_domain="0"
+  if [[ -f "${domainjilu}" ]]; then
+    PROFILE="$(grep 'domain=' ${domainjilu} | cut -d "=" -f2)"
+    CFKEYLE="$(grep 'CF_Key=' ${domainjilu} | cut -d "=" -f2)"
+    EMAILLE="$(grep 'CF_Email=' ${domainjilu} | cut -d "=" -f2)"
+  fi
+  echo -e "\033[33m 请输入已解析泛域名的域名，比如：clash.com] \033[0m"
+  export YUMINGIP="请输入"
+  while :; do
+  CUrrenty=""
+  read -p " ${YUMINGIP}：" CUrrent_ip
+  if [[ -n "${CUrrent_ip}" ]] && [[ "$(echo ${CUrrent_ip} |grep -c '.')" -ge '1' ]]; then
+    CUrrenty="Y"
+  fi
+  case $CUrrenty in
+  Y)
+    export CUrrent_ip="$(echo "${CUrrent_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/www.//g' |sed 's/\///g' |sed 's/ //g')"
+    export after_ip="http://127.0.0.1:25500"
+    export http_suc_ip="https://suc.${CUrrent_ip}"
+    export suc_ip="suc.${CUrrent_ip}"
+    export www_ip="www.${CUrrent_ip}"
+    export myurls_ip="dl.${CUrrent_ip}"
+    export domain="${CUrrent_ip}"
+  break
+  ;;
+  *)
+    export YUMINGIP="敬告,请输入正确的域名"
+  ;;
+  esac
+  done
+    if [[ "${CFKEYLE}" == "CF_Key_xx" ]] && [[ "${EMAILLE}" == "CF_Email_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
+       export CF_domain="1"
+    else
+       echo
+       echo
+      export CF_domain="0"
+      "$HOME"/.acme.sh/acme.sh --uninstall > /dev/null 2>&1
+       rm -rf "$HOME"/.acme.sh > /dev/null 2>&1
+       rm -rf /usr/bin/acme.sh > /dev/null 2>&1
+       echo -e "\033[33m 输入cloudflare网站里面的Global API Key \033[0m"
+       CFKeyIP="请输入"
+       while :; do
+       export CFKeyIPty=""
+       read -p " ${CFKeyIP}：" CF_Key
+       if [[ -n "${CF_Key}" ]]; then
+         export CFKeyIPty="Y"
+       fi
+       case $CFKeyIPty in
+       Y)
+         export CF_Key="${CF_Key}"
+	 export CF_Key="$(echo "${CF_Key}" |sed 's/ //g')"
+       break
+       ;;
+       *)
+         export CFKeyIP="敬告,Global API Key不能为空,请输入"
+       ;;
+       esac
+       done
+    fi
+    if [[ "${CFKEYLE}" == "CF_Key_xx" ]] && [[ "${EMAILLE}" == "CF_Email_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
+       CF_domain="1"
+    else
+       echo
+       echo
+       echo -e "\033[33m 注册绑定cloudflare网站的邮箱 \033[0m"
+       export EmailIP="请输入"
+       while :; do
+       export EmailIPty=""
+       read -p " ${EmailIP}：" CF_Email
+       if [[ -n "${CF_Email}" ]]; then
+         EmailIPty="Y"
+       fi
+       case $EmailIPty in
+       Y)
+         export CF_Email="${CF_Email}"
+	 export CF_Email="$(echo "${CF_Email}" |sed 's/ //g')"
+       break
+       ;;
+       *)
+         export EmailIP="敬告,CF注册邮箱不能为空,请输入"
+       ;;
+       esac
+       done
+    fi
+  echo
+  echo
+  if [[ "${CF_domain}" == "1" ]]; then
+    ECHOG "您的域名为：${CUrrent_ip} 证书已存在"
+    ECHOG "Global API Key为：已存在"
+    ECHOG "CF注册邮箱为：已存在"
+  else 
+    ECHOG "您的域名为：${CUrrent_ip}"
+    ECHOG "Global API Key为：${CF_Key}"
+    ECHOG "CF注册邮箱为：${CF_Email}"
+  fi
+  echo
+  read -p " [检查是否正确,正确回车继续,不正确按Q回车重新输入]： " NNKC
+  case $NNKC in
+  [Qq])
+    system_check
+    exit 0
+  ;;
+  *)
+    echo
+    print_ok "您已确认无误!"
+  ;;
+  esac
+  echo
+  ECHOY "开始执行安装程序,请耐心等候..."
+  sleep 2
+  echo
+  
+  ECHOY "正在安装各种必须依赖"
   source '/etc/os-release'
 
   if [[ "${ID}" == "centos" && ${VERSION_ID} -ge 7 ]]; then
@@ -173,7 +279,7 @@ function system_check() {
   fi
 
   $INS dbus
-
+  
   # 关闭各类防火墙
   systemctl stop firewalld
   systemctl disable firewalld
@@ -207,111 +313,6 @@ function system_check() {
     chmod 755 /etc/init.d/acceptoff
     update-rc.d acceptoff defaults 90
   fi
-}
-
-function kaishi_install() {
-  echo
-  echo
-  export YUMING="请输入x-ui面板所用的域名"
-  ECHOY "${YUMING}[比如：v2.xray.com]"
-  while :; do
-  read -p " ${YUMING}：" domain
-  if [[ -n "${domain}" ]] && [[ "$(echo ${domain} |grep -c '\.')" -ge '1' ]]; then
-    export domainy="Y"
-  fi
-  case $domainy in
-  Y)
-    export domain="${domain}"
-  break
-  ;;
-  *)
-    export YUMING="敬告：请输入正确的域名"
-  ;;
-  esac
-  done
-  echo
-  ECHOR "请设置x-ui面板帐号,直接回车则使用 admin"
-  read -p " 请输入帐号：" config_account
-  export config_account=${config_account:-"admin"}
-  
-  echo
-  ECHOY "请设置x-ui面板密码,直接回车则使用 admin"
-  read -p " 请输入密码：" config_password
-  export config_password=${config_password:-"admin"}
-  
-  echo
-  ECHOG "请设置x-ui面板端口,直接回车则使用 54321"
-  export DUANKO="请输入[10000-65535]之间的值"
-  while :; do
-  read -p " ${DUANKO}：" config_port
-  export config_port=${config_port:-"54321"}
-  if [[ "${config_port}" -ge "10000" ]] && [[ "${config_port}" -le "65535" ]]; then
-    export PORTY="y"
-  fi
-  case $PORTY in
-  y)
-    export config_port="${config_port}"
-  break
-  ;;
-  *)
-    export DUANKO="敬告：请输入[10000-65535]之间的值"
-  ;;
-  esac
-  done
-  
-  echo
-  ECHOY "请设置x-ui面板根路径,前面要带 “/” 符号,直接回车则使用 /xui"
-  ECHOR "比如根路径为 /xui 就会使用 ${domain}/xui 来登录x-ui面板"
-  ECHOG "而 ${domain} 则会是clash节点转换的网址"
-  echo
-  read -p " 请输入面板根路径：" config_web
-  export config_web=${config_web:-"/xui"}
-  export config_web="$(echo "${config_web}" |sed 's/\///g' |sed 's/ //g' |sed 's/^/\/&/')"
-  
-  echo
-  ECHOY "请输入clash节点转换所用的域名,此域名纯粹当IP使用的"
-  export YUMINGIP="请输入"
-  while :; do
-  CUrrenty=""
-  read -p " ${YUMINGIP}：" CUrrent_ip
-  if [[ -n "${CUrrent_ip}" ]] && [[ "$(echo ${CUrrent_ip} |grep -c '.')" -ge '1' ]]; then
-    CUrrenty="Y"
-  fi
-  case $CUrrenty in
-  Y)
-    export CUrrent_ip="$(echo "${CUrrent_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/\///g')"
-    export current_ip="http://${CUrrent_ip}"
-    export after_ip="http://127.0.0.1"
-  break
-  ;;
-  *)
-    export YUMINGIP="敬告,请输入正确的域名"
-  ;;
-  esac
-  done
-  
-  echo
-  ECHOG "您的面板域名为：${domain}"
-  ECHOG "面板帐号为：${config_account}"
-  ECHOG "面板密码为：${config_password}"
-  ECHOG "面板根路径为：${config_web}"
-  ECHOG "节点转换域名为：${CUrrent_ip}"
-  echo
-  read -p " [检查是否正确,正确回车继续,不正确按Q回车重新输入]： " NNKC
-  case $NNKC in
-  [Qq])
-    install_xui
-    exit 0
-  ;;
-  *)
-    echo
-    print_ok "您已确认无误!"
-  ;;
-  esac
-  echo
-  ECHOY "开始执行安装程序,请耐心等候..."
-  sleep 2
-  echo
 }
 
 function nginx_install() {
@@ -582,17 +583,6 @@ function xui_uninstall() {
   fi
   find / -iname 'nginx' 2>&1 | xargs -i rm -rf {}
   print_ok "nginx御载 完成"
-  sleep 2
-  ECHOY "开始御载subconverter"
-  systemctl stop subconverter
-  systemctl disable subconverter
-  systemctl daemon-reload
-  rm -rf /root/subconverter
-  rm -rf /root/sub-web
-  rm -rf /www/dist_web
-  rm -rf /etc/systemd/system/subconverter.service
-  rm -rf /etc/nginx/sites-available/clash_nginx.conf
-  print_ok "subconverter御载完成"
   sleep 2
   if [[ -d "$HOME"/.acme.sh ]]; then
     clear

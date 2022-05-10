@@ -443,10 +443,10 @@ function generate_certificate() {
 }
 
 function configure_web() {
-  rm -rf /www/xray_web
-  mkdir -p /www/xray_web
+  rm -rf /www/xui_web
+  mkdir -p /www/xui_web
   wget -O web.tar.gz https://raw.githubusercontent.com/wulabing/Xray_onekey/main/basic/web.tar.gz
-  tar xzf web.tar.gz -C /www/xray_web
+  tar xzf web.tar.gz -C /www/xui_web
   judge "站点伪装"
   rm -f web.tar.gz
 }
@@ -470,7 +470,7 @@ server {
     ssl_prefer_server_ciphers on;
     ssl_session_timeout 60m;
     index index.php index.html index.htm default.php default.htm default.html;
-    root /www/dist_web;
+    root /www/xui_web;
     add_header Access-Control-Allow-Origin *;
     
     error_page 404 /index.html;
@@ -505,7 +505,7 @@ server
     #配置站点域名，多个以空格分开
     server_name ${domain};
     index index.php index.html index.htm default.php default.htm default.html;
-    root /www/dist_web;
+    root /www/xui_web;
     #SSL-START SSL相关配置，请勿删除或修改下一行带注释的404规则
     #error_page 404/404.html;
     #HTTP_TO_HTTPS_START

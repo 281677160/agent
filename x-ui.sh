@@ -743,8 +743,8 @@ function install_xui() {
   xui_install
   nginx_install
   generate_certificate
+  configure_web
   ssl_judge_and_install
-  configure_cloudreve
   configure_nginx
   restart_all
 }

@@ -468,8 +468,8 @@ server {
     listen 443 ssl;
     listen [::]:443 ssl;
     server_name  ${www_ip} ${CUrrent_ip};
-    ssl_certificate ${clash_path}/server.crt;
-    ssl_certificate_key ${clash_path}/server.key;
+    ssl_certificate ${xui_path}/server.crt;
+    ssl_certificate_key ${xui_path}/server.key;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-GCM-SHA256:TLS13-AES-128-CCM-8-SHA256:TLS13-AES-128-CCM-SHA256:EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5;
     ssl_prefer_server_ciphers on;
@@ -514,8 +514,8 @@ server
     #SSL-START SSL相关配置，请勿删除或修改下一行带注释的404规则
     #error_page 404/404.html;
     #HTTP_TO_HTTPS_START
-    ssl_certificate       /ssl/xui.crt; 
-    ssl_certificate_key   /ssl/xui.key;
+    ssl_certificate ${xui_path}/server.crt;
+    ssl_certificate_key ${xui_path}/server.key;
     #ssl_protocols TLSv1.1 TLSv1.2 TLSv1.3;
     ssl_ciphers EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5;
     ssl_prefer_server_ciphers on; 

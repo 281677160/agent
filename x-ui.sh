@@ -131,11 +131,6 @@ function system_check() {
   case $CUrrenty in
   Y)
     export CUrrent_ip="$(echo "${CUrrent_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/www.//g' |sed 's/\///g' |sed 's/ //g')"
-    export after_ip="http://127.0.0.1:25500"
-    export http_suc_ip="https://suc.${CUrrent_ip}"
-    export suc_ip="suc.${CUrrent_ip}"
-    export www_ip="www.${CUrrent_ip}"
-    export myurls_ip="dl.${CUrrent_ip}"
     export domain="${CUrrent_ip}"
   break
   ;;
@@ -461,13 +456,13 @@ ECHOY "正在设置所有应用配置文件"
 cat >"/etc/nginx/conf.d/xui_www.conf" <<-EOF
 server {
     listen  80; 
-    server_name  ${www_ip} ${CUrrent_ip};
+    server_name  ${domain};
     return 301 https://\$host\$request_uri; 
 }
 server {
     listen 443 ssl;
     listen [::]:443 ssl;
-    server_name  ${www_ip} ${CUrrent_ip};
+    server_name  ${domain};
     ssl_certificate ${xui_path}/server.crt;
     ssl_certificate_key ${xui_path}/server.key;
     ssl_protocols TLSv1.2 TLSv1.3;
@@ -543,8 +538,8 @@ server
         error_log /dev/null;
         access_log /dev/null; 
     }
-    location ^~ ${config_web} {
-	    proxy_pass http://127.0.0.1:${config_port}${config_web};
+    location ^~ /xui {
+	    proxy_pass http://127.0.0.1:55555/xui;
 	    proxy_set_header Host \$host;
 	    proxy_set_header X-Real-IP \$remote_addr;
 	    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;

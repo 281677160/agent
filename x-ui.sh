@@ -447,6 +447,132 @@ function generate_certificate() {
   /usr/local/x-ui/x-ui setting -port ${config_port}
 }
 
+function configure_web() {
+  rm -rf /www/xray_web
+  mkdir -p /www/xray_web
+  wget -O web.tar.gz https://raw.githubusercontent.com/wulabing/Xray_onekey/main/basic/web.tar.gz
+  tar xzf web.tar.gz -C /www/xray_web
+  judge "站点伪装"
+  rm -f web.tar.gz
+}
+
+function configure_nginx() {
+ECHOY "正在设置所有应用配置文件"
+cat >"/etc/nginx/conf.d/xui_www.conf" <<-EOF
+server {
+    listen  80; 
+    server_name  ${www_ip} ${CUrrent_ip};
+    return 301 https://\$host\$request_uri; 
+}
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name  ${www_ip} ${CUrrent_ip};
+    ssl_certificate ${clash_path}/server.crt;
+    ssl_certificate_key ${clash_path}/server.key;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-GCM-SHA256:TLS13-AES-128-CCM-8-SHA256:TLS13-AES-128-CCM-SHA256:EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5;
+    ssl_prefer_server_ciphers on;
+    ssl_session_timeout 60m;
+    index index.php index.html index.htm default.php default.htm default.html;
+    root /www/dist_web;
+    add_header Access-Control-Allow-Origin *;
+    
+    error_page 404 /index.html;
+    gzip on; #开启gzip压缩
+    gzip_min_length 1k; #设置对数据启用压缩的最少字节数
+    gzip_buffers 4 16k;
+    gzip_http_version 1.0;
+    gzip_comp_level 6; #设置数据的压缩等级,等级为1-9，压缩比从小到大
+    gzip_types text/plain text/css text/javascript application/json application/javascript application/x-javascript application/xml; #设置需要压缩的数据格式
+    gzip_vary on;
+    
+    location ~* \.(css|js|png|jpg|jpeg|gif|gz|svg|mp4|ogg|ogv|webm|htc|xml|woff)$ {
+        access_log off;
+        add_header Cache-Control "public,max-age=30*24*3600";
+    }
+    
+    location ~ ^/(.user.ini|.htaccess|.git|.svn|.project|LICENSE|README.md)
+    {
+        return 404;
+    }
+    access_log off;
+}
+EOF
+
+cat >/etc/nginx/conf.d/xui_nginx.conf <<-EOF
+server
+{
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    listen 443 ssl http2;
+    listen [::]:443 ssl;
+    #配置站点域名，多个以空格分开
+    server_name ${domain};
+    index index.php index.html index.htm default.php default.htm default.html;
+    root /www/dist_web;
+    #SSL-START SSL相关配置，请勿删除或修改下一行带注释的404规则
+    #error_page 404/404.html;
+    #HTTP_TO_HTTPS_START
+    ssl_certificate       /ssl/xui.crt; 
+    ssl_certificate_key   /ssl/xui.key;
+    #ssl_protocols TLSv1.1 TLSv1.2 TLSv1.3;
+    ssl_ciphers EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5;
+    ssl_prefer_server_ciphers on; 
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+    add_header Strict-Transport-Security "max-age=31536000";
+    error_page 497  https://;
+    
+    #禁止访问的文件或目录
+    location ~ ^/(\.user.ini|\.htaccess|\.git|\.svn|\.project|LICENSE|README.md)
+    {
+        return 404;
+    }
+    
+    location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
+    {
+        expires      30d;
+        error_log /dev/null;
+        access_log /dev/null;
+    }
+    
+    location ~ .*\.(js|css)?$
+    {
+        expires      12h;
+        error_log /dev/null;
+        access_log /dev/null; 
+    }
+    location ^~ ${config_web} {
+	    proxy_pass http://127.0.0.1:${config_port}${config_web};
+	    proxy_set_header Host \$host;
+	    proxy_set_header X-Real-IP \$remote_addr;
+	    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+    }
+    location /vlpath {
+        proxy_redirect off;
+        proxy_pass http://127.0.0.1:54512;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host \$http_host;
+        proxy_read_timeout 300s;
+        # Show realip in v2ray access.log
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+  }
+}
+EOF
+  chmod -R 755 /etc/nginx/conf.d
+  systemctl restart nginx
+  if [[ $? -ne 0 ]];then
+    print_error "配置文件启动失败"
+    exit 1
+  else
+    print_ok "配置文件启动成功"
+  fi
+}
+
 function ssl_judge_and_install() {
   if [[ -f "$HOME/.acme.sh/${domain}_ecc/${domain}.key" && -f "$HOME/.acme.sh/${domain}_ecc/${domain}.cer" && -f "$HOME/.acme.sh/acme.sh" ]]; then
     print_ok "[${domain}]证书已存在，重新启用证书"
@@ -495,12 +621,6 @@ function acme() {
     rm -rf "$HOME/.acme.sh/${domain}_ecc"
     exit 1
   fi
-}
-
-function configure_nginx() {
-  bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray/xui.conf)"
-  systemctl restart nginx
-  judge "Nginx 配置 修改"
 }
 
 function restart_all() {

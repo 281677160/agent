@@ -27,14 +27,13 @@ Hi="${Green}[Hi]${Font}"
 ERROR="${Red}[ERROR]${Font}"
 
 # 变量
-github_branch="main"
+xui_path="/usr/local/ssl"
 xray_conf_dir="/usr/local/x-ui"
 website_dir="/www/xray_web/"
 xray_access_log="/var/log/xray/access.log"
 xray_error_log="/var/log/xray/error.log"
 cert_dir="/usr/local/x-ui"
 domain_tmp_dir="/usr/local/x-ui"
-cloudreve_path="/usr/local/cloudreve"
 cloudreve_service="/etc/systemd/system"
 cert_group="nobody"
 random_num=$((RANDOM % 12 + 4))
@@ -119,12 +118,12 @@ function system_check() {
   clear
   echo
   echo
-  [[ ! -d "${clash_path}" ]] && mkdir -p "${clash_path}"
+  [[ ! -d "${xui_path}" ]] && mkdir -p "${xui_path}"
   CF_domain="0"
   if [[ -f "${domainjilu}" ]]; then
-    PROFILE="$(grep 'domain=' ${domainjilu} | cut -d "=" -f2)"
-    CFKEYLE="$(grep 'CF_Key=' ${domainjilu} | cut -d "=" -f2)"
-    EMAILLE="$(grep 'CF_Email=' ${domainjilu} | cut -d "=" -f2)"
+    PROFIXI="$(grep 'domain=' ${domainjilu} | cut -d "=" -f2)"
+    CFKEYXI="$(grep 'CF_Key=' ${domainjilu} | cut -d "=" -f2)"
+    EMAILXI="$(grep 'CF_Email=' ${domainjilu} | cut -d "=" -f2)"
   fi
   echo -e "\033[33m 请输入已解析泛域名的域名，比如：clash.com] \033[0m"
   export YUMINGIP="请输入"
@@ -150,7 +149,7 @@ function system_check() {
   ;;
   esac
   done
-    if [[ "${CFKEYLE}" == "CF_Key_xx" ]] && [[ "${EMAILLE}" == "CF_Email_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
+    if [[ "${CFKEYXI}" == "CF_Key_xx" ]] && [[ "${EMAILXI}" == "CF_Email_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
        export CF_domain="1"
     else
        echo
@@ -179,7 +178,7 @@ function system_check() {
        esac
        done
     fi
-    if [[ "${CFKEYLE}" == "CF_Key_xx" ]] && [[ "${EMAILLE}" == "CF_Email_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
+    if [[ "${CFKEYXI}" == "CF_Key_xx" ]] && [[ "${EMAILXI}" == "CF_Email_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
        CF_domain="1"
     else
        echo
@@ -456,18 +455,19 @@ function generate_certificate() {
 function ssl_judge_and_install() {
   if [[ -f "$HOME/.acme.sh/${domain}_ecc/${domain}.key" && -f "$HOME/.acme.sh/${domain}_ecc/${domain}.cer" && -f "$HOME/.acme.sh/acme.sh" ]]; then
     print_ok "[${domain}]证书已存在，重新启用证书"
-    [[ ! -d /ssl ]] && mkdir -p /ssl || rm -fr /ssl/*
     [[ ! -f "/usr/bin/acme.sh" ]] && ln -s  /root/.acme.sh/acme.sh /usr/bin/acme.sh
-    acme.sh --installcert -d "${domain}" --ecc  --key-file   /ssl/xui.key   --fullchain-file /ssl/xui.crt
+    rm -rf ${xui_path}/server.key ${xui_path}/server.crt
+    acme.sh --installcert -d "${domain}" --ecc  --key-file   ${xui_path}/server.key   --fullchain-file ${xui_path}/server.crt
     judge "证书启用"
-    chown -R nobody.$cert_group /ssl/*
+    chown -R nobody.$cert_group "${xui_path}/server.key"
+    chown -R nobody.$cert_group "${xui_path}/server.crt"
     sleep 2
     .acme.sh/acme.sh --upgrade --auto-upgrade
     echo "domain=${domain}" > "${domainjilu}"
-    echo -e "\nPORT=${PORT}" >> "${domainjilu}"
+    echo "CF_Key=CF_Key_xx" >> "${domainjilu}"
+    echo "CF_Email=CF_Email_xx" >> "${domainjilu}"
     judge "域名记录"
   else
-    rm -rf /ssl/* > /dev/null 2>&1
     rm -fr "$HOME"/.acme.sh > /dev/null 2>&1
     acme
   fi
@@ -480,17 +480,19 @@ function acme() {
   acme.sh --set-default-ca --server letsencrypt
   systemctl stop nginx
   sleep 2
-  acme.sh  --issue -d "${domain}"  --standalone -k ec-256
+  acme.sh --issue --dns dns_cf -d "${domain}" -d "*.${domain}" --keylength ec-256
   if [[ $? -eq 0 ]]; then
-    print_ok "SSL 证书生成成功"
-    [[ ! -d /ssl ]] && mkdir -p /ssl || rm -fr /ssl/*  
-    acme.sh --installcert -d "${domain}" --ecc  --key-file   /ssl/xui.key   --fullchain-file /ssl/xui.crt
+    print_ok "SSL 证书生成成功" 
+    rm -rf ${xui_path}/server.key ${xui_path}/server.crt
+    acme.sh --installcert -d "${domain}" --ecc  --key-file   ${xui_path}/server.key   --fullchain-file ${xui_path}/server.crt
     judge "SSL 证书配置成功"
-    chown -R nobody.$cert_group /ssl/*
+    chown -R nobody.$cert_group "${xui_path}/server.key"
+    chown -R nobody.$cert_group "${xui_path}/server.crt"
     systemctl start nginx
     acme.sh  --upgrade  --auto-upgrade
     echo "domain=${domain}" > "${domainjilu}"
-    echo -e "\nPORT=${PORT}" >> "${domainjilu}"
+    echo "CF_Key=CF_Key_xx" >> "${domainjilu}"
+    echo "CF_Email=CF_Email_xx" >> "${domainjilu}"
     judge "域名记录"
   else
     systemctl start nginx
@@ -498,10 +500,6 @@ function acme() {
     rm -rf "$HOME/.acme.sh/${domain}_ecc"
     exit 1
   fi
-}
-
-function configure_cloudreve() {
-bash -c  "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xuiclash.sh)"
 }
 
 function configure_nginx() {

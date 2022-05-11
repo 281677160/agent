@@ -840,14 +840,13 @@ menu() {
   echo
   running_state
   echo -e "${XUI_ZT}"
-  echo -e "${CLASH_ZT}"
   echo -e "${NGINX_ZT}"
   echo
-  ECHOY "1、安装 x-ui面板、nginx和clash节点转换"
-  ECHOY "2、重启 x-ui面板、nginx和clash节点转换"
+  ECHOY "1、安装 x-ui面板、nginx和域名证书申请"
+  ECHOY "2、重启 x-ui面板、nginx"
   ECHOY "3、查询 证书路径"
   ECHOY "4、安装 BBR、锐速加速"
-  ECHOY "5、卸载 x-ui面板、nginx和clash节点转换"
+  ECHOY "5、卸载 x-ui面板、nginx"
   ECHOY "6、退出"
   echo
   echo

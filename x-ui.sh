@@ -401,13 +401,6 @@ function dependency_install() {
     ${INS} libpcre3 libpcre3-dev zlib1g-dev openssl libssl-dev
   fi
 
-  ${INS} jq
-
-  if ! command -v jq; then
-    wget -P /usr/bin https://raw.githubusercontent.com/281677160/agent/main/xray/jq && chmod +x /usr/bin/jq
-    judge "安装 jq"
-  fi
-
   # 防止部分系统xray的默认bin目录缺失
   mkdir /usr/local/bin >/dev/null 2>&1
   # 开启ROOT用户SSH和防止SSH容易断连

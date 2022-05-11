@@ -196,7 +196,11 @@ function Cloudflare_dns() {
        fi
        case $CFKeyIPty in
        Y)
-	 export ${DNS_KEY}="$(echo "${DNS_KEYy}" |sed 's/ //g')"
+	 if [[ "${DNS_service}" = "dns_cf" ]]; then
+	   export CF_Key="$(echo "${DNS_KEYy}" |sed 's/ //g')"
+	 else
+	   export DP_Key="$(echo "${DNS_KEYy}" |sed 's/ //g')"
+	 fi
        break
        ;;
        *)
@@ -220,7 +224,11 @@ function Cloudflare_dns() {
        fi
        case $EmailIPty in
        Y)
-	 export ${DNS_ID}="$(echo "${DNS_IDd}" |sed 's/ //g')"
+	 if [[ "${DNS_service}" = "dns_cf" ]]; then
+	   export CF_Email="$(echo "${DNS_IDd}" |sed 's/ //g')"
+	 else
+	   export DP_Id="$(echo "${DNS_IDd}" |sed 's/ //g')"
+	 fi
        break
        ;;
        *)
@@ -237,8 +245,8 @@ function Cloudflare_dns() {
     ECHOG "${DNS_SM2}为：已存在"
   else 
     ECHOG "您的域名为：${CUrrent_ip}"
-    ECHOG "${DNS_SM2}为：${DNS_KEY}"
-    ECHOG "${DNS_SM2}为：${DNS_ID}"
+    ECHOG "${DNS_SM2}为：${DNS_KEYy}"
+    ECHOG "${DNS_SM2}为：${DNS_IDd}"
   fi
   echo
   read -p " [检查是否正确,正确回车继续,不正确按Q回车重新输入]： " NNKC

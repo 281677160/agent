@@ -27,7 +27,7 @@ Hi="${Green}[Hi]${Font}"
 ERROR="${Red}[ERROR]${Font}"
 
 # 变量
-xui_path="/usr/local/ssl"
+xui_path="/usr/local/x-ui/ssl"
 xray_conf_dir="/usr/local/x-ui"
 website_dir="/www/xray_web/"
 cert_group="nobody"
@@ -109,18 +109,56 @@ function running_state() {
   fi
 }
 
-function system_check() {
+function DNS_service_provider() {
+  clear
+  echo  
+  echo -e "\033[33m 请选择您域名的DNS托管商] \033[0m"
+  ECHOY " 1. Cloudflare(免费CDN提供,但是免费域名不能申请泛域名证书)"
+  ECHOYY " 2. DNSPod(收费CDN提供,但是免费域名能申请泛域名证书)"
+  XUANZHEOP=" 请输入数字选择"
+  while :; do
+  read -p " ${XUANZHEOP}： " CHOOSEDNS
+  case $CHOOSEDNS in
+    1)
+      export DNS_service="dns_cf"
+      export DNS_ID="CF_Email"
+      export DNS_KEY="CF_Key"
+      export DNS_SM="输入cloudflare网站里面的Global API Key"
+      export DNS_SM2="注册绑定cloudflare网站的邮箱"
+      export DNS_SM3="cloudflare的Global API Key"
+      export DNS_SM4="cloudflare绑定邮箱"
+      Cloudflare_dns
+    break
+    ;;
+    2)
+      export DNS_service="dns_dp"
+      export DNS_ID="DP_Id"
+      export DNS_KEY="DP_Key"
+      export DNS_SM="输入DNSPod网站里面的DNSPod Token"
+      export DNS_SM2="输入DNSPod网站里面的DNSPod ID"
+      export DNS_SM3="DNSPod的DNSPod Token"
+      export DNS_SM4="DNSPodDNSPod ID"
+      Cloudflare_dns
+    break
+    ;;
+    *)
+      XUANZHEOP=" 请输入正确的数字编号!"
+    ;;
+    esac
+    done
+}
+
+function Cloudflare_dns() {
   clear
   echo
   echo
-  [[ ! -d "${xui_path}" ]] && mkdir -p "${xui_path}"
   CF_domain="0"
   if [[ -f "${domainjilu}" ]]; then
     PROFIXI="$(grep 'domain=' ${domainjilu} | cut -d "=" -f2)"
-    CFKEYXI="$(grep 'CF_Key=' ${domainjilu} | cut -d "=" -f2)"
-    EMAILXI="$(grep 'CF_Email=' ${domainjilu} | cut -d "=" -f2)"
+    CFKEYXI="$(grep "${DNS_ID}=" ${domainjilu} | cut -d "=" -f2)"
+    EMAILXI="$(grep "${DNS_KEY}=" ${domainjilu} | cut -d "=" -f2)"
   fi
-  echo -e "\033[33m 请输入已解析泛域名的域名，比如：clash.com] \033[0m"
+  echo -e "\033[33m 请输入已解析好泛域名的域名，比如：clash.com] \033[0m"
   export YUMINGIP="请输入"
   while :; do
   CUrrenty=""
@@ -139,7 +177,117 @@ function system_check() {
   ;;
   esac
   done
-    if [[ "${CFKEYXI}" == "CF_Key_xx" ]] && [[ "${EMAILXI}" == "CF_Email_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
+    if [[ "${CFKEYXI}" == "${DNS_KEY}_xx" ]] && [[ "${EMAILXI}" == "${DNS_ID}_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
+       export CF_domain="1"
+    else
+       echo
+       echo
+      export CF_domain="0"
+      "$HOME"/.acme.sh/acme.sh --uninstall > /dev/null 2>&1
+       rm -rf "$HOME"/.acme.sh > /dev/null 2>&1
+       rm -rf /usr/bin/acme.sh > /dev/null 2>&1
+       echo -e "\033[33m ${DNS_SM} \033[0m"
+       CFKeyIP="请输入"
+       while :; do
+       export CFKeyIPty=""
+       read -p " ${CFKeyIP}：" DNS_KEYy
+       if [[ -n "${DNS_KEYy}" ]]; then
+         export CFKeyIPty="Y"
+       fi
+       case $CFKeyIPty in
+       Y)
+	 export ${DNS_KEY}="$(echo "${DNS_KEYy}" |sed 's/ //g')"
+       break
+       ;;
+       *)
+         export CFKeyIP="敬告,数据不能为空"
+       ;;
+       esac
+       done
+    fi
+    if [[ "${CFKEYXI}" == "${DNS_KEY}_xx" ]] && [[ "${EMAILXI}" == "${DNS_ID}_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
+       CF_domain="1"
+    else
+       echo
+       echo
+       echo -e "\033[33m ${DNS_SM2} \033[0m"
+       export EmailIP="请输入"
+       while :; do
+       export EmailIPty=""
+       read -p " ${EmailIP}：" DNS_IDd
+       if [[ -n "${DNS_IDd}" ]]; then
+         EmailIPty="Y"
+       fi
+       case $EmailIPty in
+       Y)
+	 export ${DNS_ID}="$(echo "${DNS_IDd}" |sed 's/ //g')"
+       break
+       ;;
+       *)
+         export EmailIP="敬告,数据不能为空"
+       ;;
+       esac
+       done
+    fi
+  echo
+  echo
+  if [[ "${CF_domain}" == "1" ]]; then
+    ECHOG "您的域名为：${CUrrent_ip} 证书已存在"
+    ECHOG "${DNS_SM2}为：已存在"
+    ECHOG "${DNS_SM2}为：已存在"
+  else 
+    ECHOG "您的域名为：${CUrrent_ip}"
+    ECHOG "${DNS_SM2}为：${DNS_KEY}"
+    ECHOG "${DNS_SM2}为：${DNS_ID}"
+  fi
+  echo
+  read -p " [检查是否正确,正确回车继续,不正确按Q回车重新输入]： " NNKC
+  case $NNKC in
+  [Qq])
+    system_check
+    exit 0
+  ;;
+  *)
+    echo
+    print_ok "您已确认无误!"
+  ;;
+  esac
+  echo
+  ECHOY "开始执行安装程序,请耐心等候..."
+  sleep 2
+  echo
+ } 
+ 
+ function DNSPod_dns() {
+  clear
+  echo
+  echo
+  CF_domain="0"
+  if [[ -f "${domainjilu}" ]]; then
+    PROFIXI="$(grep 'domain=' ${domainjilu} | cut -d "=" -f2)"
+    CFKEYXI="$(grep 'DP_Key=' ${domainjilu} | cut -d "=" -f2)"
+    EMAILXI="$(grep 'DP_Email=' ${domainjilu} | cut -d "=" -f2)"
+  fi
+  echo -e "\033[33m 请输入已解析好泛域名的域名，比如：clash.com] \033[0m"
+  export YUMINGIP="请输入"
+  while :; do
+  CUrrenty=""
+  read -p " ${YUMINGIP}：" CUrrent_ip
+  if [[ -n "${CUrrent_ip}" ]] && [[ "$(echo ${CUrrent_ip} |grep -c '.')" -ge '1' ]]; then
+    CUrrenty="Y"
+  fi
+  case $CUrrenty in
+  Y)
+    export CUrrent_ip="$(echo "${CUrrent_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/www.//g' |sed 's/\///g' |sed 's/ //g')"
+    export domain="${CUrrent_ip}"
+  break
+  ;;
+  *)
+    export YUMINGIP="敬告,请输入正确的域名"
+  ;;
+  esac
+  done
+    if [[ "${CFKEYXI}" == "DP_Key_xx" ]] && [[ "${EMAILXI}" == "DP_Email_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
        export CF_domain="1"
     else
        echo
@@ -220,7 +368,9 @@ function system_check() {
   ECHOY "开始执行安装程序,请耐心等候..."
   sleep 2
   echo
+ } 
   
+function system_check() {
   ECHOY "正在安装各种必须依赖"
   source '/etc/os-release'
 
@@ -427,7 +577,8 @@ function xui_install() {
   judge "x-ui 文件解压"
   chmod +x x-ui/x-ui x-ui/bin/xray-linux-* x-ui/x-ui.sh
   cp x-ui/x-ui.sh /usr/bin/x-ui
-  cp -f x-ui/x-ui.service /etc/systemd/system/
+  [[ ! -d "${xui_path}" ]] && mkdir -p "${xui_path}"
+  cp -f x-ui/x-ui.service /etc/systemd/system/x-ui.service
   mv x-ui/ /usr/local/
   systemctl daemon-reload
   systemctl enable x-ui
@@ -445,7 +596,7 @@ function generate_certificate() {
 function configure_web() {
   rm -rf /www/xui_web
   mkdir -p /www/xui_web
-  wget -O web.tar.gz https://raw.githubusercontent.com/wulabing/Xray_onekey/main/basic/web.tar.gz
+  wget -O web.tar.gz https://raw.githubusercontent.com/281677160/agent/main/xray/web.tar.gz
   tar xzf web.tar.gz -C /www/xui_web
   judge "站点伪装"
   rm -f web.tar.gz
@@ -596,7 +747,7 @@ function acme() {
   acme.sh --set-default-ca --server letsencrypt
   systemctl stop nginx
   sleep 2
-  acme.sh --issue --dns dns_cf -d "${domain}" -d "*.${domain}" --keylength ec-256
+  acme.sh --issue --dns "${DNS_service}" -d "${domain}" -d "*.${domain}" --keylength ec-256
   if [[ $? -eq 0 ]]; then
     print_ok "SSL 证书生成成功" 
     rm -rf ${xui_path}/server.key ${xui_path}/server.crt
@@ -607,8 +758,8 @@ function acme() {
     systemctl start nginx
     acme.sh  --upgrade  --auto-upgrade
     echo "domain=${domain}" > "${domainjilu}"
-    echo "CF_Key=CF_Key_xx" >> "${domainjilu}"
-    echo "CF_Email=CF_Email_xx" >> "${domainjilu}"
+    echo "${DNS_service}_Key=${DNS_service}_Key_xx" >> "${domainjilu}"
+    echo "${DNS_service}_Email=${DNS_service}_Email_xx" >> "${domainjilu}"
     judge "域名记录"
   else
     systemctl start nginx

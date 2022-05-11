@@ -124,6 +124,7 @@ function DNS_service_provider() {
   read -p " ${XUANZHEOP}： " CHOOSEDNS
   case $CHOOSEDNS in
     1)
+      export service_name="cloudflare"
       export DNS_service="dns_cf"
       export DNS_ID="CF_Email"
       export DNS_KEY="CF_Key"
@@ -134,6 +135,7 @@ function DNS_service_provider() {
     break
     ;;
     2)
+      export service_name="DNSPod"
       export DNS_service="dns_dp"
       export DNS_ID="DP_Id"
       export DNS_KEY="DP_Key"
@@ -160,7 +162,7 @@ function DNS_provider() {
     CFKEYXI="$(grep "${DNS_ID}=" ${domainjilu} | cut -d "=" -f2)"
     EMAILXI="$(grep "${DNS_KEY}=" ${domainjilu} | cut -d "=" -f2)"
   fi
-  echo -e "\033[33m 请输入已解析好泛域名的域名，比如：clash.com] \033[0m"
+  echo -e "\033[33m 请输入${service_name}解析好泛域名的域名，比如：clash.com] \033[0m"
   export YUMINGIP="请输入"
   while :; do
   CUrrenty=""
@@ -170,7 +172,7 @@ function DNS_provider() {
   fi
   case $CUrrenty in
   Y)
-    export domain="$(echo "${CUrrent_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/www.//g' |sed 's/\///g' |sed 's/ //g')"
+    export domain="$(echo "${domain}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/www.//g' |sed 's/\///g' |sed 's/ //g')"
   break
   ;;
   *)

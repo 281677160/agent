@@ -240,6 +240,35 @@ function DNS_provider() {
     done
   fi
   echo
+  ECHOR "请设置x-ui面板帐号,直接回车则使用 admin"
+  read -p " 请输入帐号：" config_account
+  export config_account=${config_account:-"admin"}
+  
+  echo
+  ECHOY "请设置x-ui面板密码,直接回车则使用 admin"
+  read -p " 请输入密码：" config_password
+  export config_password=${config_password:-"admin"}
+  
+  echo
+  ECHOG "请设置x-ui面板端口,直接回车则使用 54321"
+  export DUANKO="请输入[10000-65535]之间的值"
+  while :; do
+  read -p " ${DUANKO}：" config_port
+  export config_port=${config_port:-"54321"}
+  if [[ "${config_port}" -ge "10000" ]] && [[ "${config_port}" -le "65535" ]]; then
+    export PORTY="y"
+  fi
+  case $PORTY in
+  y)
+    export config_port="${config_port}"
+  break
+  ;;
+  *)
+    export DUANKO="敬告：请输入[10000-65535]之间的值"
+  ;;
+  esac
+  done
+  echo
   echo
   if [[ "${CF_domain}" == "1" ]]; then
     ECHOG "您的域名为：${CUrrent_ip} 证书已存在"
@@ -581,7 +610,7 @@ server
         access_log /dev/null; 
     }
     location ^~ /xui {
-	    proxy_pass http://127.0.0.1:55555/xui;
+	    proxy_pass http://127.0.0.1:${config_port}/xui;
 	    proxy_set_header Host \$host;
 	    proxy_set_header X-Real-IP \$remote_addr;
 	    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
@@ -710,12 +739,6 @@ function restart_xui() {
     print_ok "nginx运行 正常"
   else
     print_error "nginx没有运行"
-    exit 1
-  fi
-  if [[ `systemctl status subconverter |grep -c "active (running) "` == '1' ]]; then
-    print_ok "clash节点转换运行 正常"
-  else
-    print_error "clash节点转换没有运行"
     exit 1
   fi
   if [[ `systemctl status x-ui |grep -c "active (running) "` == '1' ]]; then

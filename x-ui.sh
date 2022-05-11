@@ -117,7 +117,7 @@ function DNS_service_provider() {
   echo
   ECHOY " 1. Cloudflare(免费CDN提供,但是免费域名不能申请泛域名证书)"
   echo
-  ECHOY " 2. DNSPod(收费CDN提供,但是免费域名能申请泛域名证书)"
+  ECHOY " 2. DNSPod(收费CDN,但是免费域名能申请泛域名证书)"
   echo
   XUANZHEOP=" 请输入数字选择"
   while :; do

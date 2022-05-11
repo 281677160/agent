@@ -241,12 +241,12 @@ function Cloudflare_dns() {
   echo
   if [[ "${CF_domain}" == "1" ]]; then
     ECHOG "您的域名为：${CUrrent_ip} 证书已存在"
-    ECHOG "${DNS_SM2}为：已存在"
-    ECHOG "${DNS_SM2}为：已存在"
+    ECHOG "${DNS_SM3}为：已存在"
+    ECHOG "${DNS_SM4}为：已存在"
   else 
     ECHOG "您的域名为：${CUrrent_ip}"
-    ECHOG "${DNS_SM2}为：${DNS_KEYy}"
-    ECHOG "${DNS_SM2}为：${DNS_IDd}"
+    ECHOG "${DNS_SM3}为：${DNS_KEYy}"
+    ECHOG "${DNS_SM4}为：${DNS_IDd}"
   fi
   echo
   read -p " [检查是否正确,正确回车继续,不正确按Q回车重新输入]： " NNKC

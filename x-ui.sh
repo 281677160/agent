@@ -114,7 +114,7 @@ function DNS_service_provider() {
   echo  
   echo -e "\033[33m 请选择您域名的DNS托管商] \033[0m"
   ECHOY " 1. Cloudflare(免费CDN提供,但是免费域名不能申请泛域名证书)"
-  ECHOYY " 2. DNSPod(收费CDN提供,但是免费域名能申请泛域名证书)"
+  ECHOY " 2. DNSPod(收费CDN提供,但是免费域名能申请泛域名证书)"
   XUANZHEOP=" 请输入数字选择"
   while :; do
   read -p " ${XUANZHEOP}： " CHOOSEDNS

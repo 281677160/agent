@@ -164,14 +164,13 @@ function DNS_provider() {
   export YUMINGIP="请输入"
   while :; do
   CUrrenty=""
-  read -p " ${YUMINGIP}：" CUrrent_ip
-  if [[ -n "${CUrrent_ip}" ]] && [[ "$(echo ${CUrrent_ip} |grep -c '.')" -ge '1' ]]; then
+  read -p " ${YUMINGIP}：" domain
+  if [[ -n "${domain}" ]] && [[ "$(echo ${domain} |grep -c '.')" -ge '1' ]]; then
     CUrrenty="Y"
   fi
   case $CUrrenty in
   Y)
-    export CUrrent_ip="$(echo "${CUrrent_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/www.//g' |sed 's/\///g' |sed 's/ //g')"
-    export domain="${CUrrent_ip}"
+    export domain="$(echo "${CUrrent_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/www.//g' |sed 's/\///g' |sed 's/ //g')"
   break
   ;;
   *)
@@ -179,66 +178,67 @@ function DNS_provider() {
   ;;
   esac
   done
-    if [[ "${CFKEYXI}" == "${DNS_KEY}_xx" ]] && [[ "${EMAILXI}" == "${DNS_ID}_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
-       export CF_domain="1"
-    else
-       echo
-       echo
-      export CF_domain="0"
-      "$HOME"/.acme.sh/acme.sh --uninstall > /dev/null 2>&1
-       rm -rf "$HOME"/.acme.sh > /dev/null 2>&1
-       rm -rf /usr/bin/acme.sh > /dev/null 2>&1
-       echo -e "\033[33m ${DNS_SM} \033[0m"
-       CFKeyIP="请输入"
-       while :; do
-       export CFKeyIPty=""
-       read -p " ${CFKeyIP}：" DNS_KEYy
-       if [[ -n "${DNS_KEYy}" ]]; then
-         export CFKeyIPty="Y"
-       fi
-       case $CFKeyIPty in
-       Y)
-	 if [[ "${DNS_service}" = "dns_cf" ]]; then
-	   export CF_Key="$(echo "${DNS_KEYy}" |sed 's/ //g')"
-	 else
-	   export DP_Key="$(echo "${DNS_KEYy}" |sed 's/ //g')"
-	 fi
-       break
-       ;;
-       *)
-         export CFKeyIP="敬告,数据不能为空"
-       ;;
-       esac
-       done
+  if [[ "${CFKEYXI}" == "${DNS_KEY}_xx" ]] && [[ "${EMAILXI}" == "${DNS_ID}_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
+    export CF_domain="1"
+  else
+    echo
+    echo
+    export CF_domain="0"
+    "$HOME"/.acme.sh/acme.sh --uninstall > /dev/null 2>&1
+    rm -rf "$HOME"/.acme.sh > /dev/null 2>&1
+    rm -rf /usr/bin/acme.sh > /dev/null 2>&1
+    echo -e "\033[33m ${DNS_SM} \033[0m"
+    CFKeyIP="请输入"
+    while :; do
+    export CFKeyIPty=""
+    read -p " ${CFKeyIP}：" DNS_KEYy
+    if [[ -n "${DNS_KEYy}" ]]; then
+      export CFKeyIPty="Y"
     fi
-    if [[ "${CFKEYXI}" == "${DNS_KEY}_xx" ]] && [[ "${EMAILXI}" == "${DNS_ID}_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
-       CF_domain="1"
-    else
-       echo
-       echo
-       echo -e "\033[33m ${DNS_SM2} \033[0m"
-       export EmailIP="请输入"
-       while :; do
-       export EmailIPty=""
-       read -p " ${EmailIP}：" DNS_IDd
-       if [[ -n "${DNS_IDd}" ]]; then
-         EmailIPty="Y"
-       fi
-       case $EmailIPty in
-       Y)
-	 if [[ "${DNS_service}" = "dns_cf" ]]; then
-	   export CF_Email="$(echo "${DNS_IDd}" |sed 's/ //g')"
-	 else
-	   export DP_Id="$(echo "${DNS_IDd}" |sed 's/ //g')"
-	 fi
-       break
-       ;;
-       *)
-         export EmailIP="敬告,数据不能为空"
-       ;;
-       esac
-       done
+    case $CFKeyIPty in
+    Y)
+      if [[ "${DNS_service}" = "dns_cf" ]]; then
+        export CF_Key="$(echo "${DNS_KEYy}" |sed 's/ //g')"
+      else
+	export DP_Key="$(echo "${DNS_KEYy}" |sed 's/ //g')"
+      fi
+    break
+    ;;
+    *)
+      export CFKeyIP="敬告,数据不能为空"
+    ;;
+    esac
+    done
+  fi
+    
+  if [[ "${CFKEYXI}" == "${DNS_KEY}_xx" ]] && [[ "${EMAILXI}" == "${DNS_ID}_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
+     CF_domain="1"
+  else
+    echo
+    echo
+    echo -e "\033[33m ${DNS_SM2} \033[0m"
+    export EmailIP="请输入"
+    while :; do
+    export EmailIPty=""
+    read -p " ${EmailIP}：" DNS_IDd
+    if [[ -n "${DNS_IDd}" ]]; then
+      EmailIPty="Y"
     fi
+    case $EmailIPty in
+    Y)
+      if [[ "${DNS_service}" = "dns_cf" ]]; then
+        export CF_Email="$(echo "${DNS_IDd}" |sed 's/ //g')"
+      else
+        export DP_Id="$(echo "${DNS_IDd}" |sed 's/ //g')"
+      fi
+    break
+    ;;
+    *)
+      export EmailIP="敬告,数据不能为空"
+    ;;
+    esac
+    done
+  fi
   echo
   echo
   if [[ "${CF_domain}" == "1" ]]; then

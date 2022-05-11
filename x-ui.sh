@@ -505,8 +505,7 @@ function xui_install() {
   judge "x-ui 文件解压"
   chmod +x x-ui/x-ui x-ui/bin/xray-linux-* x-ui/x-ui.sh
   cp x-ui/x-ui.sh /usr/bin/x-ui
-  [[ ! -d "${xui_path}" ]] && mkdir -p "${xui_path}"
-  cp -f x-ui/x-ui.service /etc/systemd/system/x-ui.service
+  cp -f x-ui/x-ui.service /etc/systemd/system/
   mv x-ui/ /usr/local/
   systemctl daemon-reload
   systemctl enable x-ui
@@ -740,7 +739,6 @@ EOF
 
 function restart_xui() {
   systemctl restart nginx
-  systemctl restart subconverter
   x-ui restart
   sleep 2
   if [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then

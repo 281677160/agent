@@ -27,7 +27,7 @@ Hi="${Green}[Hi]${Font}"
 ERROR="${Red}[ERROR]${Font}"
 
 # 变量
-xui_path="/usr/local/x-ui/ssl"
+xui_path="/usr/local/ssl"
 xray_conf_dir="/usr/local/x-ui"
 website_dir="/www/xray_web/"
 cert_group="nobody"
@@ -301,12 +301,12 @@ function DNS_provider() {
   esac
   echo
   ECHOY "开始执行安装程序,请耐心等候..."
+  [[ ! -d "${xui_path}" ]] && mkdir -p "${xui_path}"
   sleep 2
   echo
  }
   
 function system_check() {
-  ECHOY "正在安装各种必须依赖"
   source '/etc/os-release'
 
   if [[ "${ID}" == "centos" && ${VERSION_ID} -ge 7 ]]; then

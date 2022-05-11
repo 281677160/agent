@@ -885,7 +885,6 @@ function xui_uninstall() {
 
 function install_xui() {
   is_root
-  kaishi_install
   DNS_service_provider
   system_check
   dependency_install

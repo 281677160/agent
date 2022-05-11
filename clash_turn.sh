@@ -219,7 +219,6 @@ function system_check() {
     echo -e "\033[31m 不支持该系统 \033[0m"
     exit 1
   fi
-}
   
   # 关闭各类防火墙
   systemctl stop firewalld

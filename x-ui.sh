@@ -273,14 +273,14 @@ function DNS_provider() {
   echo
   echo
   if [[ "${CF_domain}" == "1" ]]; then
-    ECHOG "您的域名为：${CUrrent_ip} 证书已存在"
+    ECHOG "您的域名为：${domain} 证书已存在"
     ECHOG "${DNS_SM3}为：已存在"
     ECHOG "${DNS_SM4}为：已存在"
     ECHOG "面板帐号为：${config_account}"
     ECHOG "面板密码为：${config_password}"
     ECHOG "面板端口为：${config_port}"
   else 
-    ECHOG "您的域名为：${CUrrent_ip}"
+    ECHOG "您的域名为：${domain}"
     ECHOG "${DNS_SM3}为：${DNS_KEYy}"
     ECHOG "${DNS_SM4}为：${DNS_IDd}"
     ECHOG "面板帐号为：${config_account}"

@@ -43,7 +43,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xra
 #
 ---
 <details>
-<summary>🔻x-ui安装+伪装网站（支持的协议：vmess、vless、trojan、shadowsocks、dokodemo-door、socks、http）🔻</summary>
+<summary>🔻x-ui安装+伪装网站（支持：vmess、vless、trojan、shadowsocks、dokodemo-door、socks、http）🔻</summary>
 <br>
 
 ```yaml

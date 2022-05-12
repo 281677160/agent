@@ -685,6 +685,11 @@ server {
     ssl_prefer_server_ciphers off;
     index index.php index.html index.htm default.php default.htm default.html;
     root /usr/local/etc/clash/myurls/public;
+    client_max_body_size 24M;
+    client_body_buffer_size 128k;
+
+    client_header_buffer_size 5120k;
+    large_client_header_buffers 16 5120k;
    
     location / {
         proxy_pass http://127.0.0.1:${DLJ_PORT};
@@ -693,7 +698,7 @@ server {
         proxy_set_header REMOTE-HOST \$remote_addr;
         add_header Access-Control-Allow-Origin *;
     }
-   
+    
     error_page 404 /index.html;
     gzip on; #开启gzip压缩
     gzip_min_length 1k; #设置对数据启用压缩的最少字节数

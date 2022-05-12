@@ -1,6 +1,6 @@
 
 <details>
-<summary>🔻谷歌云、甲骨云开启root用户SSH连接</summary>
+🔻谷歌云、甲骨云开启root用户SSH连接
 <br>
 
 第一步：进入服务器后,切换到root用户,下面命令一般都能切入root用户,如果不行请自行百度

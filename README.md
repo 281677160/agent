@@ -32,20 +32,27 @@ bash -c  "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/ss
 <details>
 <summary>🆙点击查看谷歌云、甲骨云开启root用户SSH连接</summary>
 <br>
+
 ```yaml
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray_install.sh)"
 ```
+<br />
+</details>
+
 ---
 #
 ---
-- x-ui安装+伪装网站（支持的协议：vmess、vless、trojan、shadowsocks、dokodemo-door、socks、http）
-#
+<details>
+<summary>🆙点击查看x-ui安装+伪装网站（支持的协议：vmess、vless、trojan、shadowsocks、dokodemo-door、socks、http）</summary>
+<br>
+
 ```yaml
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/x-ui.sh)"
 ```
-
 <br />
 </details>
+
+
   
 ---
 #

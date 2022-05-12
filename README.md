@@ -57,7 +57,11 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/x-u
 ---
 #
 ---
-- TG代理安装,二选一即可
+<details>
+<summary>🆙点击查看TG代理安装</summary>
+<br>
+
+TG代理安装,二选一即可
 #
 ```yaml
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/erlang_tg.sh)"
@@ -66,6 +70,9 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/erl
 ```yaml
 bash <(wget -qO- https://git.io/mtg.sh)
 ```
+<br />
+</details>
+
 ---
 #
 ---

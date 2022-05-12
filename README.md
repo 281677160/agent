@@ -86,7 +86,9 @@ bash -c "$(curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/2816
 </details>
 
 ---
-- BBR安装
+#
+---
+
 <details>
 <summary>🆙一键BBR安装</summary>
 <br>

@@ -30,7 +30,7 @@ bash -c  "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/ss
 #
 ---
 <details>
-<summary>🆙点击查看谷歌云、甲骨云开启root用户SSH连接</summary>
+<summary>🆙点击查看xray安装（支持的协议：vless、trojan、vmess）</summary>
 <br>
 
 ```yaml

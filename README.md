@@ -29,8 +29,9 @@ bash -c  "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/ss
 ---
 #
 ---
-- xray安装（支持的协议：vless、trojan、vmess）
-#
+<details>
+<summary>🆙点击查看谷歌云、甲骨云开启root用户SSH连接</summary>
+<br>
 ```yaml
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xray_install.sh)"
 ```
@@ -42,6 +43,10 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/xra
 ```yaml
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/x-ui.sh)"
 ```
+
+<br />
+</details>
+  
 ---
 #
 ---

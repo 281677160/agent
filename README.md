@@ -1,7 +1,7 @@
 
-
-- #### 谷歌云、甲骨云开启root用户SSH连接
-#
+<details>
+<summary>🆙点击查看谷歌云、甲骨云开启root用户SSH连接</summary>
+<br>
 
 - 第一步：进入服务器后,切换到root用户,下面命令一般都能切入root用户,如果不行请自行百度
 ```sh
@@ -22,6 +22,10 @@ yum install -y curl || apt update && apt install -y curl
 ```sh
 bash -c  "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/ssh.sh)"
 ```
+
+<br />
+</details>
+
 ---
 #
 ---

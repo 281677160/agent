@@ -1,5 +1,5 @@
 
-
+<details>
 <summary>🔻谷歌云、甲骨云开启root用户SSH连接</summary>
 <br>
 
@@ -24,7 +24,7 @@ bash -c  "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/ss
 ```
 
 <br />
-
+</details>
 
 ---
 #

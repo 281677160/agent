@@ -34,13 +34,10 @@ usage() {
     echo "MTProto proxy installer.
 Install proxy:
 ${SELF} -p <port> -s <secret> -t <ad tag> -a dd -a tls -d <fake-tls domain>
-
 Upgrade code to the latest version and restart, keeping config unchanged:
 ${SELF} upgrade
-
 Interactively generate new config and reload proxy settings:
 ${SELF} reconfigure -p <port> -s <secret> -t <ad tag> -a dd -a tls -d <fake-tls domain>
-
 Reload proxy settings after manual changes in config/prod-sys.cnfig:
 ${SELF} reload
 "
@@ -132,20 +129,14 @@ do_kaishi_install() {
     MIAO2="$(echo "$(date +%S)")"
     STR1='123454323'
     DISIGE="$(echo ${STR1:0-$FEN:1})"
-    export IIP=`curl -s -4 -m 10 http://ipv4.seriyps.ru || curl -s -4 -m 10 https://digitalresistance.dog/myIp`
     export SJPORT="${DISIGE}${MIAO2}${FEN2}"
     echo
-    echo -e "\033[33m 请输入域名,直接回车则使用本机IP \033[0m"
-    export DUANKOU="请输入域名"
-    read -p " ${DUANKOU}：" IP
-    export IP=${IP:-"$IIP"}
-    echo
     echo -e "\033[33m 请输入端口,直接回车则使用随机分配端口 \033[0m"
-    export DUANKOU="请输入[1-65535]之间的值"
+    export DUANKOU="请输入[10000-65535]之间的值"
     while :; do
     read -p " ${DUANKOU}：" PORT
     export PORT=${PORT:-"$SJPORT"}
-    if [[ $PORT -ge 1 ]] && [[ $PORT -le 65535 ]]; then
+    if [[ "${PORT}" -ge "10000" ]] && [[ "${PORT}" -le "65535" ]]; then
         export PORTY="y"
     fi
     case $PORTY in
@@ -158,9 +149,7 @@ do_kaishi_install() {
         ;;
     esac
     done
-    echo -e "\033[32m 您的域名/IP：${IP} \033[0m"
-    echo
-    echo -e "\033[32m 您的端口为：${PORT} \033[0m"
+    echo -e "\033[32m 您设置端口为：${PORT} \033[0m"
     echo
     echo -e "\033[33m 正在为您安装TG代理，请稍后... \033[0m"
     sys_pro="/etc/systemd/system"
@@ -253,7 +242,6 @@ After=systemd-journald-dev-log.socket
 After=nss-lookup.target
 Wants=network-online.target
 Requires=epmd.service
-
 [Service]
 Type=simple
 User=mtproto-proxy
@@ -271,7 +259,6 @@ ExecStart=/opt/mtp_proxy/bin/mtp_proxy foreground
 ExecStop=/opt/mtp_proxy/bin/mtp_proxy stop
 ExecReload=/opt/mtp_proxy/bin/mtp_proxy rpcterms mtproto_proxy_app reload_config
 TimeoutStopSec=15s
-
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -374,7 +361,6 @@ do_build_config() {
        tag => <<"'${TAG}'">>}
     ]}
    ]},
-
  %% Logging config
  {lager,
   [{log_root, "/var/log/mtproto-proxy"},
@@ -442,6 +428,7 @@ do_install() {
 
 do_print_links() {
     info "Detecting IP address"
+    IP=`curl -s -4 -m 10 http://ipv4.seriyps.ru || curl -s -4 -m 10 https://digitalresistance.dog/myIp`
     info "Detected external IP is ${IP}"
 
     URL_PREFIX="https://t.me/proxy?server=${IP}&port=${PORT}&secret="

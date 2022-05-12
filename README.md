@@ -61,8 +61,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/x-u
 <summary>🆙点击查看TG代理安装</summary>
 <br>
 
-TG代理安装,二选一即可
-#
+TG代理安装,下面两个一键安装二选一即可
 ```yaml
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/erlang_tg.sh)"
 ```
@@ -76,15 +75,24 @@ bash <(wget -qO- https://git.io/mtg.sh)
 ---
 #
 ---
-- 一键搭建CLASH节点转换,无需域名无需证书,自己转换自己使用,支持本地虚拟机（ubuntu、debian、alpine）
-#
+<details>
+<summary>🆙一键搭建CLASH节点转换,无需域名无需证书,自己转换自己使用,支持本地虚拟机（ubuntu、debian、alpine）</summary>
+<br>
+
 ```yaml
 bash -c "$(curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/clash_install.sh)"
 ```
-#
+<br />
+</details>
+
 ---
 - BBR安装
-#
+<details>
+<summary>🆙一键BBR安装</summary>
+<br>
+
 ```yaml
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/ylx2016/Linux-NetSpeed/master/tcp.sh)"
 ```
+<br />
+</details>

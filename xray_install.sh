@@ -441,7 +441,8 @@ function ssl_judge_and_install() {
     judge "证书启用"
     chown -R nobody.$cert_group /ssl/*
     sleep 2
-    .acme.sh/acme.sh --upgrade --auto-upgrade
+    acme.sh --upgrade --auto-upgrade
+    judge "启动证书自动续期"
     echo "domain=${domain}" > "${domainjilu}"
     echo -e "\nPORT=${PORT}" >> "${domainjilu}"
     judge "域名记录"
@@ -468,6 +469,7 @@ function acme() {
     chown -R nobody.$cert_group /ssl/*
     systemctl start nginx
     acme.sh  --upgrade  --auto-upgrade
+    judge "启动证书自动续期"
     echo "domain=${domain}" > "${domainjilu}"
     echo -e "\nPORT=${PORT}" >> "${domainjilu}"
     judge "域名记录"

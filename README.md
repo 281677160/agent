@@ -1,3 +1,8 @@
+防止服务器没curl，使用所有一键命令之前都执行安装curl、wget命令（安装过后，只要没御载curl、wget或者重新重置过系统都不需要再次执行了）
+```yaml
+yum install -y curl || apt update && apt install -y curl
+```
+
 
 <details>
 <summary>🔻谷歌云、甲骨云开启root用户SSH连接🔻</summary>
@@ -13,12 +18,7 @@ sudo -i   或者   su - root
 echo root:你想要设置的密码 |chpasswd root
 ```
 
-第三步：防止服务器没curl，使用命令执行安装curl
-```yaml
-yum install -y curl || apt update && apt install -y curl
-```
-
-第四步：一键开启root用户SSH连接
+第三步：一键开启root用户SSH连接
 ```sh
 bash -c  "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/ssh.sh)"
 ```

@@ -14,7 +14,7 @@ yum install -y curl wget || apt update && apt install -y curl wget
 
 第一步：进入服务器后,切换到root用户,下面命令一般都能切入root用户,如果不行请自行百度
 ```sh
-sudo -i   或者   su - root
+sudo -i   或者   sudo su
 ```
 
 第二步：进入root用户后，把下面命令里的中文改成您要设置的服务器密码,然后执行命令

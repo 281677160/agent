@@ -371,7 +371,8 @@ function ssl_judge_and_install() {
     chown -R nobody.$cert_group "${clash_path}/server.key"
     chown -R nobody.$cert_group "${clash_path}/server.crt"
     sleep 2
-    .acme.sh/acme.sh --upgrade --auto-upgrade
+    acme.sh --upgrade --auto-upgrade
+    judge "启动证书自动续期"
     echo "domain=${domain}" > "${domainjilu}"
     echo "CF_Key=CF_Key_xx" >> "${domainjilu}"
     echo "CF_Email=CF_Email_xx" >> "${domainjilu}"
@@ -399,6 +400,7 @@ function acme() {
     chown -R nobody.$cert_group "${clash_path}/server.crt"
     systemctl start nginx
     acme.sh  --upgrade  --auto-upgrade
+    judge "启动证书自动续期"
     echo "domain=${domain}" > "${domainjilu}"
     echo "CF_Key=CF_Key_xx" >> "${domainjilu}"
     echo "CF_Email=CF_Email_xx" >> "${domainjilu}"

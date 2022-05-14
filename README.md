@@ -1,8 +1,12 @@
+
 防止服务器没curl，使用所有一键命令之前都执行安装curl、wget命令（安装过后，只要没御载curl、wget或者重新重置过系统都不需要再次执行了）
 ```yaml
-yum install -y curl || apt update && apt install -y curl
+yum install -y curl wget || apt update && apt install -y curl wget
 ```
 
+---
+#
+---
 
 <details>
 <summary>🔻谷歌云、甲骨云开启root用户SSH连接🔻</summary>

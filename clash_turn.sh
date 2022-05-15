@@ -55,7 +55,7 @@ export random_num=$((RANDOM % 12 + 4))
 export HOME="/root"
 export domainjilu="$HOME/.acme.sh/domainjilu"
 export HDFW_PORT="25500"
-export DLJ_PORT="42301"
+export DLJ_PORT="8002"
 export arch=$(arch)
 
 if [[ ! "$USER" == "root" ]]; then
@@ -537,7 +537,7 @@ function install_myurls() {
     exit 1
   else
     print_ok "myurls解压完成"
-    chmod -R 777 "${clash_path}/myurls"
+    chmod -R 775 "${clash_path}/myurls"
     sed -i "s?const backend = .*?const backend = \'https://${myurls_ip}\'?g" "${clash_path}/myurls/public/index.html"
   fi
 
@@ -563,9 +563,9 @@ function install_myurls() {
   systemctl start myurls
   systemctl enable myurls
   sleep 2
-  if [[ `systemctl status myurls |grep -c "active (running) "` == '1' ]]; then
+  if [[ $(lsof -i:"${DLJ_PORT}" | grep -i -c "listen") -ge "1" ]]; then
+    rm -rf "${clash_path}/linux-${ARCH_PRINT}-myurls.tar.gz"
     print_ok "短链程序安装完成"
-    rm -rf "${clash_path}/linux-amd64.tar.gz"
   else
     print_error "短链程序安装失败"
     exit 1

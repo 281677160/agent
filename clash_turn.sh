@@ -196,7 +196,7 @@ function system_check() {
     print_ok "当前系统为 Centos ${VERSION_ID} ${VERSION}"
     export INS="yum install -y"
     export UNINS="yum"
-    ${INS} socat wget curl git sudo redis ca-certificates && update-ca-trust force-enable
+    ${INS} wget curl git sudo redis ca-certificates && update-ca-trust force-enable
     wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
   elif [[ "${ID}" == "ol" ]]; then
     print_ok "当前系统为 Oracle Linux ${VERSION_ID} ${VERSION}"
@@ -209,7 +209,7 @@ function system_check() {
     export INS="apt install -y"
     export UNINS="apt"
     apt update
-    ${INS} socat wget curl git sudo redis-server ca-certificates && update-ca-certificates
+    ${INS} wget curl git sudo redis-server ca-certificates && update-ca-certificates
     # 清除可能的遗留问题
     rm -f /etc/apt/sources.list.d/nginx.list
     $INS lsb-release gnupg2
@@ -226,7 +226,7 @@ function system_check() {
     export INS="apt install -y"
     export UNINS="apt"
     apt update
-    ${INS} socat wget curl git sudo redis-server ca-certificates && update-ca-certificates
+    ${INS} wget curl git sudo redis-server ca-certificates && update-ca-certificates
     # 清除可能的遗留问题
     rm -f /etc/apt/sources.list.d/nginx.list >/dev/null 2>&1
     $INS lsb-release gnupg2
@@ -324,6 +324,9 @@ function dependency_install() {
   
   ${INS} lsof
   judge "安装 lsof"
+  
+  ${INS} socat
+  judge "安装 socat"
   
   ${INS} tar
   judge "安装 tar"

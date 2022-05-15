@@ -722,8 +722,6 @@ function acme() {
 }
 
 function restart_all() {
-  x-ui enable
-  restart_xui
   curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/x-ui.sh > "/usr/bin/glxray"
   chmod 777 "/usr/bin/glxray"
   clear
@@ -752,7 +750,7 @@ EOF
 
 function restart_xui() {
   systemctl restart nginx
-  x-ui restart
+  systemctl restart x-ui
   sleep 2
   if [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then
     print_ok "nginx运行 正常"
@@ -761,6 +759,7 @@ function restart_xui() {
     exit 1
   fi
   if [[ `systemctl status x-ui |grep -c "active (running) "` == '1' ]]; then
+    systemctl enable x-ui
     print_ok "x-ui运行 正常"
   else
     print_error "x-ui没有运行"
@@ -869,6 +868,7 @@ function install_xui() {
   configure_web
   ssl_judge_and_install
   configure_nginx
+  restart_xui
   restart_all
 }
 menu() {
@@ -900,7 +900,7 @@ menu() {
     break
     ;;
   3)
-    [[ -f /ssl/conck ]] && source /ssl/conck || ECHOY "无此文件或者没有证书"
+    [[ -f ${xui_path}/conck ]] && source ${xui_path}/conck || ECHOY "无此文件或者没有证书"
     break
     ;;
   4)

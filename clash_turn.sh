@@ -491,13 +491,15 @@ function install_subconverter() {
 
 function install_subweb() {
   ECHOY "正在安装sub-web服务"
-  rm -fr "${clash_path}/sub-web" && git clone https://github.com/CareyWang/sub-web.git "${clash_path}/sub-web"
+  rm -fr "${clash_path}/sub-web"
+  git clone https://github.com/CareyWang/sub-web.git "${clash_path}/sub-web"
   if [[ $? -ne 0 ]];then
     print_error "sub-web下载失败,请再次执行安装命令试试"
     exit 1
   else
-    rm -fr "${clash_path}/subweb" && git clone https://github.com/281677160/agent "${clash_path}/subweb"
-    judge "sub-web补丁下载"
+    rm -fr "${clash_path}/subweb"
+    git clone https://github.com/281677160/agent "${clash_path}/subweb"
+    judge "sub-web源码下载"
     chmod -R 775 ${clash_path}/sub-web
     cp -R ${clash_path}/subweb/subweb/* "${clash_path}/sub-web/"
     mv -f "${clash_path}/subweb/subweb/.env" "${clash_path}/sub-web/.env"

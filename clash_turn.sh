@@ -253,6 +253,9 @@ function system_check() {
     chmod 755 /etc/init.d/acceptoff
     update-rc.d acceptoff defaults 90
   fi
+  systemctl stop nginx
+  systemctl stop subconverter
+  systemctl stop myurls
 }
 
 function nodejs_remove() {
@@ -273,14 +276,23 @@ function nodejs_install() {
 }
 
 function nginx_install() {
+  nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
   if [[ $(grep "nogroup" /etc/group) ]]; then
     cert_group="nogroup"
   fi
-  if ! command -v nginx >/dev/null 2>&1; then
-    ${INS} nginx
-  else
-    print_ok "Nginx 已存在"
+  if [[ `command -v nginx |grep -c "nginx"` -ge '1' ]] && [[ "${NGINX_VERSION}" == "1.20.2" ]]; then
     ${INS} nginx >/dev/null 2>&1
+    print_ok "Nginx 已存在"
+  else
+    systemctl stop nginx >/dev/null 2>&1
+    systemctl disable nginx >/dev/null 2>&1
+    ${UNINS} --purge remove -y nginx >/dev/null 2>&1
+    ${UNINS} autoremove -y >/dev/null 2>&1
+    ${UNINS} --purge remove -y nginx >/dev/null 2>&1
+    ${UNINS} --purge remove -y nginx-common >/dev/null 2>&1
+    ${UNINS} --purge remove -y nginx-core >/dev/null 2>&1
+    find / -iname 'nginx' 2>&1 | xargs -i rm -rf {}
+    ${INS} nginx
   fi
 }
 

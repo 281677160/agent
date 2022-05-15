@@ -777,7 +777,8 @@ function xui_uninstall() {
   rm /usr/local/x-ui/ -rf > /dev/null 2>&1
   rm -rf /usr/bin/x-ui -rf > /dev/null 2>&1
   rm -rf /etc/nginx/conf.d/xui_nginx.conf
-  rm -rf "/www/xui_web"
+  rm -rf "/www/xui_web" > /dev/null 2>&1
+  rm -rf "/etc/nginx/conf.d/xui_www.conf" > /dev/null 2>&1
   print_ok "x-ui面板御载 完成"
   sleep 1
   source '/etc/os-release'

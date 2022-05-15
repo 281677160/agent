@@ -743,8 +743,8 @@ function restart_all() {
   ECHOG "友情提示：再次输入安装命令或者输入[glxray]命令可以对程序进行管理"
   echo
   cat >${xui_path}/conck <<-EOF
-  echo -e "\033[32m面板证书公钥文件路径：\033[0m${xui_path}/server..crt"
-  echo -e "\033[32m面板证书密钥文件路径：\033[0m${xui_path}/server..key"
+  echo -e "\033[32m面板证书公钥文件路径：\033[0m${xui_path}/server.crt"
+  echo -e "\033[32m面板证书密钥文件路径：\033[0m${xui_path}/server.key"
 EOF
 }
 
@@ -879,7 +879,7 @@ menu() {
   echo -e "${XUI_ZT}"
   echo -e "${NGINX_ZT}"
   echo
-  ECHOY "1、安装 x-ui面板、nginx和域名证书申请"
+  ECHOY "1、安装 x-ui面板、nginx和伪装网站"
   ECHOY "2、重启 x-ui面板、nginx"
   ECHOY "3、查询 证书路径"
   ECHOY "4、安装 BBR、锐速加速"

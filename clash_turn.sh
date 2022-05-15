@@ -523,7 +523,7 @@ function install_subweb() {
 
 function install_myurls() {
   ECHOY "正在安装短链程序"
-  wget -P "${clash_path}" https://github.com/CareyWang/MyUrls/releases/download/v1.10/linux-amd64.tar.gz -O "${clash_path}/linux-amd64.tar.gz"
+  wget -P "${clash_path}" https://github.com/281677160/MyUrls/releases/download/v1.10/linux-${ARCH_PRINT}-myurls.tar.gz -O "${clash_path}/linux-${ARCH_PRINT}-myurls.tar.gz"
   if [[ $? -ne 0 ]];then
     print_error "myurls短链程序下载失败,请再次执行安装命令试试!"
     exit 1
@@ -531,7 +531,7 @@ function install_myurls() {
     print_ok "myurls短链程序下载完成"
   fi
   rm -rf "${clash_path}/myurls"
-  tar -zxvf "${clash_path}/linux-amd64.tar.gz" -C "${clash_path}"
+  tar -zxvf "${clash_path}/linux-${ARCH_PRINT}-myurls.tar.gz" -C "${clash_path}"
   if [[ $? -ne 0 ]];then
     print_error "myurls解压失败"
     exit 1
@@ -548,7 +548,7 @@ function install_myurls() {
     
   [Service]
   Type=simple
-  ExecStart=${clash_path}/myurls/linux-amd64-myurls.service -domain ${myurls_ip} -port ${DLJ_PORT}
+  ExecStart=${clash_path}/myurls/linux-${ARCH_PRINT}-myurls -domain ${myurls_ip} -port ${DLJ_PORT}
   WorkingDirectory=${clash_path}/myurls
   Restart=always
   RestartSec=10

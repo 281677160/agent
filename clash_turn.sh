@@ -190,35 +190,52 @@ function system_check() {
   
   ECHOY "正在安装各种必须依赖"
   echo
-  if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
-    yum install -y epel-release gcc ca-certificates && update-ca-trust force-enable
-    yum install -y nodejs redis curl wget sudo git lsof tar systemd lsb-release
-    curl -sL https://rpm.nodesource.com/setup_12.x | bash -
-    wget -N -P /etc/yum.repos.d/ https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
-    sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
-    setenforce 0
-    nodejs_remove
-    npm install -g yarn
+  source '/etc/os-release'
+
+  if [[ "${ID}" == "centos" && ${VERSION_ID} -ge 7 ]]; then
+    print_ok "当前系统为 Centos ${VERSION_ID} ${VERSION}"
     export INS="yum install -y"
-    export PUBKEY="centos"
-  elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
-    apt-get update
-    export INS="apt-get install -y"
-    export UNINS="apt-get remove -y"
-    export PUBKEY="ubuntu"
-    nodejs_remove
-    nodejs_install
-  elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
-    apt update
+    ${INS} socat wget git sudo ca-certificates && update-ca-trust force-enable
+    wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
+  elif [[ "${ID}" == "ol" ]]; then
+    print_ok "当前系统为 Oracle Linux ${VERSION_ID} ${VERSION}"
+    export INS="yum install -y"
+    ${INS} wget git sudo
+    wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
+  elif [[ "${ID}" == "debian" && ${VERSION_ID} -ge 9 ]]; then
+    print_ok "当前系统为 Debian ${VERSION_ID} ${VERSION}"
     export INS="apt install -y"
-    export UNINS="apt remove -y"
-    export PUBKEY="debian"
-    export Subcon="/etc/init.d/subconverter"
-    nodejs_remove
-    nodejs_install
+    ${INS} socat wget git sudo ca-certificates && update-ca-certificates
+    # 清除可能的遗留问题
+    rm -f /etc/apt/sources.list.d/nginx.list
+    $INS lsb-release gnupg2
+
+    curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
+    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+    echo "deb http://nginx.org/packages/debian $(lsb_release -cs) nginx" >/etc/apt/sources.list.d/nginx.list
+    curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
+
+    apt update
+  elif [[ "${ID}" == "ubuntu" && $(echo "${VERSION_ID}" | cut -d '.' -f1) -ge 18 ]]; then
+    print_ok "当前系统为 Ubuntu ${VERSION_ID} ${UBUNTU_CODENAME}"
+    export INS="apt install -y"
+    ${INS} socat wget git sudo ca-certificates && update-ca-certificates
+    # 清除可能的遗留问题
+    rm -f /etc/apt/sources.list.d/nginx.list >/dev/null 2>&1
+    $INS lsb-release gnupg2
+
+    curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
+    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+    echo "deb http://nginx.org/packages/ubuntu $(lsb_release -cs) nginx" >/etc/apt/sources.list.d/nginx.list
+    curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
+    apt update
   else
-    echo -e "\033[31m 不支持该系统 \033[0m"
+    print_error "当前系统为 ${ID} ${VERSION_ID} 不在支持的系统列表内"
     exit 1
+  fi
+
+  if [[ $(grep "nogroup" /etc/group) ]]; then
+    cert_group="nogroup"
   fi
   
   # 关闭各类防火墙
@@ -268,25 +285,8 @@ function nodejs_remove() {
     ${UNINS} yarn >/dev/null 2>&1
 }
 
-function nodejs_install() {
-    ${INS} ca-certificates && update-ca-certificates
-    ${INS} curl wget sudo git lsof tar systemd redis-server
-    ${INS} lsb-release gnupg2
-    curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
-    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-    rm -f /etc/apt/sources.list.d/nginx.list
-    echo "deb http://nginx.org/packages/${PUBKEY} $(lsb_release -cs) nginx" >/etc/apt/sources.list.d/nginx.list
-    curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
-    apt-get update
-    ${INS} nodejs yarn
-}
-
 function nginx_install() {
   nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
-  if [[ $(grep "nogroup" /etc/group) ]]; then
-    cert_group="nogroup"
-  fi
   if [[ `command -v nginx |grep -c "nginx"` -ge '1' ]] && [[ "${NGINX_VERSION}" == "1.20.2" ]]; then
     ${INS} nginx >/dev/null 2>&1
     print_ok "Nginx 已存在"
@@ -300,6 +300,54 @@ function nginx_install() {
     ${UNINS} --purge remove -y nginx-core >/dev/null 2>&1
     find / -iname 'nginx' 2>&1 | xargs -i rm -rf {}
     ${INS} nginx
+  fi
+}
+
+function dependency_install() {
+  ${INS} nodejs
+  judge "安装 nodejs"
+  
+  ${INS} yarn
+  judge "安装 yarn"
+  
+  ${INS} lsof
+  judge "安装 lsof"
+  
+  ${INS} tar
+  judge "安装 tar"
+
+  if [[ "${ID}" == "centos" || "${ID}" == "ol" ]]; then
+    ${INS} crontabs
+  else
+    ${INS} cron
+  fi
+  judge "安装 crontab"
+
+  if [[ "${ID}" == "centos" || "${ID}" == "ol" ]]; then
+    touch /var/spool/cron/root && chmod 600 /var/spool/cron/root
+    systemctl start crond && systemctl enable crond
+  else
+    touch /var/spool/cron/crontabs/root && chmod 600 /var/spool/cron/crontabs/root
+    systemctl start cron && systemctl enable cron
+  fi
+  judge "crontab 自启动配置 "
+
+  ${INS} unzip
+  judge "安装 unzip"
+
+  # upgrade systemd
+  ${INS} systemd
+  judge "安装/升级 systemd"
+
+  if [[ "${ID}" == "centos" ]]; then
+    ${INS} pcre pcre-devel zlib-devel epel-release openssl openssl-devel
+  elif [[ "${ID}" == "ol" ]]; then
+    ${INS} pcre pcre-devel zlib-devel openssl openssl-devel
+    # Oracle Linux 不同日期版本的 VERSION_ID 比较乱 直接暴力处理。如出现问题或有更好的方案，请提交 Issue。
+    yum-config-manager --enable ol7_developer_EPEL >/dev/null 2>&1
+    yum-config-manager --enable ol8_developer_EPEL >/dev/null 2>&1
+  else
+    ${INS} libpcre3 libpcre3-dev zlib1g-dev openssl libssl-dev
   fi
 }
 
@@ -811,6 +859,8 @@ menu2() {
 
 menu() {
   system_check
+  nodejs_remove
+  dependency_install
   nginx_install
   command_Version
   basic_optimization

@@ -195,16 +195,20 @@ function system_check() {
   if [[ "${ID}" == "centos" && ${VERSION_ID} -ge 7 ]]; then
     print_ok "当前系统为 Centos ${VERSION_ID} ${VERSION}"
     export INS="yum install -y"
+    export UNINS="yum"
     ${INS} socat wget curl git sudo ca-certificates && update-ca-trust force-enable
     wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
   elif [[ "${ID}" == "ol" ]]; then
     print_ok "当前系统为 Oracle Linux ${VERSION_ID} ${VERSION}"
     export INS="yum install -y"
+    export UNINS="yum"
     ${INS} wget git curl sudo
     wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
   elif [[ "${ID}" == "debian" && ${VERSION_ID} -ge 9 ]]; then
     print_ok "当前系统为 Debian ${VERSION_ID} ${VERSION}"
     export INS="apt install -y"
+    export UNINS="apt"
+    apt update
     ${INS} socat wget curl git sudo ca-certificates && update-ca-certificates
     # 清除可能的遗留问题
     rm -f /etc/apt/sources.list.d/nginx.list
@@ -220,6 +224,8 @@ function system_check() {
   elif [[ "${ID}" == "ubuntu" && $(echo "${VERSION_ID}" | cut -d '.' -f1) -ge 18 ]]; then
     print_ok "当前系统为 Ubuntu ${VERSION_ID} ${UBUNTU_CODENAME}"
     export INS="apt install -y"
+    export UNINS="apt"
+    apt update
     ${INS} socat wget curl git sudo ca-certificates && update-ca-certificates
     # 清除可能的遗留问题
     rm -f /etc/apt/sources.list.d/nginx.list >/dev/null 2>&1

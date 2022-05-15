@@ -196,7 +196,7 @@ function system_check() {
     sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
     setenforce 0
     nodejs_remove
-    yum install -y nodejs redis-server
+    yum install -y nodejs redis-server socat wget git sudo
     npm install -g yarn
     export INS="yum install -y"
     export PUBKEY="centos"
@@ -272,6 +272,7 @@ function nodejs_install() {
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
     apt-get update
+    ${INS} redis-server socat wget git sudo
     ${INS} nodejs yarn
 }
 

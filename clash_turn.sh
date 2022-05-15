@@ -723,16 +723,36 @@ server {
 }
 EOF
   chmod -R 755 /etc/nginx/conf.d
-  systemctl restart nginx
-  if [[ $? -ne 0 ]];then
-    print_error "配置文件启动失败"
-    exit 1
-  else
-    print_ok "配置文件启动成功"
-    ECHOY "全部服务安装完毕,请登录 https://${www_ip} 进行使用"
-  fi
 }
 
+function restart_all() {
+  systemctl daemon-reload
+  systemctl restart nginx
+  systemctl restart subconverter
+  systemctl restart myurls
+  sleep 3
+  clear
+  echo
+  echo
+  if [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then
+    print_ok "nginx运行 正常"
+  else
+    print_error "nginx没有运行"
+    exit 1
+  fi
+  if [[ `systemctl status subconverter |grep -c "active (running) "` == '1' ]]; then
+    print_ok "subconverter运行 正常"
+  else
+    print_error "subconverter没有运行"
+  fi
+  if [[ `systemctl status myurls |grep -c "active (running) "` == '1' ]]; then
+    print_ok "myurls运行 正常"
+  else
+    print_error "myurls没有运行"
+    exit 1
+  fi
+  ECHOY "全部服务安装完毕,请登录 https://${www_ip} 进行使用"
+}
 
 menu2() {
   ECHOG "subconverter已存在，是否要御载subconverter[Y/n]?"
@@ -776,6 +796,7 @@ menu() {
   install_subweb
   install_myurls
   nginx_conf
+  restart_all
 }
 
 

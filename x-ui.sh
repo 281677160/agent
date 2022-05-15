@@ -354,6 +354,17 @@ function system_check() {
 
   $INS dbus
   
+  if [[ -d "/etc/x-ui" ]]; then
+    systemctl stop x-ui > /dev/null 2>&1
+    systemctl disable x-ui > /dev/null 2>&1
+    rm /etc/systemd/system/x-ui.service -f > /dev/null 2>&1
+    systemctl daemon-reload > /dev/null 2>&1
+    systemctl reset-failed > /dev/null 2>&1
+    rm /etc/x-ui/ -rf > /dev/null 2>&1
+    rm /usr/local/x-ui/ -rf > /dev/null 2>&1
+    rm -rf /usr/bin/x-ui -rf > /dev/null 2>&1
+  fi
+  
   # 关闭各类防火墙
   systemctl stop firewalld
   systemctl disable firewalld
@@ -722,20 +733,20 @@ function restart_all() {
   echo
   ECHOY "1、用浏览器打开此链接： http://${local_ip}:${config_port}"
   ECHOY "2、然后用您设置的帐号密码登录面板"
-  ECHOG "3、左侧-->面板设置，然后把《面板证书公钥文件路径》改成 /ssl/xui.crt"
-  ECHOG "4、左侧-->面板设置，然后把《面板证书密钥文件路径》改成 /ssl/xui.key"
-  ECHOG "5、左侧-->面板设置，然后把《面板 url 根路径》改成 ${config_web}/"
+  ECHOG "3、左侧-->面板设置，然后把《面板证书公钥文件路径》改成 ${xui_path}/server.crt"
+  ECHOG "4、左侧-->面板设置，然后把《面板证书密钥文件路径》改成 ${xui_path}/server.key"
+  ECHOG "5、左侧-->面板设置，然后把《面板 url 根路径》改成 /xui/"
   ECHOG "6、然后左侧上面-->保存配置,重启面板"
-  ECHOY "7、重启面板后使用 https://${domain}${config_web} 访问您的x-ui面板"
-  ECHOG "8、clash节点转换页面为 https://${domain}"
+  ECHOY "7、重启面板后使用 https://${domain}/xui 访问您的x-ui面板"
+  ECHOG "8、伪装网站访问为 https://${domain}"
   ECHOR "9、提醒：《面板 url 根路径》和《端口》是不能修改成其他的,要修改的话,就相对应的修改nginx的配置文件"
   echo
   echo
   ECHOG "友情提示：再次输入安装命令或者输入[glxray]命令可以对程序进行管理"
   echo
-  cat >/ssl/conck <<-EOF
-  echo -e "\033[32m面板证书公钥文件路径：\033[0m/ssl/xui.crt"
-  echo -e "\033[32m面板证书密钥文件路径：\033[0m/ssl/xui.key"
+  cat >${xui_path}/conck <<-EOF
+  echo -e "\033[32m面板证书公钥文件路径：\033[0m${xui_path}/server..crt"
+  echo -e "\033[32m面板证书密钥文件路径：\033[0m${xui_path}/server..key"
 EOF
 }
 
@@ -758,24 +769,50 @@ function restart_xui() {
 }
 
 function xui_uninstall() {
-  x-ui stop
-  x-ui disable
-  x-ui uninstall
-  find / -iname 'x-ui' 2>&1 | xargs -i rm -rf {}
+  systemctl stop x-ui
+  systemctl disable x-ui
+  rm /etc/systemd/system/x-ui.service -f
+  systemctl daemon-reload
+  systemctl reset-failed
+  rm /etc/x-ui/ -rf > /dev/null 2>&1
+  rm /usr/local/x-ui/ -rf > /dev/null 2>&1
+  rm -rf /usr/bin/x-ui -rf > /dev/null 2>&1
   rm -rf /etc/nginx/conf.d/xui_nginx.conf
+  rm -rf "/www/xui_web"
   print_ok "x-ui面板御载 完成"
-  sleep 2
-  if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]] || [[ "$(. /etc/os-release && echo "$ID")" == "ol" ]]; then
-    yum remove nginx -y
+  sleep 1
+  source '/etc/os-release'
+  if [[ "${ID}" == "centos" ]] || [[ "${ID}" == "ol" ]]; then
+    export UNINS="yum"
   else
-    apt-get --purge remove -y nginx
-    apt-get autoremove -y
-    apt-get --purge remove -y nginx
-    apt-get --purge remove -y nginx-common
-    apt-get --purge remove -y nginx-core
+    export UNINS="apt"
   fi
-  find / -iname 'nginx' 2>&1 | xargs -i rm -rf {}
-  print_ok "nginx御载 完成"
+  if [[ -x "$(command -v nginx)" ]]; then
+    clear
+    echo
+    ECHOR "是否卸载nginx? 按[Y/y]进行御载,按任意键跳过御载程序"
+    echo
+    ECHOY "如果您还有其他应用在使用nginx，比如clash节点转换，请跳过御载"
+    echo
+    read -p " 输入您的选择：" uninstall_nginx
+    case $uninstall_nginx in
+    [Yy])
+      systemctl stop nginx
+      systemctl disable nginx
+      ${UNINS} --purge remove -y nginx
+      ${UNINS} autoremove -y
+      ${UNINS} --purge remove -y nginx
+      ${UNINS} --purge remove -y nginx-common
+      ${UNINS} --purge remove -y nginx-core
+      find / -iname 'nginx' 2>&1 | xargs -i rm -rf {}
+      print_ok "nginx御载 完成"
+    ;;
+    *) 
+       print_ok "您已跳过御载nginx"
+       echo
+     ;;
+    esac
+  fi
   sleep 2
   if [[ -d "$HOME"/.acme.sh ]]; then
     clear
@@ -790,7 +827,7 @@ function xui_uninstall() {
         "$HOME"/.acme.sh/acme.sh --uninstall
         rm -rf $HOME/.acme.sh
 	rm -rf /usr/bin/acme.sh
-        rm -rf /ssl/*
+	rm -rf "/usr/local/ssl"
       else
         ECHOR "是否卸载acme.sh? 按[Y/y]进行御载,按任意键跳过御载程序"
         echo
@@ -802,7 +839,7 @@ function xui_uninstall() {
            "$HOME"/.acme.sh/acme.sh --uninstall
            rm -rf "$HOME"/.acme.sh
 	   rm -rf /usr/bin/acme.sh
-           rm -rf /ssl/*
+	   rm -rf "/usr/local/ssl"
 	   print_ok "acme.sh御载 完成"
 	   sleep 2
         ;;

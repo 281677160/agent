@@ -302,12 +302,14 @@ function nginx_install() {
 }
 
 function command_Version() {
+  systemctl start redis
   if [[ ! -x "$(command -v node)" ]]; then
     print_error "node安装失败!"
     exit 1
   else
     node_version="$(node --version |egrep -o 'v[0-9]+\.[0-9]+\.[0-9]+')"
     print_ok "node版本号为：${node_version}"
+    sleep 1
   fi
   if [[ ! -x "$(command -v yarn)" ]]; then
     print_error "yarn安装失败!"
@@ -315,6 +317,7 @@ function command_Version() {
   else
     yarn_version="$(yarn --version |egrep -o '[0-9]+\.[0-9]+\.[0-9]+')"
     print_ok "yarn版本号为：${yarn_version}"
+    sleep 1
   fi
   if [[ ! -x "$(command -v nginx)" ]]; then
     print_error "nginx安装失败!"
@@ -322,6 +325,7 @@ function command_Version() {
   else
     nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
     print_ok "Nginx版本号为：${NGINX_VERSION}"
+    sleep 1
   fi
   if [[ `systemctl status redis |grep -c "active (running) "` == '1' ]]; then
     print_ok "redis安装成功"

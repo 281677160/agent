@@ -102,3 +102,17 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/ylx2016/Linux-NetSpeed/m
 ```
 <br />
 </details>
+
+---
+#
+---
+
+<details>
+<summary>🔻一键DD系统🔻</summary>
+<br>
+
+
+[一键更换系统](https://www.moeelf.com/archives/293.html)
+
+<br />
+</details>

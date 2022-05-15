@@ -282,7 +282,7 @@ function nodejs_remove() {
     ${UNINS} --purge npm >/dev/null 2>&1
     ${UNINS} --purge nodejs >/dev/null 2>&1
     ${UNINS} --purge nodejs-legacy >/dev/null 2>&1
-    apt autoremove -y >/dev/null 2>&1
+    ${UNINS} autoremove -y >/dev/null 2>&1
     ${UNINS} cmdtest >/dev/null 2>&1
     ${UNINS} yarn >/dev/null 2>&1
 }

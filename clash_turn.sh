@@ -191,7 +191,7 @@ function system_check() {
   ECHOY "正在安装各种必须依赖"
   echo
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
-    yum install -y epel-release gcc
+    yum install -y epel-release gcc ca-certificates && update-ca-trust force-enable
     yum install -y nodejs redis curl wget sudo git lsof tar systemd lsb-release
     curl -sL https://rpm.nodesource.com/setup_12.x | bash -
     wget -N -P /etc/yum.repos.d/ https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
@@ -269,7 +269,9 @@ function nodejs_remove() {
 }
 
 function nodejs_install() {
-    ${INS} curl wget sudo git lsof tar systemd redis-server lsb-release
+    ${INS} ca-certificates && update-ca-certificates
+    ${INS} curl wget sudo git lsof tar systemd redis-server
+    ${INS} lsb-release gnupg2
     curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list

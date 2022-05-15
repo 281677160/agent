@@ -196,7 +196,7 @@ function system_check() {
     sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
     setenforce 0
     nodejs_remove
-    yum install -y nodejs
+    yum install -y nodejs redis-server
     npm install -g yarn
     export INS="yum install -y"
     export PUBKEY="centos"

@@ -191,12 +191,13 @@ function system_check() {
   ECHOY "正在安装各种必须依赖"
   echo
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
+    yum install -y epel-release gcc
+    yum install -y nodejs redis curl wget sudo git lsof tar systemd lsb-release
     curl -sL https://rpm.nodesource.com/setup_12.x | bash -
     wget -N -P /etc/yum.repos.d/ https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
     sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
     setenforce 0
     nodejs_remove
-    yum install -y nodejs redis-server socat wget git sudo
     npm install -g yarn
     export INS="yum install -y"
     export PUBKEY="centos"
@@ -271,8 +272,11 @@ function nodejs_install() {
     curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+    rm -f /etc/apt/sources.list.d/nginx.list
+    echo "deb http://nginx.org/packages/${PUBKEY} $(lsb_release -cs) nginx" >/etc/apt/sources.list.d/nginx.list
+    curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
     apt-get update
-    ${INS} redis-server socat wget git sudo
+    ${INS} curl wget sudo git lsof tar systemd redis-server lsb-release
     ${INS} nodejs yarn
 }
 

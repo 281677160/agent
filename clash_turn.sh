@@ -202,7 +202,7 @@ function system_check() {
     export INS="yum install -y"
     export PUBKEY="centos"
   elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
-    apt update
+    apt-get update
     export INS="apt-get install -y"
     export UNINS="apt-get remove -y"
     export PUBKEY="ubuntu"
@@ -269,7 +269,6 @@ function nodejs_remove() {
 }
 
 function nodejs_install() {
-    apt-get update
     ${INS} curl wget sudo git lsof tar systemd redis-server lsb-release
     curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -

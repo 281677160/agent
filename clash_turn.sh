@@ -122,7 +122,6 @@ function DNS_service_provider() {
   case $NNKC in
   [Qq])
     DNS_service_provider
-    exit 0
   ;;
   *)
     echo
@@ -238,7 +237,6 @@ function DNS_provider() {
   case $NNKC in
   [Qq])
     DNS_provider
-    exit 0
   ;;
   *)
     echo

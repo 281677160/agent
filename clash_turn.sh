@@ -256,6 +256,8 @@ function system_check() {
     export INS="yum install -y"
     export UNINS="yum"
     curl -sL https://rpm.nodesource.com/setup_12.x | bash -
+    curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo
+    sudo rpm --import https://dl.yarnpkg.com/rpm/pubkey.gpg
     wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
     ${INS} wget curl git sudo redis ca-certificates && update-ca-trust force-enable
   elif [[ "${ID}" == "debian" && ${VERSION_ID} -ge 9 ]]; then

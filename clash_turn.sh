@@ -349,7 +349,7 @@ function nodejs_remove() {
     ${UNINS} autoremove -y >/dev/null 2>&1
     ${UNINS} cmdtest >/dev/null 2>&1
     ${UNINS} yarn >/dev/null 2>&1
-    ${UNINS} --fix-broken install -y
+    ${UNINS} --fix-broken install -y >/dev/null 2>&1
 }
 
 function nginx_install() {

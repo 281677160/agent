@@ -250,7 +250,7 @@ function DNS_provider() {
 function system_check() {
   source '/etc/os-release'
 
-  if [[ "${ID}" == "centos" && ${VERSION_ID} -ge 7 ]]; then
+  if [[ "${ID}" == "centos" && ${VERSION_ID} == "7" ]] || [[ "${ID}" == "centos" && ${VERSION_ID} == "8" ]]; then
     print_ok "当前系统为 Centos ${VERSION_ID} ${VERSION}"
     yum upgrade -y libmodulemd
     export INS="yum install -y"

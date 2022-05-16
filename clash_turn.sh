@@ -521,9 +521,15 @@ function ssl_judge_and_install() {
     sleep 2
     acme.sh --upgrade --auto-upgrade
     judge "启动证书自动续期"
-    echo "domain=${domain}" > "${domainclash}"
-    echo "CF_Key=CF_Key_xx" >> "${domainclash}"
-    echo "CF_Email=CF_Email_xx" >> "${domainclash}"
+    if [[ "${DNS_service}" = "dns_cf" ]]; then
+      echo "domain=${domain}" > "${domainclash}"
+      echo "CF_Key=CF_Key_xx" >> "${domainclash}"
+      echo "CF_Email=CF_Email_xx" >> "${domainclash}"
+    else
+      echo "domain=${domain}" > "${domainclash}"
+      echo "DP_Key=DP_Key_xx" >> "${domainclash}"
+      echo "DP_Id=DP_Id_xx" >> "${domainclash}"
+    fi
     judge "域名记录"
   else
     rm -fr "$HOME"/.acme.sh > /dev/null 2>&1
@@ -549,9 +555,15 @@ function acme() {
     systemctl start nginx
     acme.sh  --upgrade  --auto-upgrade
     judge "启动证书自动续期"
-    echo "domain=${domain}" > "${domainclash}"
-    echo "CF_Key=CF_Key_xx" >> "${domainclash}"
-    echo "CF_Email=CF_Email_xx" >> "${domainclash}"
+    if [[ "${DNS_service}" = "dns_cf" ]]; then
+      echo "domain=${domain}" > "${domainclash}"
+      echo "CF_Key=CF_Key_xx" >> "${domainclash}"
+      echo "CF_Email=CF_Email_xx" >> "${domainclash}"
+    else
+      echo "domain=${domain}" > "${domainclash}"
+      echo "DP_Key=DP_Key_xx" >> "${domainclash}"
+      echo "DP_Id=DP_Id_xx" >> "${domainclash}"
+    fi
     judge "域名记录"
   else
     systemctl start nginx

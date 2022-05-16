@@ -387,7 +387,7 @@ function dependency_install() {
   ${INS} tar
   judge "安装 tar"
 
-  if [[ "${ID}" == "centos" || "${ID}" == "ol" ]]; then
+  if [[ "${ID}" == "centos" ]]; then
     ${INS} crontabs
   else
     ${INS} cron

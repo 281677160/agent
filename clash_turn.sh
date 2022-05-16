@@ -255,14 +255,9 @@ function system_check() {
     yum upgrade -y libmodulemd
     export INS="yum install -y"
     export UNINS="yum"
+    curl -sL https://rpm.nodesource.com/setup_12.x | bash -
+    wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
     ${INS} wget curl git sudo redis ca-certificates && update-ca-trust force-enable
-    wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
-  elif [[ "${ID}" == "ol" ]]; then
-    print_ok "当前系统为 Oracle Linux ${VERSION_ID} ${VERSION}"
-    export INS="yum install -y"
-    export UNINS="yum"
-    ${INS} wget git curl sudo redis
-    wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
   elif [[ "${ID}" == "debian" && ${VERSION_ID} -ge 9 ]]; then
     print_ok "当前系统为 Debian ${VERSION_ID} ${VERSION}"
     export INS="apt install -y"

@@ -910,7 +910,7 @@ function restart_all() {
     print_error "myurls没有运行"
     exit 1
   fi
-  ECHOY "全部服务安装完毕,请登录 https://${www_ip} 进行使用"
+  ECHOY "全部服务安装完毕,请登录 ${www_ip} 或 ${CUrrent_ip} 进行使用"
 }
 
 menu2() {

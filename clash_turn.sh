@@ -137,7 +137,6 @@ function DNS_provider() {
     PROFIXI="$(grep 'domain=' ${domainclash} | cut -d "=" -f2)"
     CFKEYXI="$(grep "${DNS_KEY}=" ${domainclash} | cut -d "=" -f2)"
     EMAILXI="$(grep "${DNS_ID}=" ${domainclash} | cut -d "=" -f2)"
-    echo "${EMAILXI}"
   fi
   echo -e "\033[33m 请输入${service_name}解析好泛域名的域名，比如：clash.com] \033[0m"
   export YUMINGIP="请输入"
@@ -156,7 +155,6 @@ function DNS_provider() {
     export www_ip="www.${CUrrent_ip}"
     export myurls_ip="dl.${CUrrent_ip}"
     export domain="${CUrrent_ip}"
-    echo "${domain}"
   break
   ;;
   *)
@@ -226,8 +224,6 @@ function DNS_provider() {
   echo
   if [[ "${CF_domain}" == "1" ]]; then
     ECHOG "您的域名为：${domain} 证书已存在"
-    ECHOG "${DNS_SM3}为：已存在"
-    ECHOG "${DNS_SM4}为：已存在"
   else 
     ECHOG "您的域名为：${domain}"
     ECHOG "${DNS_SM3}为：${DNS_KEYy}"

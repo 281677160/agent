@@ -128,13 +128,19 @@ function DNS_provider() {
   export YUMINGIP="请输入"
   while :; do
   CUrrenty=""
-  read -p " ${YUMINGIP}：" domain
-  if [[ -n "${domain}" ]] && [[ "$(echo ${domain} |grep -c '.')" -ge '1' ]]; then
+  read -p " ${YUMINGIP}：" CUrrent_ip
+  if [[ -n "${CUrrent_ip}" ]] && [[ "$(echo ${CUrrent_ip} |grep -c '.')" -ge '1' ]]; then
     CUrrenty="Y"
   fi
   case $CUrrenty in
   Y)
-    export domain="$(echo "${domain}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/www.//g' |sed 's/\///g' |sed 's/ //g')"
+    export CUrrent_ip="$(echo "${CUrrent_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/www.//g' |sed 's/\///g' |sed 's/ //g')"
+    export after_ip="http://127.0.0.1:25500"
+    export http_suc_ip="https://suc.${CUrrent_ip}"
+    export suc_ip="suc.${CUrrent_ip}"
+    export www_ip="www.${CUrrent_ip}"
+    export myurls_ip="dl.${CUrrent_ip}"
+    export domain="${CUrrent_ip}"
   break
   ;;
   *)
@@ -148,11 +154,6 @@ function DNS_provider() {
     echo
     echo
     export CF_domain="0"
-    if [[ ! -f "$HOME/.acme.sh/domainjilu" ]] || [[ ! -f "$HOME/.acme.sh/domainclash" ]]; then
-      "$HOME"/.acme.sh/acme.sh --uninstall > /dev/null 2>&1
-      rm -rf "$HOME"/.acme.sh > /dev/null 2>&1
-      rm -rf /usr/bin/acme.sh > /dev/null 2>&1
-    fi
     echo -e "\033[33m ${DNS_SM} \033[0m"
     CFKeyIP="请输入"
     while :; do
@@ -234,130 +235,8 @@ function DNS_provider() {
   sleep 2
   echo
  }
- 
- 
- 
- 
- 
 
 function system_check() {
-  clear
-  echo
-  echo
-  [[ ! -d "${clash_path}" ]] && mkdir -p "${clash_path}"
-  CF_domain="0"
-  if [[ -f "${domainclash}" ]]; then
-    PROFILE="$(grep 'domain=' ${domainclash} | cut -d "=" -f2)"
-    CFKEYLE="$(grep 'CF_Key=' ${domainclash} | cut -d "=" -f2)"
-    EMAILLE="$(grep 'CF_Email=' ${domainclash} | cut -d "=" -f2)"
-  fi
-  echo -e "\033[33m 请输入已解析泛域名的域名，比如：clash.com] \033[0m"
-  export YUMINGIP="请输入"
-  while :; do
-  CUrrenty=""
-  read -p " ${YUMINGIP}：" CUrrent_ip
-  if [[ -n "${CUrrent_ip}" ]] && [[ "$(echo ${CUrrent_ip} |grep -c '.')" -ge '1' ]]; then
-    CUrrenty="Y"
-  fi
-  case $CUrrenty in
-  Y)
-    export CUrrent_ip="$(echo "${CUrrent_ip}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/www.//g' |sed 's/\///g' |sed 's/ //g')"
-    export after_ip="http://127.0.0.1:25500"
-    export http_suc_ip="https://suc.${CUrrent_ip}"
-    export suc_ip="suc.${CUrrent_ip}"
-    export www_ip="www.${CUrrent_ip}"
-    export myurls_ip="dl.${CUrrent_ip}"
-    export domain="${CUrrent_ip}"
-  break
-  ;;
-  *)
-    export YUMINGIP="敬告,请输入正确的域名"
-  ;;
-  esac
-  done
-    if [[ "${CFKEYLE}" == "CF_Key_xx" ]] && [[ "${EMAILLE}" == "CF_Email_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
-       export CF_domain="1"
-    else
-       echo
-       echo
-      export CF_domain="0"
-      "$HOME"/.acme.sh/acme.sh --uninstall > /dev/null 2>&1
-       rm -rf "$HOME"/.acme.sh > /dev/null 2>&1
-       rm -rf /usr/bin/acme.sh > /dev/null 2>&1
-       echo -e "\033[33m 输入cloudflare网站里面的Global API Key \033[0m"
-       CFKeyIP="请输入"
-       while :; do
-       export CFKeyIPty=""
-       read -p " ${CFKeyIP}：" CF_Key
-       if [[ -n "${CF_Key}" ]]; then
-         export CFKeyIPty="Y"
-       fi
-       case $CFKeyIPty in
-       Y)
-         export CF_Key="${CF_Key}"
-	 export CF_Key="$(echo "${CF_Key}" |sed 's/ //g')"
-       break
-       ;;
-       *)
-         export CFKeyIP="敬告,Global API Key不能为空,请输入"
-       ;;
-       esac
-       done
-    fi
-    if [[ "${CFKEYLE}" == "CF_Key_xx" ]] && [[ "${EMAILLE}" == "CF_Email_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
-       CF_domain="1"
-    else
-       echo
-       echo
-       echo -e "\033[33m 注册绑定cloudflare网站的邮箱 \033[0m"
-       export EmailIP="请输入"
-       while :; do
-       export EmailIPty=""
-       read -p " ${EmailIP}：" CF_Email
-       if [[ -n "${CF_Email}" ]]; then
-         EmailIPty="Y"
-       fi
-       case $EmailIPty in
-       Y)
-         export CF_Email="${CF_Email}"
-	 export CF_Email="$(echo "${CF_Email}" |sed 's/ //g')"
-       break
-       ;;
-       *)
-         export EmailIP="敬告,CF注册邮箱不能为空,请输入"
-       ;;
-       esac
-       done
-    fi
-  echo
-  echo
-  if [[ "${CF_domain}" == "1" ]]; then
-    ECHOG "您的域名为：${CUrrent_ip} 证书已存在"
-    ECHOG "Global API Key为：已存在"
-    ECHOG "CF注册邮箱为：已存在"
-  else 
-    ECHOG "您的域名为：${CUrrent_ip}"
-    ECHOG "Global API Key为：${CF_Key}"
-    ECHOG "CF注册邮箱为：${CF_Email}"
-  fi
-  echo
-  read -p " [检查是否正确,正确回车继续,不正确按Q回车重新输入]： " NNKC
-  case $NNKC in
-  [Qq])
-    system_check
-    exit 0
-  ;;
-  *)
-    echo
-    print_ok "您已确认无误!"
-  ;;
-  esac
-  echo
-  ECHOY "开始执行安装程序,请耐心等候..."
-  sleep 2
-  echo
-  
-  ECHOY "正在安装各种必须依赖"
   echo
   source '/etc/os-release'
 
@@ -628,9 +507,9 @@ function ssl_judge_and_install() {
     sleep 2
     acme.sh --upgrade --auto-upgrade
     judge "启动证书自动续期"
-    echo "domain=${domain}" > "${domainjilu}"
-    echo "CF_Key=CF_Key_xx" >> "${domainjilu}"
-    echo "CF_Email=CF_Email_xx" >> "${domainjilu}"
+    echo "domain=${domain}" > "${domainclash}"
+    echo "CF_Key=CF_Key_xx" >> "${domainclash}"
+    echo "CF_Email=CF_Email_xx" >> "${domainclash}"
     judge "域名记录"
   else
     rm -fr "$HOME"/.acme.sh > /dev/null 2>&1
@@ -656,9 +535,9 @@ function acme() {
     systemctl start nginx
     acme.sh  --upgrade  --auto-upgrade
     judge "启动证书自动续期"
-    echo "domain=${domain}" > "${domainjilu}"
-    echo "CF_Key=CF_Key_xx" >> "${domainjilu}"
-    echo "CF_Email=CF_Email_xx" >> "${domainjilu}"
+    echo "domain=${domain}" > "${domainclash}"
+    echo "CF_Key=CF_Key_xx" >> "${domainclash}"
+    echo "CF_Email=CF_Email_xx" >> "${domainclash}"
     judge "域名记录"
   else
     systemctl start nginx

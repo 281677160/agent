@@ -452,6 +452,7 @@ function command_Version() {
   fi
   if [[ `systemctl status redis |grep -c "active (running) "` == '1' ]]; then
     print_ok "redis安装成功"
+    sleep 1
   else
     print_error "redis安装失败,有可能是您的机器禁止IPV6造成的,请百度安装redis自行安装试试"
     exit 1
@@ -540,7 +541,7 @@ function acme() {
   acme.sh --set-default-ca --server letsencrypt
   systemctl stop nginx
   sleep 2
-  acme.sh --issue --dns dns_cf -d "${domain}" -d "*.${domain}" --keylength ec-256
+  acme.sh --issue --dns "${DNS_service}" -d "${domain}" -d "*.${domain}" --keylength ec-256
   if [[ $? -eq 0 ]]; then
     print_ok "SSL 证书生成成功" 
     rm -rf ${clash_path}/server.key ${clash_path}/server.crt

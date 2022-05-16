@@ -460,7 +460,7 @@ function basic_optimization() {
   echo '* hard nofile 65536' >>/etc/security/limits.conf
 
   # RedHat 系发行版关闭 SELinux
-  if [[ "${ID}" == "centos"]]; then
+  if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
     sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
     setenforce 0
   fi

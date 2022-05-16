@@ -394,15 +394,6 @@ function dependency_install() {
   fi
   judge "安装 crontab"
 
-  if [[ "${ID}" == "centos" || "${ID}" == "ol" ]]; then
-    touch /var/spool/cron/root && chmod 600 /var/spool/cron/root
-    systemctl start crond && systemctl enable crond
-  else
-    touch /var/spool/cron/crontabs/root && chmod 600 /var/spool/cron/crontabs/root
-    systemctl start cron && systemctl enable cron
-  fi
-  judge "crontab 自启动配置 "
-
   ${INS} unzip
   judge "安装 unzip"
 
@@ -410,13 +401,17 @@ function dependency_install() {
   ${INS} systemd
   judge "安装/升级 systemd"
 
+  if [[ "${ID}" == "centos"]]; then
+    touch /var/spool/cron/root && chmod 600 /var/spool/cron/root
+    systemctl start crond && systemctl enable crond
+  else
+    touch /var/spool/cron/crontabs/root && chmod 600 /var/spool/cron/crontabs/root
+    systemctl start cron && systemctl enable cron
+  fi
+  judge "crontab 自启动配置"
+
   if [[ "${ID}" == "centos" ]]; then
     ${INS} pcre pcre-devel zlib-devel epel-release openssl openssl-devel
-  elif [[ "${ID}" == "ol" ]]; then
-    ${INS} pcre pcre-devel zlib-devel openssl openssl-devel
-    # Oracle Linux 不同日期版本的 VERSION_ID 比较乱 直接暴力处理。如出现问题或有更好的方案，请提交 Issue。
-    yum-config-manager --enable ol7_developer_EPEL >/dev/null 2>&1
-    yum-config-manager --enable ol8_developer_EPEL >/dev/null 2>&1
   else
     ${INS} libpcre3 libpcre3-dev zlib1g-dev openssl libssl-dev
   fi
@@ -465,7 +460,7 @@ function basic_optimization() {
   echo '* hard nofile 65536' >>/etc/security/limits.conf
 
   # RedHat 系发行版关闭 SELinux
-  if [[ "${ID}" == "centos" || "${ID}" == "ol" ]]; then
+  if [[ "${ID}" == "centos"]]; then
     sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
     setenforce 0
   fi

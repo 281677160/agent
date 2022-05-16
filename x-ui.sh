@@ -309,21 +309,24 @@ function DNS_provider() {
 function system_check() {
   source '/etc/os-release'
 
-  if [[ "${ID}" == "centos" && ${VERSION_ID} -ge 7 ]]; then
+  if [[ "${ID}" == "centos" && ${VERSION_ID} == "7" ]] || [[ "${ID}" == "centos" && ${VERSION_ID} == "8" ]]; then
     print_ok "当前系统为 Centos ${VERSION_ID} ${VERSION}"
     yum upgrade -y libmodulemd
     export INS="yum install -y"
-    ${INS} socat wget git sudo ca-certificates && update-ca-trust force-enable
+    export UNINS="yum"
+    ${INS} wget git sudo ca-certificates && update-ca-trust force-enable
     wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
   elif [[ "${ID}" == "ol" ]]; then
     print_ok "当前系统为 Oracle Linux ${VERSION_ID} ${VERSION}"
     export INS="yum install -y"
-    ${INS} wget git sudo
+    export UNINS="yum"
+    ${INS} wget git sudo ca-certificates && update-ca-trust force-enable
     wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
   elif [[ "${ID}" == "debian" && ${VERSION_ID} -ge 9 ]]; then
     print_ok "当前系统为 Debian ${VERSION_ID} ${VERSION}"
     export INS="apt install -y"
-    ${INS} socat wget git sudo ca-certificates && update-ca-certificates
+    export UNINS="apt"
+    ${INS} wget git sudo ca-certificates && update-ca-certificates
     # 清除可能的遗留问题
     rm -f /etc/apt/sources.list.d/nginx.list
     $INS lsb-release gnupg2
@@ -335,7 +338,8 @@ function system_check() {
   elif [[ "${ID}" == "ubuntu" && $(echo "${VERSION_ID}" | cut -d '.' -f1) -ge 18 ]]; then
     print_ok "当前系统为 Ubuntu ${VERSION_ID} ${UBUNTU_CODENAME}"
     export INS="apt install -y"
-    ${INS} socat wget git sudo ca-certificates && update-ca-certificatesgit
+    export UNINS="apt"
+    ${INS} wget git sudo ca-certificates && update-ca-certificatesgit
     # 清除可能的遗留问题
     rm -f /etc/apt/sources.list.d/nginx.list
     $INS lsb-release gnupg2
@@ -401,19 +405,33 @@ function system_check() {
 }
 
 function nginx_install() {
-  if ! command -v nginx >/dev/null 2>&1; then
-    ${INS} nginx
-    judge "Nginx 安装"
-  else
+  nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
+  if [[ `command -v nginx |grep -c "nginx"` -ge '1' ]] && [[ "${NGINX_VERSION}" == "1.20.2" ]]; then
+    ${INS} nginx >/dev/null 2>&1
     print_ok "Nginx 已存在"
+  else
+    systemctl stop nginx >/dev/null 2>&1
+    systemctl disable nginx >/dev/null 2>&1
+    ${UNINS} --purge remove -y nginx >/dev/null 2>&1
+    ${UNINS} autoremove -y >/dev/null 2>&1
+    ${UNINS} --purge remove -y nginx >/dev/null 2>&1
+    ${UNINS} --purge remove -y nginx-common >/dev/null 2>&1
+    ${UNINS} --purge remove -y nginx-core >/dev/null 2>&1
+    find / -iname 'nginx' 2>&1 | xargs -i rm -rf {}
     ${INS} nginx
+    judge "安装 nginx"
   fi
-  # 遗留问题处理
-  mkdir -p /etc/nginx/conf.d >/dev/null 2>&1
 }
+
 function dependency_install() {
-  ${INS} lsof tar
-  judge "安装 lsof tar"
+  ${INS} socat
+  judge "安装 socat"
+
+  ${INS} tar
+  judge "安装 tar"
+  
+  ${INS} lsof
+  judge "安装 lsof"
 
   if [[ "${ID}" == "centos" || "${ID}" == "ol" ]]; then
     ${INS} crontabs

@@ -132,7 +132,7 @@ function DNS_service_provider() {
 function DNS_provider() {
   echo
   echo
-  CF_domain="0"
+  CF_domain=""
   if [[ -f "${domainclash}" ]]; then
     PROFIXI="$(grep 'domain=' ${domainclash} | cut -d "=" -f2)"
     CFKEYXI="$(grep "${DNS_ID}=" ${domainclash} | cut -d "=" -f2)"

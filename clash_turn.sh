@@ -401,7 +401,7 @@ function dependency_install() {
   ${INS} systemd
   judge "安装/升级 systemd"
 
-  if [[ "${ID}" == "centos"]]; then
+  if [[ "${ID}" == "centos" ]]; then
     touch /var/spool/cron/root && chmod 600 /var/spool/cron/root
     systemctl start crond && systemctl enable crond
   else

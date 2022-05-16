@@ -850,7 +850,7 @@ export default {
         }
       }
       this.$copyText(this.customSubUrl);
-      this.$message.success("定制订阅已复制到剪贴板");
+      this.$message.success("节点转换完成");
     },
     makeShortUrl() {
       if (this.customSubUrl === "") {
@@ -876,7 +876,7 @@ export default {
           if (res.data.Code === 1 && res.data.ShortUrl !== "") {
             this.curtomShortSubUrl = res.data.ShortUrl;
             this.$copyText(res.data.ShortUrl);
-            this.$message.success("短链接已复制到剪贴板");
+            this.$message.success("短链生成成功");
           } else {
             this.$message.error("短链接获取失败：" + res.data.Message);
           }

@@ -626,11 +626,10 @@ function install_subconverter() {
   sed -i 's/^[ ]*//g' /etc/systemd/system/subconverter.service
   sed -i '1d' /etc/systemd/system/subconverter.service
   chmod 755 /etc/systemd/system/subconverter.service
-  sleep 2
   systemctl daemon-reload
   systemctl start subconverter
   systemctl enable subconverter
-
+  sleep 3
   if [[ $(lsof -i:"${HDFW_PORT}" | grep -i -c "listen") -ge "1" ]]; then
     print_ok "subconverter安装成功"
   else
@@ -714,7 +713,7 @@ function install_myurls() {
   systemctl daemon-reload
   systemctl start myurls
   systemctl enable myurls
-  sleep 2
+  sleep 3
   if [[ $(lsof -i:"${DLJ_PORT}" | grep -i -c "listen") -ge "1" ]]; then
     rm -rf "${clash_path}/linux-${ARCH_PRINT}-myurls.tar.gz"
     print_ok "短链程序安装完成"

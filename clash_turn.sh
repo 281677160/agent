@@ -252,6 +252,7 @@ function system_check() {
 
   if [[ "${ID}" == "centos" && ${VERSION_ID} -ge 7 ]]; then
     print_ok "当前系统为 Centos ${VERSION_ID} ${VERSION}"
+    yum upgrade -y libmodulemd
     export INS="yum install -y"
     export UNINS="yum"
     ${INS} wget curl git sudo redis ca-certificates && update-ca-trust force-enable

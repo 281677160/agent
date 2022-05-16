@@ -49,14 +49,14 @@ judge() {
   fi
 }
 
-export clash_path="/usr/local/etc/clash"
-export cert_group="nobody"
-export random_num=$((RANDOM % 12 + 4))
-export HOME="/root"
-export domainjilu="$HOME/.acme.sh/domainjilu"
-export HDFW_PORT="25500"
-export DLJ_PORT="8002"
-export arch=$(arch)
+clash_path="/usr/local/etc/clash"
+cert_group="nobody"
+random_num=$((RANDOM % 12 + 4))
+HOME="/root"
+domainclash="$HOME/.acme.sh/domainclash"
+HDFW_PORT="25500"
+DLJ_PORT="8002"
+arch=$(arch)
 
 if [[ ! "$USER" == "root" ]]; then
   print_error "警告：请使用root用户操作!~~"
@@ -71,16 +71,185 @@ else
   exit 1
 fi
 
+function DNS_service_provider() {
+  clear
+  echo
+  echo
+  ECHOG "请选择您域名的DNS托管商"
+  echo
+  ECHOY " 1. Cloudflare(免费CDN提供,但是免费域名不能申请泛域名证书)"
+  echo
+  ECHOY " 2. DNSPod(收费CDN,但是免费域名能申请泛域名证书)"
+  echo
+  XUANZHEOP=" 请输入数字选择"
+  while :; do
+  read -p " ${XUANZHEOP}： " CHOOSEDNS
+  case $CHOOSEDNS in
+    1)
+      export service_name="cloudflare"
+      export DNS_service="dns_cf"
+      export DNS_ID="CF_Email"
+      export DNS_KEY="CF_Key"
+      export DNS_SM="输入cloudflare网站里面的Global API Key"
+      export DNS_SM2="注册绑定cloudflare网站的邮箱"
+      export DNS_SM3="cloudflare的Global API Key"
+      export DNS_SM4="cloudflare绑定邮箱"
+    break
+    ;;
+    2)
+      export service_name="DNSPod"
+      export DNS_service="dns_dp"
+      export DNS_ID="DP_Id"
+      export DNS_KEY="DP_Key"
+      export DNS_SM="输入DNSPod网站里面的DNSPod Token"
+      export DNS_SM2="输入DNSPod网站里面的DNSPod ID"
+      export DNS_SM3="DNSPod的DNSPod Token"
+      export DNS_SM4="DNSPodDNSPod ID"
+    break
+    ;;
+    *)
+      XUANZHEOP=" 请输入正确的数字编号!"
+    ;;
+    esac
+    done
+}
+
+function DNS_provider() {
+  clear
+  echo
+  echo
+  CF_domain="0"
+  if [[ -f "${domainclash}" ]]; then
+    PROFIXI="$(grep 'domain=' ${domainclash} | cut -d "=" -f2)"
+    CFKEYXI="$(grep "${DNS_ID}=" ${domainclash} | cut -d "=" -f2)"
+    EMAILXI="$(grep "${DNS_KEY}=" ${domainclash} | cut -d "=" -f2)"
+  fi
+  echo -e "\033[33m 请输入${service_name}解析好泛域名的域名，比如：clash.com] \033[0m"
+  export YUMINGIP="请输入"
+  while :; do
+  CUrrenty=""
+  read -p " ${YUMINGIP}：" domain
+  if [[ -n "${domain}" ]] && [[ "$(echo ${domain} |grep -c '.')" -ge '1' ]]; then
+    CUrrenty="Y"
+  fi
+  case $CUrrenty in
+  Y)
+    export domain="$(echo "${domain}" |sed 's/http:\/\///g' |sed 's/https:\/\///g' |sed 's/www.//g' |sed 's/\///g' |sed 's/ //g')"
+  break
+  ;;
+  *)
+    export YUMINGIP="敬告,请输入正确的域名"
+  ;;
+  esac
+  done
+  if [[ "${CFKEYXI}" == "${DNS_KEY}_xx" ]] && [[ "${EMAILXI}" == "${DNS_ID}_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
+    export CF_domain="1"
+  else
+    echo
+    echo
+    export CF_domain="0"
+    if [[ ! -f "$HOME/.acme.sh/domainjilu" ]] || [[ ! -f "$HOME/.acme.sh/domainclash" ]]; then
+      "$HOME"/.acme.sh/acme.sh --uninstall > /dev/null 2>&1
+      rm -rf "$HOME"/.acme.sh > /dev/null 2>&1
+      rm -rf /usr/bin/acme.sh > /dev/null 2>&1
+    fi
+    echo -e "\033[33m ${DNS_SM} \033[0m"
+    CFKeyIP="请输入"
+    while :; do
+    export CFKeyIPty=""
+    read -p " ${CFKeyIP}：" DNS_KEYy
+    if [[ -n "${DNS_KEYy}" ]]; then
+      export CFKeyIPty="Y"
+    fi
+    case $CFKeyIPty in
+    Y)
+      if [[ "${DNS_service}" = "dns_cf" ]]; then
+        export CF_Key="$(echo "${DNS_KEYy}" |sed 's/ //g')"
+      else
+	export DP_Key="$(echo "${DNS_KEYy}" |sed 's/ //g')"
+      fi
+    break
+    ;;
+    *)
+      export CFKeyIP="敬告,数据不能为空"
+    ;;
+    esac
+    done
+  fi
+    
+  if [[ "${CFKEYXI}" == "${DNS_KEY}_xx" ]] && [[ "${EMAILXI}" == "${DNS_ID}_xx" ]] && [[ -f "/root/.acme.sh/${domain}_ecc/${domain}.key" ]]; then
+     CF_domain="1"
+  else
+    echo
+    echo
+    echo -e "\033[33m ${DNS_SM2} \033[0m"
+    export EmailIP="请输入"
+    while :; do
+    export EmailIPty=""
+    read -p " ${EmailIP}：" DNS_IDd
+    if [[ -n "${DNS_IDd}" ]]; then
+      EmailIPty="Y"
+    fi
+    case $EmailIPty in
+    Y)
+      if [[ "${DNS_service}" = "dns_cf" ]]; then
+        export CF_Email="$(echo "${DNS_IDd}" |sed 's/ //g')"
+      else
+        export DP_Id="$(echo "${DNS_IDd}" |sed 's/ //g')"
+      fi
+    break
+    ;;
+    *)
+      export EmailIP="敬告,数据不能为空"
+    ;;
+    esac
+    done
+  fi
+  echo
+  echo
+  if [[ "${CF_domain}" == "1" ]]; then
+    ECHOG "您的域名为：${domain} 证书已存在"
+    ECHOG "${DNS_SM3}为：已存在"
+    ECHOG "${DNS_SM4}为：已存在"
+  else 
+    ECHOG "您的域名为：${domain}"
+    ECHOG "${DNS_SM3}为：${DNS_KEYy}"
+    ECHOG "${DNS_SM4}为：${DNS_IDd}"
+  fi
+  echo
+  read -p " [检查是否正确,正确回车继续,不正确按Q回车重新输入]： " NNKC
+  case $NNKC in
+  [Qq])
+    system_check
+    exit 0
+  ;;
+  *)
+    echo
+    print_ok "您已确认无误!"
+  ;;
+  esac
+  echo
+  ECHOY "开始执行安装程序,请耐心等候..."
+  [[ ! -d "${clash_path}" ]] && mkdir -p "${clash_path}"
+  sleep 2
+  echo
+ }
+ 
+ 
+ 
+ 
+ 
+
 function system_check() {
   clear
   echo
   echo
   [[ ! -d "${clash_path}" ]] && mkdir -p "${clash_path}"
   CF_domain="0"
-  if [[ -f "${domainjilu}" ]]; then
-    PROFILE="$(grep 'domain=' ${domainjilu} | cut -d "=" -f2)"
-    CFKEYLE="$(grep 'CF_Key=' ${domainjilu} | cut -d "=" -f2)"
-    EMAILLE="$(grep 'CF_Email=' ${domainjilu} | cut -d "=" -f2)"
+  if [[ -f "${domainclash}" ]]; then
+    PROFILE="$(grep 'domain=' ${domainclash} | cut -d "=" -f2)"
+    CFKEYLE="$(grep 'CF_Key=' ${domainclash} | cut -d "=" -f2)"
+    EMAILLE="$(grep 'CF_Email=' ${domainclash} | cut -d "=" -f2)"
   fi
   echo -e "\033[33m 请输入已解析泛域名的域名，比如：clash.com] \033[0m"
   export YUMINGIP="请输入"

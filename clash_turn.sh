@@ -112,6 +112,22 @@ function DNS_service_provider() {
     ;;
     esac
     done
+  
+  echo
+  echo
+  ECHOG "您选择您域名托管商为${service_name}"
+  echo
+  echo
+  read -p " [检查是否正确,正确回车继续,不正确按Q回车重新输入]： " NNKC
+  case $NNKC in
+  [Qq])
+    DNS_service_provider
+    exit 0
+  ;;
+  *)
+    echo
+  ;;
+  esac
 }
 
 function DNS_provider() {
@@ -221,7 +237,7 @@ function DNS_provider() {
   read -p " [检查是否正确,正确回车继续,不正确按Q回车重新输入]： " NNKC
   case $NNKC in
   [Qq])
-    system_check
+    DNS_provider
     exit 0
   ;;
   *)
@@ -237,7 +253,6 @@ function DNS_provider() {
  }
 
 function system_check() {
-  echo
   source '/etc/os-release'
 
   if [[ "${ID}" == "centos" && ${VERSION_ID} -ge 7 ]]; then
@@ -921,6 +936,8 @@ menu2() {
 }
 
 menu() {
+  DNS_service_provider
+  DNS_provider
   system_check
   nodejs_remove
   dependency_install

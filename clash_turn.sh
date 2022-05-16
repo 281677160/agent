@@ -401,7 +401,7 @@ function dependency_install() {
   ${INS} systemd
   judge "安装/升级 systemd"
 
-  if [[ "${ID}" == "centos" ]]; then
+  if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
     touch /var/spool/cron/root && chmod 600 /var/spool/cron/root
     systemctl start crond && systemctl enable crond
   else
@@ -410,7 +410,7 @@ function dependency_install() {
   fi
   judge "crontab 自启动配置"
 
-  if [[ "${ID}" == "centos" ]]; then
+  if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
     ${INS} pcre pcre-devel zlib-devel epel-release openssl openssl-devel
   else
     ${INS} libpcre3 libpcre3-dev zlib1g-dev openssl libssl-dev

@@ -159,8 +159,8 @@ function DNS_provider() {
   CF_domain="0"
   if [[ -f "${domainjilu}" ]]; then
     PROFIXI="$(grep 'domain=' ${domainjilu} | cut -d "=" -f2)"
-    CFKEYXI="$(grep "${DNS_ID}=" ${domainjilu} | cut -d "=" -f2)"
-    EMAILXI="$(grep "${DNS_KEY}=" ${domainjilu} | cut -d "=" -f2)"
+    CFKEYXI="$(grep "${DNS_KEY}=" ${domainjilu} | cut -d "=" -f2)"
+    EMAILXI="$(grep "${DNS_ID}=" ${domainjilu} | cut -d "=" -f2)"
   fi
   echo -e "\033[33m 请输入${service_name}解析好泛域名的域名，比如：clash.com] \033[0m"
   export YUMINGIP="请输入"

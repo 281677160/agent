@@ -135,8 +135,8 @@ function DNS_provider() {
   CF_domain=""
   if [[ -f "${domainclash}" ]]; then
     PROFIXI="$(grep 'domain=' ${domainclash} | cut -d "=" -f2)"
-    CFKEYXI="$(grep "${DNS_ID}=" ${domainclash} | cut -d "=" -f2)"
-    EMAILXI="$(grep "${DNS_KEY}=" ${domainclash} | cut -d "=" -f2)"
+    CFKEYXI="$(grep "${DNS_KEY}=" ${domainclash} | cut -d "=" -f2)"
+    EMAILXI="$(grep "${DNS_ID}=" ${domainclash} | cut -d "=" -f2)"
     echo "${EMAILXI}"
   fi
   echo -e "\033[33m 请输入${service_name}解析好泛域名的域名，比如：clash.com] \033[0m"

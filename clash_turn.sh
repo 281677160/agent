@@ -53,7 +53,7 @@ clash_path="/usr/local/etc/clash"
 cert_group="nobody"
 random_num=$((RANDOM % 12 + 4))
 HOME="/root"
-domainclash="$HOME/.acme.sh/domainclash"
+domainclash="/root/.acme.sh/domainclash"
 HDFW_PORT="25500"
 DLJ_PORT="8002"
 arch=$(arch)
@@ -130,7 +130,6 @@ function DNS_service_provider() {
 }
 
 function DNS_provider() {
-  clear
   echo
   echo
   CF_domain="0"

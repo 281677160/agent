@@ -337,9 +337,9 @@ function system_check() {
     chmod 755 /etc/init.d/acceptoff
     update-rc.d acceptoff defaults 90
   fi
-  systemctl stop nginx
-  systemctl stop subconverter
-  systemctl stop myurls
+  systemctl stop nginx >/dev/null 2>&1
+  systemctl stop subconverter >/dev/null 2>&1
+  systemctl stop myurls >/dev/null 2>&1
 }
 
 function nodejs_remove() {
@@ -356,6 +356,8 @@ function nginx_install() {
   nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
   if [[ `command -v nginx |grep -c "nginx"` -ge '1' ]] && [[ "${NGINX_VERSION}" == "1.20.2" ]]; then
     ${INS} nginx >/dev/null 2>&1
+    systemctl start nginx
+    systemctl enable nginx
     print_ok "Nginx 已存在"
   else
     systemctl stop nginx >/dev/null 2>&1
@@ -1053,8 +1055,8 @@ function install_jiedian() {
   DNS_provider
   system_check
   nodejs_remove
-  dependency_install
   nginx_install
+  dependency_install
   command_Version
   basic_optimization
   port_exist_check

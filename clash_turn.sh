@@ -402,14 +402,7 @@ function dependency_install() {
     ${INS} cron
   fi
   judge "安装 crontab"
-
-  ${INS} unzip
-  judge "安装 unzip"
-
-  # upgrade systemd
-  ${INS} systemd
-  judge "安装/升级 systemd"
-
+  
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
     touch /var/spool/cron/root && chmod 600 /var/spool/cron/root
     systemctl start crond && systemctl enable crond
@@ -418,6 +411,13 @@ function dependency_install() {
     systemctl start cron && systemctl enable cron
   fi
   judge "crontab 自启动配置"
+
+  ${INS} unzip
+  judge "安装 unzip"
+
+  # upgrade systemd
+  ${INS} systemd
+  judge "安装/升级 systemd"
 
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
     ${INS} pcre pcre-devel zlib-devel epel-release openssl openssl-devel

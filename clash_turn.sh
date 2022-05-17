@@ -913,7 +913,7 @@ function restart_all() {
     print_error "nginx没有运行,会导致以上应用无法正常使用"
     exit 1
   fi
-  ECHOY "全部服务安装完毕,请登录 ${www_ip} 或 ${CUrrent_ip} 进行使用"
+  ECHOY "全部服务安装完毕,请在浏览器打开 ${www_ip} 或 ${CUrrent_ip} 进行使用"
 }
 
 function restart_clash_all() {

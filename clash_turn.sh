@@ -372,8 +372,8 @@ function nginx_install() {
     else
       ${INS} nginx
     fi
-    systemctl start myurls
-    systemctl enable myurls
+    systemctl start nginx
+    systemctl enable nginx
     sleep 1
   fi
 }
@@ -443,13 +443,13 @@ function command_Version() {
     print_ok "yarn版本号为：${yarn_version}"
     sleep 1
   fi
-  if [[ ! -x "$(command -v nginx)" ]]; then
-    print_error "nginx安装失败!"
-    exit 1
-  else
+  if [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then
     nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
     print_ok "Nginx版本号为：${NGINX_VERSION}"
     sleep 1
+  else
+    print_error "nginx安装失败!"
+    exit 1
   fi
   if [[ `systemctl status redis |grep -c "active (running) "` == '1' ]]; then
     print_ok "redis安装成功"

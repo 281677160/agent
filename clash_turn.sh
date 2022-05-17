@@ -1065,33 +1065,33 @@ menu() {
   echo
   if [[ -f "/usr/local/etc/clash/subconverter/subconverter" ]]; then
     if [[ `systemctl status subconverter |grep -c "active (running) "` == '1' ]]; then
-      print_ok "clash节点转换程序运行中"
+      echo -e "\033[32m clash节点转换程序运行中] \033[0m"
     else
-      print_error "clash节点转换程序没有运行"
+      echo -e "\033[31m clash节点转换程序没有运行] \033[0m"
     fi
   else
-     ECHOR "clash节点转换程序没有安装"
+     echo -e "\033[31m clash节点转换程序没有安装] \033[0m"
   fi
   
   if [[ -f "/usr/local/etc/clash/myurls/linux-${ARCH_PRINT}-myurls" ]]; then
     if [[ `systemctl status myurls |grep -c "active (running) "` == '1' ]]; then
-      print_ok "短链接转换程序运行中"
+      echo -e "\033[32m 短链接转换程序运行中] \033[0m"
     else
-      print_error "短链接转换程序没有运行"
+      echo -e "\033[31m 短链接转换程序没有运行] \033[0m"
     fi
   else
-     ECHOR "短链接转换程序没有安装"
+     echo -e "\033[31m 短链接转换程序没有安装] \033[0m"
   fi
   
   nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
   if [[ -x "$(command -v nginx)" ]] && [[ "${NGINX_VERSION}" == "1.20.2" ]]; then
     if [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then
-      print_ok "nginx运行中"
+      echo -e "\033[32m nginx运行中] \033[0m"
     else
-      print_error "nginx没有运行"
+      echo -e "\033[31m nginx没有运行] \033[0m"
     fi
   else
-     ECHOR "nginx没有安装"
+     echo -e "\033[31m nginx没有安装] \033[0m"
   fi
   echo
   ECHOY "1、安装 clash节点转换程序"

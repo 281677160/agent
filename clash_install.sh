@@ -95,8 +95,10 @@ function system_check() {
   echo
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
     yum install -y wget curl sudo git lsof tar systemd
-    wget -N -P /etc/yum.repos.d/ https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
     curl -sL https://rpm.nodesource.com/setup_12.x | bash -
+    curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo
+    sudo rpm --import https://dl.yarnpkg.com/rpm/pubkey.gpg
+    wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
     sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
     setenforce 0
     yum update -y

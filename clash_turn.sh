@@ -426,6 +426,7 @@ function dependency_install() {
 
 function command_Version() {
   systemctl start redis
+  systemctl enable redis
   if [[ ! -x "$(command -v node)" ]]; then
     print_error "node安装失败!"
     exit 1

@@ -1062,7 +1062,6 @@ function install_jiedian() {
 menu() {
   clear
   echo
-  echo
   if [[ -f "/usr/local/etc/clash/subconverter/subconverter" ]]; then
     if [[ `systemctl status subconverter |grep -c "active (running) "` == '1' ]]; then
       print_ok "clash节点转换程序运行中"

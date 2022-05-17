@@ -374,7 +374,7 @@ function nginx_install() {
     fi
     systemctl start myurls
     systemctl enable myurls
-    sleep 2
+    sleep 1
   fi
 }
 

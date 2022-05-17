@@ -639,12 +639,13 @@ function xray_uninstall() {
     [Yy])
       systemctl stop nginx
       systemctl disable nginx
+      systemctl daemon-reload
       ${UNINS} --purge remove -y nginx
-      ${UNINS} autoremove -y
-      ${UNINS} --purge remove -y nginx
+      ${UNINS} remove -y nginx
       ${UNINS} --purge remove -y nginx-common
       ${UNINS} --purge remove -y nginx-core
-      find / -iname 'nginx' 2>&1 | xargs -i rm -rf {}
+      ${UNINS} autoremove -y
+      rm -rf /etc/nginx /usr/share/nginx
       print_ok "nginx御载 完成"
     ;;
     *) 

@@ -885,12 +885,6 @@ function restart_all() {
   clear
   echo
   echo
-  if [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then
-    print_ok "nginx运行 正常"
-  else
-    print_error "nginx没有运行"
-    exit 1
-  fi
   if [[ `systemctl status subconverter |grep -c "active (running) "` == '1' ]]; then
     print_ok "subconverter运行 正常"
   else
@@ -901,6 +895,12 @@ function restart_all() {
     print_ok "myurls运行 正常"
   else
     print_error "myurls没有运行"
+    exit 1
+  fi
+  if [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then
+    print_ok "nginx运行 正常"
+  else
+    print_error "nginx没有运行,会导致以上应用无法正常使用"
     exit 1
   fi
   ECHOY "全部服务安装完毕,请登录 ${www_ip} 或 ${CUrrent_ip} 进行使用"

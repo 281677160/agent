@@ -143,7 +143,7 @@ function DNS_provider() {
   while :; do
   CUrrenty=""
   read -p " ${YUMINGIP}：" CUrrent_ip
-  if [[ -n "${CUrrent_ip}" ]] && [[ "$(echo ${CUrrent_ip} |grep -c '.')" -ge '1' ]]; then
+  if [[ -n "${CUrrent_ip}" ]] && [[ "$(echo ${CUrrent_ip} |grep -c '\.')" -ge '1' ]]; then
     CUrrenty="Y"
   fi
   case $CUrrenty in
@@ -895,6 +895,7 @@ function restart_all() {
     print_ok "subconverter运行 正常"
   else
     print_error "subconverter没有运行"
+    exit 1
   fi
   if [[ `systemctl status myurls |grep -c "active (running) "` == '1' ]]; then
     print_ok "myurls运行 正常"
@@ -905,23 +906,62 @@ function restart_all() {
   ECHOY "全部服务安装完毕,请登录 ${www_ip} 或 ${CUrrent_ip} 进行使用"
 }
 
-menu2() {
-  ECHOG "subconverter已存在，是否要御载subconverter[Y/n]?"
+function restart_clash_all() {
+  ECHOG "正在重启clash节点转换程序"
+  systemctl daemon-reload
+  systemctl restart nginx
+  systemctl restart subconverter
+  systemctl restart myurls
+  sleep 3
+  clear
+  echo
+  echo
+  if [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then
+    print_ok "nginx运行 正常"
+  else
+    print_error "nginx没有运行"
+    exit 1
+  fi
+  if [[ `systemctl status subconverter |grep -c "active (running) "` == '1' ]]; then
+    print_ok "subconverter运行 正常"
+  else
+    print_error "subconverter没有运行"
+  fi
+  if [[ `systemctl status myurls |grep -c "active (running) "` == '1' ]]; then
+    print_ok "myurls运行 正常"
+  else
+    print_error "myurls没有运行"
+    exit 1
+  fi
+  ECHOY "全部服务重启完毕"
+}
+
+function clash_uninstall() {
+  source '/etc/os-release'
+  if [[ "${ID}" == "centos" ]] || [[ "${ID}" == "ol" ]]; then
+    export UNINS="yum"
+  else
+    export UNINS="apt"
+  fi
+  
+  ECHOG "是否要御载clash节点转换程序?[Y/n]?"
   export DUuuid="请输入[Y/y]确认或[N/n]退出"
   while :; do
   read -p " ${DUuuid}：" IDPATg
   case $IDPATg in
   [Yy])
-    ECHOY "开始御载subconverter"
     systemctl stop subconverter
     systemctl disable subconverter
+    systemctl stop myurls
+    systemctl disable myurls
     systemctl daemon-reload
-    rm -rf /root/subconverter
-    rm -rf /root/sub-web
+    rm -rf "/etc/nginx/conf.d/dl_nginx.conf"
+    rm -rf "/etc/nginx/conf.d/suc_nginx.conf"
+    rm -rf "/etc/nginx/conf.d/www_nginx.conf"
     rm -rf /www/dist_web
-    rm -rf /etc/systemd/system/subconverter.service
-    rm -rf /etc/nginx/sites-available/clash_nginx.conf
-    print_ok "subconverter御载完成"
+    rm -rf "/etc/systemd/system/subconverter.service"
+    rm -rf "/etc/systemd/system/myurls.service"
+    print_ok "clash节点转换程序御载完成"
   break
   ;;
   [Nn])
@@ -933,9 +973,73 @@ menu2() {
   ;;
   esac
   done
+  
+  nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
+  if [[ -x "$(command -v nginx)" ]] && [[ "${NGINX_VERSION}" == "1.20.2" ]]; then
+    clear
+    echo
+    ECHOR "是否卸载nginx? 按[Y/y]进行御载,按任意键跳过御载程序"
+    echo
+    read -p " 输入您的选择：" uninstall_nginx
+    case $uninstall_nginx in
+    [Yy])
+      systemctl stop nginx
+      systemctl disable nginx
+      systemctl daemon-reload
+      ${UNINS} --purge remove -y nginx >/dev/null 2>&1
+      ${UNINS} autoremove -y >/dev/null 2>&1
+      ${UNINS} --purge remove -y nginx >/dev/null 2>&1
+      ${UNINS} --purge remove -y nginx-common >/dev/null 2>&1
+      ${UNINS} --purge remove -y nginx-core >/dev/null 2>&1
+      ${UNINS} --fix-broken install -y >/dev/null 2>&1
+      find / -iname 'nginx' 2>&1 | xargs -i rm -rf {}
+      print_ok "nginx御载 完成"
+    ;;
+    *) 
+       print_ok "您已跳过御载nginx"
+       echo
+     ;;
+    esac
+  fi
+  
+  if [[ -e "$HOME"/.acme.sh ]]; then
+    clear
+    echo
+    [[ -f "${domainclash}" ]] && PROFILE="$(grep -i 'domain=' ${domainclash} | cut -d "=" -f2)"
+    if [[ -f "$HOME/.acme.sh/${PROFILE}_ecc/${PROFILE}.cer" ]] && [[ -f "$HOME/.acme.sh/${PROFILE}_ecc/${PROFILE}.key" ]]; then
+        export TISHI="提示：[ ${PROFILE} ]证书已经存在,如果还继续使用此域名建议勿删除.acme.sh"
+     else
+        export WUTISHI="Y"
+     fi
+     if [[ ${WUTISHI} == "Y" ]]; then
+        "$HOME"/.acme.sh/acme.sh --uninstall
+        rm -rf $HOME/.acme.sh
+	rm -rf /usr/bin/acme.sh
+      else
+        ECHOR "是否卸载acme.sh? 按[Y/y]进行御载,按任意键跳过御载程序"
+        echo
+        ECHOY "${TISHI}"
+        echo
+        read -p " 输入您的选择：" uninstall_acme
+        case $uninstall_acme in
+        [Yy])
+           "$HOME"/.acme.sh/acme.sh --uninstall
+           rm -rf "$HOME"/.acme.sh
+	   rm -rf /usr/bin/acme.sh
+	   print_ok "acme.sh御载 完成"
+	   sleep 2
+        ;;
+        *) 
+            print_ok "您已跳过御载acme.sh"
+            echo
+        ;;
+        esac
+       fi
+    fi
+  print_ok "所有卸载程序执行完毕!"
 }
 
-menu() {
+function install_jiedian() {
   DNS_service_provider
   DNS_provider
   system_check
@@ -955,5 +1059,72 @@ menu() {
 }
 
 
+menu() {
+  clear
+  echo
+  echo
+  if [[ -f "/usr/local/etc/clash/subconverter/subconverter" ]]; then
+    if [[ `systemctl status subconverter |grep -c "active (running) "` == '1' ]]; then
+      print_ok "clash节点转换程序运行中"
+    else
+      print_error "clash节点转换程序没有运行"
+    fi
+  else
+     ECHOR "clash节点转换程序没有安装"
+  fi
+  
+  if [[ -f "/usr/local/etc/clash/myurls/linux-${ARCH_PRINT}-myurls" ]]; then
+    if [[ `systemctl status myurls |grep -c "active (running) "` == '1' ]]; then
+      print_ok "短链接转换程序运行中"
+    else
+      print_error "短链接转换程序没有运行"
+    fi
+  else
+     ECHOR "短链接转换程序没有安装"
+  fi
+  
+  nginxVersion="$(nginx -v 2>&1)" && NGINX_VERSION="$(echo ${nginxVersion#*/})"
+  if [[ -x "$(command -v nginx)" ]] && [[ "${NGINX_VERSION}" == "1.20.2" ]]; then
+    if [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then
+      print_ok "nginx运行中"
+    else
+      print_error "nginx没有运行"
+    fi
+  else
+     ECHOR "nginx没有安装"
+  fi
+  echo
+  ECHOY "1、安装 clash节点转换程序"
+  ECHOY "2、重启 clash节点转换程序"
+  ECHOY "3、卸载 clash节点转换程序"
+  ECHOY "4、退出"
+  echo
+  echo
+  XUANZHE="请输入数字"
+  while :; do
+  read -p " ${XUANZHE}：" menu_num
+  case $menu_num in
+  1)
+    install_jiedian
+    break
+    ;;
+  2)
+    restart_clash_all
+    break
+    ;;
+  3)
+    clash_uninstall
+    break
+    ;;
+  4)
+    exit 0
+    break
+    ;;
+    *)
+    XUANZHE="请输入正确的选择"
+    ;;
+  esac
+  done
+}
 menu "$@"
 

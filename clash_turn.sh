@@ -360,12 +360,13 @@ function nginx_install() {
   else
     systemctl stop nginx >/dev/null 2>&1
     systemctl disable nginx >/dev/null 2>&1
+    systemctl daemon-reload
     ${UNINS} --purge remove -y nginx >/dev/null 2>&1
-    ${UNINS} autoremove -y >/dev/null 2>&1
-    ${UNINS} --purge remove -y nginx >/dev/null 2>&1
+    ${UNINS} remove -y nginx >/dev/null 2>&1
     ${UNINS} --purge remove -y nginx-common >/dev/null 2>&1
     ${UNINS} --purge remove -y nginx-core >/dev/null 2>&1
-    find / -iname 'nginx' 2>&1 | xargs -i rm -rf {}
+    ${UNINS} autoremove -y >/dev/null 2>&1
+    rm -rf /etc/nginx /usr/share/nginx
     ${INS} nginx
     judge "安装 nginx"
   fi

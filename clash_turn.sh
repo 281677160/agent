@@ -367,8 +367,14 @@ function nginx_install() {
     ${UNINS} --purge remove -y nginx-core >/dev/null 2>&1
     ${UNINS} autoremove -y >/dev/null 2>&1
     rm -rf /etc/nginx /usr/share/nginx
-    ${INS} nginx
-    judge "安装 nginx"
+    if [[ "${ID}" == "centos" ]]; then
+      ${INS} nginx-1.20.2
+    else
+      ${INS} nginx
+    fi
+    systemctl start myurls
+    systemctl enable myurls
+    sleep 2
   fi
 }
 

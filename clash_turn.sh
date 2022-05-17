@@ -971,7 +971,7 @@ function clash_uninstall() {
     rm -rf /www/dist_web
     rm -rf /etc/systemd/system/subconverter.service
     rm -rf /etc/systemd/system/myurls.service
-    rm -rf /usr/local/etc/clash
+    rm -rf ${clash_path}
     print_ok "clash节点转换程序御载完成"
   break
   ;;
@@ -1073,7 +1073,7 @@ function install_jiedian() {
 menu() {
   clear
   echo
-  if [[ -f "/usr/local/etc/clash/subconverter/subconverter" ]]; then
+  if [[ -f "${clash_path}/subconverter/subconverter" ]]; then
     if [[ `systemctl status subconverter |grep -c "active (running) "` == '1' ]]; then
       echo -e "\033[32m clash节点转换程序运行中 \033[0m"
     else
@@ -1083,7 +1083,7 @@ menu() {
      echo -e "\033[31m clash节点转换程序没有安装 \033[0m"
   fi
   
-  if [[ -f "/usr/local/etc/clash/myurls/linux-${ARCH_PRINT}-myurls" ]]; then
+  if [[ -f "${clash_path}/myurls/linux-${ARCH_PRINT}-myurls" ]]; then
     if [[ `systemctl status myurls |grep -c "active (running) "` == '1' ]]; then
       echo -e "\033[32m 短链接转换程序运行中 \033[0m"
     else

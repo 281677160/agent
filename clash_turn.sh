@@ -955,12 +955,13 @@ function clash_uninstall() {
     systemctl stop myurls
     systemctl disable myurls
     systemctl daemon-reload
-    rm -rf "/etc/nginx/conf.d/dl_nginx.conf"
-    rm -rf "/etc/nginx/conf.d/suc_nginx.conf"
-    rm -rf "/etc/nginx/conf.d/www_nginx.conf"
+    rm -rf /etc/nginx/conf.d/dl_nginx.conf
+    rm -rf /etc/nginx/conf.d/suc_nginx.conf
+    rm -rf /etc/nginx/conf.d/www_nginx.conf
     rm -rf /www/dist_web
-    rm -rf "/etc/systemd/system/subconverter.service"
-    rm -rf "/etc/systemd/system/myurls.service"
+    rm -rf /etc/systemd/system/subconverter.service
+    rm -rf /etc/systemd/system/myurls.service
+    rm -rf /usr/local/etc/clash
     print_ok "clash节点转换程序御载完成"
   break
   ;;

@@ -376,8 +376,8 @@ function nginx_install() {
     fi
     systemctl start nginx
     systemctl enable nginx
-    sleep 1
   fi
+  sleep 1
 }
 
 function dependency_install() {

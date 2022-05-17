@@ -916,21 +916,21 @@ function restart_clash_all() {
   clear
   echo
   echo
+  if [[ `systemctl status subconverter |grep -c "active (running) "` == '1' ]]; then
+    print_ok "clash节点转换程序运行 正常"
+  else
+    print_error "clash节点转换程序没有运行"
+  fi
+  if [[ `systemctl status myurls |grep -c "active (running) "` == '1' ]]; then
+    print_ok "短链接转换程序运行 正常"
+  else
+    print_error "短链接转换程序没有运行"
+    exit 1
+  fi
   if [[ `systemctl status nginx |grep -c "active (running) "` == '1' ]]; then
     print_ok "nginx运行 正常"
   else
-    print_error "nginx没有运行"
-    exit 1
-  fi
-  if [[ `systemctl status subconverter |grep -c "active (running) "` == '1' ]]; then
-    print_ok "subconverter运行 正常"
-  else
-    print_error "subconverter没有运行"
-  fi
-  if [[ `systemctl status myurls |grep -c "active (running) "` == '1' ]]; then
-    print_ok "myurls运行 正常"
-  else
-    print_error "myurls没有运行"
+    print_error "nginx没有运行,会导致以上应用无法正常使用"
     exit 1
   fi
   ECHOY "全部服务重启完毕"

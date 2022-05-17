@@ -92,6 +92,18 @@ bash -c "$(curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/2816
 ---
 #
 ---
+<details>
+<summary>🔻一键搭建CLASH节点转换+短链接，需要域名，自动申请证书🔻</summary>
+<br>
+
+```yaml
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/281677160/agent/main/clash_turn.sh)"
+```
+<br />
+</details>
+---
+#
+---
 
 <details>
 <summary>🔻一键BBR安装🔻</summary>

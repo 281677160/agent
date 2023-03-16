@@ -96,7 +96,7 @@ function system_check() {
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
     yum upgrade -y libmodulemd
     yum install -y wget curl sudo git lsof tar systemd
-    curl -sL https://rpm.nodesource.com/setup_12.x | bash -
+    curl -sL https://rpm.nodesource.com/setup_18.x | bash -
     curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo
     sudo rpm --import https://dl.yarnpkg.com/rpm/pubkey.gpg
     wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
@@ -144,7 +144,7 @@ function nodejs_install() {
     ${UNINS} --purge nodejs
     ${UNINS} --purge nodejs-legacy
     apt autoremove -y
-    curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
+    curl -sL https://deb.nodesource.com/setup_18.x | sudo bash -
     ${UNINS} cmdtest
     ${UNINS} yarn
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -

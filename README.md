@@ -1,7 +1,7 @@
 
 防止服务器没curl使用不了一键命令，进入root用户后，执行安装curl、wget命令（安装过后，只要没御载curl、wget或者重置过系统都不需要再次执行了）
 ```yaml
-yum install -y curl wget || apt update && apt install -y curl wget
+yum install -y curl wget || sudo apt update && sudo apt install -y curl wget
 ```
 
 ---

@@ -144,16 +144,23 @@ function nodejs_install() {
     ${UNINS} --purge nodejs
     ${UNINS} --purge nodejs-legacy
     apt autoremove -y
-    curl -sL https://deb.nodesource.com/setup_14.x | sudo bash -
     ${UNINS} cmdtest
     ${UNINS} yarn
+    rm -rf /usr/local/node
+    sudo mkdir -p /usr/local/node
+    cd /usr/local/node
+    wget https://nodejs.org/dist/v12.9.1/node-v12.9.1-linux-x64.tar.gz
+    tar -xvf node-v12.9.1-linux-x64.tar.gz
+    ln -s /usr/local/node/node-v12.9.1-linux-x64/bin/node /usr/bin/node
+    ln -s /usr/local/node/node-v12.9.1-linux-x64/bin/npm /usr/bin/npm
+    ${INS} nodejs
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
     rm -f /etc/apt/sources.list.d/nginx.list
     echo "deb http://nginx.org/packages/${PUBKEY} $(lsb_release -cs) nginx" >/etc/apt/sources.list.d/nginx.list
     curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
     apt-get update
-    ${INS} nodejs yarn
+    ${INS} yarn
 }
 
 function nginx_install() {

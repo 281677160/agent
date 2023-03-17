@@ -255,7 +255,7 @@ function system_check() {
     yum upgrade -y libmodulemd
     export INS="yum install -y"
     export UNINS="yum"
-    curl -sL https://rpm.nodesource.com/setup_12.x | bash -
+    curl -sL https://rpm.nodesource.com/setup_16.x | bash -
     curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo
     sudo rpm --import https://dl.yarnpkg.com/rpm/pubkey.gpg
     wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
@@ -270,7 +270,7 @@ function system_check() {
     rm -f /etc/apt/sources.list.d/nginx.list
     $INS lsb-release gnupg2
 
-    curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
+    curl -sL https://deb.nodesource.com/setup_16.x | sudo bash -
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
     echo "deb http://nginx.org/packages/debian $(lsb_release -cs) nginx" >/etc/apt/sources.list.d/nginx.list
@@ -287,7 +287,7 @@ function system_check() {
     rm -f /etc/apt/sources.list.d/nginx.list >/dev/null 2>&1
     $INS lsb-release gnupg2
 
-    curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
+    curl -sL https://deb.nodesource.com/setup_16.x | sudo bash -
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
     echo "deb http://nginx.org/packages/ubuntu $(lsb_release -cs) nginx" >/etc/apt/sources.list.d/nginx.list

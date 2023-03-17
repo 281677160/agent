@@ -153,7 +153,6 @@ function nodejs_install() {
     tar -xvf node-v12.9.1-linux-x64.tar.gz
     ln -s /usr/local/node/node-v12.9.1-linux-x64/bin/node /usr/bin/node
     ln -s /usr/local/node/node-v12.9.1-linux-x64/bin/npm /usr/bin/npm
-    ${INS} nodejs
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
     rm -f /etc/apt/sources.list.d/nginx.list

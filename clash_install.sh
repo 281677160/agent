@@ -96,7 +96,7 @@ function system_check() {
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
     yum upgrade -y libmodulemd
     yum install -y wget curl sudo git lsof tar systemd
-    curl -sL https://rpm.nodesource.com/setup_14.x | bash -
+    curl -sL https://rpm.nodesource.com/setup_16.x | bash -
     curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo
     sudo rpm --import https://dl.yarnpkg.com/rpm/pubkey.gpg
     wget -N -P /etc/yum.repos.d/ https://raw.githubusercontent.com/281677160/agent/main/xray/nginx.repo
@@ -144,21 +144,16 @@ function nodejs_install() {
     ${UNINS} --purge nodejs
     ${UNINS} --purge nodejs-legacy
     apt autoremove -y
+    curl -sL https://deb.nodesource.com/setup_16.x | sudo bash -
     ${UNINS} cmdtest
     ${UNINS} yarn
-    rm -rf /usr/local/node
-    sudo mkdir -p /usr/local/node
-    cd /usr/local/node
-    wget https://nodejs.org/dist/v12.9.1/node-v12.9.1-linux-x64.tar.gz
-    tar -xvf node-v12.9.1-linux-x64.tar.gz
-    ln -s /usr/local/node/node-v12.9.1-linux-x64/bin/node /usr/bin/node
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
     rm -f /etc/apt/sources.list.d/nginx.list
     echo "deb http://nginx.org/packages/${PUBKEY} $(lsb_release -cs) nginx" >/etc/apt/sources.list.d/nginx.list
     curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
     apt-get update
-    ${INS} yarn
+    ${INS} nodejs yarn
 }
 
 function nginx_install() {
@@ -182,12 +177,9 @@ cat >"${sub_path}" <<-EOF
 server {
     listen 80;
     server_name ${CUrrent_ip};
-
     root /www/dist_web;
     index index.html index.htm;
-
     error_page 404 /index.html;
-
     gzip on; #开启gzip压缩
     gzip_min_length 1k; #设置对数据启用压缩的最少字节数
     gzip_buffers 4 16k;
@@ -195,7 +187,6 @@ server {
     gzip_comp_level 6; #设置数据的压缩等级,等级为1-9，压缩比从小到大
     gzip_types text/plain text/css text/javascript application/json application/javascript application/x-javascript application/xml; #设置需要压缩的数据格式
     gzip_vary on;
-
     location ~* \.(css|js|png|jpg|jpeg|gif|gz|svg|mp4|ogg|ogv|webm|htc|xml|woff)$ {
         access_log off;
         add_header Cache-Control "public,max-age=30*24*3600";

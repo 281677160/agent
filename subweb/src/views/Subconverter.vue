@@ -24,7 +24,7 @@
                     placeholder="支持各种订阅链接或单节点链接，多个链接每行一个或用 | 分隔"
                 />
               </el-form-item>
-              <el-form-item label="生成类型:">
+              <el-form-item label="选择类型:">
                 <el-select v-model="form.clientType" style="width: 100%">
                   <el-option v-for="(v, k) in options.clientTypes" :key="k" :label="k" :value="v"></el-option>
                 </el-select>
@@ -78,7 +78,7 @@
                 <el-collapse>
                   <el-collapse-item>
                     <template slot="title">
-                      <el-form-item label="高级功能:" style="width: 100%;">
+                      <el-form-item label="更多功能:" style="width: 100%;">
                         <el-button
                             type="limr"
                             style="width: 100%;"

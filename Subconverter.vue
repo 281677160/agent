@@ -377,7 +377,7 @@ export default {
           "自动判断客户端": "auto",
         },
         shortTypes: {
-          "默认短链转换后端":"http://127.0.0.1:25500/short",
+          "短链后端(本地版无效)":"http://127.0.0.1:25500/short",
         },
         customBackend: {
           "自建本地订阅节点转换后端": "http://127.0.0.1:25500/sub?",

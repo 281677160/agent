@@ -52,7 +52,7 @@
                   <el-option v-for="(v, k) in options.shortTypes" :key="k" :label="k" :value="v"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="远程配置:">
+              <el-form-item label="选择规则:">
                 <el-select
                     v-model="form.remoteConfig"
                     allow-create

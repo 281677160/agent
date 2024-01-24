@@ -164,13 +164,13 @@ function system_check() {
 }
 
 function nodejs_install() {
-    apt update
-    ${INS} curl wget sudo git lsof tar systemd lsb-release gnupg2
+    ${INS} curl wget sudo git lsof tar systemd lsb-release ca-certificates gnupg gnupg2
     ${UNINS} --purge npm
     ${UNINS} --purge nodejs
     ${UNINS} --purge nodejs-legacy
     apt autoremove -y
-    curl -sL https://deb.nodesource.com/setup_16.x | sudo bash -
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_16.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
     ${UNINS} cmdtest
     ${UNINS} yarn
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
@@ -178,7 +178,7 @@ function nodejs_install() {
     rm -f /etc/apt/sources.list.d/nginx.list
     echo "deb http://nginx.org/packages/${PUBKEY} $(lsb_release -cs) nginx" >/etc/apt/sources.list.d/nginx.list
     curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
-    apt-get update
+    sudo apt-get update
     ${INS} nodejs yarn
 }
 

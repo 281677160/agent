@@ -112,10 +112,40 @@ function DNS_service_provider() {
     ;;
     esac
     done
+
+  echo
+  echo
+  ECHOG "请选择订阅转换格式服务程序"
+  echo
+  ECHOY " 1. tindy2013/subconverter(原版订阅转换格式服务程序)"
+  echo
+  ECHOY " 2. MetaCubeX/subconverter(原版基础上改版订阅转换格式服务程序)"
+  echo
+  XUANZHEOR=" 请输入数字选择"
+  while :; do
+  read -p " ${XUANZHEOR}： " CHOOSEDNS
+  case $SUB_CONVER in
+    1)
+      export subconv_erter="tindy2013"
+      export SUB_service="原版订阅转换服务程序"
+    break
+    ;;
+    2)
+      export subconv_erter="MetaCubeX"
+      export SUB_service="原版基础上的改版订阅转换服务程序"
+    break
+    ;;
+    *)
+      XUANZHEOR=" 请输入正确的数字编号!"
+    ;;
+    esac
+    done
   
   echo
   echo
-  ECHOG "您选择您域名托管商为${service_name}"
+  ECHOG "您选择的域名托管商为${service_name}"
+  echo
+  ECHOG "您选择的订阅转换服务程序为${SUB_service}"
   echo
   echo
   read -p " [检查是否正确,正确回车继续,不正确按Q回车重新输入]： " NNKC

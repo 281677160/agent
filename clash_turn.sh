@@ -116,14 +116,12 @@ function DNS_service_provider() {
   echo
   echo
   ECHOG "请选择订阅转换格式服务程序"
-  echo
   ECHOY " 1. tindy2013/subconverter(原版订阅转换格式服务程序)"
-  echo
   ECHOY " 2. MetaCubeX/subconverter(原版基础上改版订阅转换格式服务程序)"
   echo
   XUANZHEOR=" 请输入数字选择"
   while :; do
-  read -p " ${XUANZHEOR}： " CHOOSEDNS
+  read -p " ${XUANZHEOR}： " SUB_CONVER
   case $SUB_CONVER in
     1)
       export subconv_erter="tindy2013"

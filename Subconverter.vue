@@ -198,14 +198,6 @@
                     @click="makeShortUrl"
                     :loading="loading"
                     :disabled="customSubUrl.length === 0"
-                >进阶配置
-                </el-button>
-                <el-button
-                    style="width: 120px"
-                    type="primary"
-                    @click="dialogLoadConfigVisible = true"
-                    icon="el-icon-copy-document"
-                    :loading="loading"
                 >从URL解析
                 </el-button>
                </el-form-item>

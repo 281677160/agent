@@ -91,6 +91,34 @@ function system_check() {
   esac
   done
 
+  echo
+  echo
+  ECHOG "请选择订阅转换格式服务程序"
+  echo
+  ECHOY " 1. tindy2013/subconverter(原版订阅转换格式服务程序)"
+  echo
+  ECHOY " 2. MetaCubeX/subconverter(原版基础上改版订阅转换格式服务程序)"
+  echo
+  XUANZHEOR=" 请输入数字选择"
+  while :; do
+  read -p " ${XUANZHEOR}： " CHOOSEDNS
+  case $SUB_CONVER in
+    1)
+      export subconv_erter="tindy2013"
+      export SUB_service="原版订阅转换服务程序"
+    break
+    ;;
+    2)
+      export subconv_erter="MetaCubeX"
+      export SUB_service="原版基础上的改版订阅转换服务程序"
+    break
+    ;;
+    *)
+      XUANZHEOR=" 请输入正确的数字编号!"
+    ;;
+    esac
+    done
+
   ECHOY "正在安装各种必须依赖"
   echo
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then

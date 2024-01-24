@@ -359,7 +359,7 @@ function install_subweb() {
     judge "sub-web补丁下载"
     cp -R subweb/subweb/* "sub-web/"
     mv -f "subweb/subweb/.env" "sub-web/.env"
-    wget -q https://mirror.ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/Subconverter.vue -O /root/sub-web/src/views/Subconverter.vue
+    wget -q https://mirror.ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/subweb/src/views/Subconverter.vue -O /root/sub-web/src/views/Subconverter.vue
     if [[ $? -ne 0 ]]; then
       curl -fsSL https://cdn.jsdelivr.net/gh/281677160/agent@main/Subconverter.vue > "/root/sub-web/src/views/Subconverter.vue"
     fi

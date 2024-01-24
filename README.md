@@ -84,7 +84,7 @@ bash <(wget -qO- https://git.io/mtg.sh)
 <br>
 
 ```yaml
-bash -c "$(curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/clash_install.sh)"
+bash -c "$(curl -fsSL https://mirror.ghproxy.com/https://raw.githubusercontent.com/281677160/agent/main/clash_install.sh)"
 ```
 <br />
 </details>

@@ -254,8 +254,17 @@ function install_subconverter() {
       fi
     fi  
   fi
-  rm -rf "/root/subconverter_${ARCH_PRINT}.tar.gz" >/dev/null 2>&1
-  wget https://ghproxy.com/https://github.com/MetaCubeX/subconverter/releases/download/Alpha/subconverter_${ARCH_PRINT}.tar.gz
+  
+  if [[ "${subconv_erter}" == "MetaCubeX" ]]; then
+    rm -rf "${clash_path}/subconverter_${ARCH_PRINT}.tar.gz" >/dev/null 2>&1
+    wget -P "${clash_path}" https://github.com/MetaCubeX/subconverter/releases/download/Alpha/subconverter_${ARCH_PRINT}.tar.gz -O "${clash_path}/subconverter_${ARCH_PRINT}.tar.gz"
+  else
+    latest_vers="$(wget -qO- -t1 -T2 "https://github.com/281677160/common/releases/download/API/tindy2013.api" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')"
+    [[ -z ${latest_vers} ]] && latest_vers="v0.8.1"
+    rm -rf "${clash_path}/subconverter_${ARCH_PRINT}.tar.gz" >/dev/null 2>&1
+    wget -P "${clash_path}" https://github.com/tindy2013/subconverter/releases/download/${latest_vers}/subconverter_${ARCH_PRINT}.tar.gz -O "${clash_path}/subconverter_${ARCH_PRINT}.tar.gz"
+  fi
+  
   if [[ $? -ne 0 ]];then
     echo -e "\033[31m subconverter下载失败! \033[0m"
     exit 1
